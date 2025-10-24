@@ -6,7 +6,7 @@
 
 package simrskhanza;
 
-import fungsi.WarnaTable; // Import ini penting
+import fungsi.WarnaTable;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
 import fungsi.sekuel;
@@ -41,7 +41,7 @@ import kepegawaian.DlgCariPetugas;
 
 /**
  *
- * @author Gemini
+ * @author Agni
  */
 public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
     private sekuel Sequel=new sekuel();

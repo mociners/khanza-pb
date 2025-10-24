@@ -46,7 +46,7 @@ import kepegawaian.DlgCariPetugas;
 
 /**
  *
- * @author Gemini
+ * @author Agni
  */
 public class DlgPeriksaMDT extends javax.swing.JDialog {
     private sekuel Sequel=new sekuel();
