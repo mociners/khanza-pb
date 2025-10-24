@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptCetakPenilaianAwalMedisIGD" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d6b24285-1815-4654-a316-29a38f265b53">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="koneksi"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="namars" class="java.lang.String"/>
+	<parameter name="alamatrs" class="java.lang.String"/>
+	<parameter name="kotars" class="java.lang.String"/>
+	<parameter name="propinsirs" class="java.lang.String"/>
+	<parameter name="kontakrs" class="java.lang.String"/>
+	<parameter name="emailrs" class="java.lang.String"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="no_rawat" class="java.lang.String"/>
+	<parameter name="finger" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     reg_periksa.no_rawat, pasien.no_rkm_medis, pasien.nm_pasien, IF(pasien.jk='L','Laki-Laki','Perempuan') AS jk,
+     pasien.tgl_lahir, penilaian_medis_igd.tanggal, penilaian_medis_igd.kd_dokter, dokter.nm_dokter,
+     penilaian_medis_igd.anamnesis, penilaian_medis_igd.hubungan, penilaian_medis_igd.keluhan_utama,
+     penilaian_medis_igd.rps, penilaian_medis_igd.rpk, penilaian_medis_igd.rpd, penilaian_medis_igd.rpo,
+     penilaian_medis_igd.alergi, penilaian_medis_igd.keadaan, penilaian_medis_igd.gcs, penilaian_medis_igd.kesadaran,
+     penilaian_medis_igd.td, penilaian_medis_igd.nadi, penilaian_medis_igd.rr, penilaian_medis_igd.suhu,
+     penilaian_medis_igd.spo, penilaian_medis_igd.bb, penilaian_medis_igd.tb, penilaian_medis_igd.kepala,
+     penilaian_medis_igd.mata, penilaian_medis_igd.gigi, penilaian_medis_igd.leher, penilaian_medis_igd.thoraks,
+     penilaian_medis_igd.abdomen, penilaian_medis_igd.ekstremitas, penilaian_medis_igd.genital,
+     penilaian_medis_igd.ket_fisik, penilaian_medis_igd.ket_lokalis, penilaian_medis_igd.ekg,
+     penilaian_medis_igd.rad, penilaian_medis_igd.lab, penilaian_medis_igd.diagnosis, penilaian_medis_igd.tata AS tatalaksana,
+     penilaian_medis_igd.catatan, penilaian_medis_igd.rencana_tindak_lanjut, penilaian_medis_igd.skrining_keadaan,
+     penilaian_medis_igd.skrining_hemodinamic, penilaian_medis_igd.skrining_kebutuhan, penilaian_medis_igd.kondisi_keadaan,
+     penilaian_medis_igd.kondisi_td, penilaian_medis_igd.kondisi_nadi, penilaian_medis_igd.kondisi_rr,
+     penilaian_medis_igd.kondisi_suhu, penilaian_medis_igd.kondisi_pemeriksaan_fisik, penilaian_medis_igd.kondisi_tanggal
+FROM
+     reg_periksa INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis
+     INNER JOIN penilaian_medis_igd ON reg_periksa.no_rawat = penilaian_medis_igd.no_rawat
+     INNER JOIN dokter ON penilaian_medis_igd.kd_dokter = dokter.kd_dokter
+WHERE
+     penilaian_medis_igd.no_rawat = $P{no_rawat}]]>
+	</queryString>
+	<field name="no_rkm_medis" class="java.lang.String"/>
+	<field name="nm_pasien" class="java.lang.String"/>
+	<field name="jk" class="java.lang.String"/>
+	<field name="tgl_lahir" class="java.sql.Date"/>
+	<field name="tanggal" class="java.sql.Timestamp"/>
+	<field name="nm_dokter" class="java.lang.String"/>
+	<field name="anamnesis" class="java.lang.String"/>
+	<field name="hubungan" class="java.lang.String"/>
+	<field name="keluhan_utama" class="java.lang.String"/>
+	<field name="rps" class="java.lang.String"/>
+	<field name="rpd" class="java.lang.String"/>
+	<field name="rpk" class="java.lang.String"/>
+	<field name="rpo" class="java.lang.String"/>
+	<field name="alergi" class="java.lang.String"/>
+	<field name="keadaan" class="java.lang.String"/>
+	<field name="gcs" class="java.lang.String"/>
+	<field name="kesadaran" class="java.lang.String"/>
+	<field name="td" class="java.lang.String"/>
+	<field name="nadi" class="java.lang.String"/>
+	<field name="rr" class="java.lang.String"/>
+	<field name="suhu" class="java.lang.String"/>
+	<field name="spo" class="java.lang.String"/>
+	<field name="bb" class="java.lang.String"/>
+	<field name="tb" class="java.lang.String"/>
+	<field name="ket_fisik" class="java.lang.String"/>
+	<field name="ekg" class="java.lang.String"/>
+	<field name="rad" class="java.lang.String"/>
+	<field name="lab" class="java.lang.String"/>
+	<field name="diagnosis" class="java.lang.String"/>
+	<field name="tatalaksana" class="java.lang.String"/>
+	<field name="rencana_tindak_lanjut" class="java.lang.String"/>
+	<field name="skrining_keadaan" class="java.lang.String"/>
+	<field name="skrining_hemodinamic" class="java.lang.String"/>
+	<field name="skrining_kebutuhan" class="java.lang.String"/>
+	<field name="kondisi_keadaan" class="java.lang.String"/>
+	<field name="kondisi_td" class="java.lang.String"/>
+	<field name="kondisi_nadi" class="java.lang.String"/>
+	<field name="kondisi_rr" class="java.lang.String"/>
+	<field name="kondisi_suhu" class="java.lang.String"/>
+	<field name="kondisi_pemeriksaan_fisik" class="java.lang.String"/>
+	<field name="kondisi_tanggal" class="java.sql.Timestamp"/>
+	<title>
+		<band height="85" splitType="Stretch">
+			<textField>
+				<reportElement x="65" y="0" width="410" height="17" uuid="9a0ae7d2-7bc8-42cc-804a-647bac795474"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{namars}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="0" y="0" width="60" height="60" uuid="17e00e6c-9d8f-44c7-b019-4f4421cad916"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="65" y="30" width="410" height="15" uuid="2fa3f9d1-8908-4325-855d-b78ac7938986"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENILAIAN AWAL MEDIS IGD]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="410" y="65" width="145" height="20" uuid="6d332867-1d15-4004-a8b9-181b4dd80213"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="415" y="67" width="45" height="16" uuid="c2b99fb9-07d3-4493-abbd-e74e3975daa5"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[No. RM:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="460" y="67" width="90" height="16" uuid="bbe3a3df-5713-4abc-b346-7104ed2ac625"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{no_rkm_medis}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="40" uuid="50a55409-be01-4462-95fe-c7939cbfd6a0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="5" y="5" width="75" height="14" uuid="64f88656-707e-4838-9d95-65d98c230c6c"/>
+				<text><![CDATA[Nama Pasien:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="5" width="190" height="14" uuid="7230597d-c8d2-4785-9b2c-54e9cca897f7"/>
+				<textFieldExpression><![CDATA[$F{nm_pasien}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="20" width="75" height="14" uuid="9ff238bf-7a8d-4958-a4b2-9e82cd9041a7"/>
+				<text><![CDATA[Tanggal Lahir:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="80" y="20" width="190" height="14" uuid="aec2eb33-3038-4dfe-b72a-fc049fcb06a4"/>
+				<textFieldExpression><![CDATA[$F{tgl_lahir}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="5" width="75" height="14" uuid="f7d17b2b-7ab5-41e6-bb6c-f08acc6346d5"/>
+				<text><![CDATA[Jenis Kelamin:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="355" y="5" width="190" height="14" uuid="011609ac-b3eb-401e-9465-9af28a9a463c"/>
+				<textFieldExpression><![CDATA[$F{jk}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="20" width="75" height="14" uuid="4162a3ef-d7dd-4cb5-b70b-e972183692b9"/>
+				<text><![CDATA[Anamnesis:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="355" y="20" width="190" height="14" uuid="52d14432-478e-45fc-8c08-287d5d20bfd0"/>
+				<textFieldExpression><![CDATA[($F{anamnesis} != null ? $F{anamnesis} : "") + " (" + ($F{hubungan} != null ? $F{hubungan} : "") + ")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="580" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="5" width="555" height="12" backcolor="#E6E6E6" uuid="16af76c0-f8f7-4fec-9e3a-c8e4254d2fbe"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[I. RIWAYAT KESEHATAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="17" width="278" height="14" uuid="ad347205-3024-488b-bee0-8f96aa09b9a5"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Keluhan Utama:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="31" width="278" height="29" uuid="a1643188-bbf6-438f-bcea-63fc056c4b88"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{keluhan_utama} != null && $F{keluhan_utama}.trim().length() > 0) ? $F{keluhan_utama} : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="278" y="17" width="277" height="14" uuid="16b8066d-3645-46c0-ac97-b52c785a6f1d"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Riwayat Penyakit Sekarang:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="278" y="31" width="277" height="29" uuid="b3c3e7df-6626-4ea9-9bc4-117e68444769"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{rps} != null && $F{rps}.trim().length() > 0) ? $F{rps} : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="60" width="278" height="14" uuid="3f979c89-8ff1-4af4-ac87-50109c907479"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Riwayat Penyakit Dahulu:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="74" width="278" height="29" uuid="cf33c224-7410-463d-9f68-964191f0b378"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{rpd} != null && $F{rpd}.trim().length() > 0) ? $F{rpd} : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="278" y="60" width="277" height="14" uuid="32ea47b1-51e9-4617-8819-17e5ef4c88cd"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Riwayat Penyakit Keluarga:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="278" y="74" width="277" height="29" uuid="b8e5f1be-3ebd-48a1-8a2d-54de430287c5"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{rpk} != null && $F{rpk}.trim().length() > 0) ? $F{rpk} : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="103" width="278" height="14" uuid="6c96aee8-af99-4b54-b455-01872fe6db4b"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Riwayat Pengobatan:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="117" width="278" height="29" uuid="f32bb4de-ade3-42c7-b2b1-64c6778f2789"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{rpo} != null && $F{rpo}.trim().length() > 0) ? $F{rpo} : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="278" y="103" width="277" height="14" uuid="6bc9fd8b-a247-47de-96f6-2effc74df682"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Riwayat Alergi:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="278" y="117" width="277" height="29" uuid="91f580b2-9658-4459-9c6e-7d775ed8173f"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{alergi} != null && $F{alergi}.trim().length() > 0) ? $F{alergi} : "Tidak Ada"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="150" width="555" height="12" backcolor="#E6E6E6" uuid="6a7ecade-caf0-4700-8589-a043be03023e"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[II. PEMERIKSAAN FISIK]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="0" y="162" width="555" height="14" uuid="7f5f7841-be33-407b-9e8e-278afff74a37"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Keadaan Umum: " + (($F{keadaan} != null && !$F{keadaan}.isEmpty()) ? $F{keadaan} : "-") + 
+"   Kesadaran: " + (($F{kesadaran} != null && !$F{kesadaran}.isEmpty()) ? $F{kesadaran} : "-") + 
+"   GCS(E,V,M): " + (($F{gcs} != null && $F{gcs}.trim().length() > 0) ? $F{gcs} : "-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="176" width="555" height="14" uuid="db4962fd-3454-49f4-8d25-7cc34cdda9b4"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tanda Vital:  TD: " + (($F{td} != null && $F{td}.trim().length() > 0) ? $F{td} : "-") + " mmHg" +
+"   N: " + (($F{nadi} != null && $F{nadi}.trim().length() > 0) ? $F{nadi} : "-") + " x/mnt" +
+"   S: " + (($F{suhu} != null && $F{suhu}.trim().length() > 0) ? $F{suhu} : "-") + " °C" +
+"   RR: " + (($F{rr} != null && $F{rr}.trim().length() > 0) ? $F{rr} : "-") + " x/mnt" +
+"   SPO2: " + (($F{spo} != null && $F{spo}.trim().length() > 0) ? $F{spo} : "-") + "%" +
+"   BB: " + (($F{bb} != null && $F{bb}.trim().length() > 0) ? $F{bb} : "-") + " Kg" + 
+"   TB: " + (($F{tb} != null && $F{tb}.trim().length() > 0) ? $F{tb} : "-") + " cm"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="190" width="555" height="14" uuid="9680c325-d209-44b1-af9d-97dd824ba9ca"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Keterangan:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="204" width="555" height="29" uuid="f3903ad0-21be-409a-8e5c-3a17e9c3200b"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{ket_fisik} != null && $F{ket_fisik}.trim().length() > 0) ? $F{ket_fisik} : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="238" width="555" height="12" backcolor="#E6E6E6" uuid="8f6a0f19-1c17-4fb2-b531-11fed885c78b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[IV. PEMERIKSAAN PENUNJANG]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="250" width="555" height="29" uuid="a4235a49-b620-49d3-b043-605e914f2aba"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EKG: " + (($F{ekg} != null && $F{ekg}.trim().length() > 0) ? $F{ekg} : "-") + "\n" +
+"Radiologi: " + (($F{rad} != null && $F{rad}.trim().length() > 0) ? $F{rad} : "-") + "\n" +
+"Laboratorium: " + (($F{lab} != null && $F{lab}.trim().length() > 0) ? $F{lab} : "-")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="284" width="278" height="12" backcolor="#E6E6E6" uuid="2b66b6ba-4275-42e8-bb28-fde492a87b7d"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[V. DIAGNOSIS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="278" y="284" width="277" height="12" backcolor="#E6E6E6" uuid="cb56c5be-845c-4b02-b350-42139830e134"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[VI. TATALAKSANA]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="296" width="278" height="40" uuid="79450ac3-e57f-4099-bb09-b96ed80ca85c"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{diagnosis} != null && $F{diagnosis}.trim().length() > 0) ? $F{diagnosis} : "-"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="278" y="296" width="277" height="40" uuid="8f48bb5a-204f-46a0-a406-786402cc7ef7"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{tatalaksana} != null && $F{tatalaksana}.trim().length() > 0) ? $F{tatalaksana} : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="341" width="555" height="12" backcolor="#E6E6E6" uuid="e1857e20-0f92-4ea2-ac10-3ea6f919a31d"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[J. RENCANA TINDAK LANJUT]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="353" width="555" height="28" uuid="7387c027-4a35-4f92-9b36-400e10ee4df1"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{rencana_tindak_lanjut} != null && $F{rencana_tindak_lanjut}.trim().length() > 0) ? $F{rencana_tindak_lanjut}.replace(" | ", "\n") : "-"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="386" width="555" height="12" backcolor="#E6E6E6" uuid="b5681cf5-bafa-41bf-9142-fe5a3dc1b0a4"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[K. SKRINING & KONDISI TERAKHIR]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="398" width="555" height="14" uuid="07423d1e-38c2-4fa3-b734-f79f5173d8b9"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Skrining Rawat Inap: " + (($F{skrining_keadaan} != null && $F{skrining_keadaan}.trim().length() > 0) ? ("Keadaan " + $F{skrining_keadaan} + ", Hemodinamik " + $F{skrining_hemodinamic} + ", Kebutuhan " + $F{skrining_kebutuhan}) : "-")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="412" width="555" height="28" uuid="d043e528-176e-44d5-9c0c-45356e36404a"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Kondisi Terakhir: " + (($F{kondisi_keadaan} != null && $F{kondisi_keadaan}.trim().length() > 0) ? ("Keadaan " + $F{kondisi_keadaan} + " | Tanda Vital: TD " + $F{kondisi_td} + ", N " + $F{kondisi_nadi} + ", RR " + $F{kondisi_rr} + ", S " + $F{kondisi_suhu}) : "-") + "\n" + 
+"Pemeriksaan Fisik: " + (($F{kondisi_pemeriksaan_fisik} != null && $F{kondisi_pemeriksaan_fisik}.trim().length() > 0) ? $F{kondisi_pemeriksaan_fisik} : "-") + "\n" +
+"Tanggal & Jam: " + ($F{kondisi_tanggal} != null ? new SimpleDateFormat("dd MMMM yyyy, HH:mm").format($F{kondisi_tanggal}) : "-")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="100">
+			<textField pattern="dd MMMM yyyy, HH:mm:ss">
+				<reportElement x="355" y="5" width="200" height="15" uuid="e6f6490d-41a9-48d4-93ea-8222708c8f2d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{kotars} + ", " + new SimpleDateFormat("dd MMMM yyyy").format($F{tanggal})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="355" y="20" width="200" height="15" uuid="ca1ce6b7-114d-4d4f-8e0a-21485d4abba5"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Dokter dan Tanda Tangan]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="355" y="80" width="200" height="15" uuid="be89bcb3-dfcd-48cc-a030-373c75a10850"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["( " + $F{nm_dokter} + " )"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
