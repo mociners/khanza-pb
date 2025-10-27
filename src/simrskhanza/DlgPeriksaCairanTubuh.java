@@ -39,7 +39,6 @@ import javax.swing.table.TableColumn;
 import kepegawaian.DlgCariDokter;
 import kepegawaian.DlgCariPetugas;
 import keuangan.Jurnal;
-
 /**
  *
  * @author Agni
@@ -57,7 +56,8 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
     private DefaultTableModel tabModeData; // Model tabel untuk data penilaian
     private int i = 0; // Tambahkan variabel i
     
-    private final String KODE_PEMERIKSAAN_LAB = "AP"; 
+    //private final String KODE_PEMERIKSAAN_LAB = "AP"; 
+    private String kdTindakanHapus = "";
     
     private Jurnal jur = new Jurnal();
     private widget.TextBox Penjab = new widget.TextBox(); // Untuk menyimpan kd_pj
@@ -642,6 +642,14 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
         panelInput.add(ChkJln);
         ChkJln.setBounds(803, 70, 23, 23);
 
+        widget.Button btnCariTindakan = new widget.Button();
+        btnCariTindakan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // icon '...'
+        btnCariTindakan.setMnemonic('4');
+        btnCariTindakan.setToolTipText("Alt+4");
+        btnCariTindakan.setName("btnCariTindakan");
+        panelInput.add(btnCariTindakan);
+        btnCariTindakan.setBounds(788, 100, 28, 23);
+
         TabInput.add(panelInput, java.awt.BorderLayout.PAGE_START);
 
         Scroll.setName("Scroll"); // NOI18N
@@ -1134,17 +1142,24 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             Valid.textKosong(KodePerujuk,"Dokter Perujuk");
         }else if(KdPtg.getText().trim().equals("")||NmPtg.getText().trim().equals("")){
             Valid.textKosong(KdPtg,"Petugas");
-        } else if (KODE_PEMERIKSAAN_LAB.equals("KODE_LAB_CAIRAN_TUBUH")) {
-            JOptionPane.showMessageDialog(null,"Harap tentukan KODE_PEMERIKSAAN_LAB di source code terlebih dahulu.");
-            return;
+            
         } else {
-            // Mulai transaksi
-            boolean sukses = true; // Kita asumsikan sukses sampai terbukti gagal
+            // --- Determine the billing code automatically ---
+            String kodePerawatan = getKodePerawatanOtomatis();
+            if (kodePerawatan == null || kodePerawatan.isEmpty()) {
+                 JOptionPane.showMessageDialog(null,"Tidak bisa menentukan kode perawatan otomatis berdasarkan cara bayar pasien ("+Penjab.getText()+").");
+                 return; // Stop the saving process
+            }
+            // --- End automatic code determination ---
+            
+            // Start transaction
+            boolean sukses = true; // Assume success until proven otherwise
+            boolean tarifDitemukan = false; // Flag to check if tarif was found
             try {
                 Sequel.AutoComitFalse();
 
-                // 1. Simpan data klinis
-                // Hapus 'if' wrapper, panggil langsung. Jika gagal, catch block akan menangani.
+                // 1. Save clinical data
+                // Call directly. If it fails, the catch block will handle it.
                 Sequel.menyimpan("pemeriksaan_cairan_tubuh_pk", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", 25, new String[]{
                     TNoRw.getText(), Valid.SetTgl(Tanggal.getSelectedItem()+""), CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),
                     KodePj.getText(), KodePerujuk.getText(), KdPtg.getText(), Spesimen.getText(), Volume.getText(), Warna.getText(), Kejernihan.getText(),
@@ -1153,8 +1168,8 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                     Kesan.getText(), Saran.getText()
                 });
 
-                // 2. Ambil Biaya dan Simpan ke periksa_lab
-                // Reset variabel biaya
+                // 2. Get Cost and Save to periksa_lab
+                // Reset cost variables
                 ttljmdokter = 0; ttljmpetugas = 0; ttlkso = 0; ttlpendapatan = 0;
                 ttlbhp = 0; ttljasasarana = 0; ttljmperujuk = 0; ttlmenejemen = 0;
 
@@ -1174,13 +1189,12 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                 }
 
                 psbilling = koneksi.prepareStatement(sqlbilling);
-                boolean tarifDitemukan = false; // Tambahkan flag
                 try {
-                    psbilling.setString(1, KODE_PEMERIKSAAN_LAB);
+                    psbilling.setString(1, kodePerawatan); // Use the automatic code
                     if (cara_bayar_lab.equals("Yes") && kelas_lab.equals("No")) {
                         psbilling.setString(2, Penjab.getText());
                     } else if (cara_bayar_lab.equals("No") && kelas_lab.equals("No")) {
-                        // tidak ada parameter tambahan
+                        // no additional parameters
                     } else if (cara_bayar_lab.equals("Yes") && kelas_lab.equals("Yes")) {
                         psbilling.setString(2, Penjab.getText());
                         psbilling.setString(3, kelas);
@@ -1190,7 +1204,7 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
 
                     rsbilling = psbilling.executeQuery();
                     if (rsbilling.next()) {
-                        tarifDitemukan = true; // Flag tarif ditemukan
+                        tarifDitemukan = true; // Set flag: tarif found
                         ttlpendapatan = rsbilling.getDouble("total_byr");
                         ttljasasarana = rsbilling.getDouble("bagian_rs");
                         ttlbhp = rsbilling.getDouble("bhp");
@@ -1200,10 +1214,10 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                         ttlkso = rsbilling.getDouble("kso");
                         ttlmenejemen = rsbilling.getDouble("menejemen");
 
-                        // Simpan ke tabel billing utama
-                        // Hapus 'if !' wrapper, panggil langsung
+                        // Save to the main billing table
                         Sequel.menyimpantf2("periksa_lab", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Kode Pemeriksaan", 17, new String[]{
-                            TNoRw.getText(), KdPtg.getText(), KODE_PEMERIKSAAN_LAB, Valid.SetTgl(Tanggal.getSelectedItem() + ""),
+                            TNoRw.getText(), KdPtg.getText(), kodePerawatan, // Use the automatic code
+                            Valid.SetTgl(Tanggal.getSelectedItem() + ""),
                             CmbJam.getSelectedItem() + ":" + CmbMenit.getSelectedItem() + ":" + CmbDetik.getSelectedItem(), KodePerujuk.getText(),
                             String.valueOf(ttljasasarana), String.valueOf(ttlbhp), String.valueOf(ttljmperujuk),
                             String.valueOf(ttljmdokter), String.valueOf(ttljmpetugas), String.valueOf(ttlkso),
@@ -1211,20 +1225,20 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                         });
                     } else {
                         sukses = false; 
-                        JOptionPane.showMessageDialog(null, "Tarif untuk " + KODE_PEMERIKSAAN_LAB + " (Kelas: "+kelas+", Penjamin: "+Penjab.getText()+") tidak ditemukan. Transaksi dibatalkan.");
+                        JOptionPane.showMessageDialog(null, "Tarif untuk kode perawatan otomatis (" + kodePerawatan + ") (Kelas: "+kelas+", Penjamin: "+Penjab.getText()+") tidak ditemukan. Transaksi dibatalkan.");
                     }
                 } catch (Exception e) {
                     sukses = false; 
                     System.out.println("Notif Billing: " + e);
-                    throw e; // Lemparkan error agar ditangkap catch utama
+                    throw e; // Throw the error to be caught by the main catch block
                 } finally {
                     if(rsbilling != null) rsbilling.close();
                     if(psbilling != null) psbilling.close();
                 }
                 
 
-                // 3. Simpan Jurnal
-                if (sukses) { // Jurnal hanya dieksekusi jika logic di atas (tarif) berhasil
+                // 3. Save Journal
+                if (sukses) { // Journal is only executed if the logic above (finding tarif) succeeded
                     Sequel.queryu("delete from tampjurnal");
                     if (status.equals("Ranap")) {
                         if (ttlpendapatan > 0) {
@@ -1297,15 +1311,15 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                     }
                 }
 
-                // 4. Commit atau Rollback
+                // 4. Commit or Rollback
                 if (sukses) {
                     Sequel.Commit();
                     JOptionPane.showMessageDialog(null, "Proses simpan selesai...");
                     emptTeks();
                 } else {
-                    // Cek jika 'sukses' false tapi tidak ada dialog error sebelumnya
+                    // Check if 'sukses' is false but no error dialog was shown before
                     if (tarifDitemukan == false) { 
-                         // Dialog "Tarif ... tidak ditemukan" sudah ditampilkan di atas
+                         // The dialog "Tarif ... tidak ditemukan" was already shown above
                     } else {
                          JOptionPane.showMessageDialog(null, "Terjadi kesalahan saat menyimpan jurnal, transaksi dibatalkan.");
                     }
@@ -1355,26 +1369,33 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             Valid.textKosong(TNoRw,"Pasien");
         } else if(tglSimpan.equals("") || jamSimpan.equals("")){
             JOptionPane.showMessageDialog(null,"Silahkan pilih dulu data yang akan dihapus.");
+        // Use kdTindakanHapus for validation
+        } else if (kdTindakanHapus.trim().isEmpty()) {
+             JOptionPane.showMessageDialog(null,"Tidak bisa menentukan kode tindakan yang akan dihapus dari data terpilih. Harap pilih data dari tabel lagi.");
         } else {
             if(JOptionPane.showConfirmDialog(null, "Yakin anda mau menghapus data ini? Ini akan membatalkan tagihan terkait.", "Konfirmasi", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-                
-                boolean sukses = true;
+
+                boolean sukses = true; // Assume success
                 try {
                     Sequel.AutoComitFalse();
+
+                    // 1. Get cost data from periksa_lab to be deleted
                     ttljmdokter = 0; ttljmpetugas = 0; ttlkso = 0; ttlpendapatan = 0;
                     ttlbhp = 0; ttljasasarana = 0; ttljmperujuk = 0; ttlmenejemen = 0;
 
                     try {
                         psbilling = koneksi.prepareStatement(
-                            "select total_byr, bagian_rs, bhp, tarif_perujuk, tarif_tindakan_dokter, tarif_tindakan_petugas, kso, menejemen, status " +
+                            // Corrected column name: biaya instead of total_byr
+                            "select biaya, bagian_rs, bhp, tarif_perujuk, tarif_tindakan_dokter, tarif_tindakan_petugas, kso, menejemen, status " +
                             "from periksa_lab where no_rawat=? and tgl_periksa=? and jam=? and kd_jenis_prw=?");
                         psbilling.setString(1, TNoRw.getText());
                         psbilling.setString(2, tglSimpan);
                         psbilling.setString(3, jamSimpan);
-                        psbilling.setString(4, KODE_PEMERIKSAAN_LAB);
+                        psbilling.setString(4, kdTindakanHapus); // Use the saved code
                         rsbilling = psbilling.executeQuery();
                         if (rsbilling.next()) {
-                            ttlpendapatan = rsbilling.getDouble("total_byr");
+                            // Corrected column name: biaya instead of total_byr
+                            ttlpendapatan = rsbilling.getDouble("biaya");
                             ttljasasarana = rsbilling.getDouble("bagian_rs");
                             ttlbhp = rsbilling.getDouble("bhp");
                             ttljmperujuk = rsbilling.getDouble("tarif_perujuk");
@@ -1382,28 +1403,33 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                             ttljmpetugas = rsbilling.getDouble("tarif_tindakan_petugas");
                             ttlkso = rsbilling.getDouble("kso");
                             ttlmenejemen = rsbilling.getDouble("menejemen");
-                            status = rsbilling.getString("status");
+                            status = rsbilling.getString("status"); // Get Ralan/Ranap status from billing
                         } else {
-                            ttlpendapatan = 0;
+                            // Possibly already deleted, assume success to continue deleting remaining data
+                            ttlpendapatan = 0; // Ensure no journal reversal if billing record not found
                         }
                     } catch (Exception e) {
                         sukses = false;
                         System.out.println("Notif Ambil Biaya Hapus: " + e);
-                        throw e; // Lemparkan error agar ditangkap catch utama
+                        throw e; // Throw the error to be caught by the main catch block
                     } finally {
                         if(rsbilling != null) rsbilling.close();
                         if(psbilling != null) psbilling.close();
                     }
 
+
+                    // 2. Delete clinical data
                     Sequel.queryu2("DELETE FROM pemeriksaan_cairan_tubuh_pk WHERE no_rawat=? and tgl_periksa=? and jam=?", 3, new String[]{
                         TNoRw.getText(), tglSimpan, jamSimpan
                     });
-                    
+
+                    // 3. Delete billing data (periksa_lab)
                     Sequel.queryu2("DELETE FROM periksa_lab WHERE no_rawat=? and tgl_periksa=? and jam=? and kd_jenis_prw=?", 4, new String[]{
-                        TNoRw.getText(), tglSimpan, jamSimpan, KODE_PEMERIKSAAN_LAB
+                        TNoRw.getText(), tglSimpan, jamSimpan, kdTindakanHapus // Use the saved code
                     });
 
-                    if (sukses && ttlpendapatan > 0) {
+                    // 4. Reverse Journal
+                    if (sukses && ttlpendapatan > 0) { // Only reverse journal if there was revenue
                         Sequel.queryu("delete from tampjurnal");
                         if (status.equals("Ranap")) {
                             if (ttlpendapatan > 0) {
@@ -1438,7 +1464,7 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                                 Sequel.menyimpan("tampjurnal", "'" + Beban_Jasa_Menejemen_Laborat_Ranap + "','Beban Jasa Menejemen Laborat Ranap','0','" + ttlmenejemen + "'", "kredit=kredit+'" + (ttlmenejemen) + "'", "kd_rek='" + Beban_Jasa_Menejemen_Laborat_Ranap + "'");
                                 Sequel.menyimpan("tampjurnal", "'" + Utang_Jasa_Menejemen_Laborat_Ranap + "','Utang Jasa Menejemen Laborat Ranap','" + ttlmenejemen + "','0'", "debet=debet+'" + (ttlmenejemen) + "'", "kd_rek='" + Utang_Jasa_Menejemen_Laborat_Ranap + "'");
                             }
-                            
+
                             sukses = jur.simpanJurnal(TNoRw.getText(), "U", "PEMBATALAN PEMERIKSAAN CAIRAN TUBUH RAWAT INAP " + TPasien.getText() + " OLEH " + akses.getkode());
                         } else if (status.equals("Ralan")) {
                             if (ttlpendapatan > 0) {
@@ -1473,14 +1499,17 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
                                 Sequel.menyimpan("tampjurnal", "'" + Beban_Jasa_Menejemen_Laborat_Ralan + "','Beban Jasa Menejemen Laborat Ralan','0','" + ttlmenejemen + "'", "kredit=kredit+'" + (ttlmenejemen) + "'", "kd_rek='" + Beban_Jasa_Menejemen_Laborat_Ralan + "'");
                                 Sequel.menyimpan("tampjurnal", "'" + Utang_Jasa_Menejemen_Laborat_Ralan + "','Utang Jasa Menejemen Laborat Ralan','" + ttlmenejemen + "','0'", "debet=debet+'" + (ttlmenejemen) + "'", "kd_rek='" + Utang_Jasa_Menejemen_Laborat_Ralan + "'");
                             }
-                            
+
                             sukses = jur.simpanJurnal(TNoRw.getText(), "U", "PEMBATALAN PEMERIKSAAN CAIRAN TUBUH RAWAT JALAN " + TPasien.getText() + " OLEH " + akses.getkode());
                         }
                     }
+
+                    // 5. Commit or Rollback
                     if(sukses){
                         Sequel.Commit();
                         JOptionPane.showMessageDialog(null,"Proses hapus selesai...");
                         emptTeks();
+                        tampilData();
                     } else {
                         JOptionPane.showMessageDialog(null,"Terjadi kesalahan saat pembatalan jurnal, transaksi dibatalkan.");
                         Sequel.RollBack();
@@ -1770,6 +1799,7 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
     // Method baru untuk mengambil data dari tabel dan menampilkannya di form input
     private void getData(){
         if(tbDataPenilaian.getSelectedRow()!= -1){
+            // Get data from the selected table row
             String norawat = tbDataPenilaian.getValueAt(tbDataPenilaian.getSelectedRow(),0).toString();
             String norm = tbDataPenilaian.getValueAt(tbDataPenilaian.getSelectedRow(),1).toString();
             String nampasien = tbDataPenilaian.getValueAt(tbDataPenilaian.getSelectedRow(),2).toString();
@@ -1801,9 +1831,41 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             String kddokterperujuk = tbDataPenilaian.getValueAt(tbDataPenilaian.getSelectedRow(),30).toString();
             String nmdokterperujuk = tbDataPenilaian.getValueAt(tbDataPenilaian.getSelectedRow(),31).toString();
 
+            // Find the billing code (kd_jenis_prw) used for this entry from periksa_lab
+            kdTindakanHapus = ""; // Reset first
+            PreparedStatement psCariTindakan = null;
+            ResultSet rsCariTindakan = null;
+            try {
+                psCariTindakan = koneksi.prepareStatement(
+                    "select periksa_lab.kd_jenis_prw " +
+                    "from periksa_lab " +
+                    "where periksa_lab.no_rawat=? and periksa_lab.tgl_periksa=? and periksa_lab.jam=? and periksa_lab.kategori='PK' limit 1");
+                psCariTindakan.setString(1, norawat);
+                psCariTindakan.setString(2, tglperiksa);
+                psCariTindakan.setString(3, jamperiksa);
+
+                rsCariTindakan = psCariTindakan.executeQuery();
+                if (rsCariTindakan.next()) {
+                    kdTindakanHapus = rsCariTindakan.getString("kd_jenis_prw"); // Store the code for potential deletion
+                } else {
+                     System.out.println("Billing code (kd_jenis_prw) not found in periksa_lab for " + norawat + " at " + tglperiksa + " " + jamperiksa);
+                     // Optionally show a warning to the user
+                     // JOptionPane.showMessageDialog(null,"Kode tagihan untuk data ini tidak ditemukan di tabel periksa_lab.");
+                }
+            } catch (Exception e) {
+                System.out.println("Notif cari tindakan saat getData: " + e);
+            } finally {
+                // Ensure ResultSet and PreparedStatement are closed
+                try { if (rsCariTindakan != null) rsCariTindakan.close(); } catch (SQLException e) { e.printStackTrace(); }
+                try { if (psCariTindakan != null) psCariTindakan.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+
+            // Populate the form fields
             TNoRw.setText(norawat);
             TNoRM.setText(norm);
             TPasien.setText(nampasien);
+            // We need to fetch patient details again to get the payment type (Penjab)
+            isPasien(); // This will fill Penjab.getText()
             Valid.SetTgl(Tanggal,tglperiksa);
             CmbJam.setSelectedItem(jamperiksa.substring(0,2));
             CmbMenit.setSelectedItem(jamperiksa.substring(3,5));
@@ -1833,15 +1895,17 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             Glukosa.setText(glukosa);
             Kesan.setText(kesan);
             Saran.setText(saran);
-            TCari.setText(norawat);
+            TCari.setText(norawat); // Set search field to the current No. Rawat
 
-            tglSimpan = tglperiksa; // Simpan tanggal asli
-            jamSimpan = jamperiksa; // Simpan jam asli
-            
-            // Nonaktifkan input tanggal & jam jika data lama ditampilkan
+            tglSimpan = tglperiksa; // Store original date for update/delete
+            jamSimpan = jamperiksa; // Store original time for update/delete
+
+            // Disable date & time input when viewing existing data
             Tanggal.setEnabled(false);
             ChkJln.setSelected(false);
-            ChkJlnActionPerformed(null); // Update status enabled ComboBox jam
+            ChkJlnActionPerformed(null); // Update enabled status of time ComboBoxes
+            
+            Spesimen.requestFocusInWindow();
         }
     }
     
@@ -1877,13 +1941,23 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
 
     // Method kosongkan form, perlu diperbaiki agar mengaktifkan input tgl & jam
     public void emptTeks() {
-        // ... (Kode kosongkan textfield seperti sebelumnya) ...
+        // Clear patient info (usually set by setNoRm, but good practice)
+        // TNoRw.setText(""); // Keep No. Rawat
+        // TNoRM.setText("");
+        // TPasien.setText("");
+        // Penjab.setText(""); // Keep Penjab from isPasien()
+
+        // Clear doctors and petugas (except PJ Lab if set automatically)
         KodePerujuk.setText("");
         NmPerujuk.setText("");
-        KodePj.setText("");
-        NmDokterPj.setText("");
+        // Keep KodePj and NmDokterPj if they were set automatically by setNoRm
+        // If not set automatically, uncomment these:
+        // KodePj.setText("");
+        // NmDokterPj.setText("");
         KdPtg.setText("");
         NmPtg.setText("");
+
+        // Clear clinical result fields
         Spesimen.setText("");
         Volume.setText("");
         Warna.setText("");
@@ -1903,17 +1977,23 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
         Glukosa.setText("");
         Kesan.setText("");
         Saran.setText("");
+
+        // Clear search field in the data tab
         TCari.setText("");
-        
+
+        // Reset helper variables
+        kdTindakanHapus = "";
         tglSimpan = "";
         jamSimpan = "";
-        
-        // Aktifkan kembali input tanggal & jam
+
+        // Re-enable date & time input and set to current time
+        Tanggal.setDate(new Date()); // Set date to today
         Tanggal.setEnabled(true);
-        ChkJln.setSelected(true); // Default ke jam otomatis
-        ChkJlnActionPerformed(null); // Update status enabled ComboBox jam
-        
-        KodePj.requestFocus();
+        ChkJln.setSelected(true); // Default to automatic time
+        ChkJlnActionPerformed(null); // Update enabled status of time ComboBoxes
+
+        // Set focus to the first input field
+        Spesimen.requestFocusInWindow();
     }
 
     public void setNoRm(String norwt, String posisi) {
@@ -2322,6 +2402,18 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             namakamar=Sequel.cariIsi("select poliklinik.nm_poli from poliklinik inner join reg_periksa on poliklinik.kd_poli=reg_periksa.kd_poli "+
                     "where reg_periksa.no_rawat=?",TNoRw.getText());
             kelas="Rawat Jalan";
+        }
+    }
+    
+    private String getKodePerawatanOtomatis() {
+        String kodePJ = Penjab.getText().trim();
+        
+        if (kodePJ.equalsIgnoreCase("BPJ")) {
+            return "AP-(BPJS)"; // Ganti jika kode BPJS Anda berbeda
+        } else if (kodePJ.equalsIgnoreCase("UMU")) {
+            return "AP"; // Ganti jika kode Umum Anda berbeda
+        } else {
+            return "AP-(ASR)"; // Ganti jika kode Asuransi Anda berbeda
         }
     }
 }
