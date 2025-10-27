@@ -223,6 +223,69 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         initRawatJalan();
+        
+        java.awt.Color darkTextColor = java.awt.Color.BLACK;
+        int desiredFontSize = 14;
+        
+        java.awt.Font currentFont = TKeluhan.getFont();
+        java.awt.Font newFont = currentFont.deriveFont((float)desiredFontSize);
+        
+        TKeluhan.setForeground(darkTextColor);
+        TKeluhan.setFont(newFont);
+
+        TPemeriksaan.setForeground(darkTextColor);
+        TPemeriksaan.setFont(newFont);
+
+        TPenilaian.setForeground(darkTextColor);
+        TPenilaian.setFont(newFont);
+
+        TindakLanjut.setForeground(darkTextColor);
+        TindakLanjut.setFont(newFont);
+
+        TInstruksi.setForeground(darkTextColor);
+        TInstruksi.setFont(newFont);
+
+        TEvaluasi.setForeground(darkTextColor);
+        TEvaluasi.setFont(newFont);
+
+        TSuhu.setForeground(darkTextColor);
+        TSuhu.setFont(newFont);
+
+        TTensi.setForeground(darkTextColor);
+        TTensi.setFont(newFont);
+
+        TTinggi.setForeground(darkTextColor);
+        TTinggi.setFont(newFont);
+
+        TRespirasi.setForeground(darkTextColor);
+        TRespirasi.setFont(newFont);
+
+        TBerat.setForeground(darkTextColor);
+        TBerat.setFont(newFont);
+
+        TNadi.setForeground(darkTextColor);
+        TNadi.setFont(newFont);
+
+        TGCS.setForeground(darkTextColor);
+        TGCS.setFont(newFont);
+
+        TAlergi.setForeground(darkTextColor);
+        TAlergi.setFont(newFont);
+
+        KdPeg.setForeground(darkTextColor);
+        KdPeg.setFont(newFont);
+
+        TPegawai.setForeground(darkTextColor);
+        TPegawai.setFont(newFont);
+
+        Jabatan.setForeground(darkTextColor);
+        Jabatan.setFont(newFont);
+
+        SpO2.setForeground(darkTextColor);
+        SpO2.setFont(newFont);
+
+        LingkarPerut.setForeground(darkTextColor);
+        LingkarPerut.setFont(newFont);
 
         this.setLocation(8, 1);
         setSize(885, 674);

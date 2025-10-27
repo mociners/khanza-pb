@@ -196,8 +196,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     private sekuel Sequel=new sekuel();
     private validasi Valid=new validasi();
     private Connection koneksi=koneksiDB.condb();
-    private PreparedStatement psotomatis,psotomatis2,pskasir,pscaripiutang,psrekening;
-    private ResultSet rskasir,rsrekening;
+    private PreparedStatement psotomatis,psotomatis2,pskasir,pscaripiutang,psrekening,ps;
+    private ResultSet rskasir,rsrekening,rs;
     private String aktifkanparsial="no",kamar_inap_kasir_ralan=Sequel.cariIsi("select set_jam_minimal.kamar_inap_kasir_ralan from set_jam_minimal"),caripenjab="",filter="no",bangsal=Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi limit 1"),nonota="",
             sqlpsotomatis2="insert into rawat_jl_dr values (?,?,?,?,?,?,?,?,?,?,?,'Belum')",
             sqlpsotomatis2petugas="insert into rawat_jl_pr values (?,?,?,?,?,?,?,?,?,?,?,'Belum')",
@@ -6303,7 +6303,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         panelBiasa2.setLayout(null);
 
         TglSakit1.setForeground(new java.awt.Color(50, 70, 50));
-        TglSakit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-10-2025" }));
+        TglSakit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         TglSakit1.setDisplayFormat("dd-MM-yyyy");
         TglSakit1.setName("TglSakit1"); // NOI18N
         TglSakit1.setOpaque(false);
@@ -6350,7 +6350,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel32.setBounds(176, 10, 20, 23);
 
         TglSakit2.setForeground(new java.awt.Color(50, 70, 50));
-        TglSakit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-10-2025" }));
+        TglSakit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         TglSakit2.setDisplayFormat("dd-MM-yyyy");
         TglSakit2.setName("TglSakit2"); // NOI18N
         TglSakit2.setOpaque(false);
@@ -6720,7 +6720,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel15.setPreferredSize(new java.awt.Dimension(70, 23));
         panelGlass8.add(jLabel15);
 
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-10-2025" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -6733,7 +6733,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel17.setPreferredSize(new java.awt.Dimension(23, 23));
         panelGlass8.add(jLabel17);
 
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-10-2025" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -14771,7 +14771,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     private javax.swing.JMenu MnRMHemodialisa;
     private javax.swing.JMenuItem MnPenilaianPreInduksi,MnHasilPemeriksaanUSGUrologi,MnHasilPemeriksaanUSGGynecologi,MnPaketMCU,MnJawabLembarKonsul,MnPemantauanIntradialitik,MnHasilPemeriksaanEcho,MnPenilaianPasienImunitasRendah,
             MnCatatanKeseimbanganCairan,MnCatatanObservasiCHBP,MnPenilaianAwalKeperawatanHemodialisa,MnLayananKedokteranFisikRehab,MnPenilaianAwalMedisRalanUrologi,MnCetakSuratSehatMata,MnCetakSuratSehatRohani,MnCetakSuratSehatJiwa;
-    private widget.Button BtnReviewSEP;
+    private widget.Button BtnReviewSEP, BtnSurkon;
     private widget.Tanggal DTPTgl;
     private widget.ComboBox cmbJam,cmbMnt,cmbDtk;  
     private widget.Label jLabel23,antrianpasien,digit,Nosep;
@@ -15692,6 +15692,21 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     
     private void initKasirRalan() {
         
+        BtnSurkon = new widget.Button();
+        BtnSurkon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/mail_receive.png"))); 
+        BtnSurkon.setMnemonic('K');
+        BtnSurkon.setText("SURKON");
+        BtnSurkon.setToolTipText("");
+        BtnSurkon.setGlassColor(new java.awt.Color(255, 153, 153));
+        BtnSurkon.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnSurkon.setName("BtnSurkon"); // NOI18N
+        BtnSurkon.setPreferredSize(new java.awt.Dimension(100, 26));
+        BtnSurkon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSurkonActionPerformed(evt);
+            }
+        });
+        
         BtnReviewSEP = new widget.Button();
         BtnReviewSEP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/tasksgroup.png"))); 
         BtnReviewSEP.setMnemonic('K');
@@ -16115,8 +16130,8 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
         
         MnPenilaianLain.add(MnPenilaianPasienImunitasRendah);
         
-        
-        panelGlass7.add(BtnReviewSEP);       
+        panelGlass7.add(BtnSurkon);  
+        panelGlass7.add(BtnReviewSEP);
     
     }
     
@@ -16141,6 +16156,49 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 this.setCursor(Cursor.getDefaultCursor());
             }
         }
+    }
+    
+    private void BtnSurkonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        if (tabModekasir.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
+            TCari.requestFocus();
+        } else if (TNoRwCari.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
+            tbKasirRalan.requestFocus();
+        } else {
+            if (tbKasirRalan.getSelectedRow() != -1) {
+                try {
+                    ps = koneksi.prepareStatement("select no_sep,no_kartu,tanggal_lahir,jkel,nmdiagnosaawal from bridging_sep where no_rawat=? and jnspelayanan='1' order by tglsep desc limit 1");
+                    try {
+                        ps.setString(1, TNoRwCari.getText());
+                        rs = ps.executeQuery();
+                        if (rs.next()) {
+                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                            BPJSSuratKontrol form = new BPJSSuratKontrol(null, false);
+                            form.setNoRm(TNoRwCari.getText(), rs.getString("no_sep"), rs.getString("no_kartu"), TNoRMCari.getText(), TPasienCari.getText(), rs.getString("tanggal_lahir"), rs.getString("jkel"), rs.getString("nmdiagnosaawal"));
+                            form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                            form.setLocationRelativeTo(internalFrame1);
+                            form.setVisible(true);
+                            this.setCursor(Cursor.getDefaultCursor());
+                        } else {
+                            JOptionPane.showMessageDialog(null, "SEP Rawat Inap untuk pasien ini tidak ditemukan, silahkan hubungi bagian terkait..!!");
+                            TCari.requestFocus();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Notif : " + e);
+                    } finally {
+                        if (rs != null) {
+                            rs.close();
+                        }
+                        if (ps != null) {
+                            ps.close();
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                }
+            }
+        }   
     }
     
     private void MnPaketMCUBtnPrintActionPerformed(java.awt.event.ActionEvent evt) {                                                   
