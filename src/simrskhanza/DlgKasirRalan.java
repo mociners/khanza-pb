@@ -14171,11 +14171,6 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
             tbKasirRalan.requestFocus();
         }else{
             if(tbKasirRalan.getSelectedRow()>-1){
-                Object sepObj = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 6);
-                if (sepObj == null || sepObj.toString().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No. SEP kosong, berkas tidak bisa diterima!");
-                    return;
-                }
                 Sequel.menyimpan("mutasi_berkas","'"+TNoRw.getText()+"','Sudah Diterima',now(),now(),'0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'","status='Sudah Diterima',diterima=now()","no_rawat='"+TNoRw.getText()+"'");
                 Valid.editTable(tabModekasir,"reg_periksa","no_rawat",TNoRw,"stts='Berkas Diterima'");
                 if(tbKasirRalan.getSelectedRow()>-1){
