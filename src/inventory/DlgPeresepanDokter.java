@@ -1138,28 +1138,28 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
 
     private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariActionPerformed
         if (TabRawat.getSelectedIndex() == 0) {
-            tampilobat();
-        } else if (TabRawat.getSelectedIndex() == 1) {
-            if (tbObatResepRacikan.getRowCount() != 0) {
-                if (tbObatResepRacikan.getSelectedRow() != -1) {
-                    if (tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 0).toString().equals("")
-                            || tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 1).toString().equals("")
-                            || tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 2).toString().equals("")
-                            || tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 3).toString().equals("")
-                            || tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 4).toString().equals("")
-                            || tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 5).toString().equals("")
-                            || tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 6).toString().equals("")) {
-                        JOptionPane.showMessageDialog(null, "Silahkan lengkapi data racikan..!!");
-                    } else {
-                        tampildetailracikanresep();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Silahkan pilih racikan..!!");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Silahkan masukkan racikan..!!");
-            }
+        tampilobat();
+    } else if (TabRawat.getSelectedIndex() == 1) {
+        if (tbObatResepRacikan.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Silahkan masukkan racikan terlebih dahulu..!!");
+            return;
         }
+        
+        if (tbObatResepRacikan.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih baris racikan yang ingin diisi..!!");
+            return;
+        }
+
+        // Cek apakah "Nama Racikan" (kolom 1) sudah diisi
+        Object namaRacik = tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 1);
+        if (namaRacik == null || namaRacik.toString().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Silahkan isi Nama Racikan (kolom 2) terlebih dahulu..!!");
+            tbObatResepRacikan.requestFocus();
+        } else {
+            // Jika Nama Racikan sudah ada, jalankan pencarian.
+            tampildetailracikanresep();
+        }
+    }
 }//GEN-LAST:event_BtnCariActionPerformed
 
     private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnCariKeyPressed
@@ -2220,6 +2220,25 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             JOptionPane.showMessageDialog(null,"Silahkan pilih salah satu racikan di tabel tengah!");
             return; 
         }
+        try {
+            for (int j = tabModeDetailResepRacikan.getRowCount() - 1; j >= 0; j--) {
+                if (tabModeDetailResepRacikan.getValueAt(j, 0).toString().equals(noRacikYangSedangDipilih)) {
+                    // Kolom 13 adalah "Jml"
+                    double jml = 0;
+                    try {
+                        jml = Double.parseDouble(tabModeDetailResepRacikan.getValueAt(j, 13).toString());
+                    } catch (Exception e) {
+                        jml = 0;
+                    }
+
+                    if (jml <= 0) {
+                        tabModeDetailResepRacikan.removeRow(j);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error membersihkan detail racikan: " + e);
+        }
 
         try {
              if (kenaikan > 0) {
@@ -2266,7 +2285,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                 break;
                             }
                         }
-                    
+
                         if(!sudahAda) { 
                             tabModeDetailResepRacikan.addRow(new Object[]{
                                 noRacikYangSedangDipilih,
@@ -2328,9 +2347,9 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     psresep.setString(4, "%" + TCari.getText().trim() + "%");
                     psresep.setString(5, "%" + TCari.getText().trim() + "%");
                     rsobat = psresep.executeQuery();
-                    
+
                     String pilihanHarga = Jeniskelas.getSelectedItem().toString();
-                    
+
                     while (rsobat.next()) {
                         boolean sudahAda = false;
                         for(int rowDetail = 0; rowDetail < tabModeDetailResepRacikan.getRowCount(); rowDetail++) {
@@ -2340,7 +2359,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                 break;
                             }
                         }
-                    
+
                         if(!sudahAda) { 
                             double harga_jual = 0;
                             if (pilihanHarga.equals("Karyawan")) harga_jual = rsobat.getDouble("karyawan");
@@ -2352,7 +2371,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             else if (pilihanHarga.equals("VIP")) harga_jual = rsobat.getDouble("vip");
                             else if (pilihanHarga.equals("VVIP")) harga_jual = rsobat.getDouble("vvip");
                             else harga_jual = rsobat.getDouble("ralan");
-                        
+
                             tabModeDetailResepRacikan.addRow(new Object[]{
                                 noRacikYangSedangDipilih,
                                 rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
