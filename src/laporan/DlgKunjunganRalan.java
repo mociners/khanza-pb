@@ -1515,7 +1515,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     tabMode.addRow(new Object[]{
                         i,setlama,setbaru,rs.getString("nm_pasien"),umurlk,umurpr,rs.getString("almt_pj"),kddiangnosa,diagnosa,rs.getString("nm_dokter"),rs.getString("no_tlp")
                     });                
-                    
+                    i++;
                 }
                 if(i>=2){
                     tabMode.addRow(new Object[]{
