@@ -1345,21 +1345,33 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             Valid.textKosong(KodePerujuk,"Dokter Perujuk");
         }else if(KdPtg.getText().trim().equals("")||NmPtg.getText().trim().equals("")){
             Valid.textKosong(KdPtg,"Petugas");
+        }else if(tglSimpan.equals("") || jamSimpan.equals("")){
+             JOptionPane.showMessageDialog(null,"Silahkan pilih dulu data yang akan diganti dari tabel Data Penilaian.");
+             tbDataPenilaian.requestFocus();
         }else{
-            if(JOptionPane.showConfirmDialog(null, "Yakin anda mau merubah data ini?","Konfirmasi",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
-                Sequel.queryu2("UPDATE pemeriksaan_cairan_tubuh_pk SET tgl_periksa=?, jam=?, kd_dokter_pj=?, kd_dokter_perujuk=?, nip=?, " +
-                    "spesimen=?, makro_volume=?, makro_warna=?, makro_kejernihan=?, makro_berat_jenis=?, makro_ph=?, makro_bau=?, makro_bekuan=?, " +
-                    "mikro_jml_leukosit=?, mikro_sel_pnm=?, mikro_sel_mn=?, mikro_jml_eritrosit=?, kimia_rivalta=?, kimia_nonne=?, kimia_pandy=?, " +
-                    "kimia_protein=?, kimia_glukosa=?, kesan=?, saran=? WHERE no_rawat=? AND tgl_periksa=? AND jam=?", 26, new String[]{
-                    Valid.SetTgl(Tanggal.getSelectedItem()+""), CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),
-                    KodePj.getText(), KodePerujuk.getText(), KdPtg.getText(), Spesimen.getText(), Volume.getText(), Warna.getText(), Kejernihan.getText(),
-                    BeratJenis.getText(), Ph.getText(), Bau.getText(), Bekuan.getText(), JmlLeukosit.getText(), SelPNM.getText(), SelMN.getText(),
-                    JmlEritrosit.getText(), TestRivalta.getText(), TestNonne.getText(), TestPandy.getText(), Protein.getText(), Glukosa.getText(),
-                    Kesan.getText(), Saran.getText(),
-                    TNoRw.getText(), tglSimpan, jamSimpan
-                });
-                JOptionPane.showMessageDialog(null,"Proses ganti selesai...");
-                emptTeks();
+            if(JOptionPane.showConfirmDialog(null, "Yakin anda mau merubah data ini? (Hanya data klinis, tagihan & jurnal tidak akan berubah)","Konfirmasi Ganti",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+                try {
+                    Sequel.queryu2("UPDATE pemeriksaan_cairan_tubuh_pk SET " +
+                        "spesimen=?, makro_volume=?, makro_warna=?, makro_kejernihan=?, makro_berat_jenis=?, makro_ph=?, makro_bau=?, makro_bekuan=?, " +
+                        "mikro_jml_leukosit=?, mikro_sel_pnm=?, mikro_sel_mn=?, mikro_jml_eritrosit=?, kimia_rivalta=?, kimia_nonne=?, kimia_pandy=?, " +
+                        "kimia_protein=?, kimia_glukosa=?, kesan=?, saran=? " +
+                        "WHERE no_rawat=? AND tgl_periksa=? AND jam=?", 22, new String[]{
+                        // 19 field yang di-SET (diubah)
+                        Spesimen.getText(), Volume.getText(), Warna.getText(), Kejernihan.getText(),
+                        BeratJenis.getText(), Ph.getText(), Bau.getText(), Bekuan.getText(), 
+                        JmlLeukosit.getText(), SelPNM.getText(), SelMN.getText(),
+                        JmlEritrosit.getText(), TestRivalta.getText(), TestNonne.getText(), TestPandy.getText(), 
+                        Protein.getText(), Glukosa.getText(),
+                        Kesan.getText(), Saran.getText(),
+                        TNoRw.getText(), tglSimpan, jamSimpan
+                    });
+                    
+                    JOptionPane.showMessageDialog(null,"Proses ganti data klinis selesai...");
+                    emptTeks();
+                    tampilData();
+                } catch (Exception e) {
+                     JOptionPane.showMessageDialog(null,"Terjadi kesalahan saat mengganti data klinis: " + e.getMessage());
+                }
             }
         }
     }                                        
@@ -1903,7 +1915,11 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             // Disable date & time input when viewing existing data
             Tanggal.setEnabled(false);
             ChkJln.setSelected(false);
-            ChkJlnActionPerformed(null); // Update enabled status of time ComboBoxes
+            ChkJlnActionPerformed(null);
+            
+            btnDokterPj.setEnabled(false);
+            btnDokter.setEnabled(false);
+            btnPetugas.setEnabled(false);
             
             Spesimen.requestFocusInWindow();
         }
@@ -1941,23 +1957,11 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
 
     // Method kosongkan form, perlu diperbaiki agar mengaktifkan input tgl & jam
     public void emptTeks() {
-        // Clear patient info (usually set by setNoRm, but good practice)
-        // TNoRw.setText(""); // Keep No. Rawat
-        // TNoRM.setText("");
-        // TPasien.setText("");
-        // Penjab.setText(""); // Keep Penjab from isPasien()
-
-        // Clear doctors and petugas (except PJ Lab if set automatically)
         KodePerujuk.setText("");
         NmPerujuk.setText("");
-        // Keep KodePj and NmDokterPj if they were set automatically by setNoRm
-        // If not set automatically, uncomment these:
-        // KodePj.setText("");
-        // NmDokterPj.setText("");
         KdPtg.setText("");
         NmPtg.setText("");
 
-        // Clear clinical result fields
         Spesimen.setText("");
         Volume.setText("");
         Warna.setText("");
@@ -1978,21 +1982,21 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
         Kesan.setText("");
         Saran.setText("");
 
-        // Clear search field in the data tab
         TCari.setText("");
 
-        // Reset helper variables
         kdTindakanHapus = "";
         tglSimpan = "";
         jamSimpan = "";
 
-        // Re-enable date & time input and set to current time
-        Tanggal.setDate(new Date()); // Set date to today
+        Tanggal.setDate(new Date());
         Tanggal.setEnabled(true);
-        ChkJln.setSelected(true); // Default to automatic time
-        ChkJlnActionPerformed(null); // Update enabled status of time ComboBoxes
+        ChkJln.setSelected(true);
+        ChkJlnActionPerformed(null);
 
-        // Set focus to the first input field
+        btnDokterPj.setEnabled(true);
+        btnDokter.setEnabled(true);
+        isCek();
+        
         Spesimen.requestFocusInWindow();
     }
 
@@ -2073,11 +2077,11 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
             NmPtg.setText("");
         }
         BtnSimpan.setEnabled(akses.getperiksa_lab());
+        
         BtnGanti.setEnabled(akses.getperiksa_lab());
+        
         BtnHapus.setEnabled(akses.getperiksa_lab());
         btnPetugas.setEnabled(akses.getubah_petugas_lab_pk());
-        BtnGanti.setEnabled(false);
-        // Anda mungkin perlu menambahkan hak akses baru yang lebih spesifik untuk form ini
     }
 
     private void isPasien() {

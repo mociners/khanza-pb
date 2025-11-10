@@ -1336,7 +1336,7 @@ public class DlgPeriksaMDT extends javax.swing.JDialog {
         }
     }                                         
 
-    private void BtnGantiActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void BtnGantiActionPerformed(java.awt.event.ActionEvent evt) {
         if(TNoRw.getText().trim().equals("")){
             Valid.textKosong(TNoRw,"Pasien");
         }else if(KodePj.getText().trim().equals("")||NmDokterPj.getText().trim().equals("")){
@@ -1345,23 +1345,29 @@ public class DlgPeriksaMDT extends javax.swing.JDialog {
             Valid.textKosong(KodePerujuk,"Dokter Perujuk");
         }else if(KdPtg.getText().trim().equals("")||NmPtg.getText().trim().equals("")){
             Valid.textKosong(KdPtg,"Petugas");
+        }else if(tglSimpan.equals("") || jamSimpan.equals("")){
+             JOptionPane.showMessageDialog(null,"Silahkan pilih dulu data yang akan diganti dari tabel Data Pemeriksaan.");
+             tbDataPenilaian.requestFocus();
         }else{
-            if(JOptionPane.showConfirmDialog(null, "Yakin anda mau merubah data ini?","Konfirmasi",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+            if(JOptionPane.showConfirmDialog(null, "Yakin anda mau merubah data ini? (Tagihan & Jurnal tidak akan berubah)","Konfirmasi Ganti",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
                 try {
-                    Sequel.queryu2("UPDATE pemeriksaan_mdt SET tgl_periksa=?, jam=?, kd_dokter_pj=?, kd_dokter_perujuk=?, nip=?, " +
+                    Sequel.queryu2("UPDATE pemeriksaan_mdt SET " +
                         "hb=?, wbc=?, plt=?, hct=?, lym_mxd_gra=?, mcv=?, mch=?, mchc=?, rdw_sd=?, rdw_cv=?, rbc=?, " +
                         "kesan_eritrosit=?, kesan_leukosit=?, kesan_trombosit=?, kesan=?, saran=? "+
-                        "WHERE no_rawat=? AND tgl_periksa=? AND jam=?", 24, new String[]{ 
-                        Valid.SetTgl(Tanggal.getSelectedItem()+""), CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),
-                        KodePj.getText(), KodePerujuk.getText(), KdPtg.getText(), THb.getText(), TWbc.getText(), TPlt.getText(), THct.getText(),
-                        TLymMxdGra.getText(), TMcv.getText(), TMch.getText(), TMchc.getText(), TRdwSd.getText(), TRdwCv.getText(), TRbc.getText(),
-                        TKesanEritrosit.getText(), TKesanLeukosit.getText(), TKesanTrombosit.getText(), TKesan.getText(), TSaran.getText(),
+                        "WHERE no_rawat=? AND tgl_periksa=? AND jam=?", 19, new String[]{ 
+                        THb.getText(), TWbc.getText(), TPlt.getText(), THct.getText(),
+                        TLymMxdGra.getText(), TMcv.getText(), TMch.getText(), TMchc.getText(),
+                        TRdwSd.getText(), TRdwCv.getText(), TRbc.getText(),
+                        TKesanEritrosit.getText(), TKesanLeukosit.getText(), TKesanTrombosit.getText(), 
+                        TKesan.getText(), TSaran.getText(),
                         TNoRw.getText(), tglSimpan, jamSimpan
                     });
-                    JOptionPane.showMessageDialog(null,"Proses ganti selesai...");
+                    
+                    JOptionPane.showMessageDialog(null,"Proses ganti data klinis selesai...");
                     emptTeks();
+                    tampilData();
                 } catch (Exception e) {
-                     JOptionPane.showMessageDialog(null,"Terjadi kesalahan saat mengganti: " + e.getMessage());
+                     JOptionPane.showMessageDialog(null,"Terjadi kesalahan saat mengganti data klinis: " + e.getMessage());
                 }
             }
         }
@@ -1982,6 +1988,10 @@ public class DlgPeriksaMDT extends javax.swing.JDialog {
             Tanggal.setEnabled(false);
             ChkJln.setSelected(false);
             ChkJlnActionPerformed(null);
+            
+            btnDokterPj.setEnabled(false);
+            btnDokter.setEnabled(false);
+            btnPetugas.setEnabled(false);
         }
     }
     
@@ -2007,6 +2017,10 @@ public class DlgPeriksaMDT extends javax.swing.JDialog {
         Tanggal.setEnabled(true);
         ChkJln.setSelected(true);
         ChkJlnActionPerformed(null);
+        
+        btnDokterPj.setEnabled(true);
+        btnDokter.setEnabled(true);
+        isCek();
         
         // Atur Dokter PJ Default lagi saat form dikosongkan
         try {
@@ -2064,8 +2078,6 @@ public class DlgPeriksaMDT extends javax.swing.JDialog {
         BtnHapus.setEnabled(akses.getperiksa_lab());  // Ganti hak akses jika perlu
         BtnCetak.setEnabled(akses.getperiksa_lab());  // Ganti hak akses jika perlu
         btnPetugas.setEnabled(akses.getubah_petugas_lab_pk()); // Ganti hak akses jika perlu
-        
-        BtnGanti.setEnabled(false); // <-- TAMBAHKAN BARIS INI
     }
 
     private void isRawat(){
