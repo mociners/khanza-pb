@@ -18709,13 +18709,13 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     akses.setform("DlgKamarInap");
-                                    DlgPeriksaMDT periksalab = new DlgPeriksaMDT(null, false);
-                                    periksalab.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                                    periksalab.setLocationRelativeTo(internalFrame1);
-                                    periksalab.emptTeks();
-                                    periksalab.setNoRm(rs2.getString("no_rawat2"), "Ranap");
-                                    periksalab.isCek();
-                                    periksalab.setVisible(true);
+                                    DlgPeriksaMDT periksalab1 = new DlgPeriksaMDT(null, false);
+                                    periksalab1.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                                    periksalab1.setLocationRelativeTo(internalFrame1);
+                                    periksalab1.emptTeks();
+                                    periksalab1.setNoRm(rs2.getString("no_rawat2"), "Ranap");
+                                    periksalab1.isCek();
+                                    periksalab1.setVisible(true);
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu pasien...!!!");
                                     tbKamIn.requestFocus();
@@ -18736,7 +18736,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     }
                 } else {
                     akses.setform("DlgKamarInap");
-                    DlgPeriksaCairanTubuh periksalab = new DlgPeriksaCairanTubuh(null, false);
+                    DlgPeriksaMDT periksalab = new DlgPeriksaMDT(null, false);
                     periksalab.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                     periksalab.setLocationRelativeTo(internalFrame1);
                     periksalab.emptTeks();

@@ -691,7 +691,7 @@
 			</textField>
 			<image>
 				<reportElement x="390" y="39" width="62" height="63" uuid="0478a97c-0a3f-46bc-80ac-184b264ce738"/>
-				<imageExpression><![CDATA["picture/ttdRisma.jpg"]]></imageExpression>
+				<imageExpression><![CDATA["picture/ttdRisma.png"]]></imageExpression>
 			</image>
 		</band>
 	</summary>

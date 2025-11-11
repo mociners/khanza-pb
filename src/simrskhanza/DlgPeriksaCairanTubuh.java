@@ -2384,23 +2384,31 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
     
     private void isRawat(){
         if(status.equals("Ranap")){
-            norawatibu=Sequel.cariIsi("select ranap_gabung.no_rawat from ranap_gabung where ranap_gabung.no_rawat2=?",TNoRw.getText());
+            String norawatibu=Sequel.cariIsi("select ranap_gabung.no_rawat from ranap_gabung where ranap_gabung.no_rawat2=?",TNoRw.getText());
+            
             if(!norawatibu.equals("")){
-                kamar=Sequel.cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk desc limit 1",norawatibu);
+                kamar=Sequel.cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk,kamar_inap.jam_masuk desc limit 1",norawatibu);
+                
                 kelas=Sequel.cariIsi(
                     "select kamar.kelas from kamar inner join kamar_inap "+
-                    "on kamar.kd_kamar=kamar_inap.kd_kamar where no_rawat=? "+
-                    "and kamar_inap.stts_pulang='-' order by STR_TO_DATE(concat(kamar_inap.tgl_masuk,' ',kamar_inap.jam_masuk),'%Y-%m-%d %H:%i:%s') desc limit 1",norawatibu);
+                    "on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? "+
+                    "order by kamar_inap.tgl_masuk,kamar_inap.jam_masuk desc limit 1",norawatibu);
+                    
+                namakamar=kamar+", "+Sequel.cariIsi("select bangsal.nm_bangsal from bangsal inner join kamar on bangsal.kd_bangsal=kamar.kd_bangsal "+
+                    " where kamar.kd_kamar=? ",kamar);
+                kamar="Kamar";
             }else{
-                kamar=Sequel.cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk desc limit 1",TNoRw.getText());
+                kamar=Sequel.cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk,kamar_inap.jam_masuk desc limit 1",TNoRw.getText());
+                
                 kelas=Sequel.cariIsi(
                     "select kamar.kelas from kamar inner join kamar_inap "+
-                    "on kamar.kd_kamar=kamar_inap.kd_kamar where no_rawat=? "+
-                    "and kamar_inap.stts_pulang='-' order by STR_TO_DATE(concat(kamar_inap.tgl_masuk,' ',kamar_inap.jam_masuk),'%Y-%m-%d %H:%i:%s') desc limit 1",TNoRw.getText());
-            }  
-            namakamar=kamar+", "+Sequel.cariIsi("select bangsal.nm_bangsal from bangsal inner join kamar on bangsal.kd_bangsal=kamar.kd_bangsal "+
-                    " where kamar.kd_kamar=? ",kamar);            
-            kamar="Kamar"; 
+                    "on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? "+
+                    "order by kamar_inap.tgl_masuk,kamar_inap.jam_masuk desc limit 1",TNoRw.getText());
+                    
+                namakamar=kamar+", "+Sequel.cariIsi("select bangsal.nm_bangsal from bangsal inner join kamar on bangsal.kd_bangsal=kamar.kd_bangsal "+
+                    " where kamar.kd_kamar=? ",kamar);
+                kamar="Kamar";
+            }
         }else if(status.equals("Ralan")){
             kamar="Poli";
             namakamar=Sequel.cariIsi("select poliklinik.nm_poli from poliklinik inner join reg_periksa on poliklinik.kd_poli=reg_periksa.kd_poli "+
@@ -2410,14 +2418,49 @@ public class DlgPeriksaCairanTubuh extends javax.swing.JDialog {
     }
     
     private String getKodePerawatanOtomatis() {
-        String kodePJ = Penjab.getText().trim();
+        String kd_pj = Penjab.getText().trim();
         
-        if (kodePJ.equalsIgnoreCase("BPJ")) {
-            return "AP-(BPJS)"; // Ganti jika kode BPJS Anda berbeda
-        } else if (kodePJ.equalsIgnoreCase("UMU")) {
-            return "AP"; // Ganti jika kode Umum Anda berbeda
-        } else {
-            return "AP-(ASR)"; // Ganti jika kode Asuransi Anda berbeda
+        if (status.equals("Ranap")) {
+            String kodeKelasPrefix = "";
+            
+            if (kelas.equalsIgnoreCase("Kelas 1")) {
+                kodeKelasPrefix = "AP-K1";
+            } else if (kelas.equalsIgnoreCase("Kelas 2")) {
+                kodeKelasPrefix = "AP-K2";
+            } else if (kelas.equalsIgnoreCase("Kelas 3")) {
+                kodeKelasPrefix = "AP-K3";
+            } else if (kelas.equalsIgnoreCase("Kelas VIP")) {
+                kodeKelasPrefix = "AP-V";
+            } else if (kelas.equalsIgnoreCase("Kelas VVIP")) {
+                kodeKelasPrefix = "AP-VV"; 
+            } else if (kelas.equalsIgnoreCase("Kelas Utama")) {
+                kodeKelasPrefix = "AP-SV";
+            } else {
+                if (kd_pj.equalsIgnoreCase("UMU")) {
+                    return "AP";
+                } else if (kd_pj.equalsIgnoreCase("BPJ")) {
+                    return "AP-(BPJS)";
+                } else {
+                    return "AP-(ASR)";
+                }
+            }
+            
+            if (kd_pj.equalsIgnoreCase("UMU")) {
+                return kodeKelasPrefix;
+            } else if (kd_pj.equalsIgnoreCase("BPJ")) {
+                return kodeKelasPrefix + "(BPJS)";
+            } else {
+                return kodeKelasPrefix + "(ASR)";
+            }
+
+        } else {            
+            if (kd_pj.equalsIgnoreCase("UMU")) {
+                return "AP";
+            } else if (kd_pj.equalsIgnoreCase("BPJ")) {
+                return "AP-(BPJS)";
+            } else {
+                return "AP-(ASR)";
+            }
         }
     }
 }
