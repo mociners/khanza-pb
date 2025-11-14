@@ -238,6 +238,7 @@ public final class DlgIGD extends javax.swing.JDialog {
     private char[] UNIT_1_360 = {ESC,40, 'U', '1', '0'};
     // move vertical print position
     private char[] VERTICAL_PRINT_POSITION = {ESC, 'J', '1'};
+    private String kd_pj = "";
 
     /** Creates new form DlgReg
      * @param parent
@@ -921,6 +922,7 @@ public final class DlgIGD extends javax.swing.JDialog {
         LCount = new widget.Label();
         BtnKeluar = new widget.Button();
         BtnTrf = new widget.Button();
+        BtnTrf1 = new widget.Button();
         panelGlass7 = new widget.panelisi();
         jLabel15 = new widget.Label();
         DTPCari1 = new widget.Tanggal();
@@ -4773,13 +4775,13 @@ public final class DlgIGD extends javax.swing.JDialog {
 
         jLabel10.setText("Record :");
         jLabel10.setName("jLabel10"); // NOI18N
-        jLabel10.setPreferredSize(new java.awt.Dimension(70, 30));
+        jLabel10.setPreferredSize(new java.awt.Dimension(45, 30));
         panelGlass6.add(jLabel10);
 
         LCount.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         LCount.setText("0");
         LCount.setName("LCount"); // NOI18N
-        LCount.setPreferredSize(new java.awt.Dimension(72, 30));
+        LCount.setPreferredSize(new java.awt.Dimension(25, 30));
         panelGlass6.add(LCount);
 
         BtnKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/exit.png"))); // NOI18N
@@ -4817,6 +4819,24 @@ public final class DlgIGD extends javax.swing.JDialog {
             }
         });
         panelGlass6.add(BtnTrf);
+
+        BtnTrf1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Add patient SH.png"))); // NOI18N
+        BtnTrf1.setMnemonic('K');
+        BtnTrf1.setText("Resep");
+        BtnTrf1.setToolTipText("Alt+K");
+        BtnTrf1.setName("BtnTrf1"); // NOI18N
+        BtnTrf1.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnTrf1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnTrf1ActionPerformed(evt);
+            }
+        });
+        BtnTrf1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                BtnTrf1KeyPressed(evt);
+            }
+        });
+        panelGlass6.add(BtnTrf1);
 
         jPanel2.add(panelGlass6, java.awt.BorderLayout.PAGE_END);
 
@@ -11390,6 +11410,36 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnTrfKeyPressed
 
+    private void BtnTrf1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTrf1ActionPerformed
+        kd_pj = Sequel.cariIsi("select reg_periksa.kd_pj from reg_periksa where reg_periksa.no_rawat=?", TNoRw.getText());
+        if (TNoRw.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
+            TCari.requestFocus();
+        } else {
+            if (Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?", TNoRw.getText()) > 0) {
+                JOptionPane.showMessageDialog(null, "Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
+            } else {
+                jmlparsial = 0;
+                if (aktifkanparsial.equals("yes")) {
+                    jmlparsial = Sequel.cariInteger("select count(set_input_parsial.kd_pj) from set_input_parsial where set_input_parsial.kd_pj=?", kd_pj);
+                }
+                if (jmlparsial > 0) {
+                    inputResep();
+                } else {
+                    if (Sequel.cariRegistrasi(TNoRw.getText()) > 0) {
+                        JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi ..!!");
+                    } else {
+                        inputResep();
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_BtnTrf1ActionPerformed
+
+    private void BtnTrf1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnTrf1KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnTrf1KeyPressed
+
     private void MnPenilaianPreInduksiActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         if(tabMode.getRowCount()==0){
             JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
@@ -11453,6 +11503,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
     private widget.Button BtnSeek5;
     private widget.Button BtnSimpan;
     private widget.Button BtnTrf;
+    private widget.Button BtnTrf1;
     private widget.Button BtnTriase;
     private widget.CekBox ChkInput;
     private widget.CekBox ChkJln;
@@ -12743,5 +12794,16 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
 
         // Menaruh fokus kursor ke input pertama
         Bagian.requestFocus();
+    }
+    
+    private void inputResep() {
+        DlgPeresepanDokter resep = new DlgPeresepanDokter(null, false);
+        resep.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
+        resep.setLocationRelativeTo(internalFrame1);
+        resep.setNoRm(TNoRw.getText(), DTPReg.getDate(), CmbJam.getSelectedItem().toString(), CmbMenit.getSelectedItem().toString(),
+                CmbDetik.getSelectedItem().toString(), KdDokter.getText(), TDokter.getText(), "ralan");
+        resep.isCek();
+        resep.tampilobat();
+        resep.setVisible(true);
     }
 }

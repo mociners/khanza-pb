@@ -3619,8 +3619,8 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
                         " inner join dokter on resep_obat.kd_dokter=dokter.kd_dokter "+
                         " inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli "+
                         " inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "+
-                        " inner join set_depo_ralan on set_depo_ralan.kd_poli=reg_periksa.kd_poli "+
-                        " where set_depo_ralan.kd_bangsal='"+DEPOAKTIFOBAT+"' and resep_obat.tgl_peresepan<>'0000-00-00' and resep_obat.status='ralan' and resep_obat.tgl_peresepan between ? and ? "+
+                        " left join set_depo_ralan on set_depo_ralan.kd_poli=reg_periksa.kd_poli "+
+                        " where resep_obat.tgl_peresepan<>'0000-00-00' and resep_obat.status='ralan' and resep_obat.tgl_peresepan between ? and ? "+
                         (semua?"":"and dokter.nm_dokter like ? and poliklinik.nm_poli like ? and "+
                         "(resep_obat.no_resep like ? or resep_obat.no_rawat like ? or "+
                         "pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "+

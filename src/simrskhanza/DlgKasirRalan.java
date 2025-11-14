@@ -186,7 +186,6 @@ import surat.SuratPulangAtasPermintaanSendiri;
 import surat.SuratSakit;
 import surat.SuratSakitPihak2;
 import surat.SuratTidakHamil;
-import simrskhanza.DlgRawatJalanDokter;
 
 /**
  *
@@ -230,7 +229,6 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     private int i=0,pilihan=0,sudah=0,jmlparsial=0;
     public DlgKamarInap kamarinap=new DlgKamarInap(null,false);
     private DlgRawatJalan dlgrwjl2=new DlgRawatJalan(null,false);
-    private DlgRawatJalanDokter dlgrwjldokter=new DlgRawatJalanDokter(null,false);
     private boolean semua;
     private boolean sukses=false;
     private Jurnal jur=new Jurnal();
@@ -542,25 +540,6 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         }); 
         
         dlgrwjl2.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {}
-            @Override
-            public void windowClosing(WindowEvent e) {}
-            @Override
-            public void windowClosed(WindowEvent e) {
-                TabRawatMouseClicked(null);
-            }
-            @Override
-            public void windowIconified(WindowEvent e) {}
-            @Override
-            public void windowDeiconified(WindowEvent e) {}
-            @Override
-            public void windowActivated(WindowEvent e) {}
-            @Override
-            public void windowDeactivated(WindowEvent e) {}
-        });
-        
-        dlgrwjldokter.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {}
             @Override
@@ -6324,7 +6303,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         panelBiasa2.setLayout(null);
 
         TglSakit1.setForeground(new java.awt.Color(50, 70, 50));
-        TglSakit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "31-10-2025" }));
+        TglSakit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         TglSakit1.setDisplayFormat("dd-MM-yyyy");
         TglSakit1.setName("TglSakit1"); // NOI18N
         TglSakit1.setOpaque(false);
@@ -6371,7 +6350,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel32.setBounds(176, 10, 20, 23);
 
         TglSakit2.setForeground(new java.awt.Color(50, 70, 50));
-        TglSakit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "31-10-2025" }));
+        TglSakit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         TglSakit2.setDisplayFormat("dd-MM-yyyy");
         TglSakit2.setName("TglSakit2"); // NOI18N
         TglSakit2.setOpaque(false);
@@ -6493,7 +6472,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         panelGlass6.add(jLabel6);
 
         TCari.setName("TCari"); // NOI18N
-        TCari.setPreferredSize(new java.awt.Dimension(150, 23));
+        TCari.setPreferredSize(new java.awt.Dimension(203, 23));
         TCari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TCariKeyPressed(evt);
@@ -6543,7 +6522,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         LCount.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         LCount.setText("0");
         LCount.setName("LCount"); // NOI18N
-        LCount.setPreferredSize(new java.awt.Dimension(20, 30));
+        LCount.setPreferredSize(new java.awt.Dimension(50, 30));
         panelGlass6.add(LCount);
 
         BtnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/b_print.png"))); // NOI18N
@@ -6633,7 +6612,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         CrPtg.setEditable(false);
         CrPtg.setName("CrPtg"); // NOI18N
-        CrPtg.setPreferredSize(new java.awt.Dimension(100, 23));
+        CrPtg.setPreferredSize(new java.awt.Dimension(180, 23));
         panelGlass7.add(CrPtg);
 
         BtnSeek3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
@@ -6650,12 +6629,12 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         jLabel16.setText("Poliklinik :");
         jLabel16.setName("jLabel16"); // NOI18N
-        jLabel16.setPreferredSize(new java.awt.Dimension(50, 14));
+        jLabel16.setPreferredSize(new java.awt.Dimension(120, 14));
         panelGlass7.add(jLabel16);
 
         CrPoli.setEditable(false);
         CrPoli.setName("CrPoli"); // NOI18N
-        CrPoli.setPreferredSize(new java.awt.Dimension(100, 23));
+        CrPoli.setPreferredSize(new java.awt.Dimension(150, 23));
         panelGlass7.add(CrPoli);
 
         BtnSeek4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
@@ -6741,7 +6720,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel15.setPreferredSize(new java.awt.Dimension(70, 23));
         panelGlass8.add(jLabel15);
 
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "31-10-2025" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -6754,7 +6733,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel17.setPreferredSize(new java.awt.Dimension(23, 23));
         panelGlass8.add(jLabel17);
 
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "31-10-2025" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-10-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -6939,7 +6918,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         TPasienCari.setEditable(false);
         TPasienCari.setHighlighter(null);
         TPasienCari.setName("TPasienCari"); // NOI18N
-        TPasienCari.setPreferredSize(new java.awt.Dimension(150, 23));
+        TPasienCari.setPreferredSize(new java.awt.Dimension(250, 23));
         panelGlass9.add(TPasienCari);
 
         jLabel9.setText("Jenis Kelamin:");
@@ -8093,24 +8072,14 @@ private void MnDataRalanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 if(Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",TNoRw.getText())>0){
                     JOptionPane.showMessageDialog(null,"Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
                 }else {
-                    if (akses.getkode().startsWith("D0")) {
-                        dlgrwjldokter.isCek();
-                        dlgrwjldokter.emptTeks();
-                        dlgrwjldokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                        dlgrwjldokter.setLocationRelativeTo(internalFrame1);
-                        // Asumsi method setNoRm di DlgRawatJalanDokter memiliki parameter yang sama
-                        dlgrwjldokter.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
-                        dlgrwjldokter.setVisible(true);
-                    } else {
-                        dlgrwjl2.isCek();
-                        dlgrwjl2.emptTeks();
-                        dlgrwjl2.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                        dlgrwjl2.setLocationRelativeTo(internalFrame1);
-                        dlgrwjl2.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 20).toString());
-                        dlgrwjl2.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 19).toString());
-                        dlgrwjl2.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
-                        dlgrwjl2.setVisible(true);
-                    }
+                    dlgrwjl2.isCek();
+                    dlgrwjl2.emptTeks();
+                    dlgrwjl2.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                    dlgrwjl2.setLocationRelativeTo(internalFrame1);
+                    dlgrwjl2.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),20).toString());
+                    dlgrwjl2.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),19).toString());
+                    dlgrwjl2.setNoRm(TNoRw.getText(),DTPCari1.getDate(),DTPCari2.getDate());    
+                    dlgrwjl2.setVisible(true);
                 } 
             }                               
         }
@@ -9502,33 +9471,19 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 if(Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString())>0){
                     JOptionPane.showMessageDialog(null,"Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
                 }else{      
-                    if (akses.getkode().startsWith("D0")) {
-                        dlgrwjldokter.emptTeks();
-                        dlgrwjldokter.isCek();
-                        dlgrwjldokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                        dlgrwjldokter.setLocationRelativeTo(internalFrame1);
-                        dlgrwjldokter.setNoRm(
-                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 10).toString(),
-                                DTPCari1.getDate(), DTPCari2.getDate(),
-                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 0).toString(),
-                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 1).toString()
-                        );
-                        dlgrwjldokter.setVisible(true);
-                    } else {
-                        dlgrwjl2.emptTeks();
-                        dlgrwjl2.isCek();
-                        dlgrwjl2.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                        dlgrwjl2.setLocationRelativeTo(internalFrame1);
-                        dlgrwjl2.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 13).toString());
-                        dlgrwjl2.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 14).toString());
-                        dlgrwjl2.setNoRm(
-                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 10).toString(),
-                                DTPCari1.getDate(), DTPCari2.getDate(),
-                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 0).toString(),
-                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 1).toString()
-                        );
-                        dlgrwjl2.setVisible(true);
-                    }
+                    dlgrwjl2.emptTeks();
+                    dlgrwjl2.isCek();
+                    dlgrwjl2.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                    dlgrwjl2.setLocationRelativeTo(internalFrame1);
+                    dlgrwjl2.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),13).toString());
+                    dlgrwjl2.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),14).toString());
+                    dlgrwjl2.setNoRm(
+                        tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString(),
+                        DTPCari1.getDate(),DTPCari2.getDate(),
+                        tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),0).toString(),
+                        tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),1).toString()
+                    );    
+                    dlgrwjl2.setVisible(true);
                 } 
             }                               
         }
@@ -9572,28 +9527,11 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                             tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),1).toString(),
                             "rawat_jl_dr","-","-"
                         );  
-                        if (akses.getkode().startsWith("D0")) {
-                            dlgrwjldokter.emptTeks();
-                            dlgrwjldokter.isCek();
-                            dlgrwjldokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                            dlgrwjldokter.setLocationRelativeTo(internalFrame1);
-                            dlgrwjldokter.setNoRm(
-                                    tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 10).toString(),
-                                    DTPCari1.getDate(), DTPCari2.getDate(),
-                                    tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 0).toString(),
-                                    tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 1).toString()
-                            );
-                            dlgrwjldokter.setVisible(true);
-                        } else {
-                            dlgrwjl2.isCek();
-                            dlgrwjl2.emptTeks();
-                            dlgrwjl2.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                            dlgrwjl2.setLocationRelativeTo(internalFrame1);
-                            dlgrwjl2.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 18).toString());
-                            dlgrwjl2.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 17).toString());
-                            dlgrwjl2.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
-                            dlgrwjl2.setVisible(true);
-                        }
+                        dlgrwjl.isCek();
+                        dlgrwjl.setPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),13).toString());
+                        dlgrwjl.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                        dlgrwjl.setLocationRelativeTo(internalFrame1);
+                        dlgrwjl.setVisible(true);
                     }
                 }
             }               
