@@ -30,7 +30,9 @@ import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import kepegawaian.DlgCariPetugas;
-
+import simrskhanza.DlgPersetujuanWebcam;
+import com.github.sarxos.webcam.Webcam;
+import java.io.File;
 /**
  *
  * @author windiartohugroho
@@ -1177,17 +1179,34 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     }//GEN-LAST:event_ChkAccorActionPerformed
 
     private void btnAmbilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmbilActionPerformed
-        if (tabMode.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Maaf, data sudah habis...!!!!");
-            TCari.requestFocus();
-        } else {
-            if (tbObat.getSelectedRow() > -1) {
-                Sequel.queryu("delete from antripersetujuanumum");
-                Sequel.queryu("insert into antripersetujuanumum values('" + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "','" + tbObat.getValueAt(tbObat.getSelectedRow(), 1).toString() + "')");
-                Sequel.queryu("delete from surat_persetujuan_umum_pembuat_pernyataan where no_surat='" + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "'");
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih No.Pernyataan terlebih dahulu..!!");
+        if (tbObat.getSelectedRow() > -1) {
+            if (com.github.sarxos.webcam.Webcam.getDefault() == null) {
+                JOptionPane.showMessageDialog(rootPane, "Webcam tidak ditemukan! Pastikan webcam terhubung.", "Error Webcam", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            String noSurat = tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString();
+            String noRawat = tbObat.getValueAt(tbObat.getSelectedRow(), 1).toString();
+
+            DlgPersetujuanWebcam dlg = new DlgPersetujuanWebcam(
+                null, 
+                true, 
+                Sequel, 
+                koneksi, 
+                noSurat, 
+                noRawat
+            );
+            
+            dlg.setSize(800, 700); 
+            dlg.setLocationRelativeTo(internalFrame1);
+            dlg.setVisible(true);
+
+            if (dlg.isSaved()) {
+                panggilPhoto();
+            }
+            
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih No.Pernyataan terlebih dahulu..!!");
         }
     }//GEN-LAST:event_btnAmbilActionPerformed
 
@@ -1216,7 +1235,7 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                 param.put("kontakrs", akses.getkontakrs());
                 param.put("emailrs", akses.getemailrs());
                 param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
-                param.put("photo", "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/persetujuanumum/" + lokasifile);
+                param.put("photo", "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/pernyataanumum/pages/upload/" + lokasifile);
                 finger = Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?", tbObat.getValueAt(tbObat.getSelectedRow(), 16).toString());
                 param.put("finger", "Dikeluarkan di " + akses.getnamars() + ", Kabupaten/Kota " + akses.getkabupatenrs() + "\nDitandatangani secara elektronik oleh " + tbObat.getValueAt(tbObat.getSelectedRow(), 17).toString() + "\nID " + (finger.equals("") ? tbObat.getValueAt(tbObat.getSelectedRow(), 16).toString() : finger) + "\n" + Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString()));
                 Valid.MyReportqry("rptSuratPersetujuanUmum.jasper", "report", "::[ Surat Persetujuan Umum ]::",
@@ -1547,12 +1566,20 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                     ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
                     rs = ps.executeQuery();
                     if (rs.next()) {
-                        if (rs.getString("photo").equals("") || rs.getString("photo").equals("-")) {
+                        lokasifile = rs.getString("photo");
+                        if (lokasifile == null || lokasifile.equals("") || lokasifile.equals("-")) {
                             lokasifile = "";
                             LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
                         } else {
-                            lokasifile = rs.getString("photo");
-                            LoadHTML2.setText("<html><body><center><img src='http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/persetujuanumum/" + rs.getString("photo") + "' alt='photo' width='500' height='500'/></center></body></html>");
+                            
+                            File fileLokal = new File("pernyataanumum" + File.separator + "pages" + File.separator + "upload" + File.separator + lokasifile);
+
+                            if (fileLokal.exists()) {
+                                LoadHTML2.setText("<html><body><center><img src='" + fileLokal.toURI().toString() + "' alt='photo' width='500' height='500'/></center></body></html>");
+                            } else {
+                                String serverUrl = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/pernyataanumum/pages/upload/" + lokasifile;
+                                LoadHTML2.setText("<html><body><center><img src='" + serverUrl + "' alt='photo' width='500' height='500'/></center></body></html>");
+                            }
                         }
                     } else {
                         lokasifile = "";
@@ -1560,7 +1587,8 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                     }
                 } catch (Exception e) {
                     lokasifile = "";
-                    System.out.println("Notif : " + e);
+                    System.out.println("Notif panggilPhoto: " + e);
+                    LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#FF0000'>Error: " + e.getMessage() + "</font></center></body></html>");
                 } finally {
                     if (rs != null) {
                         rs.close();
@@ -1570,7 +1598,7 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Notif : " + e);
+                System.out.println("Notif panggilPhoto: " + e);
             }
         }
     }

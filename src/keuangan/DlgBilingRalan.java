@@ -44,6 +44,7 @@ import simrskhanza.DlgPeriksaLaboratoriumPA;
 import simrskhanza.DlgPeriksaRadiologi;
 import simrskhanza.DlgRawatJalan;
 import simrskhanza.DlgTagihanOperasi;
+import simrskhanza.DlgLiatFotoKeluarga;
 
 /**
  *
@@ -766,6 +767,7 @@ public class DlgBilingRalan extends javax.swing.JDialog {
         MnPeriksaLabPA = new javax.swing.JMenuItem();
         MnPeriksaLabMB = new javax.swing.JMenuItem();
         MnPeriksaRadiologi = new javax.swing.JMenuItem();
+        MnPeriksaKeluarga = new javax.swing.JMenuItem();
         MnTambahan = new javax.swing.JMenuItem();
         MnPotongan = new javax.swing.JMenuItem();
         MnOperasi = new javax.swing.JMenuItem();
@@ -998,6 +1000,22 @@ public class DlgBilingRalan extends javax.swing.JDialog {
             }
         });
         jPopupMenu1.add(MnPeriksaRadiologi);
+
+        MnPeriksaKeluarga.setBackground(new java.awt.Color(255, 255, 254));
+        MnPeriksaKeluarga.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPeriksaKeluarga.setForeground(new java.awt.Color(50, 50, 50));
+        MnPeriksaKeluarga.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPeriksaKeluarga.setText("Periksa Keluarga");
+        MnPeriksaKeluarga.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnPeriksaKeluarga.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnPeriksaKeluarga.setName("MnPeriksaKeluarga"); // NOI18N
+        MnPeriksaKeluarga.setPreferredSize(new java.awt.Dimension(250, 28));
+        MnPeriksaKeluarga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPeriksaKeluargaActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(MnPeriksaKeluarga);
 
         MnTambahan.setBackground(new java.awt.Color(255, 255, 254));
         MnTambahan.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -1919,7 +1937,7 @@ public class DlgBilingRalan extends javax.swing.JDialog {
         jLabel4.setPreferredSize(new java.awt.Dimension(65, 23));
         panelGlass1.add(jLabel4);
 
-        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10-02-2024 12:07:30" }));
+        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-05-2024 18:17:12" }));
         DTPTgl.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         DTPTgl.setName("DTPTgl"); // NOI18N
         DTPTgl.setOpaque(false);
@@ -4131,6 +4149,20 @@ private void MnPeriksaLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         // TODO add your handling code here:
     }//GEN-LAST:event_TglLahirKeyPressed
 
+    private void MnPeriksaKeluargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPeriksaKeluargaActionPerformed
+        if (TNoRw.getText().trim().equals("") || TPasien.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu pasien...!!!");
+            TNoRw.requestFocus();
+        } else {
+            // Memanggil dialog penampil foto
+            DlgLiatFotoKeluarga formFoto = new DlgLiatFotoKeluarga(null, false);
+            formFoto.setNoRawat(TNoRw.getText()); // Mengirim No Rawat
+            formFoto.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+            formFoto.setLocationRelativeTo(internalFrame1);
+            formFoto.setVisible(true);
+        }
+    }//GEN-LAST:event_MnPeriksaKeluargaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -4189,6 +4221,7 @@ private void MnPeriksaLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private javax.swing.JMenuItem MnPemberianObat;
     private javax.swing.JMenuItem MnPenjab;
     private javax.swing.JMenuItem MnPenjualan;
+    private javax.swing.JMenuItem MnPeriksaKeluarga;
     private javax.swing.JMenuItem MnPeriksaLab;
     private javax.swing.JMenuItem MnPeriksaLabMB;
     private javax.swing.JMenuItem MnPeriksaLabPA;
