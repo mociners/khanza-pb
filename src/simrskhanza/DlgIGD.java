@@ -5402,29 +5402,30 @@ public final class DlgIGD extends javax.swing.JDialog {
 }//GEN-LAST:event_BtnPrintKeyPressed
 
     private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
-        pasien.dispose();
-        pasien.bahasa.dispose();
-        pasien.cacat.dispose();
-        pasien.golonganpolri.dispose();
-        pasien.golongantni.dispose();
-        pasien.jabatanpolri.dispose();
-        pasien.jabatantni.dispose();
-        pasien.kab.dispose();
-        pasien.kec.dispose();
-        pasien.kel.dispose();
-        pasien.pangkatpolri.dispose();
-        pasien.pangkattni.dispose();
-        pasien.penjab.dispose();
-        pasien.perusahaan.dispose();
-        pasien.prop.dispose();
-        pasien.satuanpolri.dispose();
-        pasien.satuantni.dispose();
-        pasien.suku.dispose();
-        dokter.dispose();
-        rujukmasuk.WindowPerujuk.dispose();   
-        DlgSakit2.dispose();
-        DlgDemografi.dispose();
-        DlgCatatan.dispose();
+        if(pasien != null){
+            pasien.dispose();
+        }
+        
+        if(dokter != null){
+            dokter.dispose();
+        }
+        
+        if(rujukmasuk != null){
+            if(rujukmasuk.WindowPerujuk != null){
+                rujukmasuk.WindowPerujuk.dispose();
+            }
+            rujukmasuk.dispose();
+        }
+        
+        if(formSEP != null){
+            formSEP.dispose();
+        }
+
+        if(DlgTransfusiDarah != null) DlgTransfusiDarah.dispose();
+        if(DlgSakit2 != null) DlgSakit2.dispose();
+        if(DlgDemografi != null) DlgDemografi.dispose();
+        if(DlgCatatan != null) DlgCatatan.dispose();
+        
         akses.setAktif(false);
         dispose();
 }//GEN-LAST:event_BtnKeluarActionPerformed

@@ -2178,14 +2178,15 @@ private void BtnGudangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     }
          
     public void isCek(){
-         BtnSimpan.setEnabled(akses.getstok_opname_obat());   
-         if(!akses.getkode().equals("Admin Utama")){
-            if(!DEPOAKTIFOBAT.equals("")){
-                kdgudang.setText(DEPOAKTIFOBAT);
-                nmgudang.setText(bangsal.tampil3(DEPOAKTIFOBAT));
-                BtnGudang.setEnabled(false);
-            }
-        }
+         BtnSimpan.setEnabled(akses.getstok_opname_obat());
+         kdgudang.setText(DEPOAKTIFOBAT);
+//         if(!akses.getkode().equals("Admin Utama")){
+//            if(!DEPOAKTIFOBAT.equals("")){
+//                kdgudang.setText(DEPOAKTIFOBAT);
+//                nmgudang.setText(bangsal.tampil3(DEPOAKTIFOBAT));
+//                BtnGudang.setEnabled(false);
+//            }
+//        }
     }
 
 }

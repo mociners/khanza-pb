@@ -41890,7 +41890,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
 
         btnRl53 = new widget.ButtonBig();
         btnRl53.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/Gnome-X-Office-Address-Book-48.png"))); // NOI18N
-        btnRl53.setText("RL 5.3 10 Besar Kunjungan Penyakit Rawat Jalan");
+        btnRl53.setText("RL 5.3 10 Besar Kunjungan Penyakit Rawat Inap");
         btnRl53.setIconTextGap(0);
         btnRl53.setName("btnRl53"); // NOI18N
         btnRl53.setPreferredSize(new java.awt.Dimension(200, 90));
