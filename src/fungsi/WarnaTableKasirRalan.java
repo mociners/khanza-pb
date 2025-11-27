@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class WarnaTableKasirRalan extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
         Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        Object statusTindakan = table.getModel().getValueAt(row, 22);
         if (row % 2 == 1){
             component.setBackground(new Color(255,244,244));
             component.setForeground(new Color(50,50,50));
@@ -40,6 +41,10 @@ public class WarnaTableKasirRalan extends DefaultTableCellRenderer {
         }else if(table.getValueAt(row,8).toString().equals("Dirawat")){
             component.setBackground(new Color(119,221,119));
             component.setForeground(new Color(245,255,245));
+        }
+        if (statusTindakan != null && statusTindakan.toString().equals("Sudah")) {
+            component.setBackground(new Color(0, 0, 255));
+            component.setForeground(new Color(255, 255, 255));
         }
         if(table.getValueAt(row,18).toString().equals("Sudah Bayar")){
             component.setBackground(new Color(50,50,50));

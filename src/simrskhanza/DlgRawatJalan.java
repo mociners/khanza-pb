@@ -225,7 +225,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         initRawatJalan();
         
         java.awt.Color darkTextColor = java.awt.Color.BLACK;
-        int desiredFontSize = 14;
+        int desiredFontSize = 11;
         
         java.awt.Font currentFont = TKeluhan.getFont();
         java.awt.Font newFont = currentFont.deriveFont((float)desiredFontSize);
@@ -8660,20 +8660,24 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
 }//GEN-LAST:event_BtnPrintKeyPressed
 
     private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
-        petugas.dispose();
-        dokter.dispose();
-        pasien.dispose();
-        try {
-            i = JOptionPane.showConfirmDialog(null, "Mau skalian update status pasien sudah diperiksa ????", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-            if (i == JOptionPane.YES_OPTION) {
-                if (Sequel.mengedittf("reg_periksa", "no_rawat=?", "stts=?", 2, new String[]{"Sudah", TNoRw.getText()}) == true) {
-                    //    Sequel.menyimpan("mutasi_berkas", "'" + TNoRw.getText() + "','Sudah Kembali',now(),'0000-00-00 00:00:00',now(),'0000-00-00 00:00:00','0000-00-00 00:00:00'", "status='Sudah Kembali',kembali=now()", "no_rawat='" + TNoRw.getText() + "'");
-                }
-            } else {
+        if(!TNoRw.getText().trim().equals("")){
+            int jawab = javax.swing.JOptionPane.showConfirmDialog(
+                rootPane, 
+                "Apakah pasien atas nama "+TPasien.getText()+" sudah selesai diperiksa?\n" +
+                "Sistem akan mengecek tindakan otomatis dan mengubah status antrian menjadi 'Sudah'.", 
+                "Konfirmasi Selesai Periksa", 
+                javax.swing.JOptionPane.YES_NO_OPTION
+            );
 
+            if (jawab == javax.swing.JOptionPane.YES_OPTION) {
+                simpanTindakanOtomatis();
+
+                if (Sequel.mengedittf("reg_periksa", "no_rawat=?", "stts=?", 2, new String[]{"Sudah", TNoRw.getText()}) == true) {
+                }
             }
-        } catch (Exception e) {
         }
+
+        // 4. Tutup Form
         dispose();
 }//GEN-LAST:event_BtnKeluarActionPerformed
 
@@ -15679,6 +15683,171 @@ public void actionPerformed(ActionEvent e) {
                     TEvaluasi.requestFocus();
                 }
             }
+        }
+    }
+    
+    private void simpanTindakanOtomatis() {
+        if (TNoRw.getText().trim().equals("") || KdDok2.getText().trim().equals("")) {
+            return;
+        }
+
+        try {
+            String kodePJ = "";
+            PreparedStatement psPj = koneksi.prepareStatement("select kd_pj from reg_periksa where no_rawat=?");
+            try {
+                psPj.setString(1, TNoRw.getText());
+                ResultSet rsPj = psPj.executeQuery();
+                if (rsPj.next()) {
+                    kodePJ = rsPj.getString("kd_pj");
+                }
+            } catch (Exception e) {
+                System.out.println("Error Cek PJ: " + e);
+            } finally {
+                if (psPj != null) psPj.close();
+            }
+
+            if (kodePJ.equals("")) return;
+
+            PreparedStatement psOtoDr = koneksi.prepareStatement(
+                    "select set_otomatis_tindakan_ralan.kd_jenis_prw, jns_perawatan.total_byrdr, "
+                    + "jns_perawatan.material, jns_perawatan.bhp, jns_perawatan.tarif_tindakandr, "
+                    + "jns_perawatan.kso, jns_perawatan.menejemen "
+                    + "from set_otomatis_tindakan_ralan inner join jns_perawatan "
+                    + "on set_otomatis_tindakan_ralan.kd_jenis_prw=jns_perawatan.kd_jenis_prw "
+                    + "where set_otomatis_tindakan_ralan.kd_dokter=? and set_otomatis_tindakan_ralan.kd_pj=?");
+
+            try {
+                psOtoDr.setString(1, KdDok2.getText());
+                psOtoDr.setString(2, kodePJ);
+                ResultSet rsOtoDr = psOtoDr.executeQuery();
+                while (rsOtoDr.next()) {
+                    if (Sequel.cariInteger("select count(no_rawat) from rawat_jl_dr where no_rawat='" + TNoRw.getText() + "' and kd_jenis_prw='" + rsOtoDr.getString("kd_jenis_prw") + "'") == 0) {
+                        
+                        PreparedStatement psSimpanDr = koneksi.prepareStatement(
+                            "insert into rawat_jl_dr(no_rawat,kd_jenis_prw,kd_dokter,tgl_perawatan,jam_rawat,material,bhp,tarif_tindakandr,kso,menejemen,biaya_rawat,stts_bayar) " +
+                            "values(?,?,?,current_date(),current_time(),?,?,?,?,?,?,?)"
+                        );
+                        
+                        try {
+                            psSimpanDr.setString(1, TNoRw.getText());
+                            psSimpanDr.setString(2, rsOtoDr.getString("kd_jenis_prw"));
+                            psSimpanDr.setString(3, KdDok2.getText());
+                            psSimpanDr.setString(4, rsOtoDr.getString("material"));
+                            psSimpanDr.setString(5, rsOtoDr.getString("bhp"));
+                            psSimpanDr.setString(6, rsOtoDr.getString("tarif_tindakandr"));
+                            psSimpanDr.setString(7, rsOtoDr.getString("kso"));
+                            psSimpanDr.setString(8, rsOtoDr.getString("menejemen"));
+                            psSimpanDr.setString(9, rsOtoDr.getString("total_byrdr"));
+                            psSimpanDr.setString(10, "Belum");
+                            psSimpanDr.executeUpdate(); // Eksekusi Simpan
+                        } catch (Exception e) {
+                            System.out.println("Gagal Simpan Auto Dokter: " + e);
+                        } finally {
+                            psSimpanDr.close();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error Auto Dokter: " + e);
+            } finally {
+                if (psOtoDr != null) psOtoDr.close();
+            }
+
+            PreparedStatement psOtoPr = koneksi.prepareStatement(
+                    "select set_otomatis_tindakan_ralan_petugas.kd_jenis_prw, jns_perawatan.total_byrpr, "
+                    + "jns_perawatan.material, jns_perawatan.bhp, jns_perawatan.tarif_tindakanpr, "
+                    + "jns_perawatan.kso, jns_perawatan.menejemen "
+                    + "from set_otomatis_tindakan_ralan_petugas inner join jns_perawatan "
+                    + "on set_otomatis_tindakan_ralan_petugas.kd_jenis_prw=jns_perawatan.kd_jenis_prw "
+                    + "where set_otomatis_tindakan_ralan_petugas.kd_pj=?");
+
+            try {
+                psOtoPr.setString(1, kodePJ);
+                ResultSet rsOtoPr = psOtoPr.executeQuery();
+                while (rsOtoPr.next()) {
+                    if (Sequel.cariInteger("select count(no_rawat) from rawat_jl_pr where no_rawat='" + TNoRw.getText() + "' and kd_jenis_prw='" + rsOtoPr.getString("kd_jenis_prw") + "'") == 0) {
+                        
+                        PreparedStatement psSimpanPr = koneksi.prepareStatement(
+                            "insert into rawat_jl_pr(no_rawat,kd_jenis_prw,nip,tgl_perawatan,jam_rawat,material,bhp,tarif_tindakanpr,kso,menejemen,biaya_rawat,stts_bayar) " +
+                            "values(?,?,?,current_date(),current_time(),?,?,?,?,?,?,?)"
+                        );
+                        
+                        try {
+                            psSimpanPr.setString(1, TNoRw.getText());
+                            psSimpanPr.setString(2, rsOtoPr.getString("kd_jenis_prw"));
+                            psSimpanPr.setString(3, "-"); // NIP Petugas default strip
+                            psSimpanPr.setString(4, rsOtoPr.getString("material"));
+                            psSimpanPr.setString(5, rsOtoPr.getString("bhp"));
+                            psSimpanPr.setString(6, rsOtoPr.getString("tarif_tindakanpr"));
+                            psSimpanPr.setString(7, rsOtoPr.getString("kso"));
+                            psSimpanPr.setString(8, rsOtoPr.getString("menejemen"));
+                            psSimpanPr.setString(9, rsOtoPr.getString("total_byrpr"));
+                            psSimpanPr.setString(10, "Belum");
+                            psSimpanPr.executeUpdate();
+                        } catch (Exception e) {
+                            System.out.println("Gagal Simpan Auto Petugas: " + e);
+                        } finally {
+                            psSimpanPr.close();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error Auto Petugas: " + e);
+            } finally {
+                if (psOtoPr != null) psOtoPr.close();
+            }
+
+            PreparedStatement psOtoDrPr = koneksi.prepareStatement(
+                    "select set_otomatis_tindakan_ralan_dokterpetugas.kd_jenis_prw, "
+                    + "jns_perawatan.total_byrdrpr, jns_perawatan.total_byrdr, jns_perawatan.total_byrdr, jns_perawatan.total_byrpr, "
+                    + "jns_perawatan.material, jns_perawatan.bhp, "
+                    + "jns_perawatan.tarif_tindakandr, jns_perawatan.tarif_tindakanpr, "
+                    + "jns_perawatan.kso, jns_perawatan.menejemen "
+                    + "from set_otomatis_tindakan_ralan_dokterpetugas inner join jns_perawatan "
+                    + "on set_otomatis_tindakan_ralan_dokterpetugas.kd_jenis_prw=jns_perawatan.kd_jenis_prw "
+                    + "where set_otomatis_tindakan_ralan_dokterpetugas.kd_dokter=? and set_otomatis_tindakan_ralan_dokterpetugas.kd_pj=?");
+
+            try {
+                psOtoDrPr.setString(1, KdDok2.getText());
+                psOtoDrPr.setString(2, kodePJ);
+                ResultSet rsOtoDrPr = psOtoDrPr.executeQuery();
+                while (rsOtoDrPr.next()) {
+                    if (Sequel.cariInteger("select count(no_rawat) from rawat_jl_drpr where no_rawat='" + TNoRw.getText() + "' and kd_jenis_prw='" + rsOtoDrPr.getString("kd_jenis_prw") + "'") == 0) {
+                        
+                        PreparedStatement psSimpanDrPr = koneksi.prepareStatement(
+                            "insert into rawat_jl_drpr(no_rawat,kd_jenis_prw,kd_dokter,nip,tgl_perawatan,jam_rawat,material,bhp,tarif_tindakandr,tarif_tindakanpr,kso,menejemen,biaya_rawat,stts_bayar) " +
+                            "values(?,?,?,?,current_date(),current_time(),?,?,?,?,?,?,?,?)"
+                        );
+                        
+                        try {
+                            psSimpanDrPr.setString(1, TNoRw.getText());
+                            psSimpanDrPr.setString(2, rsOtoDrPr.getString("kd_jenis_prw"));
+                            psSimpanDrPr.setString(3, KdDok2.getText());
+                            psSimpanDrPr.setString(4, "-");
+                            psSimpanDrPr.setString(5, rsOtoDrPr.getString("material"));
+                            psSimpanDrPr.setString(6, rsOtoDrPr.getString("bhp"));
+                            psSimpanDrPr.setString(7, rsOtoDrPr.getString("tarif_tindakandr"));
+                            psSimpanDrPr.setString(8, rsOtoDrPr.getString("tarif_tindakanpr"));
+                            psSimpanDrPr.setString(9, rsOtoDrPr.getString("kso"));
+                            psSimpanDrPr.setString(10, rsOtoDrPr.getString("menejemen"));
+                            psSimpanDrPr.setString(11, rsOtoDrPr.getString("total_byrdrpr"));
+                            psSimpanDrPr.setString(12, "Belum");
+                            psSimpanDrPr.executeUpdate();
+                        } catch (Exception e) {
+                            System.out.println("Gagal Simpan Auto DrPr: " + e);
+                        } finally {
+                            psSimpanDrPr.close();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error Auto DrPr: " + e);
+            } finally {
+                if (psOtoDrPr != null) psOtoDrPr.close();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error Utama Auto Tindakan: " + e);
         }
     }
 

@@ -21,6 +21,7 @@ import laporan.DlgDiagnosaPenyakit;
 import keuangan.DlgBilingRalan;
 import fungsi.WarnaTable;
 import fungsi.WarnaTableKasirRalan;
+import fungsi.WarnaTableKasirRalanTindakan;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
 import fungsi.sekuel;
@@ -250,7 +251,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             "Kode Dokter", "Dokter Dituju", "No.RM", "Pasien", "Poliklinik", 
             "Jenis Bayar", "No. SEP", "No. Sukon", "Status", "No.Reg", "Penanggung Jawab", "Alamat P.J.", 
             "Hubungan P.J.", "Biaya Reg", "Stts Poli", "No.Rawat", "Tanggal", "Jam", 
-            "Status Bayar", "Kd PJ", "Kd Poli", "No.Telp Pasien"}){
+            "Status Bayar", "Kd PJ", "Kd Poli", "No.Telp Pasien", "Tindakan"}){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
         tbKasirRalan.setModel(tabModekasir);
@@ -259,7 +260,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         tbKasirRalan.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         // [PERUBAHAN 2] Sesuaikan lebar kolom dengan urutan baru
-        for (i = 0; i < 21; i++) {
+        for (i = 0; i < 23; i++) {
             TableColumn column = tbKasirRalan.getColumnModel().getColumn(i);
             if (i == 0) {
                 column.setPreferredWidth(70);
@@ -305,11 +306,17 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                 column.setMaxWidth(0);
             } else if (i == 20) {
                 column.setPreferredWidth(95);
+            } else if (i == 21) {
+                column.setPreferredWidth(95);
+            } else if (i == 22) {
+                column.setMinWidth(0);
+                column.setMaxWidth(0);
             }
         }
         try {
             if(koneksiDB.AKTIFKANWARNARALAN().equals("yes")){
                 tbKasirRalan.setDefaultRenderer(Object.class, new WarnaTableKasirRalan());
+//                tbKasirRalan.setDefaultRenderer(Object.class, new WarnaTableKasirRalanTindakan());
             }else{
                 tbKasirRalan.setDefaultRenderer(Object.class, new WarnaTable());
             }
@@ -14784,76 +14791,119 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     
     private void tampilkasir() {     
         Valid.tabelKosong(tabModekasir);
-        try{   
+        try {
             semua = caripenjab.equals("") && CrPoli.getText().trim().equals("") && CrPtg.getText().trim().equals("") && 
                     cmbStatus.getSelectedItem().toString().equals("Semua") && 
                     cmbStatusBayar.getSelectedItem().toString().equals("Semua") && 
                     cmbStatusBayar1.getSelectedItem().toString().equals("Semua") && 
                     TCari.getText().trim().equals("");
 
-            pskasir = koneksi.prepareStatement("select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"+
-            "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,poliklinik.nm_poli,"+
-            "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts,penjab.png_jawab,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur, "+
-            "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli,pasien.no_tlp,bridging_sep.no_sep,reg_periksa.stts_daftar,bridging_surat_kontrol_bpjs.no_surat "+
-            "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-            "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "+
-            "left join bridging_sep on reg_periksa.no_rawat=bridging_sep.no_rawat "+
-            "left join bridging_surat_kontrol_bpjs on bridging_sep.no_sep=bridging_surat_kontrol_bpjs.no_sep where  "+
-            "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' "+tampildiagnosa+
-            (semua ? "" : "and reg_periksa.kd_pj like ? and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.stts like ? and reg_periksa.status_bayar like ? and penjab.png_jawab like ? and "+
-            "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "+
-            "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?) ")+terbitsep+
-            "order by "+order);
-            try{
-                pskasir.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+""));
-                pskasir.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+""));
-                if(!semua){
-                    pskasir.setString(3,"%"+caripenjab+"%");
-                    pskasir.setString(4,"%"+CrPoli.getText()+"%");
-                    pskasir.setString(5,"%"+CrPtg.getText()+"%");
-                    pskasir.setString(6,"%"+cmbStatus.getSelectedItem().toString().replaceAll("Semua","")+"%");
-                    pskasir.setString(7,"%"+cmbStatusBayar.getSelectedItem().toString().replaceAll("Semua","")+"%");
-                    pskasir.setString(8,"%"+cmbStatusBayar1.getSelectedItem().toString().replaceAll("Semua","")+"%");
-                    pskasir.setString(9,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(10,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(11,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(12,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(13,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(14,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(15,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(16,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(17,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(18,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(19,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(20,"%"+TCari.getText().trim()+"%");
-                    pskasir.setString(21,"%"+TCari.getText().trim()+"%");
+            pskasir = koneksi.prepareStatement(
+                "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, " +
+                "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, poliklinik.nm_poli, " +
+                "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, reg_periksa.stts, " +
+                "penjab.png_jawab, concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, " +
+                "reg_periksa.status_bayar, reg_periksa.status_poli, reg_periksa.kd_pj, reg_periksa.kd_poli, pasien.no_tlp, " +
+                
+                "(select bridging_sep.no_sep from bridging_sep where bridging_sep.no_rawat=reg_periksa.no_rawat and bridging_sep.jnspelayanan='2' order by bridging_sep.tglsep desc limit 1) as no_sep, " +
+                "reg_periksa.stts_daftar, " +
+                "(select bridging_surat_kontrol_bpjs.no_surat from bridging_surat_kontrol_bpjs where bridging_surat_kontrol_bpjs.no_sep=(select bridging_sep.no_sep from bridging_sep where bridging_sep.no_rawat=reg_periksa.no_rawat and bridging_sep.jnspelayanan='2' order by bridging_sep.tglsep desc limit 1) limit 1) as no_surat, " +
+                
+                "if(" +
+                    "(select count(no_rawat) from rawat_jl_pr where rawat_jl_pr.no_rawat=reg_periksa.no_rawat and rawat_jl_pr.nip != '-') + " +
+                    
+                    "(select count(no_rawat) from rawat_jl_drpr where rawat_jl_drpr.no_rawat=reg_periksa.no_rawat and rawat_jl_drpr.nip != '-') + " +
+                    
+                    "if(" +
+                        "(select count(no_rawat) from rawat_jl_dr where rawat_jl_dr.no_rawat=reg_periksa.no_rawat) > " +
+                        "(select count(kd_jenis_prw) from set_otomatis_tindakan_ralan where set_otomatis_tindakan_ralan.kd_dokter=reg_periksa.kd_dokter and set_otomatis_tindakan_ralan.kd_pj=reg_periksa.kd_pj), " +
+                    "1, 0) " +
+                
+                "> 0, 'Sudah', 'Belum') as stts_tindakan " +
+
+                "from reg_periksa " +
+                "inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
+                "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
+                "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
+                "where reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' " + tampildiagnosa +
+                
+                (semua ? "" : "and reg_periksa.kd_pj like ? and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.stts like ? and reg_periksa.status_bayar like ? and penjab.png_jawab like ? and " +
+                "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or " +
+                "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?) ") + terbitsep +
+                "order by " + order
+            );
+
+            try {
+                pskasir.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + ""));
+                pskasir.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + ""));
+                
+                if (!semua) {
+                    pskasir.setString(3, "%" + caripenjab + "%");
+                    pskasir.setString(4, "%" + CrPoli.getText() + "%");
+                    pskasir.setString(5, "%" + CrPtg.getText() + "%");
+                    
+                    pskasir.setString(6, "%" + cmbStatus.getSelectedItem().toString().replaceAll("Semua", "") + "%");
+                    pskasir.setString(7, "%" + cmbStatusBayar.getSelectedItem().toString().replaceAll("Semua", "") + "%");
+                    pskasir.setString(8, "%" + cmbStatusBayar1.getSelectedItem().toString().replaceAll("Semua", "") + "%");
+                    
+                    pskasir.setString(9, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(10, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(11, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(12, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(13, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(14, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(15, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(16, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(17, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(18, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(19, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(20, "%" + TCari.getText().trim() + "%");
+                    pskasir.setString(21, "%" + TCari.getText().trim() + "%");
                 }
 
-                rskasir=pskasir.executeQuery();
-                while(rskasir.next()){
+                rskasir = pskasir.executeQuery();
+                while (rskasir.next()) {
                     tabModekasir.addRow(new String[]{
-                        rskasir.getString("kd_dokter"), rskasir.getString("nm_dokter"), rskasir.getString("no_rkm_medis"), rskasir.getString("nm_pasien") + " (" + rskasir.getString("umur") + ")",
-                        rskasir.getString("nm_poli"), rskasir.getString("png_jawab"), rskasir.getString("no_sep"), rskasir.getString("no_surat"), rskasir.getString("stts"), 
-                        rskasir.getString("no_reg"), rskasir.getString("p_jawab"), rskasir.getString("almt_pj"), 
-                        rskasir.getString("hubunganpj"), Valid.SetAngka(rskasir.getDouble("biaya_reg")), rskasir.getString("status_poli"), 
-                        rskasir.getString("no_rawat"), rskasir.getString("tgl_registrasi"), rskasir.getString("jam_reg"), 
-                        rskasir.getString("status_bayar"), rskasir.getString("kd_pj"), rskasir.getString("kd_poli"), rskasir.getString("no_tlp")
+                        rskasir.getString("kd_dokter"),
+                        rskasir.getString("nm_dokter"),
+                        rskasir.getString("no_rkm_medis"),
+                        rskasir.getString("nm_pasien") + " (" + rskasir.getString("umur") + ")",
+                        rskasir.getString("nm_poli"),
+                        rskasir.getString("png_jawab"),
+                        rskasir.getString("no_sep"),
+                        rskasir.getString("no_surat"),
+                        rskasir.getString("stts"),
+                        rskasir.getString("no_reg"),
+                        rskasir.getString("p_jawab"),
+                        rskasir.getString("almt_pj"),
+                        rskasir.getString("hubunganpj"),
+                        Valid.SetAngka(rskasir.getDouble("biaya_reg")),
+                        rskasir.getString("status_poli"),
+                        rskasir.getString("no_rawat"),
+                        rskasir.getString("tgl_registrasi"),
+                        rskasir.getString("jam_reg"),
+                        rskasir.getString("status_bayar"),
+                        rskasir.getString("kd_pj"),
+                        rskasir.getString("kd_poli"),
+                        rskasir.getString("no_tlp"),
+                        rskasir.getString("stts_tindakan") // Kolom Index 22
                     });
-                }                
-            } catch(Exception e){
-                System.out.println("Notifikasi : "+e);
-            } finally{
-               if(rskasir!=null){
-                   rskasir.close();
-               } 
-               if(pskasir!=null){
-                   pskasir.close();
-               } 
-            }            
-        }catch(Exception e){
-            System.out.println("Notifikasi : "+e);
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (rskasir != null) {
+                    rskasir.close();
+                }
+                if (pskasir != null) {
+                    pskasir.close();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
         }
-        LCount.setText(""+tabModekasir.getRowCount());
+        LCount.setText("" + tabModekasir.getRowCount());
     }
     
     private void tampilkasir2() {                   

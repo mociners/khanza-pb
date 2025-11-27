@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="612" pageHeight="936" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7435c0f7-de74-4940-ae33-c2370e46f8e7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SuratPersetujuanUmum_F4_Split" pageWidth="612" pageHeight="936" columnWidth="592" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="7435c0f7-de74-4940-ae33-c2370e46f8e7">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -11,8 +11,6 @@
 	<parameter name="kontakrs" class="java.lang.String"/>
 	<parameter name="emailrs" class="java.lang.String"/>
 	<parameter name="logo" class="java.io.InputStream"/>
-	<parameter name="finger" class="java.lang.String"/>
-	<parameter name="photo" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select surat_persetujuan_umum.no_surat,reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,
 				reg_periksa.sttsumur,pasien.jk,pasien.tgl_lahir,surat_persetujuan_umum.tanggal,surat_persetujuan_umum.pengobatan_kepada,
@@ -62,13 +60,13 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="65" splitType="Stretch">
+		<band height="60" splitType="Stretch">
 			<image scaleImage="FillFrame" onErrorType="Blank">
-				<reportElement x="0" y="2" width="48" height="45" uuid="1a2b3c4d-5e6f-7890-1234-567890abcdef"/>
+				<reportElement x="0" y="0" width="48" height="45" uuid="1a2b3c4d-5e6f-7890-1234-567890abcdef"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="48" y="0" width="524" height="20" uuid="2b3c4d5e-6f78-9012-3456-7890abcdef12"/>
+				<reportElement x="48" y="0" width="544" height="20" uuid="2b3c4d5e-6f78-9012-3456-7890abcdef12"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="14" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -76,7 +74,7 @@
 				<textFieldExpression><![CDATA[$P{namars}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="48" y="20" width="524" height="12" uuid="3c4d5e6f-7890-1234-5678-90abcdef1234"/>
+				<reportElement x="48" y="20" width="544" height="12" uuid="3c4d5e6f-7890-1234-5678-90abcdef1234"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -84,7 +82,7 @@
 				<textFieldExpression><![CDATA[$P{alamatrs}+", "+$P{kotars}+", "+$P{propinsirs}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="48" y="32" width="524" height="12" uuid="4d5e6f78-9012-3456-7890-abcdef123456"/>
+				<reportElement x="48" y="32" width="544" height="12" uuid="4d5e6f78-9012-3456-7890-abcdef123456"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -92,15 +90,15 @@
 				<textFieldExpression><![CDATA[$P{kontakrs}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="46" width="572" height="1" uuid="5e6f7890-1234-5678-90ab-cdef12345678"/>
+				<reportElement x="0" y="46" width="592" height="1" uuid="5e6f7890-1234-5678-90ab-cdef12345678"/>
 				<graphicElement>
 					<pen lineWidth="2.0" lineStyle="Double"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="0" y="50" width="572" height="14" uuid="6f789012-3456-7890-abcd-ef1234567890"/>
+				<reportElement x="0" y="48" width="592" height="12" uuid="6f789012-3456-7890-abcd-ef1234567890"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="10" isBold="true" isItalic="false" isUnderline="true"/>
+					<font fontName="Tahoma" size="9" isBold="true" isUnderline="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[PERSETUJUAN UMUM (GENERAL CONSENT)]]></text>
@@ -108,653 +106,758 @@
 		</band>
 	</title>
 	<detail>
-		<band height="160">
+		<band height="155">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="12" uuid="78901234-5678-90ab-cdef-1234567890ab"/>
+				<reportElement x="0" y="0" width="592" height="11" uuid="78901234-5678-90ab-cdef-1234567890ab"/>
 				<textElement>
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IDENTITAS PASIEN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="12" width="90" height="11" uuid="89012345-6789-0abc-def1-234567890abc"/>
+				<reportElement x="10" y="11" width="90" height="11" uuid="89012345-6789-0abc-def1-234567890abc"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Nama (Sesuai KTP)]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="105" y="12" width="290" height="11" uuid="90123456-7890-abcd-ef12-34567890abcd"/>
+				<reportElement x="105" y="11" width="290" height="11" uuid="90123456-7890-abcd-ef12-34567890abcd"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{nm_pasien}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="400" y="12" width="50" height="11" uuid="01234567-89ab-cdef-0123-456789abcdef"/>
+				<reportElement x="400" y="11" width="50" height="11" uuid="01234567-89ab-cdef-0123-456789abcdef"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[JK / No.RM]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="455" y="12" width="117" height="11" uuid="12345678-9abc-def0-1234-56789abcdef0"/>
+				<reportElement x="455" y="11" width="137" height="11" uuid="12345678-9abc-def0-1234-56789abcdef0"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + ($F{jk}.equals("L")?"Lk":"Pr") + " / " + $F{no_rkm_medis}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="23" width="90" height="11" uuid="234567ab-cdef-0123-4567-0089abcdef01"/>
+				<reportElement x="10" y="22" width="90" height="11" uuid="234567ab-cdef-0123-4567-0089abcdef01"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Tempat & Tgl Lahir]]></text>
 			</staticText>
 			<textField pattern="dd-MM-yyyy">
-				<reportElement x="105" y="23" width="290" height="11" uuid="34567890-bcde-f012-3456-789abcdef012"/>
+				<reportElement x="105" y="22" width="290" height="11" uuid="34567890-bcde-f012-3456-789abcdef012"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{tmp_lahir}+", "+new SimpleDateFormat("dd-MM-yyyy").format($F{tgl_lahir})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="34" width="90" height="11" uuid="45678901-cdef-0123-4567-89abcdef0123"/>
+				<reportElement x="10" y="33" width="90" height="11" uuid="45678901-cdef-0123-4567-89abcdef0123"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Alamat (Sesuai KTP)]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="105" y="34" width="467" height="11" uuid="56789012-def0-1234-5678-9abcdef01234"/>
+				<reportElement x="105" y="33" width="487" height="11" uuid="56789012-def0-1234-5678-9abcdef01234"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{alamat}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="45" width="90" height="11" uuid="67890123-ef01-2345-6789-abcdef012345"/>
+				<reportElement x="10" y="44" width="90" height="11" uuid="67890123-ef01-2345-6789-abcdef012345"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Agama / Pendidikan]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="105" y="45" width="290" height="11" uuid="78901234-f012-3456-7890-bcdef0123456"/>
+				<reportElement x="105" y="44" width="290" height="11" uuid="78901234-f012-3456-7890-bcdef0123456"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{agama} + " / " + $F{pnd}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="56" width="90" height="11" uuid="89012345-0123-4567-8901-cdef01234567"/>
+				<reportElement x="10" y="55" width="90" height="11" uuid="89012345-0123-4567-8901-cdef01234567"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Pekerjaan]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="105" y="56" width="290" height="11" uuid="90123456-1234-5678-9012-def012345678"/>
+				<reportElement x="105" y="55" width="290" height="11" uuid="90123456-1234-5678-9012-def012345678"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{pekerjaan}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="70" width="572" height="12" uuid="01234567-2345-6789-0123-ef0123456789"/>
+				<reportElement x="0" y="68" width="592" height="11" uuid="01234567-2345-6789-0123-ef0123456789"/>
 				<textElement>
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IDENTITAS PENANGGUNG JAWAB PASIEN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="82" width="90" height="11" uuid="12345678-3456-7890-1234-f01234567890"/>
+				<reportElement x="10" y="79" width="90" height="11" uuid="12345678-3456-7890-1234-f01234567890"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Nama (Sesuai KTP)]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="105" y="82" width="290" height="11" uuid="23456789-4567-8901-2345-012345678901"/>
+				<reportElement x="105" y="79" width="290" height="11" uuid="23456789-4567-8901-2345-012345678901"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{nama_pj}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="400" y="82" width="50" height="11" uuid="34567890-5678-9012-3456-123456789012"/>
+				<reportElement x="400" y="79" width="50" height="11" uuid="34567890-5678-9012-3456-123456789012"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[JK / Hub]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="455" y="82" width="117" height="11" uuid="45678901-6789-0123-4567-234567890123"/>
+				<reportElement x="455" y="79" width="137" height="11" uuid="45678901-6789-0123-4567-234567890123"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + ($F{jkpj}.equals("L")?"Lk":"Pr") + " / " + $F{bertindak_atas}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="93" width="90" height="11" uuid="56789012-7890-1234-5678-345678901234"/>
+				<reportElement x="10" y="90" width="90" height="11" uuid="56789012-7890-1234-5678-345678901234"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Umur]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="105" y="93" width="290" height="11" uuid="67890123-8901-2345-6789-456789012345"/>
+				<reportElement x="105" y="90" width="290" height="11" uuid="67890123-8901-2345-6789-456789012345"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{umur_pj} + " Tahun"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="104" width="90" height="11" uuid="78901234-9012-3456-7890-567890123456"/>
+				<reportElement x="10" y="101" width="90" height="11" uuid="78901234-9012-3456-7890-567890123456"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Alamat (Sesuai KTP)]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="105" y="104" width="467" height="11" uuid="89012345-0123-4567-8901-678901234567"/>
+				<reportElement x="105" y="101" width="487" height="11" uuid="89012345-0123-4567-8901-678901234567"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{alamat_pj}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="115" width="90" height="11" uuid="90123456-1234-5678-9012-789012345678"/>
+				<reportElement x="10" y="112" width="90" height="11" uuid="90123456-1234-5678-9012-789012345678"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Pekerjaan]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="105" y="115" width="290" height="11" uuid="01234567-2345-6789-0123-890123456789"/>
+				<reportElement x="105" y="112" width="290" height="11" uuid="01234567-2345-6789-0123-890123456789"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{pekerjaan_pj}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="400" y="115" width="50" height="11" uuid="12345678-3456-7890-1234-901234567890"/>
+				<reportElement x="400" y="112" width="50" height="11" uuid="12345678-3456-7890-1234-901234567890"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[No. HP]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="455" y="115" width="117" height="11" uuid="23456789-4567-8901-2345-012345678901"/>
+				<reportElement x="455" y="112" width="137" height="11" uuid="23456789-4567-8901-2345-012345678901"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": " + $F{no_telp}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="134" width="572" height="20" uuid="34567890-5678-9012-3456-123456789012"/>
+				<reportElement x="0" y="135" width="592" height="12" uuid="34567890-5678-9012-3456-123456789012"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<text><![CDATA[Selaku pasien / orang tua pasien / suami pasien / istri pasien / keluarga pasien (coret yang tidak perlu) dari pasien tersebut diatas, dengan ini MENYATAKAN Persetujuan:]]></text>
 			</staticText>
 		</band>
-		<band height="680">
+		<band height="170">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="12" uuid="45678901-6789-0123-4567-234567890123"/>
+				<reportElement x="0" y="0" width="592" height="12" uuid="a1b2c3d4-e5f6-7890-1234-567890123456"/>
 				<textElement>
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[1. PERSETUJUAN UNTUK PERAWATAN DAN PENGOBATAN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="12" width="560" height="130" uuid="56789012-7890-1234-5678-345678901234"/>
+				<reportElement positionType="Float" x="12" y="12" width="15" height="12" uuid="b1c2d3e4-f5a6-7890-1234-567890123456"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[a.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="12" width="565" height="12" uuid="c1d2e3f4-a5b6-7890-1234-567890123456"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<text><![CDATA[a. Saya mengetahui bahwa saya memiliki kondisi yang membutuhkan perawatan medis, saya mengijinkan dokter dan profesional kesehatan lainnya untuk melakukan prosedur diagnostik, elektrokardiogram dan untuk memberikan pengobatan medis seperti yang diperlukan dalam penilaian profesional mereka, prosedur diagnostik dan perawatan medis termasuk terapi tidak terbatas pada elektrokardiogram, x-ray, tes darah, terapi fisik dan pemberian obat.
-b. Saya sadar bahwa praktik kedokteran dan bedah bukanlah ilmu pasti dan saya mengakui tidak ada jaminan atas hasil apapun terhadap perawatan prosedur atau pemeriksaan apapun yang dilakukan kepada saya.
-c. Saya mengerti dan memahami bahwa :
-   - Saya memiliki hak untuk mengajukan pertanyaan tentang pengobatan yang diusulkan (termasuk identitas setiap orang yang memberikan atau mengamati pengobatan) setiap saat.
-   - Saya mengerti dan memahami bahwa saya memiliki hak untuk persetujuan atau menolak persetujuan untuk setiap prosedur/tindakan.
-   - Saya mengerti bahwa banyak dokter pada staf medis rumah sakit yang bukan karyawan tetap staf tamu yang telah diberikan hak untuk menggunakan fasilitas untuk perawatan dan pengobatan pasien mereka.
-d. Melalui dokumen ini, saya menegaskan kembali bahwa saya mempercayakan kepada semua tenaga kesehatan rumah sakit untuk memberikan perawatan, diagnostik, dan terapi kepada saya sebagai pasien rawat inap atau rawat jalan atau instalasi gawat darurat (IGD), termasuk semua pemeriksaan penunjang, yang dibutuhkan untuk pengobatan dan tindakan yang aman.]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["Saya mengetahui bahwa saya memiliki kondisi yang membutuhkan perawatan medis, saya mengijinkan dokter dan profesional kesehatan lainnya untuk melakukan prosedur diagnostik, elektrokardiogram dan untuk memberikan pengobatan medis seperti yang diperlukan dalam penilaian profesional mereka, prosedur diagnostik dan perawatan medis termasuk terapi tidak terbatas pada elektrokardiogram, x-ray, tes darah, terapi fisik dan pemberian obat."]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="0" y="145" width="572" height="12" uuid="23456789-4567-8901-2345-012345678901"/>
+				<reportElement positionType="Float" x="12" y="24" width="15" height="12" uuid="d1e2f3a4-b5c6-7890-1234-567890123456"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[b.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="24" width="565" height="12" uuid="e1f2a3b4-c5d6-7890-1234-567890123456"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Saya sadar bahwa praktik kedokteran dan bedah bukanlah ilmu pasti dan saya mengakui tidak ada jaminan atas hasil apapun terhadap perawatan prosedur atau pemeriksaan apapun yang dilakukan kepada saya."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="36" width="15" height="12" uuid="f1a2b3c4-d5e6-7890-1234-567890123456"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[c.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="36" width="565" height="12" uuid="12345678-90ab-cdef-1234-567890abcdef"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Saya mengerti dan memahami bahwa :\n"+
+"-  Saya memiliki hak untuk mengajukan pertanyaan tentang pengobatan yang diusulkan (termasuk identitas setiap orang yang memberikan atau mengamati pengobatan) setiap saat.\n"+
+"-  Saya mengerti dan memahami bahwa saya memiliki hak untuk persetujuan atau menolak persetujuan untuk setiap prosedur/tindakan.\n"+
+"-  Saya mengerti bahwa banyak dokter pada staf medis rumah sakit yang bukan karyawan tetap staf tamu yang telah diberikan hak untuk menggunakan fasilitas untuk perawatan dan pengobatan pasien mereka."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="48" width="15" height="12" uuid="23456789-0abc-def1-2345-67890abcdef1"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[d.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="48" width="565" height="12" uuid="34567890-abcd-ef12-3456-7890abcdef12"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Melalui dokumen ini, saya menegaskan kembali bahwa saya mempercayakan kepada semua tenaga kesehatan rumah sakit untuk memberikan perawatan, diagnostik, dan terapi kepada saya sebagai pasien rawat inap atau rawat jalan atau instalasi gawat darurat (IGD), termasuk semua pemeriksaan penunjang, yang dibutuhkan untuk pengobatan dan tindakan yang aman."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="65" width="592" height="12" uuid="45678901-bcde-f123-4567-890abcdef123"/>
 				<textElement>
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[2. PERSETUJUAN PELEPASAN INFORMASI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="157" width="560" height="135" uuid="34567890-5678-9012-3456-123456789012"/>
+				<reportElement positionType="Float" x="12" y="77" width="15" height="12" uuid="56789012-cdef-1234-5678-90abcdef1234"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[a.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="77" width="565" height="12" uuid="67890123-def0-1234-5678-90abcdef1234"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<text><![CDATA[a. Saya memahami informasi yang ada dalam diri saya termasuk diagnosa, hasil laboratorium dan hasil tes diagnostik yang akan digunakan untuk perawatan medis Rumah Sakit Permata Bunda Tasikmalaya akan menjamin kerahasiaannya.
-b. Saya memberi wewenang kepada Rumah Sakit Permata Bunda Tasikmalaya untuk memberikan informasi tentang diagnosa, hasil pelayanan dan pengobatan bila diperlukan untuk memproses klaim asuransi/ Jamkesmas/Jamkesda/Perusahaan atau lembaga pemerintah.
-c. Saya memberi wewenang kepada Rumah Sakit Permata Bunda Tasikmalaya untuk memberikan informasi tentang diagnosa, hasil pelayanan dan pengobatan saya kepada anggota keluarga saya, kepada:
-   1. .............................................................
-   2. .............................................................
-d. Saya mengetahui dan menyetujui bahwa berdasarkan Peraturan Menteri Kesehatan No. 24 Tahun 2022 tentang Rekam Medis, fasilitas pelayanan kesehatan wajib membuka akses dan mengirim data rekam medis kepada Kementrian Kesehatan melalui Platform SATUSEHAT.
-e. Menyetujui untuk menerima dan membuka data pasien dari Fasilitas Pelayanan Kesehatan lainnya melalui SATUSEHAT untuk kepentingan pelayanan kesehatan dan/atau rujukan.]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["Saya memahami informasi yang ada dalam diri saya termasuk diagnosa, hasil laboratorium dan hasil tes diagnostik yang akan digunakan untuk perawatan medis "+$P{namars}+" akan menjamin kerahasiaannya."]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="0" y="300" width="572" height="12" uuid="01234567-2345-6789-0123-890123456789"/>
+				<reportElement positionType="Float" x="12" y="89" width="15" height="12" uuid="78901234-ef01-2345-6789-0abcdef12345"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[b.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="89" width="565" height="12" uuid="89012345-f012-3456-7890-abcdef123456"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Saya memberi wewenang kepada "+$P{namars}+" untuk memberikan informasi tentang diagnosa, hasil pelayanan dan pengobatan bila diperlukan untuk memproses klaim asuransi/ Jamkesmas/Jamkesda/Perusahaan atau lembaga pemerintah."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="101" width="15" height="12" uuid="90123456-0123-4567-8901-bcdef1234567"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[c.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="101" width="565" height="12" uuid="01234567-1234-5678-9012-cdef12345678"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Saya memberi wewenang kepada "+$P{namars}+" untuk memberikan informasi tentang diagnosa, hasil pelayanan dan pengobatan saya kepada anggota keluarga saya, kepada:\n"+
+"1. .............................................................\n"+
+"2. ............................................................."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="113" width="15" height="12" uuid="12345678-2345-6789-0123-def123456789"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[d.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="113" width="565" height="12" uuid="23456789-3456-7890-1234-ef1234567890"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Saya mengetahui dan menyetujui bahwa berdasarkan Peraturan Menteri Kesehatan No. 24 Tahun 2022 tentang Rekam Medis, fasilitas pelayanan kesehatan wajib membuka akses dan mengirim data rekam medis kepada Kementrian Kesehatan melalui Platform SATUSEHAT."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="125" width="15" height="12" uuid="34567890-4567-8901-2345-f01234567890"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[e.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="125" width="565" height="12" uuid="45678901-5678-9012-3456-012345678901"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Menyetujui untuk menerima dan membuka data pasien dari Fasilitas Pelayanan Kesehatan lainnya melalui SATUSEHAT untuk kepentingan pelayanan kesehatan dan/atau rujukan."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="142" width="592" height="12" uuid="56789012-6789-0123-4567-123456789012"/>
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[3. PRIVASI]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="312" width="560" height="35" uuid="12345678-3456-7890-1234-901234567890"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="154" width="580" height="12" uuid="67890123-7890-1234-5678-234567890123"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Saya mengijinkan/tidak mengijinkan (coret salah satu) kepada "+$P{namars}+" memberi akses bagi keluarga dan handai taulan serta orang-orang yang akan menengok/menemui saya ......................................................................................................................................................................................................\nSaya menginginkan / tidak menginginkan (coret salah satu) privasi khusus."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Saya mengijinkan/tidak mengijinkan (coret salah satu) kepada "+$P{namars}+" memberi akses bagi keluarga dan handai taulan serta orang-orang yang akan menengok/menemui saya ......................................................................................................................................................................................................\n"+
+"Saya menginginkan / tidak menginginkan (coret salah satu) privasi khusus."]]></textFieldExpression>
 			</textField>
+		</band>
+		<band height="250">
 			<staticText>
-				<reportElement x="0" y="352" width="572" height="12" uuid="23456789-4567-8901-2345-012345678901"/>
+				<reportElement positionType="Float" x="0" y="0" width="592" height="12" uuid="78901234-8901-2345-6789-345678901234"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[4. BARANG-BARANG MILIK PASIEN]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="364" width="560" height="40" uuid="34567890-5678-9012-3456-123456789012"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="12" width="580" height="12" uuid="89012345-9012-3456-7890-456789012345"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Saya telah memahami tata tertib "+$P{namars}+" bahwa saya dilarang membawa barang berharga, alat elektronik, karena jika terjadi kehilangan rumah sakit tidak bertanggung jawab kecuali jika saya menitipkan barang berharga saya ke rumah sakit dengan mengisi formulir penitipan dan pengambilan harta benda."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="409" width="572" height="12" uuid="45678901-6789-0123-4567-234567890123"/>
+				<reportElement positionType="Float" x="0" y="29" width="592" height="12" uuid="90123456-0123-4567-8901-567890123456"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[5. HAK DAN KEWAJIBAN]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="421" width="560" height="55" uuid="56789012-7890-1234-5678-345678901234"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="41" width="580" height="12" uuid="01234567-1234-5678-9012-678901234567"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Dengan menandatangani dokumen ini saya mengakui bahwa pada proses pendaftaran untuk mendapatkan perawatan di "+$P{namars}+" telah mendapatkan informasi tentang hak-hak dan kewajiban saya sebagai pasien sebagaimana tercantum pada Undang-Undang No. 44 Tahun 2009 tentang Hak Pasien dan Kewajiban Pasien (Terlampir)."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="481" width="572" height="12" uuid="67890123-8901-2345-6789-456789012345"/>
+				<reportElement positionType="Float" x="0" y="58" width="592" height="12" uuid="12345678-2345-6789-0123-789012345678"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[6. RAHASIA MEDIS]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="493" width="560" height="33" uuid="78901234-9012-3456-7890-567890123456"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="70" width="580" height="12" uuid="23456789-3456-7890-1234-890123456789"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Saya setuju "+$P{namars}+" wajib menjamin kerahasiaan informasi medis saya baik untuk kepentingan perawatan dan pengobatan, pendidikan maupun penelitian kecuali saya mengungkapkan sendiri orang yang lain yang saya beri kuasa untuk itu."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="531" width="572" height="12" uuid="89012345-0123-4567-8901-678901234567"/>
+				<reportElement positionType="Float" x="0" y="87" width="592" height="12" uuid="34567890-4567-8901-2345-901234567890"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[7. PENGAJUAN KELUHAN]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="12" y="543" width="560" height="33" uuid="90123456-1234-5678-9012-789012345678"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="99" width="580" height="12" uuid="45678901-5678-9012-3456-012345678901"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<text><![CDATA[Saya menyatakan bahwa saya telah menerima informasi tentang adanya tatacara mengajukan dan mengatasi keluhan terkait pelayanan medik yang diberikan terhadap diri saya. Saya setuju untuk mengikuti tata cara mengajukan keluhan sesuai prosedur yang ada.]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["Saya menyatakan bahwa saya telah menerima informasi tentang adanya tatacara mengajukan dan mengatasi keluhan terkait pelayanan medik yang diberikan terhadap diri saya. Saya setuju untuk mengikuti tata cara mengajukan keluhan sesuai prosedur yang ada."]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="0" y="581" width="572" height="12" uuid="01234567-2345-6789-0123-890123456789"/>
+				<reportElement positionType="Float" x="0" y="116" width="592" height="12" uuid="56789012-6789-0123-4567-123456789012"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[8. PELAYANAN KEROHANIAN]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="593" width="560" height="33" uuid="12345678-3456-7890-1234-901234567890"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="128" width="580" height="12" uuid="67890123-7890-1234-5678-234567890123"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Saya memahami informasi bahwa selama perawatan di ruang rawat inap akan diberikan satu kali pelayanan kerohanian sesuai dengan agama "+$F{agama}+" yang saya anut kecuali bila saya non muslim, saya akan mengajukan permintaan pelayanan kerohanian kepada "+$P{namars}+"."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="631" width="572" height="12" uuid="23456789-4567-8901-2345-012345678901"/>
+				<reportElement positionType="Float" x="0" y="145" width="592" height="12" uuid="78901234-8901-2345-6789-345678901234"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[9. IDENTIFIKASI NILAI-NILAI DAN KEPERCAYAAN]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="643" width="560" height="22" uuid="34567890-5678-9012-3456-123456789012"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="157" width="580" height="12" uuid="89012345-9012-3456-7890-456789012345"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Saya / Pasien memohon kepada "+$P{namars}+" agar tidak memberikan terapi atau melakukan tindakan yang bertentangan dengan nilai-nilai akan kepercayaan saya / pasien."]]></textFieldExpression>
 			</textField>
-		</band>
-		<band height="300">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="12" uuid="56789012-7890-1234-5678-345678901234"/>
+				<reportElement positionType="Float" x="0" y="174" width="592" height="12" uuid="90123456-0123-4567-8901-567890123456"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[10. INFORMASI RAWAT JALAN / RAWAT INAP]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="12" width="560" height="95" uuid="67890123-8901-2345-6789-456789012345"/>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="186" width="15" height="12" uuid="01234567-1234-5678-9012-678901234567"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[a.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="186" width="565" height="12" uuid="12345678-2345-6789-0123-789012345678"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["a. Saya/pasien tidak diperkenankan untuk membawa barang berharga keruang rawat jalan/inap dan saya memahami bahwa "+$P{namars}+" tidak bertanggungjawab apabila terjadi kehilangan barang milik pasien/pengunjung.\n"+
-"b. Bila tidak ada anggota keluarga, rumah sakit menyediakan tempat penitipan barang milik pasien ditempat resmi yang telah disediakan oleh "+$P{namars}+".\n"+
-"c. Saya telah menerima informasi tentang peraturan yang diberlakukan oleh "+$P{namars}+" dan saya beserta keluarga bersedia mematuhinya, termasuk akan mematuhi jam berkunjung pasien sesuai dengan aturan "+$P{namars}+".\n"+
-"d. Anggota keluarga yang menunggu saya, bersedia untuk selalu memakai tanda pengenal khusus yang diberikan "+$P{namars}+", demi keamanan seluruh pasien setiap keluarga dan siapapun yang mengunjungi saya diluar jam berkunjung, bersedia untuk diminta/diperiksa identitasnya dan memakai identitas yang diberikan oleh "+$P{namars}+"."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Saya/pasien tidak diperkenankan untuk membawa barang berharga keruang rawat jalan/inap dan saya memahami bahwa "+$P{namars}+" tidak bertanggungjawab apabila terjadi kehilangan barang milik pasien/pengunjung."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="110" width="572" height="12" uuid="78901234-9012-3456-7890-567890123456"/>
+				<reportElement positionType="Float" x="12" y="198" width="15" height="12" uuid="23456789-3456-7890-1234-890123456789"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[b.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="198" width="565" height="12" uuid="34567890-4567-8901-2345-901234567890"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bila tidak ada anggota keluarga, rumah sakit menyediakan tempat penitipan barang milik pasien ditempat resmi yang telah disediakan oleh "+$P{namars}+"."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="210" width="15" height="12" uuid="45678901-5678-9012-3456-012345678901"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[c.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="210" width="565" height="12" uuid="56789012-6789-0123-4567-123456789012"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Saya telah menerima informasi tentang peraturan yang diberlakukan oleh "+$P{namars}+" dan saya beserta keluarga bersedia mematuhinya, termasuk akan mematuhi jam berkunjung pasien sesuai dengan aturan "+$P{namars}+"."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="222" width="15" height="12" uuid="67890123-7890-1234-5678-234567890123"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[d.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="222" width="565" height="12" uuid="78901234-8901-2345-6789-345678901234"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Anggota keluarga yang menunggu saya, bersedia untuk selalu memakai tanda pengenal khusus yang diberikan "+$P{namars}+", demi keamanan seluruh pasien setiap keluarga dan siapapun yang mengunjungi saya diluar jam berkunjung, bersedia untuk diminta/diperiksa identitasnya dan memakai identitas yang diberikan oleh "+$P{namars}+"."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="400">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="592" height="12" uuid="89012345-9012-3456-7890-456789012345"/>
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[11. INFORMASI BIAYA]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="122" width="560" height="25" uuid="89012345-0123-4567-8901-678901234567"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="12" width="580" height="12" uuid="90123456-0123-4567-8901-567890123456"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Saya memahami dan menyetujui tentang informasi biaya pengobatan ataupun tindakan yang telah dijelaskan oleh petugas sesuai dengan peraturan "+$P{namars}+" :"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="147" width="560" height="12" uuid="90123456-1234-5678-9012-789012345678"/>
+				<reportElement positionType="Float" x="27" y="24" width="565" height="12" uuid="01234567-1234-5678-9012-678901234567"/>
 				<textElement>
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pasien Rawat Jalan]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="159" width="560" height="20" uuid="01234567-2345-6789-0123-890123456789"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="37" y="36" width="555" height="12" uuid="12345678-2345-6789-0123-789012345678"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["\u2610 Saat mendaftar di Instalasi Rawat Jalan, wajib melengkapi persyaratan jaminan pembayaran "+$P{namars}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="180" width="560" height="12" uuid="12345678-3456-7890-1234-901234567890"/>
+				<reportElement positionType="Float" x="27" y="48" width="565" height="12" uuid="23456789-3456-7890-1234-890123456789"/>
 				<textElement>
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pasien Rawat Inap]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="192" width="560" height="23" uuid="23456789-4567-8901-2345-012345678901"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="37" y="60" width="555" height="12" uuid="34567890-4567-8901-2345-901234567890"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["\u2610 Bersedia melengkapi persyaratan jaminan pembayaran dalam waktu 1 x 24 jam terhitung sejak hari, tanggal dan jam masuk di "+$P{namars}+"."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["\u2610 Bersedia melengkapi persyaratan jaminan pembayaran dalam waktu 1 x 24 jam terhitung sejak hari, tanggal dan jam masuk di "+$P{namars}+".\n"+
+"Apabila dalam tempo waktu yang telah ditetapkan, tidak dapat menyatakan jaminan BPJS maka bersedia menjadi pasien umum"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="24" y="215" width="548" height="20" uuid="34567890-5678-9012-3456-123456789012"/>
-				<textElement textAlignment="Justified">
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[Apabila dalam tempo waktu yang telah ditetapkan, tidak dapat menyatakan jaminan BPJS maka bersedia menjadi pasien umum]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="12" y="235" width="560" height="12" uuid="45678901-6789-0123-4567-234567890123"/>
+				<reportElement positionType="Float" x="27" y="72" width="565" height="12" uuid="45678901-5678-9012-3456-012345678901"/>
 				<textElement>
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pasien Instalasi Gawat Darurat]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="247" width="560" height="23" uuid="56789012-7890-1234-5678-345678901234"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="37" y="84" width="555" height="12" uuid="56789012-6789-0123-4567-123456789012"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["\u2610 Bagi pasien BPJS yang masuk melalui IGD, apabila hasil skrining awal tidak memenuhi kriteria Gawat Darurat, bersedia untuk membayar biaya perawatan dan terdaftar sebagai pasien umum."]]></textFieldExpression>
 			</textField>
-		</band>
-		<band height="350">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="12" uuid="90123456-1234-5678-9012-789012345678"/>
+				<reportElement positionType="Float" x="0" y="101" width="592" height="12" uuid="67890123-7890-1234-5678-234567890123"/>
 				<textElement>
-					<font fontName="Tahoma" size="9" isBold="true"/>
+					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[12. KEWAJIBAN PEMBAYARAN]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="12" y="12" width="560" height="100" uuid="01234567-2345-6789-0123-890123456789"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="113" width="580" height="12" uuid="78901234-8901-2345-6789-345678901234"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Saya menyatakan setuju, baik sebagai wali atau sebagai pasien, bahwa sesuai pertimbangan pelayanan yang diberikan kepada pasien, maka saya wajib untuk membayar total biaya pelayanan. Biaya pelayanan berdasarkan acuan biaya dan ketentuan "+$P{namars}+". Apabila asuransi kesehatan swasta atau program pemerintah menanggung pembiayaan saya, saya memberi wewenang kepada rumah sakit untuk memberi tagihan dari semua pelayanan dan tindakan medis yang diberikan, Tanggungan asuransi saya mungkin menyatakan bahwa sebagian pembayaran tetap menjadi tanggung jawab pribadi saya atau tidak ditanggung oleh asuransi, maka rumah sakit berwenang memberi tagihan untuk biaya yang tidak ditanggung oleh asuransi dan saya bertanggung jawab untuk membayarnya.\n"+
-"a. Apabila saya tidak memberikan persetujuan, atau dikemudian hari mencabut persetujuan saya untuk melepas rahasia kedokteran saya kepada perusahaan asuransi yang saya tentukan, maka saya pribadi bertanggung jawab untuk membayar semua pelayanan dan tindakan medis dari "+$P{namars}+".\n"+
-"b. Apabila rumah sakit membutuhkan proses hukum untuk menagih biaya pelayan rumah sakit dari saya, saya memahami bahwa saya bertanggung jawab untuk membayar semua biaya yang disebabkan dari proses hukum tersebut."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Saya menyatakan setuju, baik sebagai wali atau sebagai pasien, bahwa sesuai pertimbangan pelayanan yang diberikan kepada pasien, maka saya wajib untuk membayar total biaya pelayanan. Biaya pelayanan berdasarkan acuan biaya dan ketentuan "+$P{namars}+". Apabila asuransi kesehatan swasta atau program pemerintah menanggung pembiayaan saya, saya memberi wewenang kepada rumah sakit untuk memberi tagihan dari semua pelayanan dan tindakan medis yang diberikan, Tanggungan asuransi saya mungkin menyatakan bahwa sebagian pembayaran tetap menjadi tanggung jawab pribadi saya atau tidak ditanggung oleh asuransi, maka rumah sakit berwenang memberi tagihan untuk biaya yang tidak ditanggung oleh asuransi dan saya bertanggung jawab untuk membayarnya."]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="0" y="112" width="572" height="26" uuid="12345678-3456-7890-1234-901234567890"/>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="125" width="15" height="12" uuid="89012345-9012-3456-7890-456789012345"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[a.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="125" width="565" height="12" uuid="90123456-0123-4567-8901-567890123456"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Apabila saya tidak memberikan persetujuan, atau dikemudian hari mencabut persetujuan saya untuk melepas rahasia kedokteran saya kepada perusahaan asuransi yang saya tentukan, maka saya pribadi bertanggung jawab untuk membayar semua pelayanan dan tindakan medis dari "+$P{namars}+"."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="137" width="15" height="12" uuid="01234567-1234-5678-9012-678901234567"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[b.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="137" width="565" height="12" uuid="12345678-2345-6789-0123-789012345678"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Apabila rumah sakit membutuhkan proses hukum untuk menagih biaya pelayan rumah sakit dari saya, saya memahami bahwa saya bertanggung jawab untuk membayar semua biaya yang disebabkan dari proses hukum tersebut."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="155" width="580" height="12" uuid="23456789-3456-7890-1234-890123456789"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Dengan ini menyatakan BERSEDIA membayar seluruh biaya pelayanan atau selisih di luar pertanggung jawaban jaminan kesehatan sesuai dengan ketentuan "+$P{namars}+" yang terjadi atas diri pasien dengan cara pembayaran sebagai berikut :"]]></textFieldExpression>
 			</textField>
-			<rectangle>
-				<reportElement x="12" y="138" width="10" height="10" uuid="23456789-4567-8901-2345-012345678901"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="28" y="138" width="100" height="11" uuid="34567890-5678-9012-3456-123456789012"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[UMUM]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="28" y="150" width="10" height="10" uuid="45678901-6789-0123-4567-234567890123"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="44" y="150" width="520" height="22" uuid="56789012-7890-1234-5678-345678901234"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[Saya telah mendapatkan penjelasan manfaat / jaminan kesehatan dan MENOLAK untuk menggunakan jaminan kesehatan.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="173" width="520" height="11" uuid="67890123-8901-2345-6789-456789012345"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[BPJS Kesehatan, alasan ......................................................................................................................................................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="185" width="520" height="11" uuid="78901234-9012-3456-7890-567890123456"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[BPJS Ketenagakerjaan, alasan ......................................................................................................................................................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="197" width="520" height="11" uuid="89012345-0123-4567-8901-678901234567"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[Jasa Raharja, alasan ......................................................................................................................................................................]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="12" y="215" width="10" height="10" uuid="90123456-1234-5678-9012-789012345678"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="28" y="215" width="100" height="11" uuid="01234567-2345-6789-0123-890123456789"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[ASURANSI SWASTA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="227" width="520" height="11" uuid="12345678-3456-7890-1234-901234567890"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[Nama Perusahaan asuransi ......................................................................................................................................................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="239" width="520" height="11" uuid="23456789-4567-8901-2345-012345678901"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[No. Kartu Peserta .....................................................................................................................................................................................]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="12" y="253" width="10" height="10" uuid="34567890-5678-9012-3456-123456789012"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="28" y="253" width="100" height="11" uuid="45678901-6789-0123-4567-234567890123"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[BPJS Ketenagakerjaan]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="265" width="520" height="11" uuid="56789012-7890-1234-5678-345678901234"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[No. Kartu Peserta .....................................................................................................................................................................................]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="12" y="279" width="10" height="10" uuid="67890123-8901-2345-6789-456789012345"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="28" y="279" width="100" height="11" uuid="78901234-9012-3456-7890-567890123456"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[BPJS Kesehatan]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="291" width="520" height="11" uuid="89012345-0123-4567-8901-678901234567"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[No. Kartu Peserta .....................................................................................................................................................................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="44" y="303" width="520" height="11" uuid="90123456-1234-5678-9012-789012345678"/>
-				<textElement>
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[Hak Kelas Perawatan ................................................................................................................................................................................]]></text>
-			</staticText>
-		</band>
-		<band height="600">
-			<textField>
-				<reportElement x="12" y="0" width="560" height="300" uuid="01234567-2345-6789-0123-890123456789"/>
+			<frame>
+				<reportElement positionType="Float" x="12" y="172" width="570" height="90" uuid="34567890-4567-8901-2345-901234567890"/>
+				<rectangle>
+					<reportElement x="0" y="2" width="10" height="10" uuid="45678901-5678-9012-3456-012345678901"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="15" y="2" width="100" height="11" uuid="56789012-6789-0123-4567-123456789012"/>
+					<textElement>
+						<font fontName="Tahoma" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[UMUM]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="14" width="550" height="11" uuid="67890123-7890-1234-5678-234567890123"/>
+					<textElement>
+						<font fontName="Tahoma" size="8"/>
+					</textElement>
+					<text><![CDATA[Saya telah mendapatkan penjelasan manfaat / jaminan kesehatan dan MENOLAK untuk menggunakan jaminan kesehatan.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="25" width="550" height="11" uuid="78901234-8901-2345-6789-345678901234"/>
+					<textElement>
+						<font fontName="Tahoma" size="8"/>
+					</textElement>
+					<text><![CDATA[BPJS Kesehatan / BPJS Ketenagakerjaan / Jasa Raharja, alasan ...........................................................................................................]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="0" y="40" width="10" height="10" uuid="89012345-9012-3456-7890-456789012345"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="15" y="40" width="100" height="11" uuid="90123456-0123-4567-8901-567890123456"/>
+					<textElement>
+						<font fontName="Tahoma" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ASURANSI SWASTA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="52" width="550" height="11" uuid="01234567-1234-5678-9012-678901234567"/>
+					<textElement>
+						<font fontName="Tahoma" size="8"/>
+					</textElement>
+					<text><![CDATA[Nama Perusahaan asuransi ................................................................. No. Kartu Peserta .......................................................................]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="0" y="67" width="10" height="10" uuid="12345678-2345-6789-0123-789012345678"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="15" y="67" width="150" height="11" uuid="23456789-3456-7890-1234-890123456789"/>
+					<textElement>
+						<font fontName="Tahoma" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[BPJS KESEHATAN / KETENAGAKERJAAN]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="79" width="550" height="11" uuid="34567890-4567-8901-2345-901234567890"/>
+					<textElement>
+						<font fontName="Tahoma" size="8"/>
+					</textElement>
+					<text><![CDATA[No. Kartu Peserta .............................................................................. Hak Kelas Perawatan .....................................................................]]></text>
+				</staticText>
+			</frame>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="270" width="592" height="12" uuid="45678901-5678-9012-3456-012345678901"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["1. Saya telah mendapatkan informasi dan penjelasan dari pihak Rumah Sakit mengenai ruang Rawat inap sesuai Hak Kelas Tersedia.\n"+
-"2. Kami sudah mengetahui kamar sesuai Hak Kelas Rawat Pasien masih tersedia.\n"+
-"3. Bersedia mengikuti ketentuan sesuai dengan PERMENKES 28 tahun 2014, PERMENKES No. 3 tahun 2023 :\n"+
-"    a) Naik kelas perawatan bisa lebih dari 2 tingkat\n"+
-"    b) Untuk peserta JKN kelas 3 tidak diperkenankan untuk naik kelas rawat inap baik PBI maupun PBPU dan bila pasien menginginkan naik kelas maka penjaminan JKN nya gugu (Penjamin UMUM)\n"+
-"    c) Untuk peserta JKN kelas 2 kenaikan kelas pelayanan rawat inap dapat dilakukan 2 tingkat lebih tinggi dari kelas yang menjadi hak pesertaa dan tidak melebihi total taif Rumah Sakit.\n"+
-"4. Setelah mengetahui kamar sesuai hak kelas rawat masih tersedia kami MEMUTUSKAN untuk dirawat (lingkari dan paraf di samping pilihan)\n"+
-"    a) Sesuai Hak Kelas Rawat............................................................................................\n"+
-"    b) Naik Kelas Hak Rawat............................................................................................. Alasan : ...................................................................................................................\n"+
-"5. Jika kami memilih poin a maka kami tidak dibebankan biaya apapun\n"+
-"6. Jika kami memilih poin b kami telah dijelaskan akan ada resiko Selisih Biaya sebesar:\n"+
-"    a) Untuk kenaikan kelas pelayanan rawat inap dari kelas 2 ke kelas 1 perhitungannya selisih Tarif INA CBG's pada kelas rawat inap kelas 1 dikurangi Tarif INA CBG's pada kelas rawat inap kelas 2, tidak melebihi total tarif Rumah Sakit.\n"+
-"    b) Untuk kenaikan kelas pelayanan rawat inap kelas 2 naik ke kelas pelayanan rawat inap 2 tingkat di atasnya (VIP), perhitungannya selisih tarif INA-CBG's antara kelas 1 dikurangi kelas 2 ditambah maksimal 75% dari tarif INA-CBG's kelas 1 dan tidak melebihi total tarif Rumah Sakit.\n"+
-"    c) Untuk kenaikan kelas pelayanan rawat inap dari kelas 1 ke kelas perawatan satu tingkat diatas kelas 1 (VIP/VVIP/DLL), maka selisih biaya sebesar 75% dari tarif INA CBG kelas 1 dan tidak melebihi total tarif Rumah Sakit.\n\n"+
-"Saya yang menyatakan bahwa akan mengikuti semua ketentuan dan tata cara pelayanan yang berlaku di "+$P{namars}+". Apabila saya tidak memenuhi kewajiban, saya bersedia di tuntut secara hukum di pengadilan.\n\n"+
+				<textFieldExpression><![CDATA["Saya yang menyatakan bahwa akan mengikuti semua ketentuan dan tata cara pelayanan yang berlaku di "+$P{namars}+". Apabila saya tidak memenuhi kewajiban, saya bersedia di tuntut secara hukum di pengadilan.\n"+
 "Demikian surat pernyataan ini saya buat dengan penuh tanggung jawab dan dalam keadaan sadar tanpa ada paksaan dari pihak manapun untuk digunakan sebagaimana mestinya."]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="300" y="315" width="260" height="14" uuid="12345678-3456-7890-1234-901234567890"/>
+				<reportElement positionType="Float" x="400" y="290" width="180" height="12" uuid="56789012-6789-0123-4567-123456789012"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{kotars}+", "+new SimpleDateFormat("dd-MM-yyyy").format($F{tanggal})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="300" y="330" width="260" height="14" uuid="23456789-4567-8901-2345-012345678901"/>
+				<reportElement positionType="Float" x="400" y="305" width="180" height="11" uuid="67890123-7890-1234-5678-234567890123"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="9"/>
 				</textElement>
 				<text><![CDATA[Yang membuat pernyataan,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="330" width="260" height="14" uuid="34567890-5678-9012-3456-123456789012"/>
+				<reportElement positionType="Float" x="10" y="305" width="170" height="11" uuid="78901234-8901-2345-6789-345678901234"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="9"/>
 				</textElement>
 				<text><![CDATA[Saksi I (pihak Rumah Sakit)]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="300" y="390" width="260" height="14" uuid="45678901-6789-0123-4567-234567890123"/>
-				<textElement textAlignment="Center">
-					<font fontName="Tahoma" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA["( .......................................................... )"]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="300" y="405" width="260" height="14" uuid="56789012-7890-1234-5678-345678901234"/>
-				<textElement textAlignment="Center">
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[Tanda tangan & nama jelas]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="12" y="390" width="260" height="14" uuid="67890123-8901-2345-6789-456789012345"/>
-				<textElement textAlignment="Center">
-					<font fontName="Tahoma" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA["( .......................................................... )"]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="12" y="405" width="260" height="14" uuid="78901234-9012-3456-7890-567890123456"/>
-				<textElement textAlignment="Center">
-					<font fontName="Tahoma" size="8"/>
-				</textElement>
-				<text><![CDATA[Tanda tangan & nama jelas]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="156" y="455" width="260" height="14" uuid="89012345-0123-4567-8901-678901234567"/>
+				<reportElement positionType="Float" x="210" y="305" width="170" height="11" uuid="89012345-9012-3456-7890-456789012345"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="9"/>
 				</textElement>
 				<text><![CDATA[Saksi II (pihak keluarga)]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="156" y="515" width="260" height="14" uuid="90123456-1234-5678-9012-789012345678"/>
+				<reportElement positionType="Float" x="10" y="350" width="170" height="12" uuid="90123456-0123-4567-8901-567890123456"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA["( .......................................................... )"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["( "+$F{nama}+" )"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="156" y="530" width="260" height="14" uuid="01234567-2345-6789-0123-890123456789"/>
+				<reportElement positionType="Float" x="10" y="362" width="170" height="14" uuid="01234567-1234-5678-9012-678901234567"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Tanda tangan & nama jelas]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="210" y="350" width="170" height="12" uuid="12345678-2345-6789-0123-789012345678"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["( .......................................... )"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="362" width="170" height="14" uuid="23456789-3456-7890-1234-890123456789"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Tanda tangan & nama jelas]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="400" y="350" width="180" height="12" uuid="34567890-4567-8901-2345-901234567890"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["( "+$F{nama_pj}+" )"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="400" y="362" width="180" height="14" uuid="45678901-5678-9012-3456-012345678901"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
