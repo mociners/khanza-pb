@@ -709,7 +709,7 @@ public final class InventarisKoleksi extends javax.swing.JDialog {
         FormInput.add(btnBarang);
         btnBarang.setBounds(703, 40, 25, 23);
 
-        tgl_pengadaan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-07-2022" }));
+        tgl_pengadaan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "24-03-2023" }));
         tgl_pengadaan.setDisplayFormat("dd-MM-yyyy");
         tgl_pengadaan.setName("tgl_pengadaan"); // NOI18N
         tgl_pengadaan.setOpaque(false);
@@ -787,7 +787,7 @@ public final class InventarisKoleksi extends javax.swing.JDialog {
         FormInput.add(jLabel19);
         jLabel19.setBounds(190, 130, 82, 23);
 
-        asal_barang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Beli", "Bantuan", "Hibah", "-" }));
+        asal_barang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Beli", "KSO", "Pinjam", "-" }));
         asal_barang.setLightWeightPopupEnabled(false);
         asal_barang.setName("asal_barang"); // NOI18N
         asal_barang.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1081,17 +1081,30 @@ public final class InventarisKoleksi extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null,"Maaf, data sudah habis. Tidak ada data yang bisa anda print...!!!!");
             BtnBatal.requestFocus();
         }else if(tabMode.getRowCount()!=0){
-                Map<String, Object> param = new HashMap<>();   
-                param.put("namars",akses.getnamars());
-                param.put("alamatrs",akses.getalamatrs());
-                param.put("kotars",akses.getkabupatenrs());
-                param.put("propinsirs",akses.getpropinsirs());
-                param.put("kontakrs",akses.getkontakrs());
-                param.put("emailrs",akses.getemailrs());   
-                param.put("logo",Sequel.cariGambar("select setting.logo from setting")); 
-                param.put("ruang","%"+nm_ruangcari.getText().trim()+"%"); 
-                param.put("parameter","%"+TCari.getText().trim()+"%"); 
-                Valid.MyReport("rptInv.jasper","report","::[ Data Inv Barang ]::",param);
+            Map<String, Object> param = new HashMap<>();   
+            param.put("namars",akses.getnamars());
+            param.put("alamatrs",akses.getalamatrs());
+            param.put("kotars",akses.getkabupatenrs());
+            param.put("propinsirs",akses.getpropinsirs());
+            param.put("kontakrs",akses.getkontakrs());
+            param.put("emailrs",akses.getemailrs());   
+            param.put("logo",Sequel.cariGambar("select setting.logo from setting")); 
+            param.put("ruang","%"+nm_ruangcari.getText().trim()+"%"); 
+            param.put("parameter","%"+TCari.getText().trim()+"%"); 
+            
+            String judulLaporan = "DATA INVENTARIS (REKAP KONDISI)";
+            boolean showRuang = false;            
+            if(nm_ruangcari.getText() != null && !nm_ruangcari.getText().trim().equals("")){
+                judulLaporan = "DATA INVENTARIS RUANG " + nm_ruangcari.getText().trim().toUpperCase();
+                
+            } else if (TCari.getText() != null && !TCari.getText().trim().equals("")) {
+                judulLaporan = "DATA INVENTARIS " + TCari.getText().trim().toUpperCase();
+                showRuang = true;
+            }
+            param.put("judul", judulLaporan);
+            param.put("showRuang", showRuang);
+            
+            Valid.MyReport("rptInv.jasper","report","::[ Data Inv Barang ]::",param);
         }
         this.setCursor(Cursor.getDefaultCursor());
 }//GEN-LAST:event_BtnPrintActionPerformed

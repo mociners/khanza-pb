@@ -1430,7 +1430,7 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                             param.put("jampermintaan", rspermintaan.getString("jam_permintaan"));
                             Valid.MyReport("rptPeriksaLabPermintaanPA.jasper", "report", "::[ Pemeriksaan Laboratorium ]::", param);
                         } else {
-                            Valid.MyReport("rptPeriksaLabPA.jasper", "report", "::[ Pemeriksaan Laboratorium ]::", param);
+                            Valid.MyReport("rptPeriksaLabPermintaanPA.jasper", "report", "::[ Pemeriksaan Laboratorium PA]::", param);
                         }
                     } finally {
                         if (rspermintaan != null) rspermintaan.close();

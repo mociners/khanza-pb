@@ -1251,7 +1251,7 @@ private void tampilKehamilanSebelumnya(){
                 }
                 // Jika nilai MENIT lebih kecil dari 10 (hanya 1 digit)
                 if (nilai_menit <= 9) {
-                    // Tambahkan "0" didepannya
+                    // Tambahkan "0" didepannya`
                     nol_menit = "0";
                 }
                 // Jika nilai DETIK lebih kecil dari 10 (hanya 1 digit)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInv_F4_Portrait_Fixed" pageWidth="612" pageHeight="936" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e941c42-689b-4935-bde2-f41527d00f79">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInv_A4_Dynamic_Col" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="572" leftMargin="11" rightMargin="12" topMargin="20" bottomMargin="20" uuid="2e941c42-689b-4935-bde2-f41527d00f79">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -13,6 +13,12 @@
 	<parameter name="logo" class="java.io.InputStream"/>
 	<parameter name="ruang" class="java.lang.String"/>
 	<parameter name="parameter" class="java.lang.String"/>
+	<parameter name="judul" class="java.lang.String">
+		<defaultValueExpression><![CDATA["DATA INVENTARIS (REKAP KONDISI)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="showRuang" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[Boolean.FALSE]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select inventaris_barang.kode_barang, inventaris_barang.nama_barang, inventaris_merk.nama_merk, inventaris_barang.thn_produksi, inventaris_barang.isbn, inventaris_kategori.nama_kategori, inventaris_jenis.nama_jenis, inventaris.asal_barang, inventaris.tgl_pengadaan, inventaris.harga, inventaris.status_barang, inventaris_ruang.nama_ruang, count(inventaris.no_inventaris) as jumlah 
         from inventaris 
@@ -36,45 +42,19 @@
         GROUP BY inventaris_barang.kode_barang, inventaris_barang.nama_barang, inventaris_merk.nama_merk, inventaris_barang.thn_produksi, inventaris_barang.isbn, inventaris_kategori.nama_kategori, inventaris_jenis.nama_jenis, inventaris.asal_barang, inventaris.tgl_pengadaan, inventaris.harga, inventaris.status_barang, inventaris_ruang.nama_ruang
         ORDER BY inventaris_barang.nama_barang]]>
 	</queryString>
-	<field name="kode_barang" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nama_barang" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nama_merk" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="thn_produksi" class="java.sql.Date">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="isbn" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nama_kategori" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nama_jenis" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="asal_barang" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="tgl_pengadaan" class="java.sql.Date">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="harga" class="java.lang.Double">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="status_barang" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nama_ruang" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="jumlah" class="java.lang.Long">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="kode_barang" class="java.lang.String"/>
+	<field name="nama_barang" class="java.lang.String"/>
+	<field name="nama_merk" class="java.lang.String"/>
+	<field name="thn_produksi" class="java.sql.Date"/>
+	<field name="isbn" class="java.lang.String"/>
+	<field name="nama_kategori" class="java.lang.String"/>
+	<field name="nama_jenis" class="java.lang.String"/>
+	<field name="asal_barang" class="java.lang.String"/>
+	<field name="tgl_pengadaan" class="java.sql.Date"/>
+	<field name="harga" class="java.lang.Double"/>
+	<field name="status_barang" class="java.lang.String"/>
+	<field name="nama_ruang" class="java.lang.String"/>
+	<field name="jumlah" class="java.lang.Long"/>
 	<variable name="total_barang" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{jumlah}]]></variableExpression>
 	</variable>
@@ -83,14 +63,14 @@
 	</background>
 	<title>
 		<band height="84">
-			<staticText>
+			<textField isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="30" y="52" width="512" height="20" uuid="1dd77a3c-1b7f-4864-a6f9-95d1f94b54c6"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="11" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[DATA INVENTARIS (REKAP KONDISI)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{judul}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="3" y="14" width="569" height="14" uuid="a87136aa-2463-4d8b-a4ee-b64d0b288bf2"/>
 				<textElement textAlignment="Center">
@@ -111,12 +91,12 @@
 				<reportElement x="1" y="2" width="48" height="45" uuid="4ba64650-2d78-4ab4-bba4-31adf6c19b40"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
-			<line>
-				<reportElement x="1" y="48" width="571" height="1" uuid="3aa78467-bbed-4660-8ff7-cf2932e7099a"/>
+			<rectangle>
+				<reportElement x="1" y="48" width="571" height="3" backcolor="#000000" uuid="70953769-6555-4428-8d26-751767119934"/>
 				<graphicElement>
-					<pen lineWidth="2.0" lineStyle="Double"/>
+					<pen lineWidth="0.0"/>
 				</graphicElement>
-			</line>
+			</rectangle>
 			<textField>
 				<reportElement x="3" y="0" width="569" height="17" uuid="62203744-b547-4d83-bb8e-d97e3c19e3ca"/>
 				<textElement textAlignment="Center">
@@ -140,15 +120,68 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="30">
-			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="22" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="5975b433-79c1-480a-85bf-980387efed4d"/>
-				<box>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="22" height="30" uuid="7a5e4066-5405-4f46-953e-324029272801"/>
+				<graphicElement>
 					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="22" y="0" width="150" height="30" uuid="b854d6e9-3b9a-41b4-b845-d45e54829302"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="172" y="0" width="25" height="30" uuid="c24a52f4-72b1-4682-93d3-f54298124003"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="197" y="0" width="75" height="30" uuid="d93b67c1-84c2-49d7-ae64-012365478904"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="272" y="0" width="70" height="30" uuid="e04c78d2-95d3-4ae8-bf75-123476589005"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="342" y="0" width="90" height="15" uuid="f15d89e3-06e4-4bf9-c086-234587690106"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="342" y="15" width="30" height="15" uuid="a26e90f4-17f5-4cf0-d197-345698701207"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="372" y="15" width="30" height="15" uuid="b37f01e5-28e6-5de1-e208-456709812308"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="402" y="15" width="30" height="15" uuid="c48e12e6-39e7-6ee2-f319-567810923409"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="432" y="0" width="140" height="30" uuid="d59e23e7-40e8-7fe3-e420-678921034510"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="22" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="5975b433-79c1-480a-85bf-980387efed4d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -156,14 +189,7 @@
 				<text><![CDATA[NO.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="22" y="0" width="150" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="bc5d9b16-3c0c-4a91-bce3-27b1c2a5ab8b"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="22" y="0" width="150" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="bc5d9b16-3c0c-4a91-bce3-27b1c2a5ab8b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -171,14 +197,7 @@
 				<text><![CDATA[NAMA BARANG]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="172" y="0" width="25" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="3d5c64b2-e0fe-4905-9b1b-09c52fa615bf"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="172" y="0" width="25" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="3d5c64b2-e0fe-4905-9b1b-09c52fa615bf"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -186,14 +205,7 @@
 				<text><![CDATA[JML]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="197" y="0" width="75" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="136a7e97-14c4-4f27-b179-d2c7f3ccbe3e"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="197" y="0" width="75" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="136a7e97-14c4-4f27-b179-d2c7f3ccbe3e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -201,29 +213,15 @@
 				<text><![CDATA[MERK]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="272" y="0" width="70" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="d56eb357-332c-4e1d-a0d6-a8f239440d9c"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="272" y="0" width="70" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="d56eb357-332c-4e1d-a0d6-a8f239440d9c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[NOMOR SERI]]></text>
+				<text><![CDATA[BARCODE SN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="342" y="0" width="90" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="8b95acf6-a2b0-4a68-acf3-6aa78a5758b8"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="342" y="0" width="90" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="8b95acf6-a2b0-4a68-acf3-6aa78a5758b8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -231,14 +229,7 @@
 				<text><![CDATA[KONDISI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="342" y="15" width="30" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="41f0e33e-d276-4775-a4d2-ca3a3967faed"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="342" y="15" width="30" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="41f0e33e-d276-4775-a4d2-ca3a3967faed"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -246,14 +237,7 @@
 				<text><![CDATA[ADA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="372" y="15" width="30" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="3bc5affc-8ce3-4ba3-956c-bf16307ca527"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="372" y="15" width="30" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="3bc5affc-8ce3-4ba3-956c-bf16307ca527"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -261,48 +245,81 @@
 				<text><![CDATA[RSK]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="402" y="15" width="30" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="655afd54-2672-494d-b956-dcde5b2c817f"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<reportElement mode="Transparent" x="402" y="15" width="30" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="655afd54-2672-494d-b956-dcde5b2c817f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[HLG/PRB]]></text>
 			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="432" y="0" width="140" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="6661b575-8344-4377-95b7-241b81906229"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+			<textField>
+				<reportElement mode="Transparent" x="432" y="0" width="140" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="6661b575-8344-4377-95b7-241b81906229"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[STATUS PEMILIK]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{showRuang} ? "RUANG" : "STATUS PEMILIK"]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="17" splitType="Stretch">
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="22" height="17" uuid="e60e34e8-51e9-8ee4-e531-789032145611"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="22" y="0" width="150" height="17" uuid="f71e45e9-62e0-9ee5-e642-890143256712"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="172" y="0" width="25" height="17" uuid="a82e56e0-73e1-0ee6-e753-901254367813"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="197" y="0" width="75" height="17" uuid="b93e67e1-84e2-1ee7-e864-012365478914"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="272" y="0" width="70" height="17" uuid="c04e78e2-95e3-2ee8-e975-123476589015"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="342" y="0" width="30" height="17" uuid="d15e89e3-06e4-3ee9-e086-234587690116"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="372" y="0" width="30" height="17" uuid="e26e90e4-17e5-4ee0-e197-345698701217"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="402" y="0" width="30" height="17" uuid="f37e01e5-28e6-5ee1-e208-456709812318"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="432" y="0" width="140" height="17" uuid="a48e12e6-39e7-6ee2-e319-567810923419"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="22" height="17" uuid="bbc69fe5-9a44-456f-87d4-80d8509a7f73"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -311,13 +328,7 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="22" y="0" width="150" height="17" uuid="524c1435-719c-414d-855f-da5882abbbf7"/>
-				<box leftPadding="2">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -326,13 +337,6 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="172" y="0" width="25" height="17" uuid="faad27b0-295f-41f5-8630-ec724f197a99"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -341,13 +345,7 @@
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="197" y="0" width="75" height="17" uuid="98adc27a-e199-475d-8ac0-24f6d7c8f2b5"/>
-				<box leftPadding="2">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -356,28 +354,15 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="272" y="0" width="70" height="17" uuid="fc77b781-cd23-4048-9b81-df727a5caeaa"/>
-				<box leftPadding="2">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
+				<box leftPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{kode_barang}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{isbn}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="342" y="0" width="30" height="17" uuid="cbcf91b0-80ac-4a2b-a3f7-58570d449d67"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -386,13 +371,6 @@
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="372" y="0" width="30" height="17" uuid="9496f35d-7d2f-496f-b6bc-9046d8600614"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -401,13 +379,6 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="402" y="0" width="30" height="17" uuid="3389f1ed-6371-4049-98da-2c60bab9d84c"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
@@ -416,18 +387,12 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="432" y="0" width="140" height="17" uuid="be7c94b0-f80c-4389-aea1-d438bbb33385"/>
-				<box leftPadding="2">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{asal_barang}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{showRuang} ? $F{nama_ruang} : $F{asal_barang}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

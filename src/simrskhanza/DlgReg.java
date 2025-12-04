@@ -10654,7 +10654,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             tbPetugas.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            DRujukInternal dlgrjk = new DRujukInternal(null, false);
+            DlgRujukInternal dlgrjk = new DlgRujukInternal(null, false);
             dlgrjk.setLocationRelativeTo(internalFrame1);
             dlgrjk.isCek();
             dlgrjk.setNoRm(TNoRw.getText(), TNoRM.getText(), TPasien.getText(), internalFrame1.getWidth(), internalFrame1.getHeight());
