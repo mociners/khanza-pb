@@ -5544,7 +5544,7 @@ public final class BPJSDataSEP extends javax.swing.JDialog {
                 if (JenisPelayanan.getSelectedIndex() == 0) {
                     Valid.MyReport("rptBridgingSEP.jasper", "report", "::[ Cetak SEP ]::", param);
                 } else {
-                    Valid.MyReport("rptBridgingSEP2.jasper", "report", "::[ Cetak SEP ]::", param);
+                    Valid.MyReport("rptBridgingSEP.jasper", "report", "::[ Cetak SEP ]::", param);
                 }
                 this.setCursor(Cursor.getDefaultCursor());
             } else {

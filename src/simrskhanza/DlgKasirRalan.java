@@ -188,6 +188,7 @@ import surat.SuratPulangAtasPermintaanSendiri;
 import surat.SuratSakit;
 import surat.SuratSakitPihak2;
 import surat.SuratTidakHamil;
+import simrskhanza.DlgRawatJalanDokter;
 
 /**
  *
@@ -245,6 +246,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     private Jurnal jur = new Jurnal();
     private double ttljmdokter = 0, ttljmperawat = 0, ttlkso = 0, ttljasasarana = 0, ttlbhp = 0, ttlmenejemen = 0,
             ttlpendapatan = 0;
+    private DlgRawatJalanDokter dlgrwjldokter=new DlgRawatJalanDokter(null,false);
 
     /**
      * Creates new form DlgReg
@@ -263,7 +265,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         tabModekasir = new DefaultTableModel(null, new String[] {
                 "Kode Dokter", "Dokter Dituju", "No.RM", "Pasien", "Poliklinik",
-                "Jenis Bayar", "No. SEP", "No. Sukon", "Status", "No.Reg", "Penanggung Jawab", "Alamat P.J.",
+                "Jenis Bayar", "No. SEP", "No. Sukon", "Status", "No.Reg", "Penanggung Jawab", "Alamat Pasien",
                 "Hubungan P.J.", "Biaya Reg", "Stts Poli", "No.Rawat", "Tanggal", "Jam",
                 "Status Bayar", "Kd PJ", "Kd Poli", "No.Telp Pasien", "Tindakan" }) {
             @Override
@@ -659,6 +661,25 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             @Override
             public void windowDeactivated(WindowEvent e) {
             }
+        });
+        
+        dlgrwjldokter.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
+            @Override
+            public void windowClosing(WindowEvent e) {}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                TabRawatMouseClicked(null);
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
         });
 
         DlgCatatan.setSize(595, 34);
@@ -8304,26 +8325,35 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     }// GEN-LAST:event_MnBelumActionPerformed
 
     private void MnDataRalanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MnDataRalanActionPerformed
-        if (tabModekasir.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
+        if(tabModekasir.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, table masih kosong...!!!!");
             TCari.requestFocus();
-        } else {
-            if (tbKasirRalan.getSelectedRow() != -1) {
-                if (Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",
-                        TNoRw.getText()) > 0) {
-                    JOptionPane.showMessageDialog(null,
-                            "Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
-                } else {
-                    dlgrwjl2.isCek();
-                    dlgrwjl2.emptTeks();
-                    dlgrwjl2.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                    dlgrwjl2.setLocationRelativeTo(internalFrame1);
-                    dlgrwjl2.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 20).toString());
-                    dlgrwjl2.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 19).toString());
-                    dlgrwjl2.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
-                    dlgrwjl2.setVisible(true);
-                }
-            }
+        }else{
+            if(tbKasirRalan.getSelectedRow()!= -1){
+                if(Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",TNoRw.getText())>0){
+                    JOptionPane.showMessageDialog(null,"Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
+                }else {
+                    if (akses.getkode().startsWith("D0")) {
+                        dlgrwjldokter.isCek();
+                        dlgrwjldokter.emptTeks();
+                        dlgrwjldokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                        dlgrwjldokter.setLocationRelativeTo(internalFrame1);
+                        dlgrwjldokter.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 20).toString());
+                        dlgrwjldokter.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 19).toString());
+                        dlgrwjldokter.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
+                        dlgrwjldokter.setVisible(true);
+                    } else {
+                        dlgrwjl2.isCek();
+                        dlgrwjl2.emptTeks();
+                        dlgrwjl2.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                        dlgrwjl2.setLocationRelativeTo(internalFrame1);
+                        dlgrwjl2.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),20).toString());
+                        dlgrwjl2.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),19).toString());
+                        dlgrwjl2.setNoRm(TNoRw.getText(),DTPCari1.getDate(),DTPCari2.getDate());    
+                        dlgrwjl2.setVisible(true);
+                    }
+                } 
+            }                               
         }
     }// GEN-LAST:event_MnDataRalanActionPerformed
 
@@ -9757,30 +9787,45 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     }// GEN-LAST:event_MnDataPemberianObat1ActionPerformed
 
     private void MnDataRalan1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MnDataRalan1ActionPerformed
-        if (tabModekasir2.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
+        if(tabModekasir2.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, table masih kosong...!!!!");
             TCari.requestFocus();
-        } else {
-            if (tbKasirRalan2.getSelectedRow() != -1) {
-                if (Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",
-                        tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 10).toString()) > 0) {
-                    JOptionPane.showMessageDialog(null,
-                            "Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
-                } else {
-                    dlgrwjl2.emptTeks();
-                    dlgrwjl2.isCek();
-                    dlgrwjl2.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                    dlgrwjl2.setLocationRelativeTo(internalFrame1);
-                    dlgrwjl2.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 13).toString());
-                    dlgrwjl2.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 14).toString());
-                    dlgrwjl2.setNoRm(
-                            tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 10).toString(),
-                            DTPCari1.getDate(), DTPCari2.getDate(),
-                            tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 0).toString(),
-                            tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 1).toString());
-                    dlgrwjl2.setVisible(true);
-                }
-            }
+        }else{
+            if(tbKasirRalan2.getSelectedRow()!= -1){
+                if(Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString())>0){
+                    JOptionPane.showMessageDialog(null,"Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
+                }else{
+                    if (akses.getkode().startsWith("D0")) {
+                        dlgrwjldokter.emptTeks();
+                        dlgrwjldokter.isCek();
+                        dlgrwjldokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                        dlgrwjldokter.setLocationRelativeTo(internalFrame1);
+                        dlgrwjldokter.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 13).toString());
+                        dlgrwjldokter.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 14).toString());
+                        dlgrwjldokter.setNoRm(
+                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 10).toString(),
+                                DTPCari1.getDate(), DTPCari2.getDate(),
+                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 0).toString(),
+                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 1).toString()
+                        );
+                        dlgrwjldokter.setVisible(true);
+                    } else {
+                        dlgrwjl2.emptTeks();
+                        dlgrwjl2.isCek();
+                        dlgrwjl2.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                        dlgrwjl2.setLocationRelativeTo(internalFrame1);
+                        dlgrwjl2.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),13).toString());
+                        dlgrwjl2.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),14).toString());
+                        dlgrwjl2.setNoRm(
+                            tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString(),
+                            DTPCari1.getDate(),DTPCari2.getDate(),
+                            tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),0).toString(),
+                            tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),1).toString()
+                        );    
+                        dlgrwjl2.setVisible(true);
+                    }
+                } 
+            }                               
         }
     }// GEN-LAST:event_MnDataRalan1ActionPerformed
 
@@ -9806,61 +9851,38 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     }// GEN-LAST:event_MnHapusRujukanActionPerformed
 
     private void MnRawatJalan1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MnRawatJalan1ActionPerformed
-        /*
-         * if(tabModekasir2.getRowCount()==0){
-         * JOptionPane.showMessageDialog(null,"Maaf, table masih kosong...!!!!");
-         * TCari.requestFocus();
-         * }else{
-         * if(tbKasirRalan2.getSelectedRow()!= -1){
-         * if(Sequel.
-         * cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?"
-         * ,tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString())>0){
-         * JOptionPane.showMessageDialog(
-         * null,"Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
-         * }else{
-         * if(Sequel.cariRegistrasi(tbKasirRalan2.getValueAt(tbKasirRalan2.
-         * getSelectedRow(),10).toString())>0){
-         * JOptionPane.showMessageDialog(
-         * rootPane,"Data billing sudah terverifikasi ..!!");
-         * }else{
-         * DlgCariPerawatanRalan dlgrwjl=new DlgCariPerawatanRalan(null,false);
-         * dlgrwjl.setNoRm(
-         * tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString(),
-         * tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),0).toString(),
-         * tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),1).toString(),
-         * "rawat_jl_dr","-","-"
-         * );
-         * dlgrwjl.isCek();
-         * dlgrwjl.setPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),13).
-         * toString());
-         * dlgrwjl.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
-         * dlgrwjl.setLocationRelativeTo(internalFrame1);
-         * dlgrwjl.setVisible(true);
-         * }
-         * }
-         * }
-         * }
-         */
-        if (tabModekasir2.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
+        if(tabModekasir2.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, table masih kosong...!!!!");
             TCari.requestFocus();
-        } else {
-            if (tbKasirRalan2.getSelectedRow() != -1) {
-                if (Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",
-                        TNoRw.getText()) > 0) {
-                    JOptionPane.showMessageDialog(null,
-                            "Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
-                } else {
-                    dlgrwjl2.isCek();
-                    dlgrwjl2.emptTeks();
-                    dlgrwjl2.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-                    dlgrwjl2.setLocationRelativeTo(internalFrame1);
-                    dlgrwjl2.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 18).toString());
-                    dlgrwjl2.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 17).toString());
-                    dlgrwjl2.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
-                    dlgrwjl2.setVisible(true);
-                }
-            }
+        }else{
+            if(tbKasirRalan2.getSelectedRow()!= -1){
+                if(Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?",tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString())>0){
+                    JOptionPane.showMessageDialog(null,"Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
+                }else {
+                    if (akses.getkode().startsWith("D0")) {
+                        dlgrwjldokter.isCek();
+                        dlgrwjldokter.emptTeks();
+                        dlgrwjldokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                        dlgrwjldokter.setLocationRelativeTo(internalFrame1);
+                        dlgrwjldokter.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 13).toString());
+                        dlgrwjldokter.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 14).toString());
+                        dlgrwjldokter.setNoRm(
+                                tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 10).toString(),
+                                DTPCari1.getDate(), DTPCari2.getDate()
+                        );
+                        dlgrwjldokter.setVisible(true);
+                    } else {
+                        dlgrwjl2.isCek();
+                        dlgrwjl2.emptTeks();
+                        dlgrwjl2.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                        dlgrwjl2.setLocationRelativeTo(internalFrame1);
+                        dlgrwjl2.SetPoli(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),13).toString());
+                        dlgrwjl2.SetPj(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),14).toString());
+                        dlgrwjl2.setNoRm(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(),10).toString(),DTPCari1.getDate(),DTPCari2.getDate());    
+                        dlgrwjl2.setVisible(true);
+                    }
+                } 
+            }                               
         }
     }// GEN-LAST:event_MnRawatJalan1ActionPerformed
 
@@ -15412,37 +15434,23 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
             pskasir = koneksi.prepareStatement(
                     "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, "
-                            +
-                            "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, poliklinik.nm_poli, "
-                            +
-                            "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, reg_periksa.stts, "
-                            +
-                            "penjab.png_jawab, concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, " +
+                            + "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, poliklinik.nm_poli, "
+                            + "reg_periksa.p_jawab, "
+                            + "pasien.alamat, "
+                            + "reg_periksa.hubunganpj, reg_periksa.biaya_reg, reg_periksa.stts, "
+                            + "penjab.png_jawab, concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, " +
                             "reg_periksa.status_bayar, reg_periksa.status_poli, reg_periksa.kd_pj, reg_periksa.kd_poli, pasien.no_tlp, "
-                            +
-
-                            "(select bridging_sep.no_sep from bridging_sep where bridging_sep.no_rawat=reg_periksa.no_rawat and bridging_sep.jnspelayanan='2' order by bridging_sep.tglsep desc limit 1) as no_sep, "
-                            +
-                            "reg_periksa.stts_daftar, " +
+                            + "(select bridging_sep.no_sep from bridging_sep where bridging_sep.no_rawat=reg_periksa.no_rawat and bridging_sep.jnspelayanan='2' order by bridging_sep.tglsep desc limit 1) as no_sep, "
+                            + "reg_periksa.stts_daftar, " +
                             "(select bridging_surat_kontrol_bpjs.no_surat from bridging_surat_kontrol_bpjs where bridging_surat_kontrol_bpjs.no_sep=(select bridging_sep.no_sep from bridging_sep where bridging_sep.no_rawat=reg_periksa.no_rawat and bridging_sep.jnspelayanan='2' order by bridging_sep.tglsep desc limit 1) limit 1) as no_surat, "
-                            +
-
-                            "if(" +
+                            + "if(" +
                             "(select count(no_rawat) from rawat_jl_pr where rawat_jl_pr.no_rawat=reg_periksa.no_rawat and rawat_jl_pr.nip != '-') + "
-                            +
-
-                            "(select count(no_rawat) from rawat_jl_drpr where rawat_jl_drpr.no_rawat=reg_periksa.no_rawat and rawat_jl_drpr.nip != '-') + "
-                            +
-
-                            "if(" +
+                            + "(select count(no_rawat) from rawat_jl_drpr where rawat_jl_drpr.no_rawat=reg_periksa.no_rawat and rawat_jl_drpr.nip != '-') + "
+                            + "if(" +
                             "(select count(no_rawat) from rawat_jl_dr where rawat_jl_dr.no_rawat=reg_periksa.no_rawat) > "
-                            +
-                            "(select count(kd_jenis_prw) from set_otomatis_tindakan_ralan where set_otomatis_tindakan_ralan.kd_dokter=reg_periksa.kd_dokter and set_otomatis_tindakan_ralan.kd_pj=reg_periksa.kd_pj), "
-                            +
-                            "1, 0) " +
-
+                            + "(select count(kd_jenis_prw) from set_otomatis_tindakan_ralan where set_otomatis_tindakan_ralan.kd_dokter=reg_periksa.kd_dokter and set_otomatis_tindakan_ralan.kd_pj=reg_periksa.kd_pj), "
+                            + "1, 0) " +
                             "> 0, 'Sudah', 'Belum') as stts_tindakan " +
-
                             "from reg_periksa " +
                             "inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
                             "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
@@ -15450,13 +15458,10 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                             "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
                             "where reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' "
                             + tampildiagnosa +
-
                             (semua ? ""
                                     : "and reg_periksa.kd_pj like ? and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.stts like ? and reg_periksa.status_bayar like ? and penjab.png_jawab like ? and "
-                                            +
-                                            "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "
-                                            +
-                                            "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?) ")
+                                            + "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "
+                                            + "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or pasien.alamat like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?) ")
                             + terbitsep +
                             "order by " + order);
 
@@ -15504,7 +15509,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                             rskasir.getString("stts"),
                             rskasir.getString("no_reg"),
                             rskasir.getString("p_jawab"),
-                            rskasir.getString("almt_pj"),
+                            rskasir.getString("alamat"),
                             rskasir.getString("hubunganpj"),
                             Valid.SetAngka(rskasir.getDouble("biaya_reg")),
                             rskasir.getString("status_poli"),
@@ -15515,7 +15520,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                             rskasir.getString("kd_pj"),
                             rskasir.getString("kd_poli"),
                             rskasir.getString("no_tlp"),
-                            rskasir.getString("stts_tindakan") // Kolom Index 22
+                            rskasir.getString("stts_tindakan")
                     });
                 }
             } catch (Exception e) {
@@ -15544,25 +15549,20 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             pskasir = koneksi.prepareStatement(
                     "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg," +
                             "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,poliklinik.nm_poli,"
-                            +
-                            "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts,penjab.png_jawab,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur, "
-                            +
-                            "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli,pasien.no_tlp,bridging_sep.no_sep,reg_periksa.stts_daftar "
-                            +
-                            "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
-                            +
-                            "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "
-                            +
-                            "inner join rujukan_internal_poli on reg_periksa.no_rawat=rujukan_internal_poli.no_rawat " +
+                            + "reg_periksa.p_jawab,"
+                            + "pasien.alamat, "
+                            + "reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts,penjab.png_jawab,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur, "
+                            + "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli,pasien.no_tlp,bridging_sep.no_sep,reg_periksa.stts_daftar "
+                            + "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                            + "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "
+                            + "inner join rujukan_internal_poli on reg_periksa.no_rawat=rujukan_internal_poli.no_rawat " +
                             "left join bridging_sep on reg_periksa.no_rawat=bridging_sep.no_rawat where  " +
                             "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' "
                             + tampildiagnosa +
                             (semua ? ""
                                     : "and reg_periksa.kd_pj like ? and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.stts like ? and reg_periksa.status_bayar like ? and penjab.png_jawab like ? and "
-                                            +
-                                            "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "
-                                            +
-                                            "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?) ")
+                                            + "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "
+                                            + "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or pasien.alamat like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?) ")
                             + terbitsep +
                             "order by " + order);
             try {
@@ -15576,8 +15576,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                     pskasir.setString(7,
                             "%" + cmbStatusBayar.getSelectedItem().toString().replaceAll("Semua", "") + "%");
                     pskasir.setString(8,
-                            "%" + cmbStatusBayar1.getSelectedItem().toString().replaceAll("Semua", "") + "%"); // Parameter
-                                                                                                               // baru
+                            "%" + cmbStatusBayar1.getSelectedItem().toString().replaceAll("Semua", "") + "%");
                     pskasir.setString(9, "%" + TCari.getText().trim() + "%");
                     pskasir.setString(10, "%" + TCari.getText().trim() + "%");
                     pskasir.setString(11, "%" + TCari.getText().trim() + "%");
@@ -15598,7 +15597,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                             rskasir.getString("kd_dokter"), rskasir.getString("nm_dokter"),
                             rskasir.getString("no_rkm_medis"),
                             rskasir.getString("nm_pasien") + " (" + rskasir.getString("umur") + ")",
-                            rskasir.getString("nm_poli"), rskasir.getString("p_jawab"), rskasir.getString("almt_pj"),
+                            rskasir.getString("nm_poli"), rskasir.getString("p_jawab"), 
+                            rskasir.getString("alamat"),
                             rskasir.getString("hubunganpj"),
                             rskasir.getString("png_jawab"), rskasir.getString("stts"), rskasir.getString("no_rawat"),
                             rskasir.getString("tgl_registrasi"),

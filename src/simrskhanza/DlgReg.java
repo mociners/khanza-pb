@@ -349,7 +349,7 @@ public final class DlgReg extends javax.swing.JDialog {
         tabMode = new DefaultTableModel(null, new Object[]{
             "P", "No. Reg", "No. Rawat", "Tanggal", "Jam", "Kode Dokter", "Dokter Dituju", "Nomor RM", 
             "Pasien", "J.K.", "Umur", "Poliklinik", "Jenis Bayar", "Status Rawat", "No. SEP", 
-            "No. Sukon/Rujuk", "No. Telp", "Alamat P.J.", "Hubungan P.J.", 
+            "No. Sukon/Rujuk", "No. Telp", "Alamat Pasien", "Hubungan P.J.", 
             "Biaya Registrasi", "Status Poli", "Status Bayar"
         }) {
             @Override
@@ -15499,8 +15499,8 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             if (semua) {
                 sql = "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"
                     + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur,poliklinik.nm_poli,"
-                    + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab,pasien.no_tlp,reg_periksa.stts,reg_periksa.status_poli, "
-                    + "reg_periksa.kd_poli,reg_periksa.kd_pj,reg_periksa.status_bayar,(CASE WHEN bridging_sep.jnspelayanan = '2' THEN bridging_sep.no_sep ELSE '' END) as no_sep," // PERUBAHAN DISINI
+                    + "reg_periksa.p_jawab,pasien.alamat,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab,pasien.no_tlp,reg_periksa.stts,reg_periksa.status_poli, "
+                    + "reg_periksa.kd_poli,reg_periksa.kd_pj,reg_periksa.status_bayar,(CASE WHEN bridging_sep.jnspelayanan = '2' THEN bridging_sep.no_sep ELSE '' END) as no_sep,"
                     + "COALESCE(bridging_surat_kontrol_bpjs.no_surat, bridging_rujukan_bpjs.no_rujukan) as no_surat_rujukan "
                     + "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                     + "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "
@@ -15512,8 +15512,8 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             } else {
                 sql = "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"
                     + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur,poliklinik.nm_poli,"
-                    + "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab,pasien.no_tlp,reg_periksa.stts,reg_periksa.status_poli, "
-                    + "reg_periksa.kd_poli,reg_periksa.kd_pj,reg_periksa.status_bayar,(CASE WHEN bridging_sep.jnspelayanan = '2' THEN bridging_sep.no_sep ELSE '' END) as no_sep," // PERUBAHAN DISINI
+                    + "reg_periksa.p_jawab,pasien.alamat,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab,pasien.no_tlp,reg_periksa.stts,reg_periksa.status_poli, "
+                    + "reg_periksa.kd_poli,reg_periksa.kd_pj,reg_periksa.status_bayar,(CASE WHEN bridging_sep.jnspelayanan = '2' THEN bridging_sep.no_sep ELSE '' END) as no_sep,"
                     + "COALESCE(bridging_surat_kontrol_bpjs.no_surat, bridging_rujukan_bpjs.no_rujukan) as no_surat_rujukan "
                     + "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                     + "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "
@@ -15523,7 +15523,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
                     + "where poliklinik.kd_poli<>'IGDK' and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.tgl_registrasi between ? and ? and ("
                     + "reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or "
                     + "dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or reg_periksa.stts_daftar like ? or pasien.nm_pasien like ? or "
-                    + "poliklinik.nm_poli like ? or reg_periksa.p_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.hubunganpj like ? or penjab.png_jawab like ?)"
+                    + "poliklinik.nm_poli like ? or reg_periksa.p_jawab like ? or pasien.alamat like ? or reg_periksa.hubunganpj like ? or penjab.png_jawab like ?)"
                     + terbitsep + " order by " + order;
                 ps = koneksi.prepareStatement(sql);
             }
@@ -15566,12 +15566,12 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
                         rs.getString("jk"),
                         rs.getString("umur"),
                         rs.getString("nm_poli"),
-                        rs.getString("png_jawab"),
+                        rs.getString("p_jawab"),
                         rs.getString("stts"),
                         rs.getString("no_sep"),
                         rs.getString("no_surat_rujukan"),
                         rs.getString("no_tlp"),
-                        rs.getString("almt_pj"),
+                        rs.getString("alamat"), 
                         rs.getString("hubunganpj"),
                         Valid.SetAngka(rs.getDouble("biaya_reg")),
                         rs.getString("status_poli"),
