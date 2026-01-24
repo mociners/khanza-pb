@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowListener;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -82,12 +83,21 @@ public final class ICareRiwayatPerawatan extends javax.swing.JDialog {
         
         NoKartu.setDocument(new batasInput((int)100).getKata(NoKartu));
         KdDPJPLayanan.setDocument(new batasInput((int)100).getKata(KdDPJPLayanan));
-        
+                
         try {
             link=koneksiDB.URLAPIICARE();
         } catch (Exception e) {
             System.out.println("E : "+e);
         }
+        
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                if(!NoKartu.getText().trim().equals("") && !KdDPJPLayanan.getText().trim().equals("")){
+                    BtnCariActionPerformed(null);
+                }
+            }
+        });
     }
     
     private void initComponents2() {           
@@ -330,6 +340,10 @@ public final class ICareRiwayatPerawatan extends javax.swing.JDialog {
     public void setPasien(String param,String kodedokter){
         NoKartu.setText(param);
         KdDPJPLayanan.setText(kodedokter);
+        
+        if(!NoKartu.getText().trim().equals("") && !KdDPJPLayanan.getText().trim().equals("")){
+             tampil();
+        }
     }
     
     private void createScene() {        

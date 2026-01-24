@@ -1,0 +1,37 @@
+    // --- AMBIL NAMA TIM OPERASI ---
+    private String[] getNamaTimOperasi(String norawat) {
+        // Array untuk menyimpan nama-nama tim: operator1-3, asisten1-3, instrumen, omloop1-5
+        String[] nama = new String[12];
+        for (int i = 0; i < 12; i++) nama[i] = "-";
+        
+        try {
+            PreparedStatement psOp = koneksi.prepareStatement(
+                "select operator1, operator2, operator3, " +
+                "asisten_operator1, asisten_operator2, asisten_operator3, " +
+                "instrumen, " +
+                "omloop, omloop2, omloop3, omloop4, omloop5 " +
+                "from operasi where no_rawat=? limit 1");
+            psOp.setString(1, norawat);
+            ResultSet rsOp = psOp.executeQuery();
+            
+            if (rsOp.next()) {
+                nama[0] = rsOp.getString(" operator1") != null ? rsOp.getString("operator1") : "-";
+                nama[1] = rsOp.getString("operator2") != null ? rsOp.getString("operator2") : "-";
+                nama[2] = rsOp.getString("operator3") != null ? rsOp.getString("operator3") : "-";
+                nama[3] = rsOp.getString("asisten_operator1") != null ? rsOp.getString("asisten_operator1") : "-";
+                nama[4] = rsOp.getString("asisten_operator2") != null ? rsOp.getString("asisten_operator2") : "-";
+                nama[5] = rsOp.getString("asisten_operator3") != null ? rsOp.getString("asisten_operator3") : "-";
+                nama[6] = rsOp.getString("instrumen") != null ? rsOp.getString("instrumen") : "-";
+                nama[7] = rsOp.getString("omloop") != null ? rsOp.getString("omloop") : "-";
+                nama[8] = rsOp.getString("omloop2") != null ? rsOp.getString("omloop2") : "-";
+                nama[9] = rsOp.getString("omloop3") != null ? rsOp.getString("omloop3") : "-";
+                nama[10] = rsOp.getString("omloop4") != null ? rsOp.getString("omloop4") : "-";
+                nama[11] = rsOp.getString("omloop5") != null ? rsOp.getString("omloop5") : "-";
+            }
+            rsOp.close();
+            psOp.close();
+        } catch (Exception e) {
+            System.out.println("Error getNamaTimOperasi: " + e);
+        }
+        return nama;
+    }

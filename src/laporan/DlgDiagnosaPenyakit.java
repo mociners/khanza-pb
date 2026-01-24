@@ -363,7 +363,7 @@ public class DlgDiagnosaPenyakit extends javax.swing.JDialog {
         jLabel14.setPreferredSize(new java.awt.Dimension(63, 23));
         panelGlass9.add(jLabel14);
 
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-03-2022" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "04-03-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -375,7 +375,7 @@ public class DlgDiagnosaPenyakit extends javax.swing.JDialog {
         jLabel19.setPreferredSize(new java.awt.Dimension(18, 23));
         panelGlass9.add(jLabel19);
 
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-03-2022" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "04-03-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -731,7 +731,29 @@ public class DlgDiagnosaPenyakit extends javax.swing.JDialog {
         panelDiagnosa1.btnTambahProsedur.setEnabled(akses.geticd9());
     }
 
-    
+    public String getDiagnosa() {
+        String data = "";
+        javax.swing.JTable tabelSumber = panelDiagnosa1.tbDiagnosa;
+
+        for(int i = 0; i < tabelSumber.getRowCount(); i++){
+            Object checkValue = tabelSumber.getValueAt(i, 0);
+
+            if(checkValue != null && Boolean.parseBoolean(checkValue.toString()) == true) {
+                // Kolom 1 = Kode ICD
+                String kode = tabelSumber.getValueAt(i, 1).toString();
+                // Kolom 2 = Nama Penyakit
+                String nama = tabelSumber.getValueAt(i, 2).toString();
+
+                if(data.equals("")){
+                    data = kode + " - " + nama;
+                } else {
+                    // Tambahkan koma jika memilih lebih dari 1
+                    data = data + ", " + kode + " - " + nama;
+                }
+            }
+        }
+        return data;
+    }
 
 
 }

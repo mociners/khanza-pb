@@ -691,6 +691,7 @@ public final class DlgIGD extends javax.swing.JDialog {
         BtnTriase = new widget.Button();
         BtnMedis = new widget.Button();
         BtnPrw = new widget.Button();
+        BtnResume = new widget.Button();
         PanelInput = new javax.swing.JPanel();
         FormInput = new widget.PanelBiasa();
         jLabel3 = new widget.Label();
@@ -4641,7 +4642,7 @@ public final class DlgIGD extends javax.swing.JDialog {
         panelGlass7.add(jLabel15);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-12-2025" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "20-01-2026" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -4655,7 +4656,7 @@ public final class DlgIGD extends javax.swing.JDialog {
         panelGlass7.add(jLabel17);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-12-2025" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "20-01-2026" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -4748,6 +4749,24 @@ public final class DlgIGD extends javax.swing.JDialog {
         });
         panelGlass7.add(BtnPrw);
 
+        BtnResume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/addressbook-add24.png"))); // NOI18N
+        BtnResume.setMnemonic('K');
+        BtnResume.setText("Resume Dokter");
+        BtnResume.setToolTipText("Alt+K");
+        BtnResume.setName("BtnResume"); // NOI18N
+        BtnResume.setPreferredSize(new java.awt.Dimension(130, 30));
+        BtnResume.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnResumeActionPerformed(evt);
+            }
+        });
+        BtnResume.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                BtnResumeKeyPressed(evt);
+            }
+        });
+        panelGlass7.add(BtnResume);
+
         jPanel2.add(panelGlass7, java.awt.BorderLayout.CENTER);
 
         internalFrame1.add(jPanel2, java.awt.BorderLayout.PAGE_END);
@@ -4802,7 +4821,7 @@ public final class DlgIGD extends javax.swing.JDialog {
         jLabel9.setBounds(165, 72, 36, 23);
 
         DTPReg.setForeground(new java.awt.Color(50, 70, 50));
-        DTPReg.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-12-2025" }));
+        DTPReg.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "20-01-2026" }));
         DTPReg.setDisplayFormat("dd-MM-yyyy");
         DTPReg.setName("DTPReg"); // NOI18N
         DTPReg.setOpaque(false);
@@ -11286,6 +11305,32 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
         }
     }//GEN-LAST:event_MnAsuhanKeperawatanActionPerformed
 
+    private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnResumeActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data pasien sudah habis...!!!!");
+            TNoRw.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data registrasi pada table...!!!");
+            TCari.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                RMDataResumePasien resume=new RMDataResumePasien(null,false);
+                resume.isCek();
+                resume.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                resume.setLocationRelativeTo(internalFrame1);
+                resume.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                resume.tampil();
+                resume.setVisible(true);
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_BtnResumeActionPerformed
+
+    private void BtnResumeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnResumeKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnResumeKeyPressed
+
     private void MnPenilaianPreInduksiActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         if(tabMode.getRowCount()==0){
             JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
@@ -11346,6 +11391,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
     private widget.Button BtnPrint4;
     private widget.Button BtnPrint5;
     private widget.Button BtnPrw;
+    private widget.Button BtnResume;
     private widget.Button BtnSeek5;
     private widget.Button BtnSimpan;
     private widget.Button BtnTrf;

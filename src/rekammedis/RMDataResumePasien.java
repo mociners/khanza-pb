@@ -2620,37 +2620,34 @@ public final class RMDataResumePasien extends javax.swing.JDialog {
     
     private void DataSOAP(){
             try{
-            pssoap=koneksi.prepareStatement(
-            "select pemeriksaan_ralan.no_rawat,pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat,pemeriksaan_ralan.suhu_tubuh,pemeriksaan_ralan.tensi,pemeriksaan_ralan.nadi,pemeriksaan_ralan.respirasi,pemeriksaan_ralan.tinggi,pemeriksaan_ralan.berat,pemeriksaan_ralan.spo2,"+
-            "pemeriksaan_ralan.gcs,pemeriksaan_ralan.kesadaran,pemeriksaan_ralan.keluhan,pemeriksaan_ralan.pemeriksaan,pemeriksaan_ralan.lingkar_perut,pemeriksaan_ralan.rtl,pemeriksaan_ralan.penilaian,pemeriksaan_ralan.instruksi,pemeriksaan_ralan.evaluasi,pemeriksaan_ralan.nip "+
-            "from pemeriksaan_ralan where pemeriksaan_ralan.no_rawat=? and nip=?");
-            try{
-                pssoap.setString(1, TNoRw.getText());
-                pssoap.setString(2, KodeDokter.getText());
-            rssoap = pssoap.executeQuery();
-            if (!rssoap.isBeforeFirst()) { // Jika tidak ada baris hasil
-                JOptionPane.showMessageDialog(null, "Tidak Ada Data SOAP Dokter", "Peringatan", JOptionPane.WARNING_MESSAGE);
-            } else {
-                while (rssoap.next()) {
-                    Keluhan.setText(rssoap.getString("keluhan"));                   
-                    JalannyaPenyakit.setText("Tensi:"+" "+rssoap.getString("tensi")+","+" Nadi:"+" "+rssoap.getString("nadi")+","+" Respirasi:"+" "+rssoap.getString("respirasi")+","+" Suhu:"+"  "+rssoap.getString("suhu_tubuh")+"\n"+rssoap.getString("pemeriksaan"));
-                    Obat2an.setText(rssoap.getString("rtl"));
-                    DiagnosaUtama.setText(rssoap.getString("penilaian"));
-                            }
-                               }
-                           } catch (Exception e) {
-                               System.out.println("Notif : " + e);
-                           } finally {
-                               if (rssoap != null) {
-                                   rssoap.close();
-                               }
-                               if (pssoap != null) {
-                                   pssoap.close();
-                               }
-                           }
-                       } catch (Exception e) {
-                           System.out.println("Notif : " + e);
-                       }
+                pssoap=koneksi.prepareStatement(
+                "select pemeriksaan_ralan.no_rawat,pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat,pemeriksaan_ralan.suhu_tubuh,pemeriksaan_ralan.tensi,pemeriksaan_ralan.nadi,pemeriksaan_ralan.respirasi,pemeriksaan_ralan.tinggi,pemeriksaan_ralan.berat,pemeriksaan_ralan.spo2,"+
+                "pemeriksaan_ralan.gcs,pemeriksaan_ralan.kesadaran,pemeriksaan_ralan.keluhan,pemeriksaan_ralan.pemeriksaan,pemeriksaan_ralan.lingkar_perut,pemeriksaan_ralan.rtl,pemeriksaan_ralan.penilaian,pemeriksaan_ralan.instruksi,pemeriksaan_ralan.evaluasi,pemeriksaan_ralan.nip "+
+                "from pemeriksaan_ralan where pemeriksaan_ralan.no_rawat=?"); // <-- Filter NIP dihapus
+
+                try{
+                    pssoap.setString(1, TNoRw.getText());
+                    
+                    rssoap = pssoap.executeQuery();
+                    if (!rssoap.isBeforeFirst()) { 
+                        // JOptionPane.showMessageDialog(null, "Tidak Ada Data SOAP Dokter", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        while (rssoap.next()) {
+                            Keluhan.setText(rssoap.getString("keluhan"));                   
+                            JalannyaPenyakit.setText("Tensi:"+" "+rssoap.getString("tensi")+","+" Nadi:"+" "+rssoap.getString("nadi")+","+" Respirasi:"+" "+rssoap.getString("respirasi")+","+" Suhu:"+"  "+rssoap.getString("suhu_tubuh")+"\n"+rssoap.getString("pemeriksaan"));
+                            Obat2an.setText(rssoap.getString("rtl"));
+                            DiagnosaUtama.setText(rssoap.getString("penilaian"));
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rssoap != null) { rssoap.close(); }
+                    if (pssoap != null) { pssoap.close(); }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
                    
             
         }

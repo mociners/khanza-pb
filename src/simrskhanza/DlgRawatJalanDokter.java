@@ -199,6 +199,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             Beban_Jasa_Menejemen_Tindakan_Ralan = "", Utang_Jasa_Menejemen_Tindakan_Ralan = "", poli = "", mode = "",
             variabel = "";
     private final Properties prop = new Properties();
+    private String tglPemeriksaan = "", jamPemeriksaan = "", nipPemeriksaan = "";
     private boolean[] pilih;
     private String[] kode, nama, kategori;
     private double[] totaltnd, bagianrs, bhp, jmdokter, jmperawat, kso, menejemen;
@@ -281,6 +282,41 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
 
         LingkarPerut.setForeground(darkTextColor);
         LingkarPerut.setFont(newFont);
+
+        TKeluhan.setOpaque(true);
+        TKeluhan.setBackground(java.awt.Color.WHITE);
+        scrollPane5.getVerticalScrollBar().setUnitIncrement(16);
+
+        TPemeriksaan.setOpaque(true);
+        TPemeriksaan.setBackground(java.awt.Color.WHITE);
+        scrollPane6.getVerticalScrollBar().setUnitIncrement(16);
+
+        TPenilaian.setOpaque(true);
+        TPenilaian.setBackground(java.awt.Color.WHITE);
+        scrollPane9.getVerticalScrollBar().setUnitIncrement(16);
+
+        TindakLanjut.setOpaque(true);
+        TindakLanjut.setBackground(java.awt.Color.WHITE);
+        scrollPane10.getVerticalScrollBar().setUnitIncrement(16);
+
+        TInstruksi.setOpaque(true);
+        TInstruksi.setBackground(java.awt.Color.WHITE);
+        scrollPane7.getVerticalScrollBar().setUnitIncrement(16);
+
+        TEvaluasi.setOpaque(true);
+        TEvaluasi.setBackground(java.awt.Color.WHITE);
+        scrollPane8.getVerticalScrollBar().setUnitIncrement(16);
+        javax.swing.border.Border lineBorder = javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK);
+        javax.swing.border.Border emptyBorder = javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        javax.swing.border.Border compoundBorder = javax.swing.BorderFactory.createCompoundBorder(lineBorder,
+                emptyBorder);
+
+        TKeluhan.setBorder(compoundBorder);
+        TPemeriksaan.setBorder(compoundBorder);
+        TPenilaian.setBorder(compoundBorder);
+        TindakLanjut.setBorder(compoundBorder);
+        TInstruksi.setBorder(compoundBorder);
+        TEvaluasi.setBorder(compoundBorder);
 
         this.setLocation(8, 1);
         setSize(1350, 700); // Expanded width for side-by-side layout
@@ -2129,14 +2165,15 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         jLabel26 = new widget.Label();
         scrollPane2 = new widget.ScrollPane();
         TPemeriksaan = new widget.TextArea();
-        TSuhu = new widget.Label();
-        TTensi = new widget.Label();
-        TTinggi = new widget.Label();
-        TRespirasi = new widget.Label();
-        TBerat = new widget.Label();
-        TNadi = new widget.Label();
-        TGCS = new widget.Label();
-        TAlergi = new widget.Label();
+        TSuhu = new widget.TextBox();
+        TTensi = new widget.TextBox();
+        TTinggi = new widget.TextBox();
+        TRespirasi = new widget.TextBox();
+        TBerat = new widget.TextBox();
+        TNadi = new widget.TextBox();
+        BtnRiwayatFKTP = new widget.Button();
+        TGCS = new widget.TextBox();
+        TAlergi = new widget.TextBox();
         scrollPane3 = new widget.ScrollPane();
         TPenilaian = new widget.TextArea();
         scrollPane6 = new widget.ScrollPane();
@@ -2153,12 +2190,13 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         scrollPane7 = new widget.ScrollPane();
         TInstruksi = new widget.TextArea();
         jLabel54 = new widget.Label();
-        SpO2 = new widget.Label();
+        SpO2 = new widget.TextBox();
         jLabel56 = new widget.Label();
         scrollPane8 = new widget.ScrollPane();
         TEvaluasi = new widget.TextArea();
-        LingkarPerut = new widget.Label();
+        LingkarPerut = new widget.TextBox();
         Btn5Soap = new widget.Button();
+        BtnRiwayatPenunjang = new widget.Button();
         BtnTemplatePemeriksaan = new widget.Button();
         BtnOdontogram = new widget.Button();
         BtnTemplateResep = new widget.Button();
@@ -3139,11 +3177,11 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
 
         PanelInput.setName("PanelInput"); // NOI18N
         PanelInput.setOpaque(false);
-        PanelInput.setPreferredSize(new java.awt.Dimension(800, 680));
+        PanelInput.setPreferredSize(new java.awt.Dimension(800, 800));
         PanelInput.setLayout(new java.awt.BorderLayout(1, 1));
 
         panelGlass12.setName("panelGlass12"); // NOI18N
-        panelGlass12.setPreferredSize(new java.awt.Dimension(800, 650));
+        panelGlass12.setPreferredSize(new java.awt.Dimension(800, 770));
         panelGlass12.setLayout(null);
 
         // === BLOK 1: TANDA-TANDA VITAL (KIRI ATAS) ===
@@ -3247,6 +3285,60 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         TGCS.setBackground(new java.awt.Color(245, 245, 245));
         panelGlass12.add(TGCS);
         TGCS.setBounds(ttvX + labelWidth + 5, ttvY, fieldWidth, 23);
+        ttvY += gap;
+
+        // Btn5Soap (Riwayat SOAP)
+        Btn5Soap = new widget.Button();
+        Btn5Soap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        Btn5Soap.setMnemonic('4');
+        Btn5Soap.setText("Riwayat SOAP");
+        Btn5Soap.setToolTipText("Alt+4");
+        Btn5Soap.setName("Btn5Soap"); // NOI18N
+        Btn5Soap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn5SoapActionPerformed(evt);
+            }
+        });
+        panelGlass12.add(Btn5Soap);
+        Btn5Soap.setBounds(ttvX + 5, ttvY, 120, 23);
+        ttvY += gap; // Move to next line
+
+        // BtnRiwayatPenunjang (Riwayat Penunjang Medis)
+        BtnRiwayatPenunjang = new widget.Button();
+        BtnRiwayatPenunjang.setForeground(new java.awt.Color(0, 0, 0));
+        BtnRiwayatPenunjang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/TestTubes.png"))); // NOI18N
+        BtnRiwayatPenunjang.setMnemonic('5');
+        BtnRiwayatPenunjang.setText("Riwayat Penunjang");
+        BtnRiwayatPenunjang.setToolTipText("Alt+5");
+        BtnRiwayatPenunjang.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        BtnRiwayatPenunjang.setGlassColor(new java.awt.Color(255, 153, 153));
+        BtnRiwayatPenunjang.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnRiwayatPenunjang.setName("BtnRiwayatPenunjang"); // NOI18N
+        BtnRiwayatPenunjang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRiwayatPenunjangActionPerformed(evt);
+            }
+        });
+        panelGlass12.add(BtnRiwayatPenunjang);
+        BtnRiwayatPenunjang.setBounds(ttvX + 5, ttvY, 150, 23);
+        ttvY += gap; // Move to next line
+
+        BtnRiwayatFKTP.setForeground(new java.awt.Color(0, 0, 200));
+        BtnRiwayatFKTP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Hospital.png"))); // NOI18N
+        BtnRiwayatFKTP.setMnemonic('6');
+        BtnRiwayatFKTP.setText("Jejak Medis Luar");
+        BtnRiwayatFKTP.setToolTipText("Alt+6");
+        BtnRiwayatFKTP.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        BtnRiwayatFKTP.setGlassColor(new java.awt.Color(255, 153, 153));
+        BtnRiwayatFKTP.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnRiwayatFKTP.setName("BtnRiwayatFKTP"); // NOI18N
+        BtnRiwayatFKTP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRiwayatFKTPActionPerformed(evt);
+            }
+        });
+        panelGlass12.add(BtnRiwayatFKTP);
+        BtnRiwayatFKTP.setBounds(ttvX + 5, ttvY, 150, 23);
 
         // === BLOK 2: S/O (KANAN ATAS) ===
         int soapX = 180;
@@ -3306,22 +3398,22 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         // === BLOK 3: TENGAH (ALERGI & PETUGAS) ===
         int middleY = 265; // Adjusted Y position below enlarged fields
 
-        // Alergi & Lingkar Perut
+        // Alergi & Lingkar Perut - Shifted to the right
         jLabel15.setText("Alergi :");
         jLabel15.setName("jLabel15"); // NOI18N
         panelGlass12.add(jLabel15);
-        jLabel15.setBounds(5, middleY, 70, 23);
+        jLabel15.setBounds(190, middleY, 70, 23);
         TAlergi.setName("TAlergi"); // NOI18N
         panelGlass12.add(TAlergi);
-        TAlergi.setBounds(80, middleY, 320, 23);
+        TAlergi.setBounds(265, middleY, 230, 23);
 
         jLabel25.setText("Lingkar Perut :");
         jLabel25.setName("jLabel25"); // NOI18N
         panelGlass12.add(jLabel25);
-        jLabel25.setBounds(405, middleY, 80, 23);
+        jLabel25.setBounds(500, middleY, 90, 23);
         LingkarPerut.setName("LingkarPerut"); // NOI18N
         panelGlass12.add(LingkarPerut);
-        LingkarPerut.setBounds(490, middleY, 80, 23);
+        LingkarPerut.setBounds(595, middleY, 80, 23);
 
         // Removed Petugas from here (moved up)
 
@@ -3390,16 +3482,16 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         TindakLanjut.setName("TindakLanjut"); // NOI18N
         scrollPane6.setViewportView(TindakLanjut);
         panelGlass12.add(scrollPane6);
-        scrollPane6.setBounds(5, bottomY, halfWidth, areaHeight);
+        scrollPane6.setBounds(5, bottomY, halfWidth, 180);
 
         // Evaluasi Input
         scrollPane8.setName("scrollPane8"); // NOI18N
         TEvaluasi.setName("TEvaluasi"); // NOI18N
         scrollPane8.setViewportView(TEvaluasi);
         panelGlass12.add(scrollPane8);
-        scrollPane8.setBounds(col2X, bottomY, halfWidth, areaHeight);
+        scrollPane8.setBounds(col2X, bottomY, halfWidth, 180);
 
-        bottomY += areaHeight + 5;
+        bottomY += 180 + 5;
 
         ChkInput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/143.png"))); // NOI18N
         ChkInput.setMnemonic('I');
@@ -9064,8 +9156,36 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                                 }
                             }
                         } else {
-                            JOptionPane.showMessageDialog(rootPane, "Silahkan pilih data yang mau diganti..!!");
-                            TCari.requestFocus();
+                            if (!tglPemeriksaan.equals("") && !jamPemeriksaan.equals("")) {
+                                if (akses.getkode().equals("Admin Utama") || akses.getkode().equals(nipPemeriksaan)) {
+                                    if (Sequel.mengedittf("pemeriksaan_ralan",
+                                            "no_rawat=? and tgl_perawatan=? and jam_rawat=?",
+                                            "suhu_tubuh=?,tensi=?,nadi=?,respirasi=?,tinggi=?,berat=?,spo2=?,gcs=?,kesadaran=?,keluhan=?,pemeriksaan=?,alergi=?,lingkar_perut=?,rtl=?,penilaian=?,instruksi=?,evaluasi=?,nip=?,tgl_perawatan=?,jam_rawat=?",
+                                            23, new String[] {
+                                                    TSuhu.getText(), TTensi.getText(), TNadi.getText(),
+                                                    TRespirasi.getText(),
+                                                    TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(),
+                                                    cmbKesadaran.getSelectedItem().toString(), TKeluhan.getText(),
+                                                    TPemeriksaan.getText(),
+                                                    TAlergi.getText(), LingkarPerut.getText(), TindakLanjut.getText(),
+                                                    TPenilaian.getText(), TInstruksi.getText(), TEvaluasi.getText(),
+                                                    KdPeg.getText(),
+                                                    Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
+                                                    cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
+                                                            + cmbDtk.getSelectedItem(),
+                                                    TNoRw.getText(), tglPemeriksaan, jamPemeriksaan
+                                            }) == true) {
+                                        tampilPemeriksaan();
+                                        emptTeks();
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null,
+                                            "Hanya bisa diganti oleh dokter/petugas yang bersangkutan..!!");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(rootPane, "Silahkan pilih data yang mau diganti..!!");
+                                TCari.requestFocus();
+                            }
                         }
                     }
                     break;
@@ -10927,23 +11047,6 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         }
     }
 
-    private void Btn5SoapActionPerformed(java.awt.event.ActionEvent evt) {
-        if (TPasien.getText().trim().equals("") || TNoRw.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
-            TCari.requestFocus();
-        } else if (TPegawai.getText().trim().equals("") || KdPeg.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu petugas/dokter pemberi asuhan...!!!");
-            TCari.requestFocus();
-        } else {
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            soapterakhir.setNoRM(TNoRM.getText(), KdPeg.getText(), "Ralan");
-            soapterakhir.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-            soapterakhir.setLocationRelativeTo(internalFrame1);
-            soapterakhir.setVisible(true);
-            this.setCursor(Cursor.getDefaultCursor());
-        }
-    }
-
     private void BtnPenilaianTambahanGeriatriActionPerformed(java.awt.event.ActionEvent evt) {
         if (TPasien.getText().trim().equals("") || TNoRw.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
@@ -12776,6 +12879,8 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private widget.TextBox AlergyDisplay;
     private widget.TextBox AlergySystem;
     private widget.Button Btn5Soap;
+    private widget.Button BtnRiwayatPenunjang;
+    private widget.Button BtnRiwayatFKTP;
     private widget.Button Btn5Soap1;
     private widget.Button BtnAll;
     private widget.Button BtnAsuhanGizi;
@@ -12881,7 +12986,6 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private widget.Button BtnResepObat;
     private widget.Button BtnResume;
     private widget.Button BtnRiwayat;
-    private widget.Button BtnRiwayatFKTP;
     private widget.Button BtnRujukInternal;
     private widget.Button BtnRujukKeluar;
     private widget.Button BtnSKDP;
@@ -12953,7 +13057,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private widget.TextBox KdPeg4;
     private widget.TextBox KdPeg5;
     private widget.Label LCount;
-    private widget.Label LingkarPerut;
+    private widget.TextBox LingkarPerut;
     private widget.PanelBiasa PanelAccor;
     private javax.swing.JPanel PanelInput;
     private javax.swing.JPanel PanelInput1;
@@ -12981,16 +13085,16 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private widget.ScrollPane Scroll8;
     private widget.ScrollPane Scroll9;
     private widget.ScrollPane ScrollMenu;
-    private widget.Label SpO2;
+    private widget.TextBox SpO2;
     private widget.TextBox TAdnexaKanan;
     private widget.TextBox TAdnexaKiri;
-    private widget.Label TAlergi;
+    private widget.TextBox TAlergi;
     private widget.TextArea TAssesment;
     private widget.TextArea TAssesment1;
     private widget.TextArea TBackground;
     private widget.TextArea TBackground1;
     private widget.TextBox TBentuk;
-    private widget.Label TBerat;
+    private widget.TextBox TBerat;
     private widget.TextBox TCari;
     private widget.TextBox TCariPasien;
     private widget.TextBox TCavumDouglas;
@@ -13001,7 +13105,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private widget.TextBox TDokter2;
     private widget.TextBox TDokter3;
     private widget.TextArea TEvaluasi;
-    private widget.Label TGCS;
+    private widget.TextBox TGCS;
     private widget.TextBox TInspeksi;
     private widget.TextBox TInspeksiVulva;
     private widget.TextBox TInspekuloGine;
@@ -13011,7 +13115,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private widget.TextBox TKualitas_dtk;
     private widget.TextBox TKualitas_mnt;
     private widget.TextBox TLetak;
-    private widget.Label TNadi;
+    private widget.TextBox TNadi;
     private widget.TextBox TNoRM;
     private widget.TextBox TNoRw;
     private widget.TextBox TPasien;
@@ -13033,14 +13137,14 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private widget.TextBox TPortioInspekulo;
     private widget.TextArea TRecommendation;
     private widget.TextArea TRecommendation1;
-    private widget.Label TRespirasi;
+    private widget.TextBox TRespirasi;
     private widget.TextArea TSituation;
     private widget.TextArea TSituation1;
     private widget.TextBox TSondage;
-    private widget.Label TSuhu;
+    private widget.TextBox TSuhu;
     private widget.TextBox TTebal;
-    private widget.Label TTensi;
-    private widget.Label TTinggi;
+    private widget.TextBox TTensi;
+    private widget.TextBox TTinggi;
     private widget.TextBox TTinggi_uteri;
     private widget.TextBox TUkuran;
     private widget.TextBox TVulva;
@@ -13242,6 +13346,32 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     // End of variables declaration
     private widget.Button BtnSkorBromagePascaAnestesi, BtnPenilaianPreInduksi, BtnHasilPemeriksaanUSGUrologi,
             BtnHasilPemeriksaanUSGGynecologi;
+
+    private void Btn5SoapActionPerformed(java.awt.event.ActionEvent evt) {
+        if (TNoRM.getText().trim().equals("")) {
+            Valid.textKosong(TNoRM, "Nama Pasien");
+        } else {
+            soapterakhir.setNoRM(TNoRM.getText(), KdPeg.getText(), "Ralan");
+            soapterakhir.setSize(DlgRawatJalanDokter.this.getWidth() - 20, DlgRawatJalanDokter.this.getHeight() - 20);
+            soapterakhir.setLocationRelativeTo(DlgRawatJalanDokter.this);
+            soapterakhir.setVisible(true);
+        }
+    }
+
+    private void BtnRiwayatPenunjangActionPerformed(java.awt.event.ActionEvent evt) {
+        if (TNoRw.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu pasien...!!!");
+            TCari.requestFocus();
+        } else {
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            RMRiwayatPenunjang resume = new RMRiwayatPenunjang(null, true);
+            resume.setNoRm(TNoRM.getText(), TPasien.getText());
+            resume.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
+            resume.setLocationRelativeTo(internalFrame1);
+            resume.setVisible(true);
+            this.setCursor(Cursor.getDefaultCursor());
+        }
+    }
 
     private void tampilDr() {
         Valid.tabelKosong(tabModeDr);
@@ -13557,7 +13687,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
     private void isForm() {
         if (ChkInput.isSelected() == true) {
             ChkInput.setVisible(false);
-            PanelInput.setPreferredSize(new Dimension(WIDTH, 680));
+            PanelInput.setPreferredSize(new Dimension(WIDTH, 800));
             panelGlass12.setVisible(true);
             ChkInput.setVisible(true);
         } else if (ChkInput.isSelected() == false) {
@@ -15719,7 +15849,8 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             // Ambil data pemeriksaan ralan TERBARU untuk no_rawat ini
             ps4 = koneksi.prepareStatement(
                     "SELECT suhu_tubuh, tensi, nadi, respirasi, tinggi, berat, spo2, gcs, kesadaran, keluhan, " +
-                            "pemeriksaan, alergi, lingkar_perut, nip, pegawai.nama, pegawai.jbtn " +
+                            "pemeriksaan, alergi, lingkar_perut, nip, pegawai.nama, pegawai.jbtn, tgl_perawatan, jam_rawat "
+                            +
                             "FROM pemeriksaan_ralan " +
                             "LEFT JOIN pegawai ON pemeriksaan_ralan.nip=pegawai.nik " +
                             "WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1");
@@ -15727,6 +15858,9 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                 ps4.setString(1, TNoRw.getText());
                 rs = ps4.executeQuery();
                 if (rs.next()) {
+                    tglPemeriksaan = rs.getString("tgl_perawatan");
+                    jamPemeriksaan = rs.getString("jam_rawat");
+                    nipPemeriksaan = rs.getString("nip");
                     // Isi TTV
                     TSuhu.setText(rs.getString("suhu_tubuh") != null ? rs.getString("suhu_tubuh") : "");
                     TTensi.setText(rs.getString("tensi") != null ? rs.getString("tensi") : "");

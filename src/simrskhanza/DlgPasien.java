@@ -1517,6 +1517,8 @@ public class DlgPasien extends javax.swing.JDialog {
             TabRawat.remove(internalFrame6);
         }
         
+        ChkRM.setSelected(true);
+        ChkRM.setEnabled(false);
         PanelAccor.setVisible(false);
         HTMLEditorKit kit = new HTMLEditorKit();
         LoadHTML.setEditable(true);
@@ -9717,6 +9719,8 @@ private void KabupatenMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
         KdKab.setText("");
         KdKec.setText("");
         KdKel.setText("");
+        autoNomor();
+        TNm.requestFocus();
         autoNomor();
         TNm.requestFocus();
     }

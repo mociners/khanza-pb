@@ -69,6 +69,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import keuangan.DlgBilingRanap;
+import keuangan.DlgBilingRanapDtl;
 import keuangan.DlgLhtPiutang;
 import keuangan.DlgPerkiraanBiayaRanap;
 import laporan.DlgBerkasRawat;
@@ -219,6 +220,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
     public DlgKamar kamar = new DlgKamar(null, false);
     private DlgCariReg reg = new DlgCariReg(null, false);
     public DlgBilingRanap billing = new DlgBilingRanap(null, false);
+    public DlgBilingRanapDtl billingDtl = new DlgBilingRanapDtl(null, false);
     public DlgDiagnosaPenyakit diagnosa = new DlgDiagnosaPenyakit(null, false);
     private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd");
     private SimpleDateFormat dateformat2 = new SimpleDateFormat("dd-MM-yyyy");
@@ -1150,6 +1152,8 @@ public class DlgKamarInap extends javax.swing.JDialog {
         MnPenjualan1 = new javax.swing.JMenuItem();
         MnDeposit = new javax.swing.JMenuItem();
         MnBilling = new javax.swing.JMenuItem();
+        jSeparator15 = new javax.swing.JPopupMenu.Separator();
+        MnBilling1 = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         MnLaporan = new javax.swing.JMenu();
         MnPersetujuanUmum = new javax.swing.JMenuItem();
@@ -3608,7 +3612,6 @@ public class DlgKamarInap extends javax.swing.JDialog {
         MnPeriksaCairanTubuh.setForeground(new java.awt.Color(50, 50, 50));
         MnPeriksaCairanTubuh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
         MnPeriksaCairanTubuh.setText("Periksa Lab Cairan Tubuh");
-        MnPeriksaCairanTubuh.setActionCommand("Periksa Lab Cairan Tubuh");
         MnPeriksaCairanTubuh.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         MnPeriksaCairanTubuh.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         MnPeriksaCairanTubuh.setName("MnPeriksaCairanTubuh"); // NOI18N
@@ -3921,6 +3924,29 @@ public class DlgKamarInap extends javax.swing.JDialog {
             }
         });
         jPopupMenu1.add(MnBilling);
+
+        jSeparator15.setBackground(new java.awt.Color(190, 220, 180));
+        jSeparator15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(190, 220, 180)));
+        jSeparator15.setForeground(new java.awt.Color(190, 220, 180));
+        jSeparator15.setName("jSeparator15"); // NOI18N
+        jSeparator15.setPreferredSize(new java.awt.Dimension(200, 1));
+        jPopupMenu1.add(jSeparator15);
+
+        MnBilling1.setBackground(new java.awt.Color(255, 255, 254));
+        MnBilling1.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnBilling1.setForeground(new java.awt.Color(50, 50, 50));
+        MnBilling1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnBilling1.setText("Detail Billing/Pembayaran Pasien");
+        MnBilling1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnBilling1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnBilling1.setName("MnBilling1"); // NOI18N
+        MnBilling1.setPreferredSize(new java.awt.Dimension(200, 26));
+        MnBilling1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnBilling1ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(MnBilling1);
 
         jSeparator12.setBackground(new java.awt.Color(190, 220, 180));
         jSeparator12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(190, 220, 180)));
@@ -6484,7 +6510,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         R2.setPreferredSize(new java.awt.Dimension(90, 23));
         panelCari.add(R2);
 
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "23-10-2025" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "13-01-2026" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -6507,7 +6533,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         jLabel22.setPreferredSize(new java.awt.Dimension(25, 23));
         panelCari.add(jLabel22);
 
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "23-10-2025" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "13-01-2026" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -6533,7 +6559,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         R3.setPreferredSize(new java.awt.Dimension(75, 23));
         panelCari.add(R3);
 
-        DTPCari3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "23-10-2025" }));
+        DTPCari3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "13-01-2026" }));
         DTPCari3.setDisplayFormat("dd-MM-yyyy");
         DTPCari3.setName("DTPCari3"); // NOI18N
         DTPCari3.setOpaque(false);
@@ -6556,7 +6582,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         jLabel25.setPreferredSize(new java.awt.Dimension(25, 23));
         panelCari.add(jLabel25);
 
-        DTPCari4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "23-10-2025" }));
+        DTPCari4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "13-01-2026" }));
         DTPCari4.setDisplayFormat("dd-MM-yyyy");
         DTPCari4.setName("DTPCari4"); // NOI18N
         DTPCari4.setOpaque(false);
@@ -18748,6 +18774,87 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         }        // TODO add your handling code here:
     }//GEN-LAST:event_MnPeriksaMDTActionPerformed
 
+    private void MnBilling1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnBilling1ActionPerformed
+        if (tabMode.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
+            TCari.requestFocus();
+        } else {
+            if (tbKamIn.getSelectedRow() > -1) {
+                if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu pasien...!!!");
+                    tbKamIn.requestFocus();
+                } else {
+                    try {
+                        pscaripiutang = koneksi.prepareStatement("select tgl_piutang from piutang_pasien where no_rkm_medis=? and status='Belum Lunas' order by tgl_piutang asc limit 1");
+                        try {
+                            pscaripiutang.setString(1, TNoRM.getText());
+                            rs = pscaripiutang.executeQuery();
+                            if (rs.next()) {
+                                i = JOptionPane.showConfirmDialog(null, "Masih ada tunggakan pembayaran, apa mau bayar sekarang ?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+                                if (i == JOptionPane.YES_OPTION) {
+                                    DlgLhtPiutang piutang = new DlgLhtPiutang(null, false);
+                                    piutang.setNoRm(TNoRM.getText(), rs.getDate(1));
+                                    piutang.tampil();
+                                    piutang.isCek();
+                                    piutang.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                                    piutang.setLocationRelativeTo(internalFrame1);
+                                    piutang.setVisible(true);
+                                } else {
+                                    bangsal = Sequel.cariIsi("select set_depo_ranap.kd_depo from set_depo_ranap where set_depo_ranap.kd_bangsal=?", Sequel.cariIsi("select kamar.kd_bangsal from kamar where kamar.kd_kamar=?", kdkamar.getText()));
+                                    if (bangsal.equals("")) {
+                                        if (Sequel.cariIsi("select set_lokasi.asal_stok from set_lokasi").equals("Gunakan Stok Bangsal")) {
+                                            akses.setkdbangsal(Sequel.cariIsi("select kamar.kd_bangsal from kamar where kamar.kd_kamar=?", kdkamar.getText()));
+                                        } else {
+                                            akses.setkdbangsal(Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi"));
+                                        }
+                                    } else {
+                                        akses.setkdbangsal(bangsal);
+                                    }
+
+                                    billingDtl.TNoRw.setText(norawat.getText());
+                                    billingDtl.isCek();
+                                    billingDtl.isRawat();
+                                    billingDtl.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                                    billingDtl.setLocationRelativeTo(internalFrame1);
+                                    billingDtl.setVisible(true);
+                                }
+                            } else {
+                                bangsal = Sequel.cariIsi("select set_depo_ranap.kd_depo from set_depo_ranap where set_depo_ranap.kd_bangsal=?", Sequel.cariIsi("select kamar.kd_bangsal from kamar where kamar.kd_kamar=?", kdkamar.getText()));
+                                if (bangsal.equals("")) {
+                                    if (Sequel.cariIsi("select set_lokasi.asal_stok from set_lokasi").equals("Gunakan Stok Bangsal")) {
+                                        akses.setkdbangsal(Sequel.cariIsi("select kamar.kd_bangsal from kamar where kamar.kd_kamar=?", kdkamar.getText()));
+                                    } else {
+                                        akses.setkdbangsal(Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi"));
+                                    }
+                                } else {
+                                    akses.setkdbangsal(bangsal);
+                                }
+
+                                billingDtl.TNoRw.setText(norawat.getText());
+                                billingDtl.isCek();
+                                billingDtl.isRawat();
+                                billingDtl.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                                billingDtl.setLocationRelativeTo(internalFrame1);
+                                billingDtl.setVisible(true);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Notifikasi : " + e);
+                        } finally {
+                            if (rs != null) {
+                                rs.close();
+                            }
+                            if (pscaripiutang != null) {
+                                pscaripiutang.close();
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_MnBilling1ActionPerformed
+
     private void MnPenilaianPreInduksiActionPerformed(java.awt.event.ActionEvent evt) {
         if (tabMode.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
@@ -19033,6 +19140,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private javax.swing.JMenuItem MnBarcode2;
     private javax.swing.JMenuItem MnBarcodeRM9;
     private javax.swing.JMenuItem MnBilling;
+    private javax.swing.JMenuItem MnBilling1;
     private javax.swing.JMenuItem MnCatatanCekGDS;
     private javax.swing.JMenuItem MnCatatanKeperawatan;
     private javax.swing.JMenuItem MnCatatanMonitoringPostERACS;
@@ -19349,6 +19457,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JPopupMenu.Separator jSeparator13;
     private javax.swing.JPopupMenu.Separator jSeparator14;
+    private javax.swing.JPopupMenu.Separator jSeparator15;
     private widget.TextBox kdkamar;
     private widget.TextBox kdkamarpindah;
     private widget.TextBox kdpenjab;

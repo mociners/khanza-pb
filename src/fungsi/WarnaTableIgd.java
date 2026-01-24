@@ -17,6 +17,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class WarnaTableIgd extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
         Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        
+        // Pewarnaan baris ganjil/genap
         if (row % 2 == 1){
             component.setBackground(new Color(255,244,244));
             component.setForeground(new Color(50,50,50));
@@ -24,20 +26,32 @@ public class WarnaTableIgd extends DefaultTableCellRenderer {
             component.setBackground(new Color(255,255,255));
             component.setForeground(new Color(50,50,50));
         } 
-        if(table.getValueAt(row,19).toString().equals("Sudah")){
+        
+        // --- MULAI PERBAIKAN ---
+        // Ambil nilai objek dari kolom 19 dan 10 terlebih dahulu
+        Object objStatus = table.getValueAt(row, 19);
+        Object objPulang = table.getValueAt(row, 10);
+
+        // Ubah ke string dengan aman (jika null, ubah jadi string kosong "")
+        String status = (objStatus != null) ? objStatus.toString() : "";
+        String statusPulang = (objPulang != null) ? objPulang.toString() : "";
+
+        // Gunakan variabel string yang aman di bawah ini, bukan getValueAt lagi
+        if(status.equals("Sudah")){
             component.setBackground(new Color(255,182,193));
             component.setForeground(new Color(50,50,50));
-        }else if(table.getValueAt(row,19).toString().equals("Batal")){
+        }else if(status.equals("Batal")){
             component.setBackground(new Color(159,197,232));
             component.setForeground(new Color(50,50,50));
-        }else if(table.getValueAt(row,19).toString().equals("Dirujuk")||table.getValueAt(row,10).toString().equals("Meninggal")||table.getValueAt(row,10).toString().equals("Pulang Paksa")){
+        }else if(status.equals("Dirujuk") || statusPulang.equals("Meninggal") || statusPulang.equals("Pulang Paksa")){
             component.setBackground(new Color(152,152,156));
             component.setForeground(new Color(245,245,255));
-        }else if(table.getValueAt(row,19).toString().equals("Dirawat")){
+        }else if(status.equals("Dirawat")){
             component.setBackground(new Color(246,178,107));
             component.setForeground(new Color(50,50,50));
         }
-/*        if(table.getValueAt(row,15).toString().equals("Sudah Bayar")){
+
+/* if(table.getValueAt(row,15).toString().equals("Sudah Bayar")){
             component.setBackground(new Color(0,255,255));
             component.setForeground(new Color(50,50,50));
         } */

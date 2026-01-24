@@ -1271,20 +1271,18 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
 
     private void MnCetakHasilLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnCetakHasilLabActionPerformed
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        // 1. Validasi Awal (Pencarian Otomatis dari Tabel)
         if (tabMode.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Maaf, data sudah habis...!!!!");
             TCari.requestFocus();
             this.setCursor(Cursor.getDefaultCursor());
             return;
-        } 
+        }
         if (tbDokter.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(null, "Maaf, Gagal mencetak. Pilih dulu data yang mau dicetak.\nKlik No.Rawat pada table untuk memilih...!!!!");
             this.setCursor(Cursor.getDefaultCursor());
             return;
         }
 
-        // 2. TAHAP BARU: Minta input manual untuk parameter no_rawat di laporan
         String noRawatFromTable = tbDokter.getValueAt(tbDokter.getSelectedRow(), 0).toString();
         String noRawatManual = (String) JOptionPane.showInputDialog(
                 rootPane,
@@ -1293,10 +1291,9 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                noRawatFromTable // Nilai awal diisi dari tabel yang dipilih
+                noRawatFromTable
         );
 
-        // Validasi input manual
         if (noRawatManual == null || noRawatManual.trim().isEmpty()) {
             JOptionPane.showMessageDialog(rootPane, "No. Rawat untuk laporan tidak boleh kosong. Proses dibatalkan.");
             this.setCursor(Cursor.getDefaultCursor());
@@ -1304,8 +1301,6 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         }
         noRawatManual = noRawatManual.trim();
 
-
-        // 3. Proses Pengambilan Data dan Pencetakan
         try {
             ps4 = koneksi.prepareStatement(
                     "select periksa_lab.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.umur,petugas.nama,DATE_FORMAT(periksa_lab.tgl_periksa,'%d-%m-%Y') as tgl_periksa,periksa_lab.jam,periksa_lab.nip,"
@@ -1315,10 +1310,9 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                     + "and pasien.kd_kel=kelurahan.kd_kel and pasien.kd_kec=kecamatan.kd_kec and pasien.kd_kab=kabupaten.kd_kab where periksa_lab.kategori='PA' and "
                     + "periksa_lab.tgl_periksa=? and periksa_lab.jam=? and periksa_lab.no_rawat=? group by concat(periksa_lab.no_rawat,periksa_lab.tgl_periksa,periksa_lab.jam)");
             try {
-                // Data untuk query tetap diambil dari tabel yang dipilih
                 ps4.setString(1, tbDokter.getValueAt(tbDokter.getSelectedRow(), 3).toString());
                 ps4.setString(2, tbDokter.getValueAt(tbDokter.getSelectedRow(), 4).toString());
-                ps4.setString(3, noRawatFromTable); // Menggunakan no_rawat dari tabel untuk mencari data
+                ps4.setString(3, noRawatFromTable);
                 rs = ps4.executeQuery();
 
                 while (rs.next()) {
@@ -1334,10 +1328,8 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                     }
                     Map<String, Object> param = new HashMap<>();
 
-                    // --- INI BAGIAN UTAMA PERUBAHAN ---
-                    param.put("noperiksa", noRawatManual); // Parameter 'noperiksa' diisi dari input manual
-
-                    // Parameter lainnya tetap mengambil dari database
+                    param.put("noperiksa", noRawatManual);
+                    param.put("norawat", rs.getString("no_rawat"));
                     param.put("norm", rs.getString("no_rkm_medis"));
                     param.put("namapasien", rs.getString("nm_pasien"));
                     param.put("jkel", rs.getString("jk"));
@@ -1396,25 +1388,15 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                     param.put("kontakrs", akses.getkontakrs());
                     param.put("emailrs", akses.getemailrs());
 
-                    // --- PERBAIKAN UNTUK MEMUNCULKAN LOGO ---
                     try {
-                        // 1. Dapatkan nama file logo dari database
                         String logoName = Sequel.cariIsi("select setting.logo from setting");
-
-                        // 2. Buat path lengkap ke file logo (asumsi logo ada di folder /picture di dalam source code)
                         String logoPath = "/picture/" + logoName;
-
-                        // 3. Muat file sebagai InputStream
                         InputStream logoStream = this.getClass().getResourceAsStream(logoPath);
-
-                        // 4. Masukkan InputStream ke dalam parameter 'logo'
                         param.put("logo", logoStream);
                     } catch (Exception e) {
                         System.out.println("Gagal memuat logo: " + e);
-                        // Jika gagal, parameter 'logo' akan null dan area logo akan kosong
                         param.put("logo", null); 
                     }
-                    // --- AKHIR PERBAIKAN ---
 
                     pspermintaan = koneksi.prepareStatement(
                             "select noorder,DATE_FORMAT(tgl_permintaan,'%d-%m-%Y') as tgl_permintaan,jam_permintaan from permintaan_labpa where "

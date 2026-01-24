@@ -604,7 +604,7 @@ public class DlgDaftarPermintaanResep extends javax.swing.JDialog {
         panelisi2.add(jLabel20);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-01-2024" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-11-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -618,7 +618,7 @@ public class DlgDaftarPermintaanResep extends javax.swing.JDialog {
         panelisi2.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-01-2024" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-11-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -919,6 +919,11 @@ public class DlgDaftarPermintaanResep extends javax.swing.JDialog {
         CrDokter.setEditable(false);
         CrDokter.setName("CrDokter"); // NOI18N
         CrDokter.setPreferredSize(new java.awt.Dimension(295, 23));
+        CrDokter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CrDokterActionPerformed(evt);
+            }
+        });
         panelGlass8.add(CrDokter);
 
         BtnSeek3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
@@ -3309,6 +3314,10 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
             }
         }
     }//GEN-LAST:event_BtnResepLuarActionPerformed
+
+    private void CrDokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrDokterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CrDokterActionPerformed
 
     /**
     * @param args the command line arguments

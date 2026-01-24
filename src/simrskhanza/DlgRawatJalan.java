@@ -225,7 +225,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         initRawatJalan();
         
         java.awt.Color darkTextColor = java.awt.Color.BLACK;
-        int desiredFontSize = 11;
+        int desiredFontSize = 14;
         
         java.awt.Font currentFont = TKeluhan.getFont();
         java.awt.Font newFont = currentFont.deriveFont((float)desiredFontSize);

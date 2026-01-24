@@ -246,34 +246,41 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
      
 
     private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
-        Robot r = null;
+        BufferedImage img = new BufferedImage(PanelWall.getWidth(), PanelWall.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.setColor(new Color(255, 255, 255, 0));
+        g2.fillRect(0, 0, PanelWall.getWidth(), PanelWall.getHeight());
+        PanelWall.print(g2);
+        g2.dispose();
+
         try {
-            r = new Robot();
-        } catch (AWTException ex) {
-            Logger.getLogger(DlgMarkingImageAssMedisIGD.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Rectangle capture = 
-            new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-            BufferedImage Image = r.createScreenCapture(panelGlass9.bounds());
-        try {
-            ImageIO.write(Image, "png", new File("tmpImageFreehand/assMdsIGD"+TNoRawat.getText().replaceAll("/", "")+".png"));
+            File file = new File("tmpImageFreehand/assMdsIGD" + TNoRawat.getText().replaceAll("/", "") + ".png");
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            ImageIO.write(img, "png", file);
         } catch (IOException ex) {
             Logger.getLogger(DlgMarkingImageAssMedisIGD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        uploadImage("assMdsIGD"+TNoRawat.getText().replaceAll("/", "")+".png","assesmentmedisigd/imagemarking");
-        
-        if(Sequel.cariInteger("select count(no_rawat) as jumlah from asesmen_medis_igd_image_marking where no_rawat='"+TNoRawat.getText()+"'")>0){
-            if(Sequel.mengedittf("asesmen_medis_igd_image_marking","no_rawat=?","tanggal=?,jam=?,url_image=?",4,new String[]{
-                   tanggalNow.format(new Date()),jamNow.format(new Date()),"assesmentmedisigd/imagemarking/assMdsIGD"+TNoRawat.getText().replaceAll("/", "")+".png",TNoRawat.getText()
-                     })==true){
-                
-            }
-        }else{
-         if(Sequel.menyimpantf("asesmen_medis_igd_image_marking","?,?,?,?","No.Rawat",4,new String[]{
-                    TNoRawat.getText(),tanggalNow.format(new Date()),jamNow.format(new Date()),"assesmentmedisigd/imagemarking/assMdsIGD"+TNoRawat.getText().replaceAll("/", "")+".png"
-                })==true){
-            }
+
+        uploadImage("assMdsIGD" + TNoRawat.getText().replaceAll("/", "") + ".png", "assesmentmedisigd/imagemarking");
+
+        if (Sequel.cariInteger("select count(no_rawat) as jumlah from asesmen_medis_igd_image_marking where no_rawat='" + TNoRawat.getText() + "'") > 0) {
+            Sequel.mengedittf("asesmen_medis_igd_image_marking", "no_rawat=?", "tanggal=?,jam=?,url_image=?", 4, new String[]{
+                tanggalNow.format(new Date()),
+                jamNow.format(new Date()),
+                "assesmentmedisigd/imagemarking/assMdsIGD" + TNoRawat.getText().replaceAll("/", "") + ".png",
+                TNoRawat.getText()
+            });
+        } else {
+            Sequel.menyimpantf("asesmen_medis_igd_image_marking", "?,?,?,?", "No.Rawat", 4, new String[]{
+                TNoRawat.getText(),
+                tanggalNow.format(new Date()),
+                jamNow.format(new Date()),
+                "assesmentmedisigd/imagemarking/assMdsIGD" + TNoRawat.getText().replaceAll("/", "") + ".png"
+            });
         }
+
         dispose();
 }//GEN-LAST:event_BtnSimpanActionPerformed
 
@@ -321,7 +328,10 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
     }//GEN-LAST:event_BtnHapusKeyPressed
 
     private void BtnHapus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapus1ActionPerformed
-        imageAssesment("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/imagefreehand/masterimage/asesmen_medis_igd.png");
+        index = 0;
+        arr = new Point[100000];
+        repaint();
+        imageAssesment("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/masterimage/semua.png");
     }//GEN-LAST:event_BtnHapus1ActionPerformed
 
     private void BtnHapus1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnHapus1KeyPressed
@@ -364,14 +374,14 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
     }
 
     public void setNoRw(String norw) {
-       
-        TNoRawat.setText(norw); 
-        urlImage=Sequel.cariIsi("select url_image from asesmen_medis_igd_image_marking where no_rawat='"+norw+"' ");
-        if(urlImage.toString().equals(null)||urlImage.toString().equals("")){
-           imageAssesment("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/imagefreehand/masterimage/asesmen_medis_igd.png");
-       }else{
-             imageAssesment("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/imagefreehand/"+urlImage.trim()+"");
-       }    
+       TNoRawat.setText(norw);
+        urlImage = Sequel.cariIsi("select url_image from asesmen_medis_igd_image_marking where no_rawat='" + norw + "' ");
+
+        if (urlImage == null || urlImage.equals("")) {
+            imageAssesment("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/masterimage/semua.png");
+        } else {
+            imageAssesment("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/" + urlImage.trim() + "?t=" + System.currentTimeMillis());
+        }   
     }
     
     
@@ -413,13 +423,15 @@ void deleteFile(){
    }
 
 void imageAssesment(String url){  
-    try {
+        try {
+            System.out.println("Loading Image: " + url.trim());
             BufferedImage img = ImageIO.read(new URL(url.trim()));
             PanelWall.setBackgroundImage(new javax.swing.ImageIcon(img));
+            PanelWall.repaint();
+            PanelWall.revalidate();
+        } catch (IOException ex) {
+            System.out.println("Error loading image: " + ex);
+            }
         }
-        catch(IOException ex) {
-
-        }
-    }
 
 }

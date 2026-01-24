@@ -12,6 +12,7 @@
  */
 package keuangan;
 
+
 import bridging.ApiBRI;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,7 +61,7 @@ import simrskhanza.DlgLiatFotoKeluarga;
  *
  * @author perpustakaan
  */
-public class DlgBilingRanap extends javax.swing.JDialog {
+public class DlgBilingRanapDtl extends javax.swing.JDialog {
 
     private final DefaultTableModel tabModeRwJlDr, tabModeTambahan, tabModePotongan, tabModeKamIn, tabModeAkunBayar, tabModeAkunPiutang, tabModeLab, tabModeRad, tabModeApotek;
     public DlgPemberianObat beriobat = new DlgPemberianObat(null, false);
@@ -128,48 +129,48 @@ public class DlgBilingRanap extends javax.swing.JDialog {
             + "resep_pulang.no_rawat=? order by databarang.nama_brng",
             sqlpstambahanbiaya = "select tambahan_biaya.nama_biaya, tambahan_biaya.besar_biaya from tambahan_biaya where tambahan_biaya.no_rawat=?  ",
             sqlpspotonganbiaya = "select pengurangan_biaya.nama_pengurangan, pengurangan_biaya.besar_pengurangan from pengurangan_biaya where pengurangan_biaya.no_rawat=?  ",
-            sqlpsralandokter = "select jns_perawatan.nm_perawatan,rawat_jl_dr.biaya_rawat as total_byrdr,count(rawat_jl_dr.kd_jenis_prw) as jml, "
+            sqlpsralandokter = "select jns_perawatan.nm_perawatan,dokter.nm_dokter,rawat_jl_dr.biaya_rawat as total_byrdr,count(rawat_jl_dr.kd_jenis_prw) as jml, "
             + "sum(rawat_jl_dr.biaya_rawat) as biaya,"
             + "sum(rawat_jl_dr.bhp) as totalbhp,"
             + "(sum(rawat_jl_dr.material)+sum(rawat_jl_dr.menejemen)+sum(rawat_jl_dr.kso)) as totalmaterial,"
             + "rawat_jl_dr.tarif_tindakandr,"
             + "sum(rawat_jl_dr.tarif_tindakandr) as totaltarif_tindakandr  "
-            + "from rawat_jl_dr inner join jns_perawatan inner join kategori_perawatan "
+            + "from rawat_jl_dr inner join jns_perawatan inner join kategori_perawatan inner join dokter "
             + "on rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw and "
-            + "jns_perawatan.kd_kategori=kategori_perawatan.kd_kategori where "
-            + "rawat_jl_dr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_jl_dr.kd_jenis_prw",
-            sqlpsralandrpr = "select jns_perawatan.nm_perawatan,rawat_jl_drpr.biaya_rawat as total_byrdr,count(rawat_jl_drpr.kd_jenis_prw) as jml, "
+            + "jns_perawatan.kd_kategori=kategori_perawatan.kd_kategori and rawat_jl_dr.kd_dokter=dokter.kd_dokter where "
+            + "rawat_jl_dr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_jl_dr.kd_jenis_prw,rawat_jl_dr.kd_dokter",
+            sqlpsralandrpr = "select jns_perawatan.nm_perawatan,dokter.nm_dokter,rawat_jl_drpr.biaya_rawat as total_byrdr,count(rawat_jl_drpr.kd_jenis_prw) as jml, "
             + "sum(rawat_jl_drpr.biaya_rawat) as biaya,"
             + "sum(rawat_jl_drpr.bhp) as totalbhp,"
             + "(sum(rawat_jl_drpr.material)+sum(rawat_jl_drpr.menejemen)+sum(rawat_jl_drpr.kso)) as totalmaterial,"
             + "rawat_jl_drpr.tarif_tindakandr,"
             + "sum(rawat_jl_drpr.tarif_tindakanpr) as totaltarif_tindakanpr,"
             + "sum(rawat_jl_drpr.tarif_tindakandr) as totaltarif_tindakandr  "
-            + "from rawat_jl_drpr inner join jns_perawatan inner join kategori_perawatan "
+            + "from rawat_jl_drpr inner join jns_perawatan inner join kategori_perawatan inner join dokter "
             + "on rawat_jl_drpr.kd_jenis_prw=jns_perawatan.kd_jenis_prw and "
-            + "jns_perawatan.kd_kategori=kategori_perawatan.kd_kategori where "
-            + "rawat_jl_drpr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_jl_drpr.kd_jenis_prw",
-            sqlpsranapdokter = "select jns_perawatan_inap.nm_perawatan,rawat_inap_dr.biaya_rawat as total_byrdr,count(rawat_inap_dr.kd_jenis_prw) as jml, "
+            + "jns_perawatan.kd_kategori=kategori_perawatan.kd_kategori and rawat_jl_drpr.kd_dokter=dokter.kd_dokter where "
+            + "rawat_jl_drpr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_jl_drpr.kd_jenis_prw,rawat_jl_drpr.kd_dokter",
+            sqlpsranapdokter = "select jns_perawatan_inap.nm_perawatan,dokter.nm_dokter,rawat_inap_dr.biaya_rawat as total_byrdr,count(rawat_inap_dr.kd_jenis_prw) as jml, "
             + "sum(rawat_inap_dr.biaya_rawat) as biaya,"
             + "sum(rawat_inap_dr.bhp) as totalbhp,"
             + "(sum(rawat_inap_dr.material)+sum(rawat_inap_dr.menejemen)+sum(rawat_inap_dr.kso)) as totalmaterial,"
             + "rawat_inap_dr.tarif_tindakandr,"
             + "sum(rawat_inap_dr.tarif_tindakandr) as totaltarif_tindakandr "
-            + "from rawat_inap_dr inner join jns_perawatan_inap inner join kategori_perawatan "
+            + "from rawat_inap_dr inner join jns_perawatan_inap inner join kategori_perawatan inner join dokter "
             + "on rawat_inap_dr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw and "
-            + "jns_perawatan_inap.kd_kategori=kategori_perawatan.kd_kategori where "
-            + "rawat_inap_dr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_inap_dr.kd_jenis_prw",
-            sqlpsranapdrpr = "select jns_perawatan_inap.nm_perawatan,rawat_inap_drpr.biaya_rawat as total_byrdr,count(rawat_inap_drpr.kd_jenis_prw) as jml, "
+            + "jns_perawatan_inap.kd_kategori=kategori_perawatan.kd_kategori and rawat_inap_dr.kd_dokter=dokter.kd_dokter where "
+            + "rawat_inap_dr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_inap_dr.kd_jenis_prw,rawat_inap_dr.kd_dokter",
+            sqlpsranapdrpr = "select jns_perawatan_inap.nm_perawatan,dokter.nm_dokter,rawat_inap_drpr.biaya_rawat as total_byrdr,count(rawat_inap_drpr.kd_jenis_prw) as jml, "
             + "sum(rawat_inap_drpr.biaya_rawat) as biaya,"
             + "sum(rawat_inap_drpr.bhp) as totalbhp,"
             + "(sum(rawat_inap_drpr.material)+sum(rawat_inap_drpr.menejemen)+sum(rawat_inap_drpr.kso)) as totalmaterial,"
             + "rawat_inap_drpr.tarif_tindakandr,"
             + "sum(rawat_inap_drpr.tarif_tindakanpr) as totaltarif_tindakanpr, "
             + "sum(rawat_inap_drpr.tarif_tindakandr) as totaltarif_tindakandr "
-            + "from rawat_inap_drpr inner join jns_perawatan_inap inner join kategori_perawatan "
+            + "from rawat_inap_drpr inner join jns_perawatan_inap inner join kategori_perawatan inner join dokter "
             + "on rawat_inap_drpr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw and "
-            + "jns_perawatan_inap.kd_kategori=kategori_perawatan.kd_kategori where "
-            + "rawat_inap_drpr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_inap_drpr.kd_jenis_prw",
+            + "jns_perawatan_inap.kd_kategori=kategori_perawatan.kd_kategori and rawat_inap_drpr.kd_dokter=dokter.kd_dokter where "
+            + "rawat_inap_drpr.no_rawat=? and kategori_perawatan.kd_kategori=? group by rawat_inap_drpr.kd_jenis_prw,rawat_inap_drpr.kd_dokter",
             sqlpsralanperawat = "select jns_perawatan.nm_perawatan,jns_perawatan.total_byrpr,count(jns_perawatan.nm_perawatan) as jml, "
             + "jns_perawatan.total_byrpr*count(jns_perawatan.nm_perawatan) as biaya "
             + "from rawat_jl_pr inner join jns_perawatan inner join kategori_perawatan  "
@@ -182,7 +183,25 @@ public class DlgBilingRanap extends javax.swing.JDialog {
             + "on rawat_inap_pr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw  and "
             + "jns_perawatan_inap.kd_kategori=kategori_perawatan.kd_kategori where "
             + "rawat_inap_pr.no_rawat=? and kategori_perawatan.kd_kategori=?  group by rawat_inap_pr.kd_jenis_prw",
-            sqlpsoperasi = "select paket_operasi.nm_perawatan,(operasi.biayaoperator1+operasi.biayaoperator2+"
+            sqlpsoperasi = "select paket_operasi.nm_perawatan, "
+            + "(select nm_dokter from dokter where dokter.kd_dokter=operasi.operator1 limit 1) as nm_op1, "
+            + "(select nm_dokter from dokter where dokter.kd_dokter=operasi.operator2 limit 1) as nm_op2, "
+            + "(select nm_dokter from dokter where dokter.kd_dokter=operasi.operator3 limit 1) as nm_op3, "
+            + "(select nm_dokter from dokter where dokter.kd_dokter=operasi.biayadokter_anak limit 1) as nm_dr_anak, "
+            + "(select nm_dokter from dokter where dokter.kd_dokter=operasi.biayadokter_anestesi limit 1) as nm_dr_anestesi, "
+            + "(select nm_dokter from dokter where dokter.kd_dokter=operasi.biaya_dokter_umum limit 1) as nm_dr_umum, "
+            + "(select nama from petugas where petugas.nip=operasi.asisten_operator1 limit 1) as nm_asisten1, "
+            + "(select nama from petugas where petugas.nip=operasi.asisten_operator2 limit 1) as nm_asisten2, "
+            + "(select nama from petugas where petugas.nip=operasi.asisten_operator3 limit 1) as nm_asisten3, "
+            + "(select nama from petugas where petugas.nip=operasi.biayaperawaat_resusitas limit 1) as nm_resusitasi, "
+            + "(select nama from petugas where petugas.nip=operasi.biayaasisten_anestesi limit 1) as nm_as_anestesi, "
+            + "(select nama from petugas where petugas.nip=operasi.omloop limit 1) as nm_omloop1, "
+            + "(select nama from petugas where petugas.nip=operasi.omloop2 limit 1) as nm_omloop2, "
+            + "(select nama from petugas where petugas.nip=operasi.omloop3 limit 1) as nm_omloop3, "
+            + "(select nama from petugas where petugas.nip=operasi.omloop4 limit 1) as nm_omloop4, "
+            + "(select nama from petugas where petugas.nip=operasi.omloop5 limit 1) as nm_omloop5, "
+            + "(select nama from petugas where petugas.nip=operasi.biayaperawat_luar limit 1) as nm_perawat_luar, "
+            + "(operasi.biayaoperator1+operasi.biayaoperator2+"
             + "operasi.biayaoperator3+operasi.biayaasisten_operator1+operasi.biayaasisten_operator2+"
             + "operasi.biayaasisten_operator3+operasi.biayainstrumen+operasi.biayadokter_anak+"
             + "operasi.biayaperawaat_resusitas+operasi.biayadokter_anestesi+operasi.biayaasisten_anestesi+"
@@ -239,7 +258,7 @@ public class DlgBilingRanap extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public DlgBilingRanap(java.awt.Frame parent, boolean modal) {
+    public DlgBilingRanapDtl(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         //this.setLocation(8,1);
@@ -2175,7 +2194,7 @@ public class DlgBilingRanap extends javax.swing.JDialog {
         jLabel4.setPreferredSize(new java.awt.Dimension(65, 23));
         panelGlass1.add(jLabel4);
 
-        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "13-03-2025 15:34:45" }));
+        DTPTgl.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "17-11-2025 13:10:18" }));
         DTPTgl.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         DTPTgl.setName("DTPTgl"); // NOI18N
         DTPTgl.setOpaque(false);
@@ -4727,7 +4746,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            DlgBilingRanap dialog = new DlgBilingRanap(new javax.swing.JFrame(), true);
+            DlgBilingRanapDtl dialog = new DlgBilingRanapDtl(new javax.swing.JFrame(), true);
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -4883,6 +4902,9 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     // End of variables declaration//GEN-END:variables
 
     public void isRawat() {
+        PreparedStatement psListDokter = null;
+        ResultSet rsListDokter = null;
+
         try {
             pscekbilling = koneksi.prepareStatement(sqlpscekbilling);
             try {
@@ -4988,8 +5010,142 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     rsreg = pssudahmasuk.executeQuery();
                     while (rsreg.next()) {
                         if (!rsreg.getString("status").equals("Tagihan")) {
+                            String nama_tindakan = rsreg.getString("nm_perawatan");
+                            String status_tindakan = rsreg.getString("status").trim();
+                            String nama_clean = nama_tindakan.replaceAll("'", "''");
+
+                            // --- BAGIAN 1: TINDAKAN DOKTER/PARAMEDIS (VISITE DLL) ---
+                            if (status_tindakan.contains("Dokter") || status_tindakan.contains("Paramedis") || status_tindakan.contains("Ranap") || status_tindakan.contains("Ralan")) {
+                                StringBuilder rincian_dokter = new StringBuilder();
+                                try {
+                                    // Cek Rawat Inap Dokter
+                                    psListDokter = koneksi.prepareStatement(
+                                            "select dokter.nm_dokter, count(rawat_inap_dr.kd_dokter) as jml " +
+                                            "from rawat_inap_dr inner join dokter on rawat_inap_dr.kd_dokter=dokter.kd_dokter " +
+                                            "inner join jns_perawatan_inap on rawat_inap_dr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw " +
+                                            "where rawat_inap_dr.no_rawat=? and jns_perawatan_inap.nm_perawatan like ? " +
+                                            "group by rawat_inap_dr.kd_dokter");
+                                    psListDokter.setString(1, TNoRw.getText());
+                                    psListDokter.setString(2, "%" + nama_clean + "%");
+                                    rsListDokter = psListDokter.executeQuery();
+                                    
+                                    while (rsListDokter.next()) {
+                                        if (rincian_dokter.length() > 0) rincian_dokter.append(", ");
+                                        rincian_dokter.append(rsListDokter.getString("nm_dokter")).append(" [").append(rsListDokter.getString("jml")).append("]");
+                                    }
+                                    
+                                    // Jika kosong, cek Inap DrPr
+                                    if (rincian_dokter.length() == 0) {
+                                        if (rsListDokter != null) rsListDokter.close();
+                                        if (psListDokter != null) psListDokter.close();
+                                        psListDokter = koneksi.prepareStatement(
+                                            "select dokter.nm_dokter, count(rawat_inap_drpr.kd_dokter) as jml " +
+                                            "from rawat_inap_drpr inner join dokter on rawat_inap_drpr.kd_dokter=dokter.kd_dokter " +
+                                            "inner join jns_perawatan_inap on rawat_inap_drpr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw " +
+                                            "where rawat_inap_drpr.no_rawat=? and jns_perawatan_inap.nm_perawatan like ? " +
+                                            "group by rawat_inap_drpr.kd_dokter");
+                                        psListDokter.setString(1, TNoRw.getText());
+                                        psListDokter.setString(2, "%" + nama_clean + "%");
+                                        rsListDokter = psListDokter.executeQuery();
+                                        while (rsListDokter.next()) {
+                                            if (rincian_dokter.length() > 0) rincian_dokter.append(", ");
+                                            rincian_dokter.append(rsListDokter.getString("nm_dokter")).append(" [").append(rsListDokter.getString("jml")).append("]");
+                                        }
+                                    }
+                                    
+                                    // Jika masih kosong, cek Rawat Jalan
+                                    if (rincian_dokter.length() == 0) {
+                                        if (rsListDokter != null) rsListDokter.close();
+                                        if (psListDokter != null) psListDokter.close();
+                                        psListDokter = koneksi.prepareStatement(
+                                            "select dokter.nm_dokter, count(rawat_jl_dr.kd_dokter) as jml " +
+                                            "from rawat_jl_dr inner join dokter on rawat_jl_dr.kd_dokter=dokter.kd_dokter " +
+                                            "inner join jns_perawatan on rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+                                            "where rawat_jl_dr.no_rawat=? and jns_perawatan.nm_perawatan like ? " +
+                                            "group by rawat_jl_dr.kd_dokter");
+                                        psListDokter.setString(1, TNoRw.getText());
+                                        psListDokter.setString(2, "%" + nama_clean + "%");
+                                        rsListDokter = psListDokter.executeQuery();
+                                        while (rsListDokter.next()) {
+                                            if (rincian_dokter.length() > 0) rincian_dokter.append(", ");
+                                            rincian_dokter.append(rsListDokter.getString("nm_dokter")).append(" [").append(rsListDokter.getString("jml")).append("]");
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                    System.out.println("Error cari rincian dokter: " + e);
+                                } finally {
+                                    if (rsListDokter != null) rsListDokter.close();
+                                    if (psListDokter != null) psListDokter.close();
+                                }
+                                
+                                if (rincian_dokter.length() > 0) {
+                                    if (!nama_tindakan.contains(rincian_dokter.toString())) {
+                                         nama_tindakan = nama_tindakan + " (" + rincian_dokter.toString() + ")";
+                                    }
+                                }
+
+                            // --- BAGIAN 2: OPERASI & RINCIANNYA ---
+                            } else if (status_tindakan.equalsIgnoreCase("Operasi")) {
+                                String detail_nama = null;
+                                String nm_cek = nama_tindakan.trim();
+                                
+                                // Mapping Nama Biaya ke Kolom Operasi
+                                if (nm_cek.equalsIgnoreCase("Biaya Operator 1")) {
+                                    detail_nama = Sequel.cariIsi("select nm_dokter from dokter inner join operasi on dokter.kd_dokter=operasi.operator1 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Operator 2")) {
+                                    detail_nama = Sequel.cariIsi("select nm_dokter from dokter inner join operasi on dokter.kd_dokter=operasi.operator2 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Operator 3")) {
+                                    detail_nama = Sequel.cariIsi("select nm_dokter from dokter inner join operasi on dokter.kd_dokter=operasi.operator3 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Asisten Operator 1")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.asisten_operator1 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Asisten Operator 2")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.asisten_operator2 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Asisten Operator 3")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.asisten_operator3 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Dokter Anak")) {
+                                    detail_nama = Sequel.cariIsi("select nm_dokter from dokter inner join operasi on dokter.kd_dokter=operasi.biayadokter_anak where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Perawat Resusitas")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.biayaperawaat_resusitas where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Dokter Anastesi")) {
+                                    detail_nama = Sequel.cariIsi("select nm_dokter from dokter inner join operasi on dokter.kd_dokter=operasi.biayadokter_anestesi where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Asisten Anastesi 1")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.biayaasisten_anestesi where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Onloop 1")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.omloop where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Onloop 2")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.omloop2 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Onloop 3")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.omloop3 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Onloop 4")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.omloop4 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Onloop 5")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.omloop5 where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Perawat Luar")) {
+                                    detail_nama = Sequel.cariIsi("select nama from petugas inner join operasi on petugas.nip=operasi.biayaperawat_luar where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else if (nm_cek.equalsIgnoreCase("Biaya Dokter Umum")) {
+                                    detail_nama = Sequel.cariIsi("select nm_dokter from dokter inner join operasi on dokter.kd_dokter=operasi.biaya_dokter_umum where operasi.no_rawat='" + TNoRw.getText() + "' limit 1");
+                                } else {
+                                    // Cek apakah ini Header Nama Paket Operasi? Ambil Operator 1
+                                    if (!nm_cek.startsWith("Biaya ")) {
+                                        String op_utama = Sequel.cariIsi("select nm_dokter from operasi inner join paket_operasi on operasi.kode_paket=paket_operasi.kode_paket inner join dokter on operasi.operator1=dokter.kd_dokter where operasi.no_rawat='" + TNoRw.getText() + "' and paket_operasi.nm_perawatan like '%" + nama_clean + "%' limit 1");
+                                        if(!op_utama.equals("")) {
+                                            detail_nama = op_utama;
+                                        }
+                                    }
+                                }
+
+                                if (detail_nama != null) {
+                                    if (detail_nama.equals("")) detail_nama = "-";
+                                    // Tambahkan nama jika belum ada
+                                    if (!nama_tindakan.contains(detail_nama)) {
+                                        nama_tindakan = nama_tindakan + " (" + detail_nama + ")";
+                                    }
+                                }
+                            }
+
                             tabModeRwJlDr.addRow(new Object[]{true, rsreg.getString("no"),
-                                rsreg.getString("nm_perawatan"),
+                                nama_tindakan, 
                                 rsreg.getString("pemisah"),
                                 rsreg.getObject("satu"),
                                 rsreg.getObject("dua"),
@@ -6021,6 +6177,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                                 tabModeRwJlDr.addRow(new Object[]{true, x + ". " + rskategori.getString(2), ":", "", null, null, null, null, "Ranap Dokter"});
                                 x++;
                             }
+
                             rsralandokter.beforeFirst();
                             while (rsralandokter.next()) {
                                 tamkur = 0;
@@ -6047,11 +6204,11 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                                 if (rinciandokterranap.equals("Yes")) {
                                     detailbhp = detailbhp + rsralandokter.getDouble("totalbhp");
                                     detailjs = detailjs + rsralandokter.getDouble("totalmaterial");
-                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsralandokter.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsralandokter.getString("nm_perawatan") + " (" + rsralandokter.getString("nm_dokter") + ")", ":",
                                         rsralandokter.getDouble("tarif_tindakandr"), rsralandokter.getDouble("jml"), tamkur, (rsralandokter.getDouble("totaltarif_tindakandr") + tamkur), "Ralan Dokter"});
                                     subttl = subttl + rsralandokter.getDouble("totaltarif_tindakandr") + tamkur;
                                 } else {
-                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsralandokter.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsralandokter.getString("nm_perawatan") + " (" + rsralandokter.getString("nm_dokter") + ")", ":",
                                         rsralandokter.getDouble("total_byrdr"), rsralandokter.getDouble("jml"), tamkur, (tamkur + rsralandokter.getDouble("biaya")), "Ralan Dokter"});
                                     subttl = subttl + rsralandokter.getDouble("biaya") + tamkur;
                                 }
@@ -6083,11 +6240,11 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                                 if (rinciandokterranap.equals("Yes")) {
                                     detailbhp = detailbhp + rsralandrpr.getDouble("totalbhp");
                                     detailjs = detailjs + rsralandrpr.getDouble("totalmaterial") + rsralandrpr.getDouble("totaltarif_tindakanpr");
-                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsralandrpr.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsralandrpr.getString("nm_perawatan") + " (" + rsralandrpr.getString("nm_dokter") + ")", ":",
                                         rsralandrpr.getDouble("tarif_tindakandr"), rsralandrpr.getDouble("jml"), tamkur, (rsralandrpr.getDouble("totaltarif_tindakandr") + tamkur), "Ralan Dokter Paramedis"});
                                     subttl = subttl + rsralandrpr.getDouble("totaltarif_tindakandr") + tamkur;
                                 } else {
-                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsralandrpr.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsralandrpr.getString("nm_perawatan") + " (" + rsralandrpr.getString("nm_dokter") + ")", ":",
                                         rsralandrpr.getDouble("total_byrdr"), rsralandrpr.getDouble("jml"), tamkur, (tamkur + rsralandrpr.getDouble("biaya")), "Ralan Dokter Paramedis"});
                                     subttl = subttl + rsralandrpr.getDouble("biaya") + tamkur;
                                 }
@@ -6127,6 +6284,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                                 tabModeRwJlDr.addRow(new Object[]{true, x + ". " + rskategori.getString(2), ":", "", null, null, null, null, "Ranap Dokter"});
                                 x++;
                             }
+
                             rsranapdokter.beforeFirst();
                             while (rsranapdokter.next()) {
                                 tamkur = 0;
@@ -6153,11 +6311,11 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                                 if (rinciandokterranap.equals("Yes")) {
                                     detailbhp = detailbhp + rsranapdokter.getDouble("totalbhp");
                                     detailjs = detailjs + rsranapdokter.getDouble("totalmaterial");
-                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsranapdokter.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsranapdokter.getString("nm_perawatan") + " (" + rsranapdokter.getString("nm_dokter") + ")", ":",
                                         rsranapdokter.getDouble("tarif_tindakandr"), rsranapdokter.getDouble("jml"), tamkur, (rsranapdokter.getDouble("totaltarif_tindakandr") + tamkur), "Ranap Dokter"});
                                     subttl = subttl + rsranapdokter.getDouble("totaltarif_tindakandr") + tamkur;
                                 } else {
-                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsranapdokter.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsranapdokter.getString("nm_perawatan") + " (" + rsranapdokter.getString("nm_dokter") + ")", ":",
                                         rsranapdokter.getDouble("total_byrdr"), rsranapdokter.getDouble("jml"), tamkur, (tamkur + rsranapdokter.getDouble("biaya")), "Ranap Dokter"});
                                     subttl = subttl + rsranapdokter.getDouble("biaya") + tamkur;
                                 }
@@ -6189,15 +6347,14 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                                 if (rinciandokterranap.equals("Yes")) {
                                     detailbhp = detailbhp + rsranapdrpr.getDouble("totalbhp");
                                     detailjs = detailjs + rsranapdrpr.getDouble("totalmaterial") + rsranapdrpr.getDouble("totaltarif_tindakanpr");
-                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsranapdrpr.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "", rsranapdrpr.getString("nm_perawatan") + " (" + rsranapdrpr.getString("nm_dokter") + ")", ":",
                                         rsranapdrpr.getDouble("tarif_tindakandr"), rsranapdrpr.getDouble("jml"), tamkur, (rsranapdrpr.getDouble("totaltarif_tindakandr") + tamkur), "Ranap Dokter Paramedis"});
                                     subttl = subttl + rsranapdrpr.getDouble("totaltarif_tindakandr") + tamkur;
                                 } else {
-                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsranapdrpr.getString("nm_perawatan"), ":",
+                                    tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsranapdrpr.getString("nm_perawatan") + " (" + rsranapdrpr.getString("nm_dokter") + ")", ":",
                                         rsranapdrpr.getDouble("total_byrdr"), rsranapdrpr.getDouble("jml"), tamkur, (tamkur + rsranapdrpr.getDouble("biaya")), "Ranap Dokter Paramedis"});
                                     subttl = subttl + rsranapdrpr.getDouble("biaya") + tamkur;
                                 }
-
                             }
 
                             rsranapperawat.beforeFirst();
@@ -6445,123 +6602,146 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 rsoperasi.beforeFirst();
                 if (rincianoperasi.equals("Yes")) {
                     while (rsoperasi.next()) {
-                        tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsoperasi.getString("nm_perawatan"), ":", null, null, null, null, "Operasi"});
+                        String nm_op_utama = rsoperasi.getString("nm_op1");
+                        String nm_tindakan = rsoperasi.getString("nm_perawatan");
+                        if (nm_op_utama != null && !nm_op_utama.trim().equals("")) {
+                            nm_tindakan = nm_tindakan + " (" + nm_op_utama + ")";
+                        } else {
+                            nm_tindakan = nm_tindakan + " (-)";
+                        }
+
+                        tabModeRwJlDr.addRow(new Object[]{true, "                           ", nm_tindakan, ":", null, null, null, null, "Operasi"});
+
                         if (rsoperasi.getDouble("biayaoperator1") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Operator 1", ":", rsoperasi.getDouble("biayaoperator1"), 1, 0, rsoperasi.getDouble("biayaoperator1"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_op1");
+                            String label = "  Biaya Operator 1" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaoperator1"), 1, 0, rsoperasi.getDouble("biayaoperator1"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaoperator2") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Operator 2", ":", rsoperasi.getDouble("biayaoperator2"), 1, 0, rsoperasi.getDouble("biayaoperator2"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_op2");
+                            String label = "  Biaya Operator 2" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaoperator2"), 1, 0, rsoperasi.getDouble("biayaoperator2"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaoperator3") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Operator 3", ":", rsoperasi.getDouble("biayaoperator3"), 1, 0, rsoperasi.getDouble("biayaoperator3"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_op3");
+                            String label = "  Biaya Operator 3" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaoperator3"), 1, 0, rsoperasi.getDouble("biayaoperator3"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaasisten_operator1") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Asisten Operator 1", ":", rsoperasi.getDouble("biayaasisten_operator1"), 1, 0, rsoperasi.getDouble("biayaasisten_operator1"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_asisten1");
+                            String label = "  Biaya Asisten Operator 1" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaasisten_operator1"), 1, 0, rsoperasi.getDouble("biayaasisten_operator1"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaasisten_operator2") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Asisten Operator 2", ":", rsoperasi.getDouble("biayaasisten_operator2"), 1, 0, rsoperasi.getDouble("biayaasisten_operator2"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_asisten2");
+                            String label = "  Biaya Asisten Operator 2" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaasisten_operator2"), 1, 0, rsoperasi.getDouble("biayaasisten_operator2"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaasisten_operator3") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Asisten Operator 3", ":", rsoperasi.getDouble("biayaasisten_operator3"), 1, 0, rsoperasi.getDouble("biayaasisten_operator3"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_asisten3");
+                            String label = "  Biaya Asisten Operator 3" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaasisten_operator3"), 1, 0, rsoperasi.getDouble("biayaasisten_operator3"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayainstrumen") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Instrumen", ":", rsoperasi.getDouble("biayainstrumen"), 1, 0, rsoperasi.getDouble("biayainstrumen"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayadokter_anak") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Dokter Anak", ":", rsoperasi.getDouble("biayadokter_anak"), 1, 0, rsoperasi.getDouble("biayadokter_anak"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_dr_anak");
+                            String label = "  Biaya Dokter Anak" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayadokter_anak"), 1, 0, rsoperasi.getDouble("biayadokter_anak"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaperawaat_resusitas") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Perawat Resusitas", ":", rsoperasi.getDouble("biayaperawaat_resusitas"), 1, 0, rsoperasi.getDouble("biayaperawaat_resusitas"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_resusitasi");
+                            String label = "  Biaya Perawat Resusitas" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaperawaat_resusitas"), 1, 0, rsoperasi.getDouble("biayaperawaat_resusitas"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayadokter_anestesi") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Dokter Anastesi", ":", rsoperasi.getDouble("biayadokter_anestesi"), 1, 0, rsoperasi.getDouble("biayadokter_anestesi"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_dr_anestesi");
+                            String label = "  Biaya Dokter Anastesi" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayadokter_anestesi"), 1, 0, rsoperasi.getDouble("biayadokter_anestesi"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaasisten_anestesi") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Asisten Anastesi 1", ":", rsoperasi.getDouble("biayaasisten_anestesi"), 1, 0, rsoperasi.getDouble("biayaasisten_anestesi"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_as_anestesi");
+                            String label = "  Biaya Asisten Anastesi 1" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaasisten_anestesi"), 1, 0, rsoperasi.getDouble("biayaasisten_anestesi"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaasisten_anestesi2") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Asisten Anastesi 2", ":", rsoperasi.getDouble("biayaasisten_anestesi2"), 1, 0, rsoperasi.getDouble("biayaasisten_anestesi2"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayabidan") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Bidan 1", ":", rsoperasi.getDouble("biayabidan"), 1, 0, rsoperasi.getDouble("biayabidan"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayabidan2") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Bidan 2", ":", rsoperasi.getDouble("biayabidan2"), 1, 0, rsoperasi.getDouble("biayabidan2"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayabidan3") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Bidan 3", ":", rsoperasi.getDouble("biayabidan3"), 1, 0, rsoperasi.getDouble("biayabidan3"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaperawat_luar") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Perawat Luar", ":", rsoperasi.getDouble("biayaperawat_luar"), 1, 0, rsoperasi.getDouble("biayaperawat_luar"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_perawat_luar");
+                            String label = "  Biaya Perawat Luar" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biayaperawat_luar"), 1, 0, rsoperasi.getDouble("biayaperawat_luar"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayaalat") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Alat", ":", rsoperasi.getDouble("biayaalat"), 1, 0, rsoperasi.getDouble("biayaalat"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayasewaok") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Sewa OK/VK", ":", rsoperasi.getDouble("biayasewaok"), 1, 0, rsoperasi.getDouble("biayasewaok"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("akomodasi") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Ruang Pemulihan", ":", rsoperasi.getDouble("akomodasi"), 1, 0, rsoperasi.getDouble("akomodasi"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biaya_omloop") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Onloop 1", ":", rsoperasi.getDouble("biaya_omloop"), 1, 0, rsoperasi.getDouble("biaya_omloop"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_omloop1");
+                            String label = "  Biaya Onloop 1" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biaya_omloop"), 1, 0, rsoperasi.getDouble("biaya_omloop"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biaya_omloop2") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Onloop 2", ":", rsoperasi.getDouble("biaya_omloop2"), 1, 0, rsoperasi.getDouble("biaya_omloop2"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_omloop2");
+                            String label = "  Biaya Onloop 2" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biaya_omloop2"), 1, 0, rsoperasi.getDouble("biaya_omloop2"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biaya_omloop3") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Onloop 3", ":", rsoperasi.getDouble("biaya_omloop3"), 1, 0, rsoperasi.getDouble("biaya_omloop3"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_omloop3");
+                            String label = "  Biaya Onloop 3" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biaya_omloop3"), 1, 0, rsoperasi.getDouble("biaya_omloop3"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biaya_omloop4") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Onloop 4", ":", rsoperasi.getDouble("biaya_omloop4"), 1, 0, rsoperasi.getDouble("biaya_omloop4"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_omloop4");
+                            String label = "  Biaya Onloop 4" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biaya_omloop4"), 1, 0, rsoperasi.getDouble("biaya_omloop4"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biaya_omloop5") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Onloop 5", ":", rsoperasi.getDouble("biaya_omloop5"), 1, 0, rsoperasi.getDouble("biaya_omloop5"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_omloop5");
+                            String label = "  Biaya Onloop 5" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biaya_omloop5"), 1, 0, rsoperasi.getDouble("biaya_omloop5"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("bagian_rs") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Kamar Operasi", ":", rsoperasi.getDouble("bagian_rs"), 1, 0, rsoperasi.getDouble("bagian_rs"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biayasarpras") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Sarpras", ":", rsoperasi.getDouble("biayasarpras"), 1, 0, rsoperasi.getDouble("biayasarpras"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biaya_dokter_pjanak") > 0) {
                             tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Dokter PJ Anak", ":", rsoperasi.getDouble("biaya_dokter_pjanak"), 1, 0, rsoperasi.getDouble("biaya_dokter_pjanak"), "Operasi"});
                         }
-
                         if (rsoperasi.getDouble("biaya_dokter_umum") > 0) {
-                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", "  Biaya Dokter Umum", ":", rsoperasi.getDouble("biaya_dokter_umum"), 1, 0, rsoperasi.getDouble("biaya_dokter_umum"), "Operasi"});
+                            String nm = rsoperasi.getString("nm_dr_umum");
+                            String label = "  Biaya Dokter Umum" + ((nm != null && !nm.trim().equals("")) ? " (" + nm + ")" : " (-)");
+                            tabModeRwJlDr.addRow(new Object[]{true, "                           ", label, ":", rsoperasi.getDouble("biaya_dokter_umum"), 1, 0, rsoperasi.getDouble("biaya_dokter_umum"), "Operasi"});
                         }
                         subttl = subttl + rsoperasi.getDouble("biaya");
                     }
                 } else {
                     while (rsoperasi.next()) {
-                        tabModeRwJlDr.addRow(new Object[]{true, "                           ", rsoperasi.getString("nm_perawatan"), ":", rsoperasi.getDouble("biaya"), 1, 0, rsoperasi.getDouble("biaya"), "Operasi"});
+                        String nm_op_utama = rsoperasi.getString("nm_op1");
+                        String nm_tindakan = rsoperasi.getString("nm_perawatan");
+                        if (nm_op_utama != null && !nm_op_utama.trim().equals("")) {
+                            nm_tindakan = nm_tindakan + " (" + nm_op_utama + ")";
+                        } else {
+                            nm_tindakan = nm_tindakan + " (-)";
+                        }
+                        tabModeRwJlDr.addRow(new Object[]{true, "                           ", nm_tindakan, ":", rsoperasi.getDouble("biaya"), 1, 0, rsoperasi.getDouble("biaya"), "Operasi"});
                         subttl = subttl + rsoperasi.getDouble("biaya");
                     }
                 }
