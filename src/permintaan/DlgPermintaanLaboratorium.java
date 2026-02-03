@@ -44,14 +44,14 @@ import javax.swing.table.TableColumn;
  * @author dosen
  */
 public final class DlgPermintaanLaboratorium extends javax.swing.JDialog {
-    private final DefaultTableModel tabMode,tabMode2,tabMode3,tabModeMB,tabModeDetailMB;
+    private final DefaultTableModel tabMode,tabMode2,tabMode3,tabModeMB,tabModeDetailMB, tabModeRiwayat;
     private sekuel Sequel=new sekuel();
     private validasi Valid=new validasi();
     private Connection koneksi=koneksiDB.condb();
     private DlgCariDokter dokter=new DlgCariDokter(null,false);
     private PreparedStatement pstindakan,pstampil,
-            psset_tarif;
-    private ResultSet rstindakan,rstampil,rsset_tarif;
+            psset_tarif,ps;
+    private ResultSet rstindakan,rstampil,rsset_tarif,rs;
     private boolean[] pilih,pilih2; 
     private String[] kode,nama,pemeriksaan2,satuan2,nilai_rujukan2,idtemplate2;
     private int jml=0,i=0,index=0,jml2=0,jml3=0,i2=0,index2=0,jmlparsial=0;
@@ -377,6 +377,52 @@ public final class DlgPermintaanLaboratorium extends javax.swing.JDialog {
         } catch (Exception ex) {            
             aktifkanparsial="no";
         }
+        
+        Object[] rowRiwayat = {
+            "No.Permintaan", "No.Rawat", "Pasien", "Permintaan", "Jam", "Sampel", "Jam", 
+            "Hasil", "Jam", "Kode Dokter", "Dokter Perujuk", "Status", "Informasi Tambahan", "Diagnosis Klinis"
+        };
+        
+        tabModeRiwayat = new DefaultTableModel(null, rowRiwayat) {
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
+
+        tbRiwayat = new widget.Table();
+        tbRiwayat.setModel(tabModeRiwayat);
+        tbRiwayat.setPreferredScrollableViewportSize(new Dimension(500, 500));
+        tbRiwayat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        for (i = 0; i < 14; i++) {
+            TableColumn column = tbRiwayat.getColumnModel().getColumn(i);
+            if (i == 0) column.setPreferredWidth(100);
+            else if (i == 1) column.setPreferredWidth(105);
+            else if (i == 2) column.setPreferredWidth(250); 
+            else if (i == 3) column.setPreferredWidth(80);  
+            else if (i == 4) column.setPreferredWidth(50);  
+            else if (i == 5) column.setPreferredWidth(80); 
+            else if (i == 6) column.setPreferredWidth(50);  
+            else if (i == 7) column.setPreferredWidth(80); 
+            else if (i == 8) column.setPreferredWidth(50); 
+            else if (i == 9) { column.setMinWidth(0); column.setMaxWidth(0); } 
+            else if (i == 10) column.setPreferredWidth(150); 
+            else if (i == 11) column.setPreferredWidth(80);  
+            else if (i == 12) column.setPreferredWidth(150); 
+            else if (i == 13) column.setPreferredWidth(150); 
+        }
+        tbRiwayat.setDefaultRenderer(Object.class, new WarnaTable());
+        tbRiwayat.setRowHeight(23);
+
+        javax.swing.JPanel PanelRiwayat = new javax.swing.JPanel();
+        PanelRiwayat.setLayout(new java.awt.BorderLayout());
+
+        widget.ScrollPane ScrollRiwayat = new widget.ScrollPane();
+        ScrollRiwayat.setViewportView(tbRiwayat);
+        PanelRiwayat.add(ScrollRiwayat, java.awt.BorderLayout.CENTER);
+
+        TabRawat.addTab("Riwayat Permintaan", PanelRiwayat);
     }
 
     /** This method is called from within the constructor to
@@ -1783,8 +1829,10 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             autoNomor();
         }else if(TabRawat.getSelectedIndex()==1){
             autoNomor2();
-        }else if(TabRawat.getSelectedIndex()==1){
+        }else if(TabRawat.getSelectedIndex()==2){ // Index Mikrobiologi (di kode asli Anda tertulis index==1, ini koreksi jika indexnya 2)
             autoNomor3();
+        }else if(TabRawat.getSelectedIndex()==3){ // TAB BARU: RIWAYAT
+            tampilRiwayat();
         }
     }//GEN-LAST:event_TabRawatMouseClicked
 
@@ -2032,7 +2080,8 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private widget.Table tbTarifPA;
     private widget.Table tbTarifPK;
     // End of variables declaration//GEN-END:variables
-
+    private widget.Table tbRiwayat;
+    
     private void tampil() { 
         try {
             jml2=0;
@@ -2232,6 +2281,7 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         autoNomor();
         autoNomor2();
         autoNomor3();
+        tampilRiwayat();
     }
     
     public void onCari(){
@@ -2377,6 +2427,7 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         isRawat();
         isPsien();
         isReset();
+        tampilRiwayat();
     }
     
     public void setNoRm(String norwt,String posisi,String kddokter,String nmdokter) {
@@ -2790,6 +2841,126 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             ChkJln.setSelected(true);
         }                 
     }
+    
+    private void tampilRiwayat() {
+        Valid.tabelKosong(tabModeRiwayat);
+        PreparedStatement psDetail = null;
+        ResultSet rsDetail = null;
+
+        try {
+            ps = koneksi.prepareStatement(
+                "select * from (" +
+                    "select permintaan_lab.noorder, permintaan_lab.no_rawat, reg_periksa.no_rkm_medis, pasien.nm_pasien, " +
+                    "permintaan_lab.tgl_permintaan, permintaan_lab.jam_permintaan, " +
+                    "permintaan_lab.tgl_sampel, permintaan_lab.jam_sampel, " +
+                    "permintaan_lab.tgl_hasil, permintaan_lab.jam_hasil, " +
+                    "permintaan_lab.dokter_perujuk, dokter.nm_dokter, permintaan_lab.status, " +
+                    "permintaan_lab.informasi_tambahan, permintaan_lab.diagnosa_klinis, 'PK' as jenis_lab " +
+                    "from permintaan_lab " +
+                    "inner join reg_periksa on permintaan_lab.no_rawat=reg_periksa.no_rawat " +
+                    "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                    "inner join dokter on permintaan_lab.dokter_perujuk=dokter.kd_dokter " +
+                    "where permintaan_lab.no_rawat=? " +
+                    "UNION ALL " +
+                    "select permintaan_labpa.noorder, permintaan_labpa.no_rawat, reg_periksa.no_rkm_medis, pasien.nm_pasien, " +
+                    "permintaan_labpa.tgl_permintaan, permintaan_labpa.jam_permintaan, " +
+                    "permintaan_labpa.tgl_sampel, permintaan_labpa.jam_sampel, " +
+                    "permintaan_labpa.tgl_hasil, permintaan_labpa.jam_hasil, " +
+                    "permintaan_labpa.dokter_perujuk, dokter.nm_dokter, permintaan_labpa.status, " +
+                    "permintaan_labpa.informasi_tambahan, permintaan_labpa.diagnosa_klinis, 'PA' as jenis_lab " +
+                    "from permintaan_labpa " +
+                    "inner join reg_periksa on permintaan_labpa.no_rawat=reg_periksa.no_rawat " +
+                    "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                    "inner join dokter on permintaan_labpa.dokter_perujuk=dokter.kd_dokter " +
+                    "where permintaan_labpa.no_rawat=? " +
+                ") as gabungan " +
+                "order by tgl_permintaan desc, jam_permintaan desc");
+
+            try {
+                ps.setString(1, TNoRw.getText());
+                ps.setString(2, TNoRw.getText());
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    String noOrder = rs.getString("noorder");
+                    String jenis = rs.getString("jenis_lab");
+
+                    tabModeRiwayat.addRow(new String[]{
+                        rs.getString("noorder"),
+                        rs.getString("no_rawat"),
+                        rs.getString("no_rkm_medis") + " " + rs.getString("nm_pasien"),
+                        rs.getString("tgl_permintaan"),
+                        rs.getString("jam_permintaan"),
+                        rs.getString("tgl_sampel"),
+                        rs.getString("jam_sampel"),
+                        rs.getString("tgl_hasil"),
+                        rs.getString("jam_hasil"),
+                        rs.getString("dokter_perujuk"),
+                        rs.getString("nm_dokter"),
+                        rs.getString("status"),
+                        rs.getString("informasi_tambahan"),
+                        rs.getString("diagnosa_klinis")
+                    });
+
+                    try {
+                        if (jenis.equals("PK")) {
+                            psDetail = koneksi.prepareStatement(
+                                "select jns_perawatan_lab.nm_perawatan as item " +
+                                "from permintaan_pemeriksaan_lab " +
+                                "inner join jns_perawatan_lab on permintaan_pemeriksaan_lab.kd_jenis_prw=jns_perawatan_lab.kd_jenis_prw " +
+                                "where permintaan_pemeriksaan_lab.noorder=?");
+                            psDetail.setString(1, noOrder);
+                            rsDetail = psDetail.executeQuery();
+                            while(rsDetail.next()){
+                                 tabModeRiwayat.addRow(new Object[]{
+                                    "","", "   - " + rsDetail.getString("item"),"","","","","","","","","","",""
+                                 });
+                            }
+
+                            psDetail = koneksi.prepareStatement(
+                                "select template_laboratorium.Pemeriksaan as item " +
+                                "from permintaan_detail_permintaan_lab " +
+                                "inner join template_laboratorium on permintaan_detail_permintaan_lab.id_template=template_laboratorium.id_template " +
+                                "where permintaan_detail_permintaan_lab.noorder=?");
+                            psDetail.setString(1, noOrder);
+                            rsDetail = psDetail.executeQuery();
+                            while(rsDetail.next()){
+                                 tabModeRiwayat.addRow(new Object[]{
+                                    "","", "   - " + rsDetail.getString("item"),"","","","","","","","","","",""
+                                 });
+                            }
+
+                        } else {
+                            psDetail = koneksi.prepareStatement(
+                                "select jns_perawatan_lab.nm_perawatan as item " +
+                                "from permintaan_pemeriksaan_labpa " +
+                                "inner join jns_perawatan_lab on permintaan_pemeriksaan_labpa.kd_jenis_prw=jns_perawatan_lab.kd_jenis_prw " +
+                                "where permintaan_pemeriksaan_labpa.noorder=?");
+                            psDetail.setString(1, noOrder);
+                            rsDetail = psDetail.executeQuery();
+                            while(rsDetail.next()){
+                                 tabModeRiwayat.addRow(new Object[]{
+                                    "","", "   - " + rsDetail.getString("item"),"","","","","","","","","","",""
+                                 });
+                            }
+                        }
+                    } catch (Exception e2) {
+                        System.out.println("Err Detail: " + e2);
+                    } finally {
+                        if (rsDetail != null) rsDetail.close();
+                        if (psDetail != null) psDetail.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi Riwayat : " + e);
+            } finally {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi Riwayat : " + e);
+        }
+    }
 
     private void autoNomor() {
         Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(permintaan_lab.noorder,4),signed)),0) from permintaan_lab where permintaan_lab.tgl_permintaan='"+Valid.SetTgl(Tanggal.getSelectedItem()+"")+"' ","PK"+Valid.SetTgl(Tanggal.getSelectedItem()+"").replaceAll("-",""),4,TNoPermintaanPK);           
@@ -2996,6 +3167,34 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             }
         }catch(Exception e){
             System.out.println("Notifikasi : "+e);
+        }
+    }
+    
+    private class RendererRiwayat extends javax.swing.JTextArea implements javax.swing.table.TableCellRenderer {
+        public RendererRiwayat() {
+            setLineWrap(true);
+            setWrapStyleWord(true);
+            setOpaque(true);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            this.setText(value != null ? value.toString() : "");
+
+            if (isSelected) {
+                setBackground(new java.awt.Color(255, 255, 0));
+                setForeground(java.awt.Color.BLACK);
+            } else if (row % 2 == 1) {
+                setBackground(new java.awt.Color(230, 250, 230));
+                setForeground(java.awt.Color.BLACK);
+            } else {
+                setBackground(java.awt.Color.WHITE);
+                setForeground(java.awt.Color.BLACK);
+            }
+
+            setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 3, 2, 3)); 
+
+            return this;
         }
     }
 

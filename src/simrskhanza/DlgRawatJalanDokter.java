@@ -208,6 +208,8 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             ttlpendapatan = 0;
     private Jurnal jur = new Jurnal();
     private SatuSehatCariAllergy allergycode = new SatuSehatCariAllergy(null, false);
+    private String fileTTD = "";
+    private widget.Button BtnTTD;
 
     /**
      * Creates new form DlgPerawatan
@@ -220,11 +222,14 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         initComponents();
         initRawatJalan();
 
-        java.awt.Color darkTextColor = java.awt.Color.BLACK;
-        int desiredFontSize = 12;
+        // Note: aturUrutanTombolFormMenu() sekarang dipanggil di isCek() setelah user
+        // login
 
-        java.awt.Font currentFont = TKeluhan.getFont();
-        java.awt.Font newFont = currentFont.deriveFont((float) desiredFontSize);
+        java.awt.Color darkTextColor = java.awt.Color.BLACK;
+
+        int inputFieldFontSize = 12;
+
+        java.awt.Font newFont = new java.awt.Font("Tahoma", java.awt.Font.PLAIN, inputFieldFontSize);
 
         TKeluhan.setForeground(darkTextColor);
         TKeluhan.setFont(newFont);
@@ -3398,22 +3403,56 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         // === BLOK 3: TENGAH (ALERGI & PETUGAS) ===
         int middleY = 265; // Adjusted Y position below enlarged fields
 
-        // Alergi & Lingkar Perut - Shifted to the right
+        // BtnTTD - Tombol Tanda Tangan Dokter (di sebelah kiri Alergi)
+        BtnTTD = new widget.Button();
+        BtnTTD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/b_print.png")));
+        BtnTTD.setText("Tanda Tangan");
+        BtnTTD.setToolTipText("Wajib diisi oleh Dokter");
+        BtnTTD.setName("BtnTTD");
+        BtnTTD.setForeground(new java.awt.Color(0, 0, 0));
+        BtnTTD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (TNoRw.getText().trim().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Silahkan pilih pasien terlebih dahulu!");
+                    return;
+                }
+                freehand.DlgTTDDokter form = new freehand.DlgTTDDokter(null, true);
+                form.setNoRawat(TNoRw.getText());
+                form.setVisible(true);
+                if (!form.getNamaFile().equals("")) {
+                    fileTTD = form.getNamaFile();
+                    BtnTTD.setText("");
+                    try {
+                        String urlGambar = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
+                                + koneksiDB.HYBRIDWEB() + "/imagefreehand/" + fileTTD;
+                        java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(new java.net.URL(urlGambar));
+                        BtnTTD.setIcon(new javax.swing.ImageIcon(
+                                image.getScaledInstance(80, 23, java.awt.Image.SCALE_SMOOTH)));
+                    } catch (Exception ex) {
+                        BtnTTD.setText("OK");
+                    }
+                }
+            }
+        });
+        panelGlass12.add(BtnTTD);
+        BtnTTD.setBounds(165, middleY, 110, 23);
+
+        // Alergi & Lingkar Perut - Shifted to the right by 90px to make room for BtnTTD
         jLabel15.setText("Alergi :");
         jLabel15.setName("jLabel15"); // NOI18N
         panelGlass12.add(jLabel15);
-        jLabel15.setBounds(190, middleY, 70, 23);
+        jLabel15.setBounds(280, middleY, 70, 23);
         TAlergi.setName("TAlergi"); // NOI18N
         panelGlass12.add(TAlergi);
-        TAlergi.setBounds(265, middleY, 230, 23);
+        TAlergi.setBounds(355, middleY, 230, 23);
 
         jLabel25.setText("Lingkar Perut :");
         jLabel25.setName("jLabel25"); // NOI18N
         panelGlass12.add(jLabel25);
-        jLabel25.setBounds(500, middleY, 90, 23);
+        jLabel25.setBounds(590, middleY, 90, 23);
         LingkarPerut.setName("LingkarPerut"); // NOI18N
         panelGlass12.add(LingkarPerut);
-        LingkarPerut.setBounds(595, middleY, 80, 23);
+        LingkarPerut.setBounds(685, middleY, 80, 23);
 
         // Removed Petugas from here (moved up)
 
@@ -7220,6 +7259,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 1:
                     if (kdptg.getText().trim().equals("") || TPerawat.getText().trim().equals("")) {
                         Valid.textKosong(kdptg, "Petugas");
@@ -7248,6 +7288,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 2:
                     if (KdDok2.getText().trim().equals("") || TDokter2.getText().trim().equals("")) {
                         Valid.textKosong(KdDok2, "Dokter");
@@ -7278,20 +7319,34 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 3:
                     if ((!TKeluhan.getText().trim().equals("")) || (!TPemeriksaan.getText().trim().equals(""))
-                            || (!TSuhu.getText().trim().equals(""))
-                            || (!TTensi.getText().trim().equals("")) || (!TAlergi.getText().trim().equals(""))
-                            || (!TTinggi.getText().trim().equals(""))
+                            || (!TSuhu.getText().trim().equals("")) || (!TTensi.getText().trim().equals(""))
+                            || (!TAlergi.getText().trim().equals("")) || (!TTinggi.getText().trim().equals(""))
                             || (!TBerat.getText().trim().equals("")) || (!TRespirasi.getText().trim().equals(""))
-                            || (!TNadi.getText().trim().equals(""))
-                            || (!TGCS.getText().trim().equals("")) || (!TindakLanjut.getText().trim().equals(""))
-                            || (!TPenilaian.getText().trim().equals(""))
+                            || (!TNadi.getText().trim().equals("")) || (!TGCS.getText().trim().equals(""))
+                            || (!TindakLanjut.getText().trim().equals("")) || (!TPenilaian.getText().trim().equals(""))
                             || (!TInstruksi.getText().trim().equals("")) || (!SpO2.getText().trim().equals(""))
                             || (!TEvaluasi.getText().trim().equals(""))) {
+
                         if (KdPeg.getText().trim().equals("") || TPegawai.getText().trim().equals("")) {
                             Valid.textKosong(KdPeg, "Dokter/Paramedis masih kosong...!!");
                         } else {
+
+                            // int isDokter = Sequel.cariInteger("select count(kd_dokter) from dokter where
+                            // kd_dokter=?", KdPeg.getText());
+                            //
+                            // if (isDokter > 0 && fileTTD.equals("")) {
+                            // JOptionPane.showMessageDialog(null,
+                            // "Maaf, Dokter WAJIB melakukan Tanda Tangan Digital (TTD) sebelum menyimpan
+                            // SOAP!\n" +
+                            // "Identitas anda terdeteksi sebagai Dokter.\n" +
+                            // "Silahkan klik tombol TTD di samping kolom Alergi.");
+                            // BtnTTD.requestFocus();
+                            // break;
+                            // }
+
                             if (akses.getkode().equals("Admin Utama")) {
                                 if (Sequel.menyimpantf("pemeriksaan_ralan", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?",
                                         "Data", 21, new String[] {
@@ -7305,6 +7360,17 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                                                 TPemeriksaan.getText(), TAlergi.getText(),
                                                 LingkarPerut.getText(), TindakLanjut.getText(), TPenilaian.getText(),
                                                 TInstruksi.getText(), TEvaluasi.getText(), KdPeg.getText() }) == true) {
+
+                                    if (!fileTTD.equals("")) {
+                                        Sequel.menyimpan("ttd_dokter_ralan",
+                                                "'" + TNoRw.getText() + "','"
+                                                        + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "','" +
+                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
+                                                        + cmbDtk.getSelectedItem() + "','" +
+                                                        KdPeg.getText() + "','" + fileTTD + "'",
+                                                "Tanda Tangan Dokter");
+                                    }
+
                                     tabModePemeriksaan.addRow(new Object[] {
                                             false, TNoRw.getText(), TNoRM.getText(), TPasien.getText(),
                                             Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
@@ -7320,26 +7386,12 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                                     });
                                     SimpanTemplateSOAPIE();
                                     SimpanTemplateSOAPIEPerawat();
-                                    TSuhu.setText("");
-                                    TTensi.setText("");
-                                    TNadi.setText("");
-                                    TRespirasi.setText("");
-                                    TTinggi.setText("");
-                                    TBerat.setText("");
-                                    TGCS.setText("");
-                                    TKeluhan.setText("");
-                                    TPemeriksaan.setText("");
-                                    TAlergi.setText("");
-                                    LingkarPerut.setText("");
-                                    TindakLanjut.setText("");
-                                    TPenilaian.setText("");
-                                    TInstruksi.setText("");
-                                    SpO2.setText("");
-                                    TEvaluasi.setText("");
-                                    cmbKesadaran.setSelectedIndex(0);
-                                    ChkTemplate.setSelected(false);
-                                    ChkTemplatePerawat.setSelected(false);
+                                    emptTeks();
 
+                                    fileTTD = "";
+                                    BtnTTD.setText("TTD");
+                                    BtnTTD.setIcon(
+                                            new javax.swing.ImageIcon(getClass().getResource("/picture/b_print.png")));
                                     LCount.setText("" + tabModePemeriksaan.getRowCount());
                                 }
                             } else {
@@ -7357,6 +7409,17 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                                                     LingkarPerut.getText(), TindakLanjut.getText(),
                                                     TPenilaian.getText(), TInstruksi.getText(), TEvaluasi.getText(),
                                                     KdPeg.getText() }) == true) {
+
+                                        if (!fileTTD.equals("")) {
+                                            Sequel.menyimpan("ttd_dokter_ralan",
+                                                    "'" + TNoRw.getText() + "','"
+                                                            + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "','" +
+                                                            cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem()
+                                                            + ":" + cmbDtk.getSelectedItem() + "','" +
+                                                            KdPeg.getText() + "','" + fileTTD + "'",
+                                                    "Tanda Tangan Dokter");
+                                        }
+
                                         tabModePemeriksaan.addRow(new Object[] {
                                                 false, TNoRw.getText(), TNoRM.getText(), TPasien.getText(),
                                                 Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
@@ -7373,25 +7436,12 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                                         });
                                         SimpanTemplateSOAPIE();
                                         SimpanTemplateSOAPIEPerawat();
-                                        TSuhu.setText("");
-                                        TTensi.setText("");
-                                        TNadi.setText("");
-                                        TRespirasi.setText("");
-                                        TTinggi.setText("");
-                                        TBerat.setText("");
-                                        TGCS.setText("");
-                                        TKeluhan.setText("");
-                                        TPemeriksaan.setText("");
-                                        TAlergi.setText("");
-                                        LingkarPerut.setText("");
-                                        TindakLanjut.setText("");
-                                        TPenilaian.setText("");
-                                        TInstruksi.setText("");
-                                        SpO2.setText("");
-                                        TEvaluasi.setText("");
-                                        cmbKesadaran.setSelectedIndex(0);
-                                        ChkTemplate.setSelected(false);
-                                        ChkTemplatePerawat.setSelected(false);
+                                        emptTeks();
+
+                                        fileTTD = "";
+                                        BtnTTD.setText("TTD");
+                                        BtnTTD.setIcon(new javax.swing.ImageIcon(
+                                                getClass().getResource("/picture/b_print.png")));
                                         LCount.setText("" + tabModePemeriksaan.getRowCount());
                                     }
                                 } else {
@@ -7402,6 +7452,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 4:
                     if ((!TTinggi_uteri.getText().trim().equals("")) || (!TLetak.getText().trim().equals(""))
                             || (!TDenyut.getText().trim().equals("")) || (!TKualitas_mnt.getText().trim().equals(""))
@@ -7410,7 +7461,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                             || (!TPembukaan.getText().trim().equals("")) || (!TPenurunan.getText().trim().equals(""))
                             || (!TDenominator.getText().trim().equals(""))) {
                         if (Sequel.menyimpantf("pemeriksaan_obstetri_ralan",
-                                "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 23, new String[] {
+                                "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 23, new String[] {
                                         TNoRw.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
                                         cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
                                                 + cmbDtk.getSelectedItem(),
@@ -7464,6 +7515,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 5:
                     if ((!TInspeksi.getText().trim().equals("")) || (!TInspeksiVulva.getText().trim().equals(""))
                             || (!TInspekuloGine.getText().trim().equals("")) || (!TUkuran.getText().trim().equals(""))
@@ -7474,7 +7526,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                             || (!TAdnexaKanan.getText().trim().equals("")) || (!TAdnexaKiri.getText().trim().equals(""))
                             || (!TCavumDouglas.getText().trim().equals(""))) {
                         if (Sequel.menyimpantf("pemeriksaan_ginekologi_ralan",
-                                "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 20, new String[] {
+                                "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 20, new String[] {
                                         TNoRw.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
                                         cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
                                                 + cmbDtk.getSelectedItem(),
@@ -7522,6 +7574,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 6:
                     if (akses.getdiagnosa_pasien() == true) {
                         panelDiagnosa1.setRM(TNoRw.getText(), TNoRM.getText(),
@@ -7530,6 +7583,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         panelDiagnosa1.simpan();
                     }
                     break;
+
                 case 7:
                     if ((!KdDok3.getText().trim().equals("")) && (!TDokter3.getText().trim().equals(""))
                             && (!Catatan.getText().trim().equals(""))) {
@@ -7551,6 +7605,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 8:
                     if ((!TSituation.getText().trim().equals("")) || (!TBackground.getText().trim().equals(""))
                             || (!TAssesment.getText().trim().equals(""))
@@ -7626,6 +7681,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 10:
                     if ((!kdptg3.getText().trim().equals("")) && (!TPerawat3.getText().trim().equals(""))
                             && (!Catatan1.getText().trim().equals(""))) {
@@ -7640,6 +7696,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }
                     }
                     break;
+
                 case 11:
                     if (akses.getkode().equals("Admin Utama")) {
                         JOptionPane.showMessageDialog(null, "Anda login sebagai admin utama, harap login sebagai user");
@@ -7660,10 +7717,10 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
                         }) == true) {
                             tampil();
                             emptTeks();
-
                         }
                     }
                     break;
+
                 default:
                     break;
             }
@@ -14146,6 +14203,13 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TPegawai.setText(pegawai.tampil3(KdPeg.getText()));
             Jabatan.setText(pegawai.tampilJbatan(KdPeg.getText()));
         }
+
+        // Atur urutan tombol FormMenu sesuai spesialisasi dokter
+        try {
+            aturUrutanTombolFormMenu();
+        } catch (Exception e) {
+            System.out.println("Notifikasi aturUrutanTombolFormMenu: " + e);
+        }
     }
 
     private void tampilPemeriksaan() {
@@ -16379,6 +16443,183 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             KdPeg.setText(akses.getkode());
             Sequel.cariIsi("select pegawai.nama from pegawai where pegawai.nik=?", TPegawai, KdPeg.getText());
             Sequel.cariIsi("select pegawai.jbtn from pegawai where pegawai.nik=?", Jabatan, KdPeg.getText());
+        }
+    }
+
+    private void aturUrutanTombolFormMenu() {
+        try {
+            String spesialis = Sequel.cariIsi(
+                    "select spesialis.nm_sps from spesialis inner join dokter on dokter.kd_sps=spesialis.kd_sps " +
+                            "where dokter.kd_dokter=?",
+                    akses.getkode());
+
+            if (spesialis.toLowerCase().contains("umum")) {
+                java.awt.Component[] comps = FormMenu.getComponents();
+
+                java.awt.Component[] prioritas = {
+                        BtnRiwayat,
+                        BtnAwalMedisIGD,
+                        BtnResepObat,
+                        BtnPermintaanLab,
+                        BtnPermintaanRad,
+                        BtnKamar
+                };
+
+                FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 5));
+
+                FormMenu.removeAll();
+
+                for (java.awt.Component c : prioritas) {
+                    if (c != null) {
+                        FormMenu.add(c);
+                    }
+                }
+
+                javax.swing.JSeparator garis = new javax.swing.JSeparator(javax.swing.SwingConstants.VERTICAL);
+                garis.setPreferredSize(new java.awt.Dimension(2, 30));
+                FormMenu.add(garis);
+
+                for (java.awt.Component c : comps) {
+                    boolean isPriority = false;
+                    for (java.awt.Component p : prioritas) {
+                        if (c == p) {
+                            isPriority = true;
+                            break;
+                        }
+                    }
+                    if (!isPriority && !(c instanceof javax.swing.JSeparator)) {
+                        FormMenu.add(c);
+                    }
+                }
+
+                FormMenu.revalidate();
+                FormMenu.repaint();
+            } else if (!spesialis.trim().isEmpty()) {
+                // Dokter Spesialis - urutan tombol sesuai kebutuhan
+                java.awt.Component[] comps = FormMenu.getComponents();
+
+                // Cari tombol Awal Medis yang sesuai dengan spesialisasi berdasarkan caption
+                java.awt.Component btnAwalMedisSpesialis = null;
+                String spesialisLower = spesialis.toLowerCase();
+
+                // Mapping spesialisasi ke caption tombol
+                String targetCaption = null;
+                if (spesialisLower.equals("anak") || spesialisLower.contains("pediatri")) {
+                    targetCaption = "Awal Medis Bayi/Anak";
+                } else if (spesialisLower.equals("obgyn") || spesialisLower.contains("kandungan") ||
+                        spesialisLower.contains("kebidanan")) {
+                    targetCaption = "Awal Medis Kandungan";
+                } else if (spesialisLower.equals("tht")) {
+                    targetCaption = "Awal Medis THT";
+                } else if (spesialisLower.equals("kejiwaan") || spesialisLower.contains("psikiatri") ||
+                        spesialisLower.contains("jiwa")) {
+                    targetCaption = "Awal Medis Psikiatri";
+                } else if (spesialisLower.equals("dalam") || spesialisLower.contains("penyakit dalam") ||
+                        spesialisLower.contains("internis") || spesialisLower.contains("interna")) {
+                    targetCaption = "Awal Medis Penyakit Dalam";
+                } else if (spesialisLower.equals("mata") || spesialisLower.contains("oftalmologi")) {
+                    targetCaption = "Awal Medis Mata";
+                } else if (spesialisLower.equals("syaraf") || spesialisLower.equals("saraf") ||
+                        spesialisLower.contains("neurologi")) {
+                    targetCaption = "Awal Medis Neurologi";
+                } else if (spesialisLower.equals("orthopedi") || spesialisLower.contains("tulang")) {
+                    targetCaption = "Awal Medis Orthopedi";
+                } else if (spesialisLower.equals("gigi dan mulut") || spesialisLower.equals("dokter gigi") ||
+                        spesialisLower.contains("periodonsia") || spesialisLower.contains("bedah mulut")) {
+                    targetCaption = "Awal Medis Bedah Mulut";
+                } else if (spesialisLower.equals("bedah") && !spesialisLower.contains("mulut")) {
+                    targetCaption = "Awal Medis Bedah";
+                } else if (spesialisLower.contains("geriatri")) {
+                    targetCaption = "Awal Medis Geriatri";
+                } else if (spesialisLower.equals("kulit dan kelamin") || spesialisLower.contains("kulit") ||
+                        spesialisLower.contains("kelamin") || spesialisLower.contains("dermatologi")) {
+                    targetCaption = "Awal Medis Kulit & Kelamin";
+                } else if (spesialisLower.equals("paru") || spesialisLower.contains("pulmonologi")) {
+                    targetCaption = "Awal Medis Paru";
+                } else if (spesialisLower.contains("rehabilitasi") || spesialisLower.contains("fisik") ||
+                        spesialisLower.contains("kfr")) {
+                    targetCaption = "Awal Medis Fisik & Rehabilitasi";
+                } else if (spesialisLower.contains("hemodialisa") || spesialisLower.contains("dialisis")) {
+                    targetCaption = "Awal Medis Hemodialisa";
+                } else if (spesialisLower.equals("jantung") || spesialisLower.contains("kardiologi")) {
+                    targetCaption = null;
+                } else if (spesialisLower.equals("urologi")) {
+                    targetCaption = null;
+                }
+
+                // Cari tombol dengan caption yang sesuai
+                if (targetCaption != null) {
+                    for (java.awt.Component c : comps) {
+                        if (c instanceof javax.swing.JButton) {
+                            String caption = ((javax.swing.JButton) c).getText();
+                            if (caption != null && caption.equals(targetCaption)) {
+                                btnAwalMedisSpesialis = c;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Daftar tombol prioritas untuk dokter spesialis berdasarkan caption
+                java.util.List<java.awt.Component> prioritasList = new java.util.ArrayList<>();
+
+                // 1. Awal Medis (spesialisasi) - sudah dicari di atas
+                if (btnAwalMedisSpesialis != null) {
+                    prioritasList.add(btnAwalMedisSpesialis);
+                }
+                // 2. Riwayat Pasien
+                prioritasList.add(BtnRiwayat);
+                // 3. Input Resep
+                prioritasList.add(BtnResepObat);
+                // 4. Copy Resep
+                prioritasList.add(BtnCopyResep);
+                // 5. Input Template Resep
+                prioritasList.add(BtnTemplate);
+                // 6. Resume Pasien
+                prioritasList.add(BtnResume);
+                // 7. Berkas Digital
+                prioritasList.add(BtnBerkasDigital);
+                // 8. Permintaan Lab
+                prioritasList.add(BtnPermintaanLab);
+                // 9. Permintaan Rad
+                prioritasList.add(BtnPermintaanRad);
+                // 10. Surat Kontrol
+                prioritasList.add(BtnSKDP);
+                // 11. Kamar Inap
+                prioritasList.add(BtnKamar);
+                // 12. Rujuk Internal
+                prioritasList.add(BtnRujukInternal);
+                // 13. Rujuk Keluar
+                prioritasList.add(BtnRujukKeluar);
+
+                FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 5));
+                FormMenu.removeAll();
+
+                // Tambahkan tombol prioritas
+                for (java.awt.Component c : prioritasList) {
+                    if (c != null) {
+                        FormMenu.add(c);
+                    }
+                }
+
+                // Tambahkan separator
+                javax.swing.JSeparator garis = new javax.swing.JSeparator(javax.swing.SwingConstants.VERTICAL);
+                garis.setPreferredSize(new java.awt.Dimension(2, 30));
+                FormMenu.add(garis);
+
+                // Tambahkan tombol lainnya yang bukan prioritas
+                for (java.awt.Component c : comps) {
+                    boolean isPriority = prioritasList.contains(c);
+                    if (!isPriority && !(c instanceof javax.swing.JSeparator)) {
+                        FormMenu.add(c);
+                    }
+                }
+
+                FormMenu.revalidate();
+                FormMenu.repaint();
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi Gagal Urutkan FormMenu : " + e);
         }
     }
 

@@ -8,6 +8,8 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import org.apache.commons.codec.binary.Base64;
 import java.util.Date;
@@ -43,6 +45,30 @@ public class QRCodeHelper {
     public static String getPetugasQRBase64(String nip, int size) {
         String content = generatePetugasQRContent(nip);
         return generateQRCodeBase64(content, size);
+    }
+
+    /**
+     * Generate doctor signature QR code as File URI.
+     * 
+     * @param kodeDokter The doctor's code
+     * @param size       QR code size in pixels
+     * @return File URI of QR code image (file:///...)
+     */
+    public static String getDoctorQRPath(String kodeDokter, int size) {
+        String content = generateDoctorQRContent(kodeDokter);
+        return generateQRCodeFile(content, "doc_" + kodeDokter, size);
+    }
+
+    /**
+     * Generate petugas signature QR code as File URI.
+     * 
+     * @param nip  The staff NIP
+     * @param size QR code size in pixels
+     * @return File URI of QR code image (file:///...)
+     */
+    public static String getPetugasQRPath(String nip, int size) {
+        String content = generatePetugasQRContent(nip);
+        return generateQRCodeFile(content, "stf_" + nip, size);
     }
 
     private static String generateDoctorQRContent(String kodeDokter) {
@@ -114,6 +140,34 @@ public class QRCodeHelper {
             return "data:image/png;base64," + base64;
         } catch (WriterException | java.io.IOException e) {
             System.out.println("Error generating QR code: " + e);
+            return "";
+        }
+    }
+    /**
+     * Generate QR code as file and return File URI.
+     */
+    public static String generateQRCodeFile(String content, String filenamePrefix, int size) {
+        try {
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hints.put(EncodeHintType.MARGIN, 1);
+
+            BitMatrix bitMatrix = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, size, size, hints);
+            BufferedImage image = MatrixToImageWriter.toBufferedImage(bitMatrix);
+
+            // Sanitize filename
+            String cleanFilename = filenamePrefix.replaceAll("[^a-zA-Z0-9.-]", "_") + ".png";
+            File tempFile = new File(System.getProperty("java.io.tmpdir"), cleanFilename);
+            
+            // Write payload
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            ImageIO.write(image, "png", fos);
+            fos.close();
+            
+            return "file:///" + tempFile.getAbsolutePath();
+        } catch (Exception e) {
+            System.out.println("Error generating QR code file: " + e);
             return "";
         }
     }

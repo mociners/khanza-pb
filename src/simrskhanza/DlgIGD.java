@@ -248,6 +248,7 @@ public final class DlgIGD extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         initIGD();
+        initTransfusi();
 
         this.setLocation(8,1);
         setSize(885,674);
@@ -688,6 +689,7 @@ public final class DlgIGD extends javax.swing.JDialog {
         jLabel6 = new widget.Label();
         TCari = new widget.TextBox();
         BtnCari = new widget.Button();
+        BtnTrf3 = new widget.Button();
         BtnTriase = new widget.Button();
         BtnMedis = new widget.Button();
         BtnPrw = new widget.Button();
@@ -4693,6 +4695,24 @@ public final class DlgIGD extends javax.swing.JDialog {
             }
         });
         panelGlass7.add(BtnCari);
+
+        BtnTrf3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Syringe.png"))); // NOI18N
+        BtnTrf3.setMnemonic('K');
+        BtnTrf3.setText("Tindakan");
+        BtnTrf3.setToolTipText("Alt+K");
+        BtnTrf3.setName("BtnTrf3"); // NOI18N
+        BtnTrf3.setPreferredSize(new java.awt.Dimension(110, 30));
+        BtnTrf3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnTrf3ActionPerformed(evt);
+            }
+        });
+        BtnTrf3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                BtnTrf3KeyPressed(evt);
+            }
+        });
+        panelGlass7.add(BtnTrf3);
 
         BtnTriase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/addressbook-add24.png"))); // NOI18N
         BtnTriase.setMnemonic('K');
@@ -11331,6 +11351,37 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnResumeKeyPressed
 
+    private void BtnTrf3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTrf3ActionPerformed
+        if (tabMode.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
+            TNoReg.requestFocus();
+        } else if (TPasien.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        } else {
+            if (tbPetugas.getSelectedRow() != -1) {
+                if (Sequel.cariInteger("select count(kamar_inap.no_rawat) from kamar_inap where kamar_inap.no_rawat=?", TNoRw.getText()) > 0) {
+                    JOptionPane.showMessageDialog(null, "Maaf, Pasien sudah masuk Kamar Inap. Gunakan billing Ranap..!!!");
+                } else {
+                    this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                    DlgRawatJalan dlgrwjl = new DlgRawatJalan(null, false);
+                    dlgrwjl.isCek();
+                    dlgrwjl.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
+                    dlgrwjl.setLocationRelativeTo(internalFrame1);
+                    dlgrwjl.SetPoli("IGDK");
+                    dlgrwjl.SetPj(tbPetugas.getValueAt(tbPetugas.getSelectedRow(), 20).toString());
+                    dlgrwjl.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
+                    dlgrwjl.setVisible(true);
+                    this.setCursor(Cursor.getDefaultCursor());
+                }
+            }
+        }
+    }//GEN-LAST:event_BtnTrf3ActionPerformed
+
+    private void BtnTrf3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnTrf3KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnTrf3KeyPressed
+
     private void MnPenilaianPreInduksiActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         if(tabMode.getRowCount()==0){
             JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
@@ -11397,6 +11448,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
     private widget.Button BtnTrf;
     private widget.Button BtnTrf1;
     private widget.Button BtnTrf2;
+    private widget.Button BtnTrf3;
     private widget.Button BtnTriase;
     private widget.CekBox ChkInput;
     private widget.CekBox ChkJln;

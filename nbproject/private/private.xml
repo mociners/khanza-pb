@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="4">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="5">
         <file>
             <url>src/simrskhanza/DlgCariPeriksaRadiologi.java</url>
             <bookmark id="2">
@@ -17,22 +17,19 @@
                 <key/>
             </bookmark>
         </file>
+        <file>
+            <url>src/rekammedis/RMGenerateKlaim.java</url>
+            <bookmark id="5">
+                <name/>
+                <line>221</line>
+                <key/>
+            </bookmark>
+        </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/permintaan/DlgCariPermintaanRadiologi.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/fungsi/WarnaTableIgd.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgIGD.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMTransferPasienAntarRuang.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/bridging/BPJSKompilasiBerkasKlaim.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMDataResumePasien.java</file>
             <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgRawatJalan.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgKasirRalan.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/permintaan/DlgPermintaanRadiologi.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMPenilaianAwalMedisIGD.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMGenerateKlaim.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMGenerateKlaimFarmasi.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/frmUtama.java</file>
+            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgRawatJalanDokter.java</file>
         </group>
     </open-files>
 </project-private>

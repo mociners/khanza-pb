@@ -16,6 +16,7 @@ import fungsi.akses;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
 import fungsi.sekuel;
+import fungsi.QRCodeHelper;
 import fungsi.validasi;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -45,21 +46,16 @@ import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import kepegawaian.DlgCariPegawai2;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
+
 import org.json.JSONObject;
 import simrskhanza.DlgCariPasien;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import simrskhanza.DlgKasirRalan;
 
 /**
  *
@@ -83,124 +79,16 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             petugasbilling = "", bayi1 = "", bayi2 = "",
             bayi3 = "", tgl_masuk = "", tgl_keluar = "", billing1 = "", billing2 = "";
     private StringBuilder htmlContent;
-    private HttpClient http = new HttpClient();
-    private GetMethod get;
-    private DlgCariPasien pasien = new DlgCariPasien(null, true);
-    public DlgCariPegawai2 pegawai = new DlgCariPegawai2(null, true);
-    public ApiINACBG inacbg = new ApiINACBG();
 
-    /**
-     * Generate QR code content for a doctor (dokter).
-     * Format matches the PHP generateqrcode.php output.
-     * 
-     * @param kodeDokter The doctor's code
-     * @return Formatted QR content string
-     */
-    private String generateDoctorQRContent(String kodeDokter) {
-        try {
-            String namaInstansi = Sequel.cariIsi("SELECT nama_instansi FROM setting LIMIT 1");
-            String kabupaten = Sequel.cariIsi("SELECT kabupaten FROM setting LIMIT 1");
-            String namaDokter = Sequel.cariIsi("SELECT nm_dokter FROM dokter WHERE kd_dokter=?", kodeDokter);
-            String idSidikJari = Sequel.cariIsiSmc(
-                    "SELECT IFNULL(SHA1(sidikjari.sidikjari), ?) FROM sidikjari INNER JOIN pegawai ON pegawai.id=sidikjari.id WHERE pegawai.nik=?",
-                    kodeDokter, kodeDokter);
-            if (idSidikJari == null || idSidikJari.isEmpty()) {
-                idSidikJari = kodeDokter;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            String tanggal = sdf.format(new Date());
+    private DlgCariPasien pasien = null; // lazy loaded
+    public DlgCariPegawai2 pegawai = null; // lazy loaded
+    public ApiINACBG inacbg = null; // lazy loaded
+    private DlgKasirRalan kasir = null; // lazy loaded
 
-            return "Dikeluarkan di " + namaInstansi + ", Kabupaten/Kota " + kabupaten + "\n" +
-                    "Ditandatangani secara elektronik oleh " + namaDokter + "\n" +
-                    "ID " + idSidikJari + "\n" + tanggal;
-        } catch (Exception e) {
-            System.out.println("Error generating doctor QR content: " + e);
-            return "TTD Elektronik - " + kodeDokter;
-        }
-    }
-
-    /**
-     * Generate QR code content for a staff member (petugas).
-     * Format matches the PHP generateqrcodepetugas.php output.
-     * 
-     * @param nip The staff NIP
-     * @return Formatted QR content string
-     */
-    private String generatePetugasQRContent(String nip) {
-        try {
-            String namaInstansi = Sequel.cariIsi("SELECT nama_instansi FROM setting LIMIT 1");
-            String kabupaten = Sequel.cariIsi("SELECT kabupaten FROM setting LIMIT 1");
-            String namaPetugas = Sequel.cariIsi("SELECT nama FROM petugas WHERE nip=?", nip);
-            String idSidikJari = Sequel.cariIsiSmc(
-                    "SELECT IFNULL(SHA1(sidikjari.sidikjari), ?) FROM sidikjari INNER JOIN pegawai ON pegawai.id=sidikjari.id WHERE pegawai.nik=?",
-                    nip, nip);
-            if (idSidikJari == null || idSidikJari.isEmpty()) {
-                idSidikJari = nip;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            String tanggal = sdf.format(new Date());
-
-            return "Dikeluarkan di " + namaInstansi + ", Kabupaten/Kota " + kabupaten + "\n" +
-                    "Ditandatangani secara elektronik oleh " + namaPetugas + "\n" +
-                    "ID " + idSidikJari + "\n" + tanggal;
-        } catch (Exception e) {
-            System.out.println("Error generating petugas QR content: " + e);
-            return "TTD Elektronik - " + nip;
-        }
-    }
-
-    /**
-     * Generate QR code as Base64 PNG data URL for embedding in HTML.
-     * 
-     * @param content The content to encode in QR code
-     * @param size    The size of QR code in pixels (width and height)
-     * @return Base64 data URL string (e.g., "data:image/png;base64,...")
-     */
-    private String generateQRCodeBase64(String content, int size) {
-        try {
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            Map<EncodeHintType, Object> hints = new HashMap<>();
-            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            hints.put(EncodeHintType.MARGIN, 1);
-
-            BitMatrix bitMatrix = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, size, size, hints);
-            BufferedImage image = MatrixToImageWriter.toBufferedImage(bitMatrix);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
-            byte[] imageBytes = baos.toByteArray();
-            String base64 = Base64.getEncoder().encodeToString(imageBytes);
-
-            return "data:image/png;base64," + base64;
-        } catch (WriterException | java.io.IOException e) {
-            System.out.println("Error generating QR code: " + e);
-            return "";
-        }
-    }
-
-    /**
-     * Generate doctor signature QR code as Base64 data URL.
-     * 
-     * @param kodeDokter The doctor's code
-     * @param size       QR code size in pixels
-     * @return Base64 data URL of QR code image
-     */
-    private String getDoctorQRBase64(String kodeDokter, int size) {
-        String content = generateDoctorQRContent(kodeDokter);
-        return generateQRCodeBase64(content, size);
-    }
-
-    /**
-     * Generate petugas signature QR code as Base64 data URL.
-     * 
-     * @param nip  The staff NIP
-     * @param size QR code size in pixels
-     * @return Base64 data URL of QR code image
-     */
-    private String getPetugasQRBase64(String nip, int size) {
-        String content = generatePetugasQRContent(nip);
-        return generateQRCodeBase64(content, size);
-    }
+    // Listener flags to prevent duplicate listener registration
+    private boolean pasienListenerAdded = false;
+    private boolean pegawaiListenerAdded = false;
+    private boolean kasirListenerAdded = false;
 
     /**
      * Creates new form DlgLhtBiaya
@@ -218,108 +106,11 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         Date date = new Date();
         lokal = formatter.format(date);
 
+        // Dialog initialization moved to lazy getters for faster startup
+        // kasir, pasien, pegawai will be created on first use
+
         NoRM.setDocument(new batasInput((byte) 20).getKata(NoRM));
         NoRawat.setDocument(new batasInput((byte) 20).getKata(NoRawat));
-
-        pasien.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if (pasien.getTable().getSelectedRow() != -1) {
-                    NoRM.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 0).toString());
-                    NmPasien.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 1).toString());
-                    Jk.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 3).toString());
-                    TempatLahir.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 4).toString());
-                    TanggalLahir
-                            .setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 5).toString());
-                    IbuKandung.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 6).toString());
-                    Alamat.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 7).toString());
-                    GD.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 8).toString());
-                    StatusNikah
-                            .setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 10).toString());
-                    Agama.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 11).toString());
-                    Pendidikan.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 15).toString());
-                    Bahasa.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 26).toString());
-                    CacatFisik.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 32).toString());
-                }
-                NoRM.requestFocus();
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-
-        pasien.getTable().addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    pasien.dispose();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
-
-        pegawai.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if (pegawai.getTable().getSelectedRow() != -1) {
-                    KdPeg2.setText(pegawai.getTable().getValueAt(pegawai.getTable().getSelectedRow(), 0).toString());
-                    TPegawai2.setText(pegawai.getTable().getValueAt(pegawai.getTable().getSelectedRow(), 1).toString());
-                    KdPeg2.requestFocus();
-                }
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
 
         HTMLEditorKit kit = new HTMLEditorKit();
         LoadHTMLRiwayatPerawatan.setEditorKit(kit);
@@ -1852,11 +1643,17 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
 
     private void BtnPasienActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnPasienActionPerformed
         if (akses.getpasien() == true) {
-            pasien.isCek();
-            pasien.emptTeks();
-            pasien.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-            pasien.setLocationRelativeTo(internalFrame1);
-            pasien.setVisible(true);
+            akses.setform("RMGenerateKlaim");
+            getKasir().tampil();
+
+            getKasir().setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+            getKasir().setLocationRelativeTo(internalFrame1);
+
+            getKasir().setAlwaysOnTop(true);
+            getKasir().setVisible(true);
+            getKasir().toFront();
+            getKasir().requestFocus();
+            getKasir().setAlwaysOnTop(false);
         }
     }// GEN-LAST:event_BtnPasienActionPerformed
 
@@ -1937,10 +1734,10 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
 
     private void BtnSeekPegawai1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnSeekPegawai1ActionPerformed
         akses.setform("RMRiwayatPrawatan");
-        pegawai.emptTeks();
-        pegawai.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
-        pegawai.setLocationRelativeTo(internalFrame1);
-        pegawai.setVisible(true);
+        getPegawai().emptTeks();
+        getPegawai().setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+        getPegawai().setLocationRelativeTo(internalFrame1);
+        getPegawai().setVisible(true);
     }// GEN-LAST:event_BtnSeekPegawai1ActionPerformed
 
     private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnAllActionPerformed
@@ -2902,7 +2699,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     rs3.beforeFirst();
                                     while (rs3.next()) {
                                         // Generate QR code secara lokal menggunakan ZXing
-                                        String qrCodePJLab = getDoctorQRBase64(rs3.getString("kd_dokterlab"), 90);
+                                        String qrCodePJLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
+                                                90);
                                         htmlContent.append(
                                                 "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
                                                 .append(qrCodePJLab).append("'/><br>")
@@ -2916,7 +2714,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             rs4.beforeFirst();
                                             while (rs4.next()) {
                                                 // Generate QR code petugas secara lokal
-                                                String qrCodePetugas = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                                String qrCodePetugas = QRCodeHelper
+                                                        .getPetugasQRPath(rs4.getString("nip"), 90);
                                                 htmlContent.append(
                                                         "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
                                                         .append(qrCodePetugas).append("'/><br>")
@@ -3123,7 +2922,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         rs3.beforeFirst();
                                         while (rs3.next()) {
                                             // Generate QR code secara lokal menggunakan ZXing
-                                            String qrCodePJRad = getDoctorQRBase64(rs3.getString("kd_dokterrad"), 90);
+                                            String qrCodePJRad = QRCodeHelper
+                                                    .getDoctorQRPath(rs3.getString("kd_dokterrad"), 90);
                                             htmlContent.append(
                                                     "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
                                                     .append(qrCodePJRad).append("'/><br>")
@@ -3137,7 +2937,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                 rs4.beforeFirst();
                                                 while (rs4.next()) {
                                                     // Generate QR code petugas secara lokal
-                                                    String qrCodePetugas = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                                    String qrCodePetugas = QRCodeHelper
+                                                            .getPetugasQRPath(rs4.getString("nip"), 90);
                                                     htmlContent.append(
                                                             "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
                                                             .append(qrCodePetugas).append("'/><br>")
@@ -3323,7 +3124,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     }
 
                                     // Generate QR code petugas secara lokal
-                                    String qrCodeKasir = getPetugasQRBase64(petugasbilling, 150);
+                                    String qrCodeKasir = QRCodeHelper.getPetugasQRPath(petugasbilling, 150);
                                     htmlContent.append(
                                             "<td padding='0' width='40%' align=center><font color='000000'  face='Tahoma'></td><td padding='0' width='20%' align=center><font color='000000'  face='Tahoma'>&nbsp;</td><td padding='0' width='40%' align='center'><img width='150' src='")
                                             .append(qrCodeKasir).append("' /><br>")
@@ -3354,12 +3155,15 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                     String Dir = "./berkasklaim/" + noSEP + ".pdf";
                     File fileSAVE = new File(Dir);
 
-                    htmlContent.append("<br><br><br>" +
-                            "<p class='pagebreak'>" +
-                            "<fieldset>" +
-                            "<iframe src='" + fileSAVE + "?#toolbar=0&view=FitH' " +
-                            "style='width:1050px; height:1340px;' frameborder='0'></iframe>" +
-                            "</p></fieldset>");
+                    // Only show PDF iframe if file exists
+                    if (fileSAVE.exists()) {
+                        htmlContent.append("<br><br><br>" +
+                                "<p class='pagebreak'>" +
+                                "<fieldset>" +
+                                "<iframe src='" + fileSAVE + "?#toolbar=0&view=FitH' " +
+                                "style='width:1050px; height:1340px;' frameborder='0'></iframe>" +
+                                "</p></fieldset>");
+                    }
                     // data eklaim
 
                     // //menampilkan asuhan awal keperawatan IGD
@@ -4957,9 +4761,38 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             "<head><link href=\"fileklaim.css\" rel=\"stylesheet\" type=\"text/css\" media=\"all\"/><meta http-equiv=\"Access-Control-Allow-Origin\" content=\"*\" /><script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>"));
 
             bw.close();
-            Desktop.getDesktop().browse(f.toURI());
+
+            // Cross-platform browser open with Linux fallback
+            openInBrowser(f);
         } catch (Exception e) {
             System.out.println("Notifikasi : " + e);
+        }
+    }
+
+    /**
+     * Open file in browser with cross-platform support.
+     * Falls back to xdg-open on Linux if Desktop.browse() is not supported.
+     */
+    private void openInBrowser(File file) {
+        try {
+            // Try standard Desktop.browse() first (works on Windows and some Linux)
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(file.toURI());
+            } else {
+                // Fallback for Linux: use xdg-open
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.contains("linux")) {
+                    Runtime.getRuntime().exec(new String[] { "xdg-open", file.getAbsolutePath() });
+                } else if (os.contains("mac")) {
+                    Runtime.getRuntime().exec(new String[] { "open", file.getAbsolutePath() });
+                } else {
+                    // Last resort: try cmd on Windows
+                    Runtime.getRuntime().exec(new String[] { "cmd", "/c", "start", file.getAbsolutePath() });
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error opening browser: " + e);
+            JOptionPane.showMessageDialog(null, "Tidak dapat membuka browser: " + e.getMessage());
         }
     }
 
@@ -5078,14 +4911,10 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         if (rs3.next()) {
                             rs3.beforeFirst();
                             while (rs3.next()) {
-                                get = new GetMethod("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB()
-                                        + "/" + koneksiDB.HYBRIDWEB() + "/berkasrawat/generateqrcodesep.php?sepbpjs="
-                                        + rs3.getString("no_sep").replace(" ", "_"));
-                                http.executeMethod(get);
-                                htmlContent.append("<img alt='Image' src='http://").append(koneksiDB.HOSTHYBRIDWEB())
-                                        .append(":").append(koneksiDB.PORTWEB()).append("/")
-                                        .append(koneksiDB.HYBRIDWEB()).append("/berkasrawat/temp/")
-                                        .append(rs3.getString("no_sep")).append(".png' width='170px'><br>");
+                                String qrCodePath = QRCodeHelper.generateQRCodeFile(rs3.getString("no_sep"),
+                                        "sep_" + rs3.getString("no_sep"), 170);
+                                htmlContent.append("<img alt='Image' src='").append(qrCodePath)
+                                        .append("' width='170px'><br>");
                             }
                         }
 
@@ -5169,7 +4998,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         // QR Code TTD Dokter Konsultasi - hanya tampil jika ENABLE_QRCODE_TTD = true
                         if (ENABLE_QRCODE_TTD) {
                             // Generate QR code dokter konsultasi secara lokal
-                            String qrCodeDokterKonsul = getDoctorQRBase64(rs2.getString("kd_dokter"), 90);
+                            String qrCodeDokterKonsul = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"), 90);
                             htmlContent
                                     .append("Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                     .append(qrCodeDokterKonsul).append("'/><br>")
@@ -5179,7 +5008,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     + "<td colspan='3'>");
 
                             // Generate QR code dokter dikonsuli secara lokal
-                            String qrCodeDokterDikonsuli = getDoctorQRBase64(rs2.getString("kd_dokter_dikonsuli"), 90);
+                            String qrCodeDokterDikonsuli = QRCodeHelper
+                                    .getDoctorQRPath(rs2.getString("kd_dokter_dikonsuli"), 90);
                             htmlContent.append(
                                     "&nbsp;&nbsp;&nbsp;&nbsp;Dokter Penanggung Jawab<br>&nbsp;&nbsp;&nbsp;&nbsp;<img width='90' height='90' src='")
                                     .append(qrCodeDokterDikonsuli).append("'/><br>&nbsp;&nbsp;&nbsp;&nbsp;")
@@ -5213,13 +5043,30 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
     private void menampilkanKONTROLBPJS(String norawat) {
         try {
             if (chkSuratKontrol.isSelected() == true) {
+                String nomr = Sequel.cariIsi("select no_rkm_medis from reg_periksa where no_rawat=?", norawat);
+                String tglKunjungan = Sequel.cariIsi("select tgl_registrasi from reg_periksa where no_rawat=?",
+                        norawat);
+
                 rs2 = koneksi.prepareStatement(
-                        "select bridging_sep.no_rawat,bridging_sep.no_sep,bridging_sep.no_kartu,bridging_sep.nomr,bridging_sep.nama_pasien,DATE_FORMAT(bridging_sep.tanggal_lahir, '%d %M %Y') as tanggal_lahir, bridging_sep.jkel,bridging_sep.diagawal,bridging_sep.nmdiagnosaawal,DATE_FORMAT(bridging_surat_kontrol_bpjs.tgl_surat, '%d %M %Y') as tgl_surat,bridging_surat_kontrol_bpjs.no_surat, DATE_FORMAT(bridging_surat_kontrol_bpjs.tgl_rencana, '%d %M %Y') as tgl_rencana,bridging_surat_kontrol_bpjs.kd_dokter_bpjs,bridging_surat_kontrol_bpjs.nm_dokter_bpjs, bridging_surat_kontrol_bpjs.kd_poli_bpjs,bridging_surat_kontrol_bpjs.nm_poli_bpjs from bridging_sep inner join bridging_surat_kontrol_bpjs on bridging_surat_kontrol_bpjs.no_sep=bridging_sep.no_sep where bridging_surat_kontrol_bpjs.no_surat='"
-                                + Sequel.cariIsi("SELECT noskdp FROM bridging_sep WHERE no_rawat=?", norawat) + "'")
+                        "select bridging_sep.no_rawat,bridging_sep.no_sep,bridging_sep.no_kartu,bridging_sep.nomr,bridging_sep.nama_pasien, "
+                                +
+                                "DATE_FORMAT(bridging_sep.tanggal_lahir, '%d %M %Y') as tanggal_lahir, bridging_sep.jkel,bridging_sep.diagawal,bridging_sep.nmdiagnosaawal, "
+                                +
+                                "DATE_FORMAT(bridging_surat_kontrol_bpjs.tgl_surat, '%d %M %Y') as tgl_surat,bridging_surat_kontrol_bpjs.no_surat, "
+                                +
+                                "DATE_FORMAT(bridging_surat_kontrol_bpjs.tgl_rencana, '%d %M %Y') as tgl_rencana,bridging_surat_kontrol_bpjs.kd_dokter_bpjs, "
+                                +
+                                "bridging_surat_kontrol_bpjs.nm_dokter_bpjs, bridging_surat_kontrol_bpjs.kd_poli_bpjs,bridging_surat_kontrol_bpjs.nm_poli_bpjs "
+                                +
+                                "from bridging_sep inner join bridging_surat_kontrol_bpjs on bridging_surat_kontrol_bpjs.no_sep=bridging_sep.no_sep "
+                                +
+                                "where bridging_sep.nomr='" + nomr + "' " +
+                                "and bridging_surat_kontrol_bpjs.tgl_rencana<='" + tglKunjungan + "' " +
+                                "order by bridging_surat_kontrol_bpjs.tgl_rencana desc, bridging_surat_kontrol_bpjs.no_surat desc limit 1")
                         .executeQuery();
+
                 if (rs2.next()) {
                     if (!rs2.getString("no_rawat").isEmpty()) {
-
                         htmlContent.append(
                                 "</br></br></br><p class='pagebreak'><fieldset><table class='sep' width='100%' style='font-size:11px;padding:0;border:0px solid #fff;' border='0' padding='0'><tr><td><table border='0' padding='0'><tr><td rowspan='2' width='350' ><img alt='Image' src='")
                                 .append(getLogoBPJSBase64())
@@ -5239,28 +5086,30 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 + "</td></tr><tr><td><b>Tgl. KONTROL</b></td><td><b>: "
                                 + rs2.getString("tgl_rencana").toUpperCase()
                                 + "</b></td></tr><td colspan='2'>Demikian atas bantuannya diucapkan banyak terima kasih</td></tr></table>");
-                        // dokter dpjp - QR Code TTD hanya tampil jika ENABLE_QRCODE_TTD = true
-                        if (ENABLE_QRCODE_TTD) {
-                            // Generate QR code DPJP secara lokal
-                            String kodeDokterDPJP = Sequel.cariIsi(
-                                    "select dokter.kd_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
-                                    rs2.getString("kd_dokter_bpjs"));
-                            String qrCodeDPJP = getDoctorQRBase64(kodeDokterDPJP, 150);
-                            htmlContent.append("<table><tr><td width='600'>Tgl.Cetak " + lokal
-                                    + "</td><td>Mengetahui DPJP</td></tr><tr><td></td><td><img width='150' src='")
-                                    .append(qrCodeDPJP).append("' /><br>")
-                                    .append(Sequel.cariIsi(
-                                            "select dokter.nm_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
-                                            rs2.getString("kd_dokter_bpjs")))
-                                    .append("</td></tr></table >");
-                        } // end ENABLE_QRCODE_TTD DPJP
 
-                        htmlContent.append("<tr><td></td></tr></table></fieldset></p>");
+                        // Try to get doctor's freehand signature for this visit
+                        String ttdDokterUrl = getTTDDokterUrl(norawat);
+                        if (!ttdDokterUrl.isEmpty()) {
+                            // Use freehand signature from DlgTTDDokter
+                            htmlContent.append(
+                                    "<table width='100%'><tr><td width='70%'></td><td align='center'>Ditetapkan Oleh,<br/>")
+                                    .append(rs2.getString("nm_dokter_bpjs"))
+                                    .append("<br/><img src='").append(ttdDokterUrl)
+                                    .append("' width='100' height='100'><br/>")
+                                    .append("</td></tr></table>");
+                        } else {
+                            // No freehand signature - show only doctor name without signature
+                            htmlContent.append(
+                                    "<table width='100%'><tr><td width='70%'></td><td align='center'>Ditetapkan Oleh,<br/><br/><br/><br/>")
+                                    .append(rs2.getString("nm_dokter_bpjs"))
+                                    .append("</td></tr></table>");
+                        }
+                        htmlContent.append("</fieldset>");
                     }
                 }
             }
         } catch (Exception e) {
-            System.out.println("Notif Kontrol BPJS : " + e);
+            System.out.println("Notif Surat Kontrol BPJS : " + e);
         }
 
         // try {
@@ -5468,7 +5317,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         rs2.beforeFirst();
                                         while (rs2.next()) {
                                             // Generate QR code secara lokal
-                                            String qrCodeDPJP = getDoctorQRBase64(rs2.getString("kd_dokter"), 90);
+                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"),
+                                                    90);
 
                                             htmlContent.append(
                                                     "<tr><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>PALEMBANG, ")
@@ -5533,7 +5383,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             String kodeDokterDPJP = Sequel.cariIsi(
                                                     "select dokter.kd_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
                                                     rs2.getString("kd_dokter_bpjs"));
-                                            String qrCodeDPJP = getDoctorQRBase64(kodeDokterDPJP, 150);
+                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kodeDokterDPJP, 150);
                                             htmlContent.append("<table><tr><td width='600'>Tgl.Cetak " + lokal
                                                     + "</td><td>Mengetahui DPJP</td></tr><tr><td></td><td><img width='150' src='")
                                                     .append(qrCodeDPJP).append("' /><br>")
@@ -5815,20 +5665,15 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
 
                             rs3.beforeFirst();
                             while (rs3.next()) {
-                                get = new GetMethod("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB()
-                                        + "/" + koneksiDB.HYBRIDWEB() + "/berkasrawat/generateqrcodesep.php?sepbpjs="
-                                        + rs3.getString("no_sep").replace(" ", "_"));
-                                http.executeMethod(get);
-                                htmlContent.append("<td><img width='150' alt='Image' src='http://")
-                                        .append(koneksiDB.HOSTHYBRIDWEB()).append(":").append(koneksiDB.PORTWEB())
-                                        .append("/").append(koneksiDB.HYBRIDWEB()).append("/berkasrawat/temp/")
-                                        .append(rs3.getString("no_sep"))
-                                        .append(".png' /><br>" + rs2.getString("nama_pasien") + "</td>");
+                                String qrCodePath = QRCodeHelper.generateQRCodeFile(rs3.getString("no_sep"),
+                                        "sep_" + rs3.getString("no_sep"), 150);
+                                htmlContent.append("<td><img width='150' alt='Image' src='").append(qrCodePath)
+                                        .append("' /><br>" + rs2.getString("nama_pasien") + "</td>");
                             }
                         }
 
                         // verif - Generate QR code petugas secara lokal
-                        String qrCodeVerif = getPetugasQRBase64(akses.getkode(), 150);
+                        String qrCodeVerif = QRCodeHelper.getPetugasQRPath(akses.getkode(), 150);
                         htmlContent.append("<td><img width='150' src='")
                                 .append(qrCodeVerif).append("' /><br>")
                                 .append(Sequel.cariIsi("select petugas.nama FROM petugas WHERE nip=?", akses.getkode()))
@@ -5838,7 +5683,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         String kodeDokterDPJP = Sequel.cariIsi(
                                 "select dokter.kd_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
                                 rs2.getString("kddpjp"));
-                        String qrCodeDPJP = getDoctorQRBase64(kodeDokterDPJP, 150);
+                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kodeDokterDPJP, 150);
                         htmlContent.append("<td><img width='150' src='")
                                 .append(qrCodeDPJP).append("' /><br>")
                                 .append(Sequel.cariIsi(
@@ -5968,13 +5813,20 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append("</b></td></tr>");
                                     w++;
 
-                                    // Generate QR code Dokter DPJP secara lokal
-                                    String qrCodeDPJP = getDoctorQRBase64(rs.getString("kd_dokter"), 90);
-
-                                    htmlContent.append(
-                                            "<tr class='isi2'><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='3'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
-                                            .append(qrCodeDPJP).append("'/><br>")
-                                            .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                    // Try to get doctor's freehand signature for this visit
+                                    String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                    if (!ttdDokterUrl.isEmpty()) {
+                                        // Use freehand signature
+                                        htmlContent.append(
+                                                "<tr class='isi2'><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='3'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                                .append(ttdDokterUrl).append("'/><br>")
+                                                .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                    } else {
+                                        // No freehand signature - show only doctor name
+                                        htmlContent.append(
+                                                "<tr class='isi2'><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='3'>Dokter Penanggung Jawab<br><br><br><br>")
+                                                .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                    }
                                 }
                                 htmlContent.append(
                                         "</table>" +
@@ -6241,14 +6093,23 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                             "<tr class='isi2'>");
                                             rs3.beforeFirst();
                                             urutdpjp = 1;
+                                            // Try to get doctor's freehand signature for this visit
+                                            String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                             while (rs3.next()) {
-                                                // Generate QR code Dokter DPJP secara lokal
-                                                String qrCodeDPJP = getDoctorQRBase64(rs3.getString("kd_dokter"), 90);
-                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
-                                                        .append(urutdpjp)
-                                                        .append("<br><img width='90' height='90' src='")
-                                                        .append(qrCodeDPJP).append("'/><br>")
-                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                                if (!ttdDokterUrl.isEmpty()) {
+                                                    // Use freehand signature from DlgTTDDokter
+                                                    htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                            .append(urutdpjp)
+                                                            .append("<br><img width='90' height='90' src='")
+                                                            .append(ttdDokterUrl).append("'/><br>")
+                                                            .append(rs3.getString("nm_dokter")).append("</td>");
+                                                } else {
+                                                    // No signature - show only doctor name
+                                                    htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                            .append(urutdpjp)
+                                                            .append("<br><br><br><br>")
+                                                            .append(rs3.getString("nm_dokter")).append("</td>");
+                                                }
                                                 urutdpjp++;
                                             }
                                             htmlContent.append(
@@ -6257,15 +6118,19 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                             "</td>" +
                                                             "</tr>");
                                         } else {
-                                            // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = getDoctorQRBase64(rs.getString("kd_dokter"), 90);
-
-                                            htmlContent.append(
-                                                    "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
-                                                    .append(qrCodeDPJP).append("'/><br>")
-                                                    .append(rs.getString("nm_dokter")).append("</td></tr>")
-                                            // "<fieldset>"+
-                                            ;
+                                            // Try to get doctor's freehand signature for this visit
+                                            String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                            if (!ttdDokterUrl.isEmpty()) {
+                                                htmlContent.append(
+                                                        "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
+                                                        .append(ttdDokterUrl).append("'/><br>")
+                                                        .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                            } else {
+                                                // No signature - show only doctor name
+                                                htmlContent.append(
+                                                        "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><br><br><br>")
+                                                        .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                            }
                                         }
                                     } catch (Exception e) {
                                         System.out.println("Tanda Tangan IGD : " + e);
@@ -6409,31 +6274,19 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                 + "<td valign='top' width='80%' border='0'><b>:&nbsp;</b></td></tr>"
                                                 + "<tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td>"
                                                 + "<td valign='top' width='80%' border='0'><b>:&nbsp;"
-                                                + Sequel.cariIsi(
-                                                        "select icd9.deskripsi_panjang from prosedur_pasien inner join reg_periksa inner join icd9 on prosedur_pasien.no_rawat=reg_periksa.no_rawat and prosedur_pasien.kode=icd9.kode where prosedur_pasien.no_rawat='"
-                                                                + rs.getString("no_rawat")
-                                                                + "' and prosedur_pasien.status='Ralan' and prosedur_pasien.prioritas='1' ")
+                                                + getProsedurWithFallback(rs.getString("no_rawat"), "1", "Ralan")
                                                 + "</b></td></tr>"
                                                 + "<tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td>"
                                                 + "<td valign='top' width='80%' border='0'><b>:&nbsp;"
-                                                + Sequel.cariIsi(
-                                                        "select icd9.deskripsi_panjang from prosedur_pasien inner join reg_periksa inner join icd9 on prosedur_pasien.no_rawat=reg_periksa.no_rawat and prosedur_pasien.kode=icd9.kode where prosedur_pasien.no_rawat='"
-                                                                + rs.getString("no_rawat")
-                                                                + "' and prosedur_pasien.status='Ralan' and prosedur_pasien.prioritas='2' ")
+                                                + getProsedurWithFallback(rs.getString("no_rawat"), "2", "Ralan")
                                                 + "</b></td></tr>"
                                                 + "<tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td>"
                                                 + "<td valign='top' width='80%' border='0'><b>:&nbsp;"
-                                                + Sequel.cariIsi(
-                                                        "select icd9.deskripsi_panjang from prosedur_pasien inner join reg_periksa inner join icd9 on prosedur_pasien.no_rawat=reg_periksa.no_rawat and prosedur_pasien.kode=icd9.kode where prosedur_pasien.no_rawat='"
-                                                                + rs.getString("no_rawat")
-                                                                + "' and prosedur_pasien.status='Ralan' and prosedur_pasien.prioritas='3' ")
+                                                + getProsedurWithFallback(rs.getString("no_rawat"), "3", "Ralan")
                                                 + "</b></td></tr>"
                                                 + "<tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td>"
                                                 + "<td valign='top' width='80%' border='0'><b>:&nbsp;"
-                                                + Sequel.cariIsi(
-                                                        "select icd9.deskripsi_panjang from prosedur_pasien inner join reg_periksa inner join icd9 on prosedur_pasien.no_rawat=reg_periksa.no_rawat and prosedur_pasien.kode=icd9.kode where prosedur_pasien.no_rawat='"
-                                                                + rs.getString("no_rawat")
-                                                                + "' and prosedur_pasien.status='Ralan' and prosedur_pasien.prioritas='4' ")
+                                                + getProsedurWithFallback(rs.getString("no_rawat"), "4", "Ralan")
                                                 + "</b></td></tr>"
                                                 + "</table></td></tr>");
                                         // + "<tr><td valign='top' colspan='4'><b>Kondisi Pasien Pulang
@@ -6442,14 +6295,21 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         // :<br></b>"+rs2.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)","<br>")+"</td></tr>"
                                         w++;
 
-                                        // Generate QR code Dokter Poli secara lokal
-                                        String qrCodeDokterPoli = getDoctorQRBase64(rs.getString("kd_dokter"), 90);
-
-                                        htmlContent.append(
-                                                "<tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='2'>Dokter Poli<br><img width='90' height='90' src='")
-                                                .append(qrCodeDokterPoli)
-                                                .append("'/><br>").append(rs.getString("nm_dokter"))
-                                                .append("</td></tr>");
+                                        // Try to get doctor's freehand signature for this visit
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        if (!ttdDokterUrl.isEmpty()) {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='2'>Dokter Poli<br><img width='90' height='90' src='")
+                                                    .append(ttdDokterUrl)
+                                                    .append("'/><br>").append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr>");
+                                        } else {
+                                            // No signature - show only doctor name
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='2'>Dokter Poli<br><br><br><br>")
+                                                    .append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr>");
+                                        }
                                     }
                                     htmlContent.append(
                                             "</table>" +
@@ -6970,15 +6830,23 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                                 "<tr class='isi2'>");
                                                 rs3.beforeFirst();
                                                 urutdpjp = 1;
+                                                // Try to get doctor's freehand signature for this visit
+                                                String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                                 while (rs3.next()) {
-                                                    // Generate QR code Dokter DPJP secara lokal
-                                                    String qrCodeDPJP = getDoctorQRBase64(rs3.getString("kd_dokter"),
-                                                            90);
-                                                    htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
-                                                            .append(urutdpjp)
-                                                            .append("<br><img width='90' height='90' src='")
-                                                            .append(qrCodeDPJP).append("'/><br>")
-                                                            .append(rs3.getString("nm_dokter")).append("</td>");
+                                                    if (!ttdDokterUrl.isEmpty()) {
+                                                        // Use freehand signature from DlgTTDDokter
+                                                        htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                                .append(urutdpjp)
+                                                                .append("<br><img width='90' height='90' src='")
+                                                                .append(ttdDokterUrl).append("'/><br>")
+                                                                .append(rs3.getString("nm_dokter")).append("</td>");
+                                                    } else {
+                                                        // No signature - show only doctor name
+                                                        htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                                .append(urutdpjp)
+                                                                .append("<br><br><br><br>")
+                                                                .append(rs3.getString("nm_dokter")).append("</td>");
+                                                    }
                                                     urutdpjp++;
                                                 }
                                                 htmlContent.append(
@@ -6986,15 +6854,19 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                                 "</table>" +
                                                                 "</td>");
                                             } else {
-                                                // Generate QR code Dokter DPJP secara lokal
-                                                String qrCodeDPJP = getDoctorQRBase64(rs.getString("kd_dokter"), 90);
-
-                                                htmlContent.append(
-                                                        "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
-                                                        .append(qrCodeDPJP).append("'/><br>")
-                                                        .append(rs.getString("nm_dokter")).append("</td></tr>")
-                                                // "<fieldset>"+
-                                                ;
+                                                // Try to get doctor's freehand signature for this visit
+                                                String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                                if (!ttdDokterUrl.isEmpty()) {
+                                                    htmlContent.append(
+                                                            "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
+                                                            .append(ttdDokterUrl).append("'/><br>")
+                                                            .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                                } else {
+                                                    // No signature - show only doctor name
+                                                    htmlContent.append(
+                                                            "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><br><br><br>")
+                                                            .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                                }
                                             }
                                         } catch (Exception e) {
                                             System.out.println("Tanda Tangan IGD : " + e);
@@ -7080,7 +6952,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         rs2.beforeFirst();
                                         while (rs2.next()) {
                                             // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = getDoctorQRBase64(rs2.getString("kd_dokter"), 90);
+                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"),
+                                                    90);
 
                                             htmlContent.append(
                                                     "<tr></tr><tr><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='1'>PALEMBANG, ")
@@ -7329,7 +7202,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 .append(rs2.getString("nik")).append(" ").append(rs2.getString("nama"))
                                 .append("</td></tr></table></td></tr>");
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
-                        String qrCodeDPJP = getDoctorQRBase64(rs2.getString("nik"), 90);
+                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append(
                                 "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
@@ -7636,7 +7509,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 .append(rs2.getString("nik")).append(" ").append(rs2.getString("nama"))
                                 .append("</td></tr></table></td></tr>");
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
-                        String qrCodeDPJP = getDoctorQRBase64(rs2.getString("nik"), 90);
+                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append("<tr><br><br></tr>"
                                 + "<tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
@@ -7865,7 +7738,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 .append(rs2.getString("nik")).append(" ").append(rs2.getString("nama"))
                                 .append("</td></tr></table></td></tr>");
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
-                        String qrCodeDPJP = getDoctorQRBase64(rs2.getString("nik"), 90);
+                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append(
                                 "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
@@ -8172,7 +8045,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 .append(rs2.getString("nik")).append(" ").append(rs2.getString("nama"))
                                 .append("</td></tr></table></td></tr>");
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
-                        String qrCodeDPJP = getDoctorQRBase64(rs2.getString("nik"), 90);
+                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append("<tr><br><br></tr>"
                                 + "<tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
@@ -10261,7 +10134,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append(rs2.getString("tata").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                             // Generate QR code Dokter DPJP secara lokal
-                            String qrCodeDPJP = getDoctorQRBase64(rs2.getString("kd_dokter"), 90);
+                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"), 90);
                             htmlContent.append(
                                     "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                     .append(qrCodeDPJP).append("'/><br>")
@@ -10293,7 +10166,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             if (chkOperasiVK.isSelected() == true) {
                 try {
                     rs2 = koneksi.prepareStatement(
-                            "SELECT laporan_operasi.tgl_operasi,laporan_operasi.jenis_anasthesi,laporan_operasi.kategori,laporan_operasi.diagnosa_preop,laporan_operasi.diagnosa_postop,laporan_operasi.jaringan_dieksekusi,laporan_operasi.selesaioperasi,laporan_operasi.permintaan_pa,laporan_operasi.laporan_operasi,( SELECT kd_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as kdoperator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as operator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator2 ) as operator2,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator3 ) as operator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator1 ) as asistenoperator1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator2 ) as asistenoperator2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator3 ) as asistenoperator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.instrumen ) as instrumen,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anak ) as dokteranak,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawaat_resusitas )as perawatresusitas,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anestesi ) as anastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi ) as asistenanastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi2 ) as asistenanastesi2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan ) as bidan1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan2 ) as bidan2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan3 ) as bidan3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawat_luar ) as perawatluar,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop ) as omloop,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop2 ) as omloop2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop3 ) as omloop3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop4 ) as omloop4,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop5 ) as omloop5,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_pjanak ) as pjanak,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_umum ) as dokumum from operasi inner join laporan_operasi on operasi.no_rawat=laporan_operasi.no_rawat and operasi.tgl_operasi=laporan_operasi.tanggal where operasi.no_rawat='"
+                            "SELECT laporan_operasi.tanggal,laporan_operasi.kategori,laporan_operasi.diagnosa_preop,laporan_operasi.diagnosa_postop,laporan_operasi.jaringan_dieksekusi,laporan_operasi.selesaioperasi,laporan_operasi.permintaan_pa,laporan_operasi.laporan_operasi,( SELECT kd_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as kdoperator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as operator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator2 ) as operator2,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator3 ) as operator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator1 ) as asistenoperator1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator2 ) as asistenoperator2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator3 ) as asistenoperator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.instrumen ) as instrumen,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anak ) as dokteranak,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawaat_resusitas )as perawatresusitas,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anestesi ) as anastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi ) as asistenanastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi2 ) as asistenanastesi2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan ) as bidan1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan2 ) as bidan2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan3 ) as bidan3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawat_luar ) as perawatluar,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop ) as omloop,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop2 ) as omloop2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop3 ) as omloop3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop4 ) as omloop4,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop5 ) as omloop5,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_pjanak ) as pjanak,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_umum ) as dokumum from operasi inner join laporan_operasi on operasi.no_rawat=laporan_operasi.no_rawat and operasi.tgl_operasi=laporan_operasi.tanggal where operasi.no_rawat='"
                                     + norawat + "'")
                             .executeQuery();
                     if (rs2.next()) {
@@ -10490,7 +10363,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</b></td></tr></table></td></tr>");
 
                             // Generate QR code Operator secara lokal
-                            String qrCodeDPJP = getDoctorQRBase64(rs2.getString("kdoperator1"), 90);
+                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kdoperator1"), 90);
                             htmlContent.append(
                                     "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                     .append(qrCodeDPJP).append("'/><br>")
@@ -10592,7 +10465,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</b></td></tr></table></tr>");
 
                             // Generate QR code Petugas secara lokal
-                            String qrCodeDPJP = getDoctorQRBase64(rs2.getString("nip"), 90);
+                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nip"), 90);
                             htmlContent.append(
                                     "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                     .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
@@ -19711,7 +19584,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             // Use the JSON string in your request
             String request = requestJson;
 
-            JSONObject response = inacbg.request(request);
+            JSONObject response = getInacbg().request(request);
 
             // Extract the 'data' field from the response
 
@@ -20571,7 +20444,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         urutdpjp = 1;
                                         while (rs3.next()) {
                                             // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = getDoctorQRBase64(rs3.getString("kd_dokter"), 90);
+                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokter"),
+                                                    90);
                                             htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
                                                     .append(urutdpjp)
                                                     .append("<br><img width='90' height='90' src='")
@@ -20585,7 +20459,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                         "</td>");
                                     } else {
                                         // Generate QR code Dokter DPJP secara lokal
-                                        String qrCodeDPJP = getDoctorQRBase64(rs.getString("kd_dokter"), 90);
+                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
 
                                         htmlContent.append(
                                                 "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
@@ -20941,7 +20815,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         urutdpjp = 1;
                                         while (rs3.next()) {
                                             // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = getDoctorQRBase64(rs3.getString("kd_dokter"), 90);
+                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokter"),
+                                                    90);
                                             htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
                                                     .append(urutdpjp)
                                                     .append("<br><img width='90' height='90' src='")
@@ -20955,7 +20830,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                         "</td>");
                                     } else {
                                         // Generate QR code Dokter DPJP secara lokal
-                                        String qrCodeDPJP = getDoctorQRBase64(rs.getString("kd_dokter"), 90);
+                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
 
                                         htmlContent.append(
                                                 "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
@@ -21311,7 +21186,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         urutdpjp = 1;
                                         while (rs3.next()) {
                                             // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = getDoctorQRBase64(rs3.getString("kd_dokter"), 90);
+                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokter"),
+                                                    90);
                                             htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
                                                     .append(urutdpjp)
                                                     .append("<br><img width='90' height='90' src='")
@@ -21325,7 +21201,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                         "</td>");
                                     } else {
                                         // Generate QR code Dokter DPJP secara lokal
-                                        String qrCodeDPJP = getDoctorQRBase64(rs.getString("kd_dokter"), 90);
+                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
 
                                         htmlContent.append(
                                                 "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
@@ -21703,7 +21579,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             rs3.beforeFirst();
                             while (rs3.next()) {
                                 // Generate QR code Dokter Lab secara lokal
-                                String qrCodeDokterLab = getDoctorQRBase64(rs3.getString("kd_dokterlab"), 90);
+                                String qrCodeDokterLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
+                                        90);
                                 htmlContent.append(
                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
                                         .append(qrCodeDokterLab).append("'/><br>")
@@ -21719,7 +21596,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     rs4.beforeFirst();
                                     while (rs4.next()) {
                                         // Generate QR code Petugas Laboratorium secara lokal
-                                        String qrCodePetugasLab = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                        String qrCodePetugasLab = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
+                                                90);
                                         htmlContent.append(
                                                 "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
                                                 .append(qrCodePetugasLab).append("'/><br>")
@@ -22080,7 +21958,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             rs3.beforeFirst();
                             while (rs3.next()) {
                                 // Generate QR code Dokter Lab secara lokal
-                                String qrCodeDokterLab = getDoctorQRBase64(rs3.getString("kd_dokterlab"), 90);
+                                String qrCodeDokterLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
+                                        90);
                                 htmlContent.append(
                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
                                         .append(qrCodeDokterLab).append("'/><br>")
@@ -22096,7 +21975,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     rs4.beforeFirst();
                                     while (rs4.next()) {
                                         // Generate QR code Petugas Laboratorium secara lokal
-                                        String qrCodePetugasLab = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                        String qrCodePetugasLab = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
+                                                90);
                                         htmlContent.append(
                                                 "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
                                                 .append(qrCodePetugasLab).append("'/><br>")
@@ -22457,7 +22337,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             rs3.beforeFirst();
                             while (rs3.next()) {
                                 // Generate QR code Dokter Lab secara lokal
-                                String qrCodeDokterLab = getDoctorQRBase64(rs3.getString("kd_dokterlab"), 90);
+                                String qrCodeDokterLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
+                                        90);
                                 htmlContent.append(
                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
                                         .append(qrCodeDokterLab).append("'/><br>")
@@ -22473,7 +22354,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     rs4.beforeFirst();
                                     while (rs4.next()) {
                                         // Generate QR code Petugas Laboratorium secara lokal
-                                        String qrCodePetugasLab = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                        String qrCodePetugasLab = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
+                                                90);
                                         htmlContent.append(
                                                 "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
                                                 .append(qrCodePetugasLab).append("'/><br>")
@@ -22693,7 +22575,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 rs3.beforeFirst();
                                 while (rs3.next()) {
                                     // Generate QR code Dokter Radiologi secara lokal
-                                    String qrCodeDokterRad = getDoctorQRBase64(rs3.getString("kd_dokterrad"), 90);
+                                    String qrCodeDokterRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
+                                            90);
                                     htmlContent.append(
                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
                                             .append(qrCodeDokterRad).append("'/><br>")
@@ -22709,7 +22592,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         rs4.beforeFirst();
                                         while (rs4.next()) {
                                             // Generate QR code Petugas Radiologi secara lokal
-                                            String qrCodePetugasRad = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                            String qrCodePetugasRad = QRCodeHelper
+                                                    .getPetugasQRPath(rs4.getString("nip"), 90);
                                             htmlContent.append(
                                                     "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
                                                     .append(qrCodePetugasRad).append("'/><br>")
@@ -22979,7 +22863,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 rs3.beforeFirst();
                                 while (rs3.next()) {
                                     // Generate QR code Dokter Radiologi secara lokal
-                                    String qrCodeDokterRad = getDoctorQRBase64(rs3.getString("kd_dokterrad"), 90);
+                                    String qrCodeDokterRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
+                                            90);
                                     htmlContent.append(
                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
                                             .append(qrCodeDokterRad).append("'/><br>")
@@ -22995,7 +22880,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         rs4.beforeFirst();
                                         while (rs4.next()) {
                                             // Generate QR code Petugas Radiologi secara lokal
-                                            String qrCodePetugasRad = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                            String qrCodePetugasRad = QRCodeHelper
+                                                    .getPetugasQRPath(rs4.getString("nip"), 90);
                                             htmlContent.append(
                                                     "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
                                                     .append(qrCodePetugasRad).append("'/><br>")
@@ -23265,7 +23151,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 rs3.beforeFirst();
                                 while (rs3.next()) {
                                     // Generate QR code Dokter Radiologi secara lokal
-                                    String qrCodeDokterRad = getDoctorQRBase64(rs3.getString("kd_dokterrad"), 90);
+                                    String qrCodeDokterRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
+                                            90);
                                     htmlContent.append(
                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
                                             .append(qrCodeDokterRad).append("'/><br>")
@@ -23281,7 +23168,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         rs4.beforeFirst();
                                         while (rs4.next()) {
                                             // Generate QR code Petugas Radiologi secara lokal
-                                            String qrCodePetugasRad = getPetugasQRBase64(rs4.getString("nip"), 90);
+                                            String qrCodePetugasRad = QRCodeHelper
+                                                    .getPetugasQRPath(rs4.getString("nip"), 90);
                                             htmlContent.append(
                                                     "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
                                                     .append(qrCodePetugasRad).append("'/><br>")
@@ -23872,6 +23760,75 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
     }
 
     /**
+     * Get doctor's signature image URL from ttd_dokter_ralan table for a specific
+     * visit.
+     * Signatures are visit-specific, so each patient will have different signatures
+     * per visit.
+     * 
+     * @param noRawat Visit number (no_rawat)
+     * @return Full URL to the signature image, or empty string if not found
+     */
+    private String getTTDDokterUrl(String noRawat) {
+        // Column structure: no_rawat, tgl_perawatan, jam_rawat, kd_dokter, file_ttd
+        String namaFile = Sequel.cariIsi(
+                "SELECT file_ttd FROM ttd_dokter_ralan WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1",
+                noRawat);
+
+        if (namaFile != null && !namaFile.isEmpty()) {
+            try {
+                // Construct the URL to fetch the image
+                String imageUrl = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
+                        + koneksiDB.HYBRIDWEB() + "/imagefreehand/" + namaFile;
+
+                System.out.println("Fetching TTD from: " + imageUrl);
+
+                // Use HttpURLConnection for better error handling
+                java.net.URL url = new java.net.URL(imageUrl);
+                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+
+                int responseCode = conn.getResponseCode();
+                System.out.println("TTD HTTP Response Code: " + responseCode);
+
+                if (responseCode == 200) {
+                    java.io.InputStream inputStream = conn.getInputStream();
+                    byte[] imageBytes = inputStream.readAllBytes();
+                    inputStream.close();
+                    conn.disconnect();
+
+                    if (imageBytes != null && imageBytes.length > 0) {
+                        // Save to temp file - JEditorPane doesn't support data: URI
+                        String safeNoRawat = noRawat.replaceAll("/", "");
+                        java.io.File tempDir = new java.io.File("tmpImageFreehand");
+                        if (!tempDir.exists()) {
+                            tempDir.mkdirs();
+                        }
+                        java.io.File tempFile = new java.io.File(tempDir, "TTD_" + safeNoRawat + "_temp.jpg");
+                        java.io.FileOutputStream fos = new java.io.FileOutputStream(tempFile);
+                        fos.write(imageBytes);
+                        fos.close();
+
+                        System.out.println("TTD image saved to temp: " + tempFile.getAbsolutePath());
+
+                        // Return file:// URL for JEditorPane
+                        return "file:///" + tempFile.getAbsolutePath().replace("\\", "/");
+                    }
+                } else {
+                    System.out.println("TTD image not found on server (HTTP " + responseCode + ")");
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                System.out
+                        .println("Error fetching TTD image: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    /**
      * Mengambil logo RS dari database (tabel setting) dan mengkonversi ke Base64
      * string.
      * 
@@ -23937,5 +23894,327 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             return "image/bmp";
         }
         return "image/png"; // default fallback
+    }
+
+    /**
+     * Helper method untuk mendapatkan prosedur dengan double-check.
+     * Jika prosedur_pasien kosong, fallback ke tindakan dari rawat_jl_dr,
+     * rawat_jl_pr, rawat_jl_drpr
+     * Untuk Prosedur Utama: skip "PEMERIKSAAN DOKTER" kecuali tidak ada tindakan
+     * lain
+     * 
+     * @param noRawat   nomor rawat pasien
+     * @param prioritas prioritas prosedur (1=utama, 2-4=sekunder)
+     * @param status    status rawat (Ralan/Ranap)
+     * @return deskripsi prosedur atau nama tindakan
+     */
+    private String getProsedurWithFallback(String noRawat, String prioritas, String status) {
+        // 1. Cek prosedur_pasien dulu
+        String prosedur = Sequel.cariIsi(
+                "select icd9.deskripsi_panjang from prosedur_pasien " +
+                        "inner join icd9 on prosedur_pasien.kode=icd9.kode " +
+                        "where prosedur_pasien.no_rawat='" + noRawat + "' and prosedur_pasien.status='" + status + "' "
+                        +
+                        "and prosedur_pasien.prioritas='" + prioritas + "'");
+
+        // 2. Jika kosong, fallback ke tindakan
+        if (prosedur == null || prosedur.trim().isEmpty()) {
+            int offset = Integer.parseInt(prioritas) - 1;
+
+            // Untuk Prosedur Utama (prioritas=1): skip PEMERIKSAAN DOKTER kecuali tidak ada
+            // tindakan lain
+            if (prioritas.equals("1")) {
+                prosedur = getTindakanRawatJalanExcludePemDr(noRawat, 0);
+                // Jika tidak ada tindakan lain, baru ambil PEMERIKSAAN DOKTER
+                if (prosedur == null || prosedur.trim().isEmpty()) {
+                    prosedur = getTindakanRawatJalan(noRawat, 0);
+                }
+            } else {
+                // Untuk Prosedur Sekunder: ambil semua termasuk PEMERIKSAAN DOKTER
+                prosedur = getTindakanRawatJalan(noRawat, offset);
+            }
+        }
+
+        return prosedur;
+    }
+
+    /**
+     * Ambil nama tindakan dari rawat_jl_dr, rawat_jl_pr, rawat_jl_drpr
+     * TIDAK termasuk PEMERIKSAAN DOKTER
+     * 
+     * @param noRawat nomor rawat pasien
+     * @param offset  urutan tindakan (0=pertama, 1=kedua, dst)
+     * @return nama tindakan/perawatan (excluding PEMERIKSAAN DOKTER)
+     */
+    private String getTindakanRawatJalanExcludePemDr(String noRawat, int offset) {
+        String tindakan = "";
+        try {
+            ResultSet rsTindakan = koneksi.prepareStatement(
+                    "SELECT nm_perawatan FROM (" +
+                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_dr.tgl_perawatan, rawat_jl_dr.jam_rawat " +
+                            "  FROM rawat_jl_dr " +
+                            "  INNER JOIN jns_perawatan ON rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+                            "  WHERE rawat_jl_dr.no_rawat='" + noRawat
+                            + "' AND jns_perawatan.nm_perawatan NOT LIKE '%PEMERIKSAAN DOKTER%' " +
+                            "  UNION ALL " +
+                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_pr.tgl_perawatan, rawat_jl_pr.jam_rawat " +
+                            "  FROM rawat_jl_pr " +
+                            "  INNER JOIN jns_perawatan ON rawat_jl_pr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+                            "  WHERE rawat_jl_pr.no_rawat='" + noRawat
+                            + "' AND jns_perawatan.nm_perawatan NOT LIKE '%PEMERIKSAAN DOKTER%' " +
+                            "  UNION ALL " +
+                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_drpr.tgl_perawatan, rawat_jl_drpr.jam_rawat "
+                            +
+                            "  FROM rawat_jl_drpr " +
+                            "  INNER JOIN jns_perawatan ON rawat_jl_drpr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+                            "  WHERE rawat_jl_drpr.no_rawat='" + noRawat
+                            + "' AND jns_perawatan.nm_perawatan NOT LIKE '%PEMERIKSAAN DOKTER%' " +
+                            ") AS combined ORDER BY tgl_perawatan, jam_rawat LIMIT 1 OFFSET " + offset)
+                    .executeQuery();
+            if (rsTindakan.next()) {
+                tindakan = rsTindakan.getString("nm_perawatan");
+            }
+            rsTindakan.close();
+        } catch (Exception e) {
+            System.out.println("Error getTindakanRawatJalanExcludePemDr: " + e);
+        }
+        return tindakan;
+    }
+
+    /**
+     * Ambil nama tindakan dari rawat_jl_dr, rawat_jl_pr, rawat_jl_drpr
+     * dengan offset tertentu untuk urutan prosedur
+     * 
+     * @param noRawat nomor rawat pasien
+     * @param offset  urutan tindakan (0=pertama, 1=kedua, dst)
+     * @return nama tindakan/perawatan
+     */
+    private String getTindakanRawatJalan(String noRawat, int offset) {
+        String tindakan = "";
+        try {
+            // Query gabungan dari 3 tabel tindakan rawat jalan
+            ResultSet rsTindakan = koneksi.prepareStatement(
+                    "SELECT nm_perawatan FROM (" +
+                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_dr.tgl_perawatan, rawat_jl_dr.jam_rawat " +
+                            "  FROM rawat_jl_dr " +
+                            "  INNER JOIN jns_perawatan ON rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+                            "  WHERE rawat_jl_dr.no_rawat='" + noRawat + "' " +
+                            "  UNION ALL " +
+                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_pr.tgl_perawatan, rawat_jl_pr.jam_rawat " +
+                            "  FROM rawat_jl_pr " +
+                            "  INNER JOIN jns_perawatan ON rawat_jl_pr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+                            "  WHERE rawat_jl_pr.no_rawat='" + noRawat + "' " +
+                            "  UNION ALL " +
+                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_drpr.tgl_perawatan, rawat_jl_drpr.jam_rawat "
+                            +
+                            "  FROM rawat_jl_drpr " +
+                            "  INNER JOIN jns_perawatan ON rawat_jl_drpr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+                            "  WHERE rawat_jl_drpr.no_rawat='" + noRawat + "' " +
+                            ") AS combined ORDER BY tgl_perawatan, jam_rawat LIMIT 1 OFFSET " + offset)
+                    .executeQuery();
+            if (rsTindakan.next()) {
+                tindakan = rsTindakan.getString("nm_perawatan");
+            }
+            rsTindakan.close();
+        } catch (Exception e) {
+            System.out.println("Error getTindakanRawatJalan: " + e);
+        }
+        return tindakan;
+    }
+
+    // ==================== LAZY LOADING GETTERS ====================
+
+    /**
+     * Lazy getter untuk DlgKasirRalan - hanya dibuat saat dibutuhkan
+     */
+    private DlgKasirRalan getKasir() {
+        if (kasir == null) {
+            kasir = new DlgKasirRalan(null, true);
+            if (!kasirListenerAdded) {
+                kasir.addWindowListener(new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        if (kasir.getTable().getSelectedRow() != -1) {
+                            NoRawat.setText(
+                                    kasir.getTable().getValueAt(kasir.getTable().getSelectedRow(), 17).toString());
+                            NoRM.setText(kasir.getTable().getValueAt(kasir.getTable().getSelectedRow(), 2).toString());
+                            isPasien();
+                            BtnCari1ActionPerformed(null);
+                        }
+                        NoRawat.requestFocus();
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {
+                    }
+                });
+                kasirListenerAdded = true;
+            }
+        }
+        return kasir;
+    }
+
+    /**
+     * Lazy getter untuk DlgCariPasien - hanya dibuat saat dibutuhkan
+     */
+    private DlgCariPasien getPasien() {
+        if (pasien == null) {
+            pasien = new DlgCariPasien(null, true);
+            if (!pasienListenerAdded) {
+                pasien.addWindowListener(new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        if (pasien.getTable().getSelectedRow() != -1) {
+                            NoRM.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 0).toString());
+                            NmPasien.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 1).toString());
+                            Jk.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 3).toString());
+                            TempatLahir.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 4).toString());
+                            TanggalLahir.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 5).toString());
+                            IbuKandung.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 6).toString());
+                            Alamat.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 7).toString());
+                            GD.setText(pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 8).toString());
+                            StatusNikah.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 10).toString());
+                            Agama.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 11).toString());
+                            Pendidikan.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 15).toString());
+                            Bahasa.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 26).toString());
+                            CacatFisik.setText(
+                                    pasien.getTable().getValueAt(pasien.getTable().getSelectedRow(), 32).toString());
+                        }
+                        NoRM.requestFocus();
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {
+                    }
+                });
+                pasien.getTable().addKeyListener(new KeyListener() {
+                    @Override
+                    public void keyTyped(KeyEvent e) {
+                    }
+
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                            pasien.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void keyReleased(KeyEvent e) {
+                    }
+                });
+                pasienListenerAdded = true;
+            }
+        }
+        return pasien;
+    }
+
+    /**
+     * Lazy getter untuk DlgCariPegawai2 - hanya dibuat saat dibutuhkan
+     */
+    private DlgCariPegawai2 getPegawai() {
+        if (pegawai == null) {
+            pegawai = new DlgCariPegawai2(null, true);
+            if (!pegawaiListenerAdded) {
+                pegawai.addWindowListener(new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        if (pegawai.getTable().getSelectedRow() != -1) {
+                            KdPeg2.setText(
+                                    pegawai.getTable().getValueAt(pegawai.getTable().getSelectedRow(), 0).toString());
+                            TPegawai2.setText(
+                                    pegawai.getTable().getValueAt(pegawai.getTable().getSelectedRow(), 1).toString());
+                            KdPeg2.requestFocus();
+                        }
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {
+                    }
+                });
+                pegawaiListenerAdded = true;
+            }
+        }
+        return pegawai;
+    }
+
+    /**
+     * Lazy getter untuk ApiINACBG - hanya dibuat saat dibutuhkan
+     */
+    private ApiINACBG getInacbg() {
+        if (inacbg == null) {
+            inacbg = new ApiINACBG();
+        }
+        return inacbg;
     }
 }

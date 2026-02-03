@@ -2989,7 +2989,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 rs3.beforeFirst();
                                 while (rs3.next()) {
                                     // Generate QR code secara lokal using QRCodeHelper
-                                    String qrCodeLab = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterlab"),
+                                    String qrCodeLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
                                             90);
                                     htmlContent.append(
                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
@@ -3212,7 +3212,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                     rs3.beforeFirst();
                                     while (rs3.next()) {
                                         // Generate QR code secara lokal using QRCodeHelper
-                                        String qrCodeRad = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterrad"),
+                                        String qrCodeRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
                                                 90);
                                         htmlContent.append(
                                                 "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
@@ -3448,7 +3448,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 }
 
                                 // Generate QR code locally
-                                String qrCodeBilling = QRCodeHelper.getPetugasQRBase64(petugasbilling.replace(" ", "_"),
+                                String qrCodeBilling = QRCodeHelper.getPetugasQRPath(petugasbilling.replace(" ", "_"),
                                         90);
 
                                 htmlContent.append(
@@ -5300,7 +5300,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                         + "<td colspan='3'>");
 
                         // Generate QR lokal
-                        String qrCodePj = QRCodeHelper.getDoctorQRBase64(rs2.getString("kd_dokter"), 90);
+                        String qrCodePj = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"), 90);
                         htmlContent
                                 .append("Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                 .append(qrCodePj).append("'/><br>")
@@ -5310,7 +5310,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 + "<td colspan='3'>");
 
                         // Generate QR lokal
-                        String qrCodeKonsul = QRCodeHelper.getDoctorQRBase64(rs2.getString("kd_dokter_dikonsuli"), 90);
+                        String qrCodeKonsul = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter_dikonsuli"), 90);
                         htmlContent.append(
                                 "&nbsp;&nbsp;&nbsp;&nbsp;Dokter Penanggung Jawab<br>&nbsp;&nbsp;&nbsp;&nbsp;<img width='90' height='90' src='")
                                 .append(qrCodeKonsul).append("'/><br>&nbsp;&nbsp;&nbsp;&nbsp;")
@@ -5375,7 +5375,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                         String kodeDokterDPJP = Sequel.cariIsi(
                                 "select dokter.kd_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
                                 rs2.getString("kd_dokter_bpjs"));
-                        String qrCodeDPJP = QRCodeHelper.getDoctorQRBase64(kodeDokterDPJP, 90);
+                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kodeDokterDPJP, 90);
 
                         htmlContent.append("<table><tr><td width='600'>Tgl.Cetak " + lokal
                                 + "</td><td>Mengetahui DPJP</td></tr><tr><td></td><td><img width='150' src='")
@@ -5528,7 +5528,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                             String kodeDokterDPJP = Sequel.cariIsi(
                                                     "select dokter.kd_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
                                                     rs2.getString("kd_dokter_bpjs"));
-                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRBase64(kodeDokterDPJP, 90);
+                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kodeDokterDPJP, 90);
 
                                             htmlContent.append("<table><tr><td width='600'>Tgl.Cetak " + lokal
                                                     + "</td><td>Mengetahui DPJP</td></tr><tr><td></td><td><img width='150' src='")
@@ -5826,7 +5826,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
 
                         // verif
                         // verif
-                        String qrCodePetugas = QRCodeHelper.getPetugasQRBase64(akses.getkode(), 90);
+                        String qrCodePetugas = QRCodeHelper.getPetugasQRPath(akses.getkode(), 90);
                         htmlContent.append("<td><img width='150' src='").append(qrCodePetugas).append("' /><br>")
                                 .append(Sequel.cariIsi("select petugas.nama FROM petugas WHERE nip=?", akses.getkode()))
                                 .append("</td>");
@@ -5836,7 +5836,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                         String kodeDokterSJP = Sequel.cariIsi(
                                 "select dokter.kd_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
                                 rs2.getString("kddpjp"));
-                        String qrCodeSJP = QRCodeHelper.getDoctorQRBase64(kodeDokterSJP, 90);
+                        String qrCodeSJP = QRCodeHelper.getDoctorQRPath(kodeDokterSJP, 90);
                         htmlContent.append("<td><img width='150' src='").append(qrCodeSJP).append("' /><br>")
                                 .append(Sequel.cariIsi(
                                         "select dokter.nm_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
@@ -6049,7 +6049,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 w++;
 
                                 // Generate QR code secara lokal using QRCodeHelper
-                                String qrCodePoli = QRCodeHelper.getDoctorQRBase64(rs.getString("kd_dokter"), 90);
+                                String qrCodePoli = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
                                 htmlContent.append(
                                         "<tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='2'>Dokter Poli<br><img width='90' height='90' src='")
                                         .append(qrCodePoli).append("'/><br>")
@@ -6546,7 +6546,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                     urutdpjp = 1;
                                     while (rs3.next()) {
                                         // Generate QR code secara lokal using QRCodeHelper
-                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokter"),
+                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokter"),
                                                 90);
                                         htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
                                                 .append(urutdpjp).append("<br><img width='90' height='90' src='")
@@ -6560,7 +6560,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                                     "</td>");
                                 } else {
                                     // Generate QR code secara lokal using QRCodeHelper
-                                    String qrCodeDPJP = QRCodeHelper.getDoctorQRBase64(rs.getString("kd_dokter"), 90);
+                                    String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
 
                                     htmlContent.append(
                                             "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
@@ -6646,7 +6646,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                         rs2.beforeFirst();
                                         while (rs2.next()) {
                                             // Generate QR code secara lokal using QRCodeHelper
-                                            String qrCodePj = QRCodeHelper.getDoctorQRBase64(rs2.getString("kd_dokter"),
+                                            String qrCodePj = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"),
                                                     90);
                                             htmlContent.append(
                                                     "<tr></tr><tr><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='1'>PALEMBANG, ")
@@ -6895,7 +6895,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 .append(rs2.getString("nik")).append(" ").append(rs2.getString("nama"))
                                 .append("</td></tr></table></td></tr>");
                         // Generate QR code secara lokal using QRCodeHelper
-                        String qrCodeTriase = QRCodeHelper.getDoctorQRBase64(rs2.getString("nik"), 90);
+                        String qrCodeTriase = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append(
                                 "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                 .append(qrCodeTriase).append("'/><br>").append(rs2.getString("nama"))
@@ -7202,7 +7202,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 .append(rs2.getString("nik")).append(" ").append(rs2.getString("nama"))
                                 .append("</td></tr></table></td></tr>");
                         // Generate QR code secara lokal using QRCodeHelper
-                        String qrCodeTriase2 = QRCodeHelper.getDoctorQRBase64(rs2.getString("nik"), 90);
+                        String qrCodeTriase2 = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append("<tr><br><br></tr>"
                                 + "<tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                 .append(qrCodeTriase2).append("'/><br>").append(rs2.getString("nama"))
@@ -9291,7 +9291,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                     .append(rs2.getString("tata").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                             // Generate QR code secara lokal using QRCodeHelper
-                            String qrCodeAsuhan = QRCodeHelper.getDoctorQRBase64(rs2.getString("kd_dokter"), 90);
+                            String qrCodeAsuhan = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"), 90);
                             htmlContent.append(
                                     "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                     .append(qrCodeAsuhan).append("'/><br>")
@@ -9520,7 +9520,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                     .append("</b></td></tr></table></td></tr>");
 
                             // Generate QR code secara lokal using QRCodeHelper
-                            String qrCodeOp = QRCodeHelper.getDoctorQRBase64(rs2.getString("kdoperator1"), 90);
+                            String qrCodeOp = QRCodeHelper.getDoctorQRPath(rs2.getString("kdoperator1"), 90);
                             htmlContent.append(
                                     "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                     .append(qrCodeOp).append("'/><br>")
@@ -9622,7 +9622,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                     .append("</b></td></tr></table></tr>");
 
                             // Generate QR code secara lokal using QRCodeHelper
-                            String qrCodeDebriment = QRCodeHelper.getDoctorQRBase64(rs2.getString("nip"), 90);
+                            String qrCodeDebriment = QRCodeHelper.getDoctorQRPath(rs2.getString("nip"), 90);
                             htmlContent.append(
                                     "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
                                     .append(qrCodeDebriment).append("'/><br>").append(rs2.getString("nama"))
@@ -19609,7 +19609,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                                         "</td>");
                                     } else {
                                         // Generate QR code secara lokal using QRCodeHelper
-                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRBase64(rs.getString("kd_dokter"),
+                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"),
                                                 90);
                                         htmlContent.append(
                                                 "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
@@ -19981,7 +19981,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                                         "</td>");
                                     } else {
                                         // Generate QR code secara lokal using QRCodeHelper
-                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRBase64(rs.getString("kd_dokter"),
+                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"),
                                                 90);
 
                                         htmlContent.append(
@@ -20354,7 +20354,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                                         "</td>");
                                     } else {
                                         // Generate QR code secara lokal using QRCodeHelper
-                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRBase64(rs.getString("kd_dokter"),
+                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"),
                                                 90);
 
                                         htmlContent.append(
@@ -20733,7 +20733,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                             rs3.beforeFirst();
                             while (rs3.next()) {
                                 // Generate QR code secara lokal using QRCodeHelper
-                                String qrCodeLab = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterlab"), 90);
+                                String qrCodeLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"), 90);
                                 htmlContent.append(
                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
                                         .append(qrCodeLab).append("'/><br>")
@@ -21111,7 +21111,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                             rs3.beforeFirst();
                             while (rs3.next()) {
                                 // Generate QR code secara lokal using QRCodeHelper
-                                String qrCodeLab = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterlab"), 90);
+                                String qrCodeLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"), 90);
                                 htmlContent.append(
                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
                                         .append(qrCodeLab).append("'/><br>")
@@ -21488,7 +21488,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                             rs3.beforeFirst();
                             while (rs3.next()) {
                                 // Generate QR code secara lokal using QRCodeHelper
-                                String qrCodeLab = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterlab"), 90);
+                                String qrCodeLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"), 90);
                                 htmlContent.append(
                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
                                         .append(qrCodeLab).append("'/><br>")
@@ -21504,7 +21504,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                     rs4.beforeFirst();
                                     while (rs4.next()) {
                                         // Generate QR code secara lokal using QRCodeHelper
-                                        String qrCodePetugas = QRCodeHelper.getPetugasQRBase64(rs4.getString("nip"),
+                                        String qrCodePetugas = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
                                                 90);
                                         htmlContent.append(
                                                 "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
@@ -21724,7 +21724,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 rs3.beforeFirst();
                                 while (rs3.next()) {
                                     // Generate QR code secara lokal using QRCodeHelper
-                                    String qrCodeRad = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterrad"),
+                                    String qrCodeRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
                                             90);
                                     htmlContent.append(
                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
@@ -22012,7 +22012,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 rs3.beforeFirst();
                                 while (rs3.next()) {
                                     // Generate QR code secara lokal using QRCodeHelper
-                                    String qrCodeRad = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterrad"),
+                                    String qrCodeRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
                                             90);
                                     htmlContent.append(
                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
@@ -22029,7 +22029,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                         rs4.beforeFirst();
                                         while (rs4.next()) {
                                             // Generate QR code secara lokal using QRCodeHelper
-                                            String qrCodePetugas = QRCodeHelper.getPetugasQRBase64(rs4.getString("nip"),
+                                            String qrCodePetugas = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
                                                     90);
                                             htmlContent.append(
                                                     "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
@@ -22300,7 +22300,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                 rs3.beforeFirst();
                                 while (rs3.next()) {
                                     // Generate QR code secara lokal using QRCodeHelper
-                                    String qrCodeRad = QRCodeHelper.getDoctorQRBase64(rs3.getString("kd_dokterrad"),
+                                    String qrCodeRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
                                             90);
                                     htmlContent.append(
                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
@@ -22317,7 +22317,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                                         rs4.beforeFirst();
                                         while (rs4.next()) {
                                             // Generate QR code secara lokal using QRCodeHelper
-                                            String qrCodePetugas = QRCodeHelper.getPetugasQRBase64(rs4.getString("nip"),
+                                            String qrCodePetugas = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
                                                     90);
                                             htmlContent.append(
                                                     "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
@@ -22979,7 +22979,7 @@ public class RMGenerateKlaimFarmasi extends javax.swing.JDialog {
                             + "<table width='100%' class='tbl_form'><tr><td></br></br></td></tr><tr valign='top'><td witdh=70%></td>");
 
                     // Generate QR code secara lokal using QRCodeHelper
-                    String qrCode = QRCodeHelper.getDoctorQRBase64(rs.getString("kd_dokter"), 90);
+                    String qrCode = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
                     htmlContent.append(""
                             + "<td width='30%' valign='top' align='center'>DPJP<br><img width='90' height='90' src='")
                             .append(qrCode).append("'/><br>")
