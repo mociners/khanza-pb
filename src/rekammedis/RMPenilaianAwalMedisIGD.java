@@ -2341,14 +2341,13 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
             param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
             param.put("no_rawat", TNoRw.getText()); // Parameter untuk query Jasper
 
-            // Mengambil URL gambar marking jika ada
             String urlGambarMarking = Sequel
                     .cariIsi("select url_image from asesmen_medis_igd_image_marking where no_rawat=?", TNoRw.getText());
             if (urlGambarMarking != null && !urlGambarMarking.isEmpty()) {
                 param.put("url_gambar", "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
                         + koneksiDB.HYBRIDWEB() + "/imagefreehand/" + urlGambarMarking);
             } else {
-                param.put("url_gambar", null); // Kirim null jika tidak ada gambar
+                param.put("url_gambar", null); 
             }
 
             finger = Sequel.cariIsi(
@@ -2361,7 +2360,6 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
                             + (finger.equals("") ? tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString() : finger)
                             + "\n" + Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString()));
 
-            // Query tidak perlu ditaruh di sini lagi karena sudah ada di dalam file Jasper
             Valid.MyReport("rptCetakPenilaianAwalMedisIGD.jasper", param, "::[ Laporan Penilaian Awal Medis IGD ]::");
         } else {
             JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih data terlebih dahulu..!!!!");

@@ -128,11 +128,12 @@ public class DlgTTDDokter extends JDialog {
     }
 
     /**
-     * Simpan tanda tangan ke server.
+     * Simpan tanda tangan ke server dan database.
      * Mengikuti pola DlgMarkingImageAssMedisIGD:
      * 1. Simpan ke folder lokal tmpImageFreehand
      * 2. Upload ke server (folder imagefreehand root, tanpa subfolder)
-     * 3. Return nama file untuk disimpan ke database
+     * 3. Simpan ke database ttd_dokter_ralan
+     * 4. Return nama file untuk disimpan ke database
      */
     private void simpanTTD() {
         try {
@@ -153,18 +154,26 @@ public class DlgTTDDokter extends JDialog {
             System.out.println("TTD saved locally: " + file.getAbsolutePath());
 
             // 2. Upload ke server (ke root imagefreehand, tanpa subfolder)
-            // Menggunakan doc="" agar tersimpan langsung di folder imagefreehand
+            // Menggunakan doc="." agar tersimpan langsung di folder imagefreehand
             boolean uploadSuccess = uploadImage(fileName);
 
             if (uploadSuccess) {
-                // 3. Return nama file saja (tanpa path subfolder)
-                namaFileTersimpan = fileName;
-                System.out.println("TTD uploaded successfully: " + namaFileTersimpan);
+                // 3. Simpan ke database
+                boolean dbSuccess = saveToDatabase(fileName);
 
-                // Hapus file lokal
-                deleteLocalFile(fileName);
+                if (dbSuccess) {
+                    // 4. Return nama file saja (tanpa path subfolder)
+                    namaFileTersimpan = fileName;
+                    System.out.println("TTD uploaded and saved to DB: " + namaFileTersimpan);
 
-                dispose();
+                    // Hapus file lokal
+                    deleteLocalFile(fileName);
+
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Gagal menyimpan tanda tangan ke database");
+                    namaFileTersimpan = "";
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Gagal upload tanda tangan ke server");
                 namaFileTersimpan = "";
@@ -175,6 +184,84 @@ public class DlgTTDDokter extends JDialog {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Gagal menyimpan: " + e.getMessage());
             namaFileTersimpan = "";
+        }
+    }
+
+    /**
+     * Simpan data tanda tangan ke database ttd_dokter_ralan
+     * Harus menggunakan tgl_perawatan dan jam_rawat yang ada di pemeriksaan_ralan
+     * (FK constraint)
+     */
+    private boolean saveToDatabase(String fileName) {
+        try {
+            java.sql.Connection conn = koneksiDB.condb();
+
+            // Ambil tgl_perawatan dan jam_rawat dari pemeriksaan_ralan (untuk FK
+            // constraint)
+            String getSql = "SELECT tgl_perawatan, jam_rawat, nip FROM pemeriksaan_ralan WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1";
+            java.sql.PreparedStatement getPs = conn.prepareStatement(getSql);
+            getPs.setString(1, noRawat);
+            java.sql.ResultSet getRs = getPs.executeQuery();
+
+            if (!getRs.next()) {
+                System.out.println("No pemeriksaan_ralan record found for no_rawat: " + noRawat);
+                getRs.close();
+                getPs.close();
+                JOptionPane.showMessageDialog(this,
+                        "Tidak ada data pemeriksaan untuk no rawat ini. Silakan isi SOAP terlebih dahulu.");
+                return false;
+            }
+
+            String tglPerawatan = getRs.getString("tgl_perawatan");
+            String jamRawat = getRs.getString("jam_rawat");
+            String nip = getRs.getString("nip");
+            getRs.close();
+            getPs.close();
+
+            // Cek apakah sudah ada TTD untuk noRawat + tgl + jam ini
+            String cekSql = "SELECT COUNT(*) FROM ttd_dokter_ralan WHERE no_rawat=? AND tgl_perawatan=? AND jam_rawat=?";
+            java.sql.PreparedStatement cekPs = conn.prepareStatement(cekSql);
+            cekPs.setString(1, noRawat);
+            cekPs.setString(2, tglPerawatan);
+            cekPs.setString(3, jamRawat);
+            java.sql.ResultSet cekRs = cekPs.executeQuery();
+            cekRs.next();
+            int count = cekRs.getInt(1);
+            cekRs.close();
+            cekPs.close();
+
+            String sql;
+            java.sql.PreparedStatement ps;
+
+            if (count > 0) {
+                // Update existing record
+                sql = "UPDATE ttd_dokter_ralan SET file_ttd=? WHERE no_rawat=? AND tgl_perawatan=? AND jam_rawat=?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, fileName);
+                ps.setString(2, noRawat);
+                ps.setString(3, tglPerawatan);
+                ps.setString(4, jamRawat);
+            } else {
+                // Insert new record dengan FK yang valid
+                sql = "INSERT INTO ttd_dokter_ralan (no_rawat, tgl_perawatan, jam_rawat, kd_dokter, file_ttd) VALUES (?, ?, ?, ?, ?)";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, noRawat);
+                ps.setString(2, tglPerawatan);
+                ps.setString(3, jamRawat);
+                ps.setString(4, nip);
+                ps.setString(5, fileName);
+            }
+
+            int result = ps.executeUpdate();
+            ps.close();
+
+            System.out.println("TTD saved to database: " + (result > 0 ? "Success" : "Failed"));
+            return result > 0;
+
+        } catch (Exception e) {
+            System.out.println("Error saving TTD to database: " + e);
+            e.printStackTrace();
+            return false;
         }
     }
 

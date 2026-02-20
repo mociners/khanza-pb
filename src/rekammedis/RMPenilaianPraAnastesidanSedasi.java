@@ -2,7 +2,6 @@
  * By Mas Elkhanza
  */
 
-
 package rekammedis;
 
 import fungsi.WarnaTable;
@@ -36,247 +35,273 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import kepegawaian.DlgCariDokter;
 
-
 /**
  *
  * @author perpustakaan
  */
 public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
     private final DefaultTableModel tabMode;
-    private Connection koneksi=koneksiDB.condb();
-    private sekuel Sequel=new sekuel();
-    private validasi Valid=new validasi();
+    private Connection koneksi = koneksiDB.condb();
+    private sekuel Sequel = new sekuel();
+    private validasi Valid = new validasi();
     private PreparedStatement ps;
     private ResultSet rs;
-    private int i=0;
-    private DlgCariDokter dokter=new DlgCariDokter(null,false);
+    private int i = 0;
+    private DlgCariDokter dokter = new DlgCariDokter(null, false);
     private StringBuilder htmlContent;
-    private String finger="";
-    
-    /** Creates new form DlgRujuk
+    private String finger = "";
+
+    /**
+     * Creates new form DlgRujuk
+     * 
      * @param parent
-     * @param modal */
+     * @param modal
+     */
     public RMPenilaianPraAnastesidanSedasi(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
-        tabMode=new DefaultTableModel(null,new Object[]{
-            "No.Rawat","No.RM","Nama Pasien","Tgl.Lahir","J.K.","Kode Dokter","Nama Dokter","Tanggal","Diagnosa","Tindakan Bedah","Tanggal Operasi",
-            "BB","TB","Anamnesa","Astma","DM","Alergi","Hipertensi","Riwayat Operasi","Jenis Anestesi","Komplikasi","Pemeriksaan Fisik","Keadaan Umum",
-            "TD","Nadi","RR","Suhu","Konjuntiva","Sklera","Mallmapati","Thorax","Abdomen","Ektremitas","Lab","Ro Thorax","Periksaan Penunjang",
-            "ASA","Premedikasi","Puasa","Tidak Setuju: Rencana Tindakan","Sedasi","GA","Regional","Persediaan Darah","Teknik Khusus","Keterangan",
-            "Monitoring","Keterangan Monitoring","Perawatan Pasca Anestesi"
 
-        }){
-              @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
+        tabMode = new DefaultTableModel(null, new Object[] {
+                "No.Rawat", "No.RM", "Nama Pasien", "Tgl.Lahir", "J.K.", "Kode Dokter", "Nama Dokter", "Tanggal",
+                "Diagnosa", "Tindakan Bedah", "Tanggal Operasi",
+                "BB", "TB", "Anamnesa", "Astma", "DM", "Alergi", "Hipertensi", "Riwayat Operasi", "Jenis Anestesi",
+                "Komplikasi", "Pemeriksaan Fisik", "Keadaan Umum",
+                "TD", "Nadi", "RR", "Suhu", "Konjuntiva", "Sklera", "Mallmapati", "Thorax", "Abdomen", "Ektremitas",
+                "Lab", "Ro Thorax", "Periksaan Penunjang",
+                "ASA", "Premedikasi", "Puasa", "Tidak Setuju: Rencana Tindakan", "Sedasi", "GA", "Regional",
+                "Persediaan Darah", "Teknik Khusus", "Keterangan",
+                "Monitoring", "Keterangan Monitoring", "Perawatan Pasca Anestesi"
+
+        }) {
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
         };
-        
+
         tbObat.setModel(tabMode);
-        tbObat.setPreferredScrollableViewportSize(new Dimension(500,500));
+        tbObat.setPreferredScrollableViewportSize(new Dimension(500, 500));
         tbObat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         for (i = 0; i < 49; i++) {
             TableColumn column = tbObat.getColumnModel().getColumn(i);
-            if(i==0){
+            if (i == 0) {
                 column.setPreferredWidth(105);
-            }else if(i==1){
+            } else if (i == 1) {
                 column.setPreferredWidth(70);
-            }else if(i==2){
+            } else if (i == 2) {
                 column.setPreferredWidth(150);
-            }else if(i==3){
+            } else if (i == 3) {
                 column.setPreferredWidth(65);
-            }else if(i==4){
+            } else if (i == 4) {
                 column.setPreferredWidth(65);
-            }else if(i==5){
+            } else if (i == 5) {
                 column.setPreferredWidth(80);
-            }else if(i==6){
+            } else if (i == 6) {
                 column.setPreferredWidth(150);
-            }else if(i==7){
+            } else if (i == 7) {
                 column.setPreferredWidth(115);
-            }else if(i==8){
+            } else if (i == 8) {
                 column.setPreferredWidth(115);
-            }else if(i==9){
+            } else if (i == 9) {
                 column.setPreferredWidth(170);
-            }else if(i==10){
+            } else if (i == 10) {
                 column.setPreferredWidth(170);
-            }else if(i==11){
+            } else if (i == 11) {
                 column.setPreferredWidth(35);
-            }else if(i==12){
+            } else if (i == 12) {
                 column.setPreferredWidth(35);
-            }else if(i==13){
+            } else if (i == 13) {
                 column.setPreferredWidth(50);
-            }else if(i==14){
+            } else if (i == 14) {
                 column.setPreferredWidth(35);
-            }else if(i==15){
+            } else if (i == 15) {
                 column.setPreferredWidth(35);
-            }else if(i==16){
+            } else if (i == 16) {
                 column.setPreferredWidth(55);
-            }else if(i==17){
+            } else if (i == 17) {
                 column.setPreferredWidth(35);
-            }else if(i==18){
+            } else if (i == 18) {
                 column.setPreferredWidth(170);
-            }else if(i==19){
+            } else if (i == 19) {
                 column.setPreferredWidth(170);
-            }else if(i==20){
+            } else if (i == 20) {
                 column.setPreferredWidth(170);
-            }else if(i==21){
+            } else if (i == 21) {
                 column.setPreferredWidth(170);
-            }else if(i==22){
+            } else if (i == 22) {
                 column.setPreferredWidth(170);
-            }else if(i==23){
+            } else if (i == 23) {
                 column.setPreferredWidth(170);
-            }else if(i==24){
+            } else if (i == 24) {
                 column.setPreferredWidth(170);
-            }else if(i==25){
+            } else if (i == 25) {
                 column.setPreferredWidth(170);
-            }else if(i==26){
+            } else if (i == 26) {
                 column.setPreferredWidth(170);
-            }else if(i==27){
+            } else if (i == 27) {
                 column.setPreferredWidth(170);
-            }else if(i==28){
+            } else if (i == 28) {
                 column.setPreferredWidth(170);
-            }else if(i==29){
+            } else if (i == 29) {
                 column.setPreferredWidth(170);
-            }else if(i==30){
+            } else if (i == 30) {
                 column.setPreferredWidth(100);
-            }else if(i==31){
+            } else if (i == 31) {
                 column.setPreferredWidth(55);
-            }else if(i==32){
+            } else if (i == 32) {
                 column.setPreferredWidth(97);
-            }else if(i==33){
+            } else if (i == 33) {
                 column.setPreferredWidth(49);
-            }else if(i==34){
+            } else if (i == 34) {
                 column.setPreferredWidth(94);
-            }else if(i==35){
+            } else if (i == 35) {
                 column.setPreferredWidth(130);
-            }else if(i==36){
+            } else if (i == 36) {
                 column.setPreferredWidth(170);
-            }else if(i==37){
+            } else if (i == 37) {
                 column.setPreferredWidth(170);
-            }else if(i==38){
+            } else if (i == 38) {
                 column.setPreferredWidth(170);
-            }else if(i==39){
+            } else if (i == 39) {
                 column.setPreferredWidth(170);
-            }else if(i==40){
+            } else if (i == 40) {
                 column.setPreferredWidth(60);
-            }else if(i==41){
+            } else if (i == 41) {
                 column.setPreferredWidth(115);
-            }else if(i==42){
+            } else if (i == 42) {
                 column.setPreferredWidth(95);
-            }else if(i==43){
+            } else if (i == 43) {
                 column.setPreferredWidth(140);
-            }else if(i==44){
+            } else if (i == 44) {
                 column.setPreferredWidth(170);
-            }else if(i==45){
+            } else if (i == 45) {
                 column.setPreferredWidth(115);
-            }else if(i==46){
+            } else if (i == 46) {
                 column.setPreferredWidth(95);
-            }else if(i==47){
+            } else if (i == 47) {
                 column.setPreferredWidth(140);
-            }else if(i==48){
+            } else if (i == 48) {
                 column.setPreferredWidth(170);
             }
         }
-        tbObat.setDefaultRenderer(Object.class, new WarnaTable());        
-        TNoRw.setDocument(new batasInput((byte)17).getKata(TNoRw));
-        Diagnosa.setDocument(new batasInput((byte)100).getKata(Diagnosa));
-        Tb.setDocument(new batasInput((byte)5).getKata(Tb));
-        Bb.setDocument(new batasInput((byte)5).getKata(Bb));
-        Td.setDocument(new batasInput((byte)10).getKata(Td));
-        Nadi.setDocument(new batasInput((byte)10).getKata(Nadi));
-        Rr.setDocument(new batasInput((byte)10).getKata(Rr));
-        Suhu.setDocument(new batasInput((byte)10).getKata(Suhu));
-        Thorax.setDocument(new batasInput((byte)100).getKata(Thorax));
-        Abdomen.setDocument(new batasInput((byte)100).getKata(Abdomen));
-        Premedikasi.setDocument(new batasInput((byte)100).getKata(Premedikasi));
-        Puasa.setDocument(new batasInput((byte)100).getKata(Puasa));
-        Conjungtiva.setDocument(new batasInput((byte)100).getKata(Conjungtiva));
-        Sklera.setDocument(new batasInput((byte)100).getKata(Sklera));
-        Mallmapati.setDocument(new batasInput((byte)100).getKata(Mallmapati));
-        Ekstremitas.setDocument(new batasInput((byte)100).getKata(Ekstremitas));
-        Laboratorium.setDocument(new batasInput((byte)100).getKata(Laboratorium));
-        Asa.setDocument(new batasInput((byte)100).getKata(Asa));
-        RoThorax.setDocument(new batasInput((byte)100).getKata(RoThorax));
-        PemeriksaanPenunjang.setDocument(new batasInput((byte)100).getKata(PemeriksaanPenunjang));
-        RencanaTindakan.setDocument(new batasInput((byte)100).getKata(RencanaTindakan));
-        Sedasi.setDocument(new batasInput((byte)100).getKata(Sedasi));
-        TeknikKhususKet.setDocument(new batasInput((byte)100).getKata(TeknikKhususKet));
-        PersediaanDarah.setDocument(new batasInput((byte)100).getKata(PersediaanDarah));
-        TCari.setDocument(new batasInput((int)100).getKata(TCari));
-        
-        if(koneksiDB.CARICEPAT().equals("aktif")){
-            TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
+        tbObat.setDefaultRenderer(Object.class, new WarnaTable());
+        TNoRw.setDocument(new batasInput((byte) 17).getKata(TNoRw));
+        Diagnosa.setDocument(new batasInput((byte) 100).getKata(Diagnosa));
+        Tb.setDocument(new batasInput((byte) 5).getKata(Tb));
+        Bb.setDocument(new batasInput((byte) 5).getKata(Bb));
+        Td.setDocument(new batasInput((byte) 10).getKata(Td));
+        Nadi.setDocument(new batasInput((byte) 10).getKata(Nadi));
+        Rr.setDocument(new batasInput((byte) 10).getKata(Rr));
+        Suhu.setDocument(new batasInput((byte) 10).getKata(Suhu));
+        Thorax.setDocument(new batasInput((byte) 100).getKata(Thorax));
+        Abdomen.setDocument(new batasInput((byte) 100).getKata(Abdomen));
+        Premedikasi.setDocument(new batasInput((byte) 100).getKata(Premedikasi));
+        Puasa.setDocument(new batasInput((byte) 100).getKata(Puasa));
+        Conjungtiva.setDocument(new batasInput((byte) 100).getKata(Conjungtiva));
+        Sklera.setDocument(new batasInput((byte) 100).getKata(Sklera));
+        Mallmapati.setDocument(new batasInput((byte) 100).getKata(Mallmapati));
+        Ekstremitas.setDocument(new batasInput((byte) 100).getKata(Ekstremitas));
+        Laboratorium.setDocument(new batasInput((byte) 100).getKata(Laboratorium));
+        Asa.setDocument(new batasInput((byte) 100).getKata(Asa));
+        RoThorax.setDocument(new batasInput((byte) 100).getKata(RoThorax));
+        PemeriksaanPenunjang.setDocument(new batasInput((byte) 100).getKata(PemeriksaanPenunjang));
+        RencanaTindakan.setDocument(new batasInput((byte) 100).getKata(RencanaTindakan));
+        Sedasi.setDocument(new batasInput((byte) 100).getKata(Sedasi));
+        TeknikKhususKet.setDocument(new batasInput((byte) 100).getKata(TeknikKhususKet));
+        PersediaanDarah.setDocument(new batasInput((byte) 100).getKata(PersediaanDarah));
+        TCari.setDocument(new batasInput((int) 100).getKata(TCari));
+
+        if (koneksiDB.CARICEPAT().equals("aktif")) {
+            TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
+                    if (TCari.getText().length() > 2) {
                         tampil();
                     }
                 }
+
                 @Override
                 public void removeUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
+                    if (TCari.getText().length() > 2) {
                         tampil();
                     }
                 }
+
                 @Override
                 public void changedUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
+                    if (TCari.getText().length() > 2) {
                         tampil();
                     }
                 }
             });
         }
-        
+
         dokter.addWindowListener(new WindowListener() {
             @Override
-            public void windowOpened(WindowEvent e) {}
+            public void windowOpened(WindowEvent e) {
+            }
+
             @Override
-            public void windowClosing(WindowEvent e) {}
+            public void windowClosing(WindowEvent e) {
+            }
+
             @Override
             public void windowClosed(WindowEvent e) {
-                if(dokter.getTable().getSelectedRow()!= -1){
-                    KdDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),0).toString());
-                    NmDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),1).toString());
+                if (dokter.getTable().getSelectedRow() != -1) {
+                    KdDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 0).toString());
+                    NmDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 1).toString());
                     KdDokter.requestFocus();
                 }
             }
+
             @Override
-            public void windowIconified(WindowEvent e) {}
+            public void windowIconified(WindowEvent e) {
+            }
+
             @Override
-            public void windowDeiconified(WindowEvent e) {}
+            public void windowDeiconified(WindowEvent e) {
+            }
+
             @Override
-            public void windowActivated(WindowEvent e) {}
+            public void windowActivated(WindowEvent e) {
+            }
+
             @Override
-            public void windowDeactivated(WindowEvent e) {}
+            public void windowDeactivated(WindowEvent e) {
+            }
         });
-        
+
         HTMLEditorKit kit = new HTMLEditorKit();
         LoadHTML.setEditable(true);
         LoadHTML.setEditorKit(kit);
         StyleSheet styleSheet = kit.getStyleSheet();
         styleSheet.addRule(
-                ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}"+
-                ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}"+
-                ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}"+
-                ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}"+
-                ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}"+
-                ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}"
-        );
+                ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                        +
+                        ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}" +
+                        ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                        +
+                        ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                        +
+                        ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}" +
+                        ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}" +
+                        ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}" +
+                        ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}" +
+                        ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}");
         Document doc = kit.createDefaultDocument();
         LoadHTML.setDocument(doc);
     }
 
-
-    /** This method is called from within the constructor to
+    /**
+     * This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         LoadHTML = new widget.editorpane();
@@ -453,7 +478,11 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
         setUndecorated(true);
         setResizable(false);
 
-        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Penilaian Pra Anestesi dan Sedasi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
+        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)),
+                "::[ Penilaian Pra Anestesi dan Sedasi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11),
+                new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame1.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setPreferredSize(new java.awt.Dimension(467, 500));
@@ -1164,7 +1193,8 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
         FormInput.add(jLabel123);
         jLabel123.setBounds(650, 450, 30, 23);
 
-        Regional.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Spinal", "Epidural", "Kaudal ", "Blok Perifer", " " }));
+        Regional.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Spinal", "Epidural", "Kaudal ", "Blok Perifer", " " }));
         Regional.setName("Regional"); // NOI18N
         Regional.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1444,7 +1474,8 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
         FormInput.add(jLabel130);
         jLabel130.setBounds(430, 870, 80, 23);
 
-        TeknikKhusus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hipotensi", "Ventilasi satu paru", "TCI", "Lainnya", " " }));
+        TeknikKhusus.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Hipotensi", "Ventilasi satu paru", "TCI", "Lainnya", " " }));
         TeknikKhusus.setName("TeknikKhusus"); // NOI18N
         TeknikKhusus.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1469,7 +1500,8 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
         FormInput.add(jLabel131);
         jLabel131.setBounds(20, 900, 80, 23);
 
-        Monitoring.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EKG lead", "CVP", "SpO2", "Arteri line", "NIBP", "Temp", "EtCO2", "BIS", "Lainnya", " " }));
+        Monitoring.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EKG lead", "CVP", "SpO2",
+                "Arteri line", "NIBP", "Temp", "EtCO2", "BIS", "Lainnya", " " }));
         Monitoring.setName("Monitoring"); // NOI18N
         Monitoring.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1494,7 +1526,8 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
         FormInput.add(jLabel132);
         jLabel132.setBounds(460, 900, 140, 23);
 
-        Perawatan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Rawat jalan", "Rawat inap", "ICU", "NICU", " " }));
+        Perawatan.setModel(
+                new javax.swing.DefaultComboBoxModel(new String[] { "Rawat jalan", "Rawat inap", "ICU", "NICU", " " }));
         Perawatan.setName("Perawatan"); // NOI18N
         Perawatan.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1619,362 +1652,419 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void TNoRwKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TNoRwKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
+    private void TNoRwKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TNoRwKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
             isRawat();
-        }else{            
-            Valid.pindah(evt,TCari,BtnDokter);
+        } else {
+            Valid.pindah(evt, TCari, BtnDokter);
         }
-}//GEN-LAST:event_TNoRwKeyPressed
+    }// GEN-LAST:event_TNoRwKeyPressed
 
-    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
-        if(TNoRM.getText().trim().equals("")){
-            Valid.textKosong(TNoRw,"Nama Pasien");
-        }else if(NmDokter.getText().trim().equals("")){
-            Valid.textKosong(BtnDokter,"Dokter");
-        }else if(Diagnosa.getText().trim().equals("")){
-            Valid.textKosong(Diagnosa,"Diagnosa");
-        }else if(TindakanBedah.getText().trim().equals("")){
-            Valid.textKosong(TindakanBedah,"Rencana Tindakan");
-        }else if(TindakanBedah.getText().trim().equals("")){
-            Valid.textKosong(TindakanBedah,"Rencana Tindakan");
-        }else{
-            if(Sequel.menyimpantf("penilaian_pre_anestesi_sedasi","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat, Tanggal & Jam",44,new String[]{
-                    TNoRw.getText(),KdDokter.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),Diagnosa.getText(),
-                    TindakanBedah.getText(),Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),Bb.getText(),Tb.getText(),
-                    Anamnesis.getText(),Astma.getSelectedItem().toString(),Dm.getSelectedItem().toString(),Alergi.getSelectedItem().toString(),Hipertensi.getSelectedItem().toString(),
-                    RiwayatOperasi.getText(),JenisAnestesi.getText(),Komplikasi.getText(),PemeriksaanFisik.getText(),KeadaanUmum.getText(),Td.getText(),Nadi.getText(),Rr.getText(),Suhu.getText(),
-                    Conjungtiva.getText(),Sklera.getText(),Mallmapati.getText(),Thorax.getText(),Abdomen.getText(),Ekstremitas.getText(),Laboratorium.getText(),RoThorax.getText(),PemeriksaanPenunjang.getText(),
-                    Asa.getText(),Premedikasi.getText(),Puasa.getText(),RencanaTindakan.getText(),Sedasi.getText(),Ga.getText(),Regional.getSelectedItem().toString(),
-                    PersediaanDarah.getText(),TeknikKhusus.getSelectedItem().toString(),TeknikKhususKet.getText(),Monitoring.getSelectedItem().toString(),MonitoringKet.getText(),Perawatan.getSelectedItem().toString()
-                    
-                })==true){
-                    tabMode.addRow(new String[]{
-                    TNoRw.getText(),TNoRM.getText(),TPasien.getText(),TglLahir.getText(),Jk.getText(),KdDokter.getText(),NmDokter.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),Diagnosa.getText(),
-                    TindakanBedah.getText(),Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),Bb.getText(),Tb.getText(),
-                    Anamnesis.getText(),Astma.getSelectedItem().toString(),Dm.getSelectedItem().toString(),Alergi.getSelectedItem().toString(),Hipertensi.getSelectedItem().toString(),
-                    RiwayatOperasi.getText(),JenisAnestesi.getText(),Komplikasi.getText(),PemeriksaanFisik.getText(),KeadaanUmum.getText(),Td.getText(),Nadi.getText(),Rr.getText(),Suhu.getText(),
-                    Conjungtiva.getText(),Sklera.getText(),Mallmapati.getText(),Thorax.getText(),Abdomen.getText(),Ekstremitas.getText(),Laboratorium.getText(),RoThorax.getText(),PemeriksaanPenunjang.getText(),
-                    Asa.getText(),Premedikasi.getText(),Puasa.getText(),RencanaTindakan.getText(),Sedasi.getText(),Ga.getText(),Regional.getSelectedItem().toString(),
-                    PersediaanDarah.getText(),TeknikKhusus.getSelectedItem().toString(),TeknikKhususKet.getText(),Monitoring.getSelectedItem().toString(),MonitoringKet.getText(),Perawatan.getSelectedItem().toString()
-                    });
-                    emptTeks();
-                    LCount.setText(""+tabMode.getRowCount());
+    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnSimpanActionPerformed
+        if (TNoRM.getText().trim().equals("")) {
+            Valid.textKosong(TNoRw, "Nama Pasien");
+        } else if (NmDokter.getText().trim().equals("")) {
+            Valid.textKosong(BtnDokter, "Dokter");
+        } else if (Diagnosa.getText().trim().equals("")) {
+            Valid.textKosong(Diagnosa, "Diagnosa");
+        } else if (TindakanBedah.getText().trim().equals("")) {
+            Valid.textKosong(TindakanBedah, "Rencana Tindakan");
+        } else if (TindakanBedah.getText().trim().equals("")) {
+            Valid.textKosong(TindakanBedah, "Rencana Tindakan");
+        } else {
+            if (Sequel.menyimpantf("penilaian_pre_anestesi_sedasi",
+                    "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?",
+                    "No.Rawat, Tanggal & Jam", 44, new String[] {
+                            TNoRw.getText(), KdDokter.getText(),
+                            Valid.SetTgl(TglAsuhan.getSelectedItem() + "") + " "
+                                    + TglAsuhan.getSelectedItem().toString().substring(11, 19),
+                            Diagnosa.getText(),
+                            TindakanBedah.getText(),
+                            Valid.SetTgl(TglOperasi.getSelectedItem() + "") + " "
+                                    + TglOperasi.getSelectedItem().toString().substring(11, 19),
+                            Bb.getText(), Tb.getText(),
+                            Anamnesis.getText(), Astma.getSelectedItem().toString(), Dm.getSelectedItem().toString(),
+                            Alergi.getSelectedItem().toString(), Hipertensi.getSelectedItem().toString(),
+                            RiwayatOperasi.getText(), JenisAnestesi.getText(), Komplikasi.getText(),
+                            PemeriksaanFisik.getText(), KeadaanUmum.getText(), Td.getText(), Nadi.getText(),
+                            Rr.getText(), Suhu.getText(),
+                            Conjungtiva.getText(), Sklera.getText(), Mallmapati.getText(), Thorax.getText(),
+                            Abdomen.getText(), Ekstremitas.getText(), Laboratorium.getText(), RoThorax.getText(),
+                            PemeriksaanPenunjang.getText(),
+                            Asa.getText(), Premedikasi.getText(), Puasa.getText(), RencanaTindakan.getText(),
+                            Sedasi.getText(), Ga.getText(), Regional.getSelectedItem().toString(),
+                            PersediaanDarah.getText(), TeknikKhusus.getSelectedItem().toString(),
+                            TeknikKhususKet.getText(), Monitoring.getSelectedItem().toString(), MonitoringKet.getText(),
+                            Perawatan.getSelectedItem().toString()
+
+                    }) == true) {
+                tabMode.addRow(new String[] {
+                        TNoRw.getText(), TNoRM.getText(), TPasien.getText(), TglLahir.getText(), Jk.getText(),
+                        KdDokter.getText(), NmDokter.getText(),
+                        Valid.SetTgl(TglAsuhan.getSelectedItem() + "") + " "
+                                + TglAsuhan.getSelectedItem().toString().substring(11, 19),
+                        Diagnosa.getText(),
+                        TindakanBedah.getText(),
+                        Valid.SetTgl(TglOperasi.getSelectedItem() + "") + " "
+                                + TglOperasi.getSelectedItem().toString().substring(11, 19),
+                        Bb.getText(), Tb.getText(),
+                        Anamnesis.getText(), Astma.getSelectedItem().toString(), Dm.getSelectedItem().toString(),
+                        Alergi.getSelectedItem().toString(), Hipertensi.getSelectedItem().toString(),
+                        RiwayatOperasi.getText(), JenisAnestesi.getText(), Komplikasi.getText(),
+                        PemeriksaanFisik.getText(), KeadaanUmum.getText(), Td.getText(), Nadi.getText(), Rr.getText(),
+                        Suhu.getText(),
+                        Conjungtiva.getText(), Sklera.getText(), Mallmapati.getText(), Thorax.getText(),
+                        Abdomen.getText(), Ekstremitas.getText(), Laboratorium.getText(), RoThorax.getText(),
+                        PemeriksaanPenunjang.getText(),
+                        Asa.getText(), Premedikasi.getText(), Puasa.getText(), RencanaTindakan.getText(),
+                        Sedasi.getText(), Ga.getText(), Regional.getSelectedItem().toString(),
+                        PersediaanDarah.getText(), TeknikKhusus.getSelectedItem().toString(), TeknikKhususKet.getText(),
+                        Monitoring.getSelectedItem().toString(), MonitoringKet.getText(),
+                        Perawatan.getSelectedItem().toString()
+                });
+                emptTeks();
+                LCount.setText("" + tabMode.getRowCount());
             }
         }
-    
-}//GEN-LAST:event_BtnSimpanActionPerformed
 
-    private void BtnSimpanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnSimpanKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    }// GEN-LAST:event_BtnSimpanActionPerformed
+
+    private void BtnSimpanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnSimpanKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnSimpanActionPerformed(null);
-        }else{
-           Valid.pindah(evt,PersediaanDarah,BtnBatal);
+        } else {
+            Valid.pindah(evt, PersediaanDarah, BtnBatal);
         }
-}//GEN-LAST:event_BtnSimpanKeyPressed
+    }// GEN-LAST:event_BtnSimpanKeyPressed
 
-    private void BtnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBatalActionPerformed
+    private void BtnBatalActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnBatalActionPerformed
         emptTeks();
-}//GEN-LAST:event_BtnBatalActionPerformed
+    }// GEN-LAST:event_BtnBatalActionPerformed
 
-    private void BtnBatalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnBatalKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnBatalKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnBatalKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             emptTeks();
-        }else{Valid.pindah(evt, BtnSimpan, BtnHapus);}
-}//GEN-LAST:event_BtnBatalKeyPressed
+        } else {
+            Valid.pindah(evt, BtnSimpan, BtnHapus);
+        }
+    }// GEN-LAST:event_BtnBatalKeyPressed
 
-    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
-        if(tbObat.getSelectedRow()>-1){
-            if(akses.getkode().equals("Admin Utama")){
+    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnHapusActionPerformed
+        if (tbObat.getSelectedRow() > -1) {
+            if (akses.getkode().equals("Admin Utama")) {
                 hapus();
-            }else{
-                if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),5).toString())){
+            } else {
+                if (KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString())) {
                     hapus();
-                }else{
-                    JOptionPane.showMessageDialog(null,"Hanya bisa dihapus oleh dokter yang bersangkutan..!!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Hanya bisa dihapus oleh dokter yang bersangkutan..!!");
                 }
             }
-        }else{
-            JOptionPane.showMessageDialog(rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
-        }              
-            
-}//GEN-LAST:event_BtnHapusActionPerformed
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih data terlebih dahulu..!!");
+        }
 
-    private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnHapusKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    }// GEN-LAST:event_BtnHapusActionPerformed
+
+    private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnHapusKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnHapusActionPerformed(null);
-        }else{
+        } else {
             Valid.pindah(evt, BtnBatal, BtnEdit);
         }
-}//GEN-LAST:event_BtnHapusKeyPressed
+    }// GEN-LAST:event_BtnHapusKeyPressed
 
-    private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditActionPerformed
-        if(TNoRM.getText().trim().equals("")){
-            Valid.textKosong(TNoRw,"Nama Pasien");
-        }else if(NmDokter.getText().trim().equals("")){
-            Valid.textKosong(BtnDokter,"Dokter");
-        }else if(Diagnosa.getText().trim().equals("")){
-            Valid.textKosong(Diagnosa,"Diagnosa");
-        }else if(TindakanBedah.getText().trim().equals("")){
-            Valid.textKosong(TindakanBedah,"Rencana Tindakan");
-        }else if(TindakanBedah.getText().trim().equals("")){
-            Valid.textKosong(TindakanBedah,"Rencana Tindakan");
-        }else{
-            if(tbObat.getSelectedRow()>-1){
-                if(akses.getkode().equals("Admin Utama")){
+    private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnEditActionPerformed
+        if (TNoRM.getText().trim().equals("")) {
+            Valid.textKosong(TNoRw, "Nama Pasien");
+        } else if (NmDokter.getText().trim().equals("")) {
+            Valid.textKosong(BtnDokter, "Dokter");
+        } else if (Diagnosa.getText().trim().equals("")) {
+            Valid.textKosong(Diagnosa, "Diagnosa");
+        } else if (TindakanBedah.getText().trim().equals("")) {
+            Valid.textKosong(TindakanBedah, "Rencana Tindakan");
+        } else if (TindakanBedah.getText().trim().equals("")) {
+            Valid.textKosong(TindakanBedah, "Rencana Tindakan");
+        } else {
+            if (tbObat.getSelectedRow() > -1) {
+                if (akses.getkode().equals("Admin Utama")) {
                     ganti();
-                }else{
-                    if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),5).toString())){
+                } else {
+                    if (KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString())) {
                         ganti();
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Hanya bisa diganti oleh dokter yang bersangkutan..!!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Hanya bisa diganti oleh dokter yang bersangkutan..!!");
                     }
                 }
-            }else{
-                JOptionPane.showMessageDialog(rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih data terlebih dahulu..!!");
             }
         }
-}//GEN-LAST:event_BtnEditActionPerformed
+    }// GEN-LAST:event_BtnEditActionPerformed
 
-    private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnEditKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnEditKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnEditActionPerformed(null);
-        }else{
+        } else {
             Valid.pindah(evt, BtnHapus, BtnPrint);
         }
-}//GEN-LAST:event_BtnEditKeyPressed
+    }// GEN-LAST:event_BtnEditKeyPressed
 
-    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
+    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnKeluarActionPerformed
         dispose();
-}//GEN-LAST:event_BtnKeluarActionPerformed
+    }// GEN-LAST:event_BtnKeluarActionPerformed
 
-    private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnKeluarKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnKeluarKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnKeluarActionPerformed(null);
-        }else{Valid.pindah(evt,BtnEdit,TCari);}
-}//GEN-LAST:event_BtnKeluarKeyPressed
+        } else {
+            Valid.pindah(evt, BtnEdit, TCari);
+        }
+    }// GEN-LAST:event_BtnKeluarKeyPressed
 
-    private void BtnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrintActionPerformed
+    private void BtnPrintActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnPrintActionPerformed
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        if(tabMode.getRowCount()==0){
-            JOptionPane.showMessageDialog(null,"Maaf, data sudah habis. Tidak ada data yang bisa anda print...!!!!");
+        if (tabMode.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Maaf, data sudah habis. Tidak ada data yang bisa anda print...!!!!");
             BtnBatal.requestFocus();
-        }else if(tabMode.getRowCount()!=0){
-            try{
+        } else if (tabMode.getRowCount() != 0) {
+            try {
                 htmlContent = new StringBuilder();
-                htmlContent.append(                             
-                    "<tr class='isi'>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.Rawat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.RM</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Pasien</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Lahir</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>J.K.</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kode Dokter</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Dokter</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tanggal</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Operasi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Diagnosa</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Tindakan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TB</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>BB</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TD</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>IO2</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nadi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Pernapasan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Suhu</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Cardiovasculer</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Paru</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Abdomen</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Extrimitas</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Endokrin</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Ginjal</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Obat-obatan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Laborat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Penunjang</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Obat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Lainnya</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Terapi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Merokok</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Rokok</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Alkohol</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Alko</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Penggunaan Obat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Obat Dikonsumsi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Cardiovasculer</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Respiratory</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Endocrine</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Lainnya</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Angka ASA</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Mulai Puasa</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Anestesi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Perawatan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Catatan Khusus</b></td>"+
-                    "</tr>"
-                );
-                
+                htmlContent.append(
+                        "<tr class='isi'>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.Rawat</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.RM</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Pasien</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Lahir</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>J.K.</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kode Dokter</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Dokter</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tanggal</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Operasi</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Diagnosa</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Tindakan</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TB</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>BB</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TD</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>IO2</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nadi</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Pernapasan</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Suhu</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Cardiovasculer</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Paru</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Abdomen</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Extrimitas</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Endokrin</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Ginjal</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Obat-obatan</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Laborat</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Penunjang</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Obat</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Lainnya</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Terapi</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Merokok</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Rokok</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Alkohol</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Alko</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Penggunaan Obat</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Obat Dikonsumsi</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Cardiovasculer</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Respiratory</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Endocrine</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Lainnya</b></td>"
+                                +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Angka ASA</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Mulai Puasa</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Anestesi</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Perawatan</b></td>" +
+                                "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Catatan Khusus</b></td>" +
+                                "</tr>");
+
                 for (i = 0; i < tabMode.getRowCount(); i++) {
                     htmlContent.append(
-                        "<tr class='isi'>"+
-                           "<td valign='top'>"+tbObat.getValueAt(i,0).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,1).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,2).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,3).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,4).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,5).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,6).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,7).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,8).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,9).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,10).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,11).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,12).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,13).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,14).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,15).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,16).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,17).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,18).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,19).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,20).toString()+"</td>"+ 
-                            "<td valign='top'>"+tbObat.getValueAt(i,21).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,22).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,23).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,24).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,25).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,26).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,27).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,28).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,29).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,30).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,31).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,32).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,33).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,34).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,35).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,36).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,37).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,38).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,39).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,40).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,41).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,42).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,43).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,44).toString()+"</td>"+ 
-                        "</tr>");
+                            "<tr class='isi'>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 0).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 1).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 2).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 3).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 4).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 5).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 6).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 7).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 8).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 9).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 10).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 11).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 12).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 13).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 14).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 15).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 16).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 17).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 18).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 19).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 20).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 21).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 22).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 23).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 24).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 25).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 26).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 27).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 28).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 29).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 30).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 31).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 32).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 33).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 34).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 35).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 36).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 37).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 38).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 39).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 40).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 41).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 42).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 43).toString() + "</td>" +
+                                    "<td valign='top'>" + tbObat.getValueAt(i, 44).toString() + "</td>" +
+                                    "</tr>");
                 }
-                
-                LoadHTML.setText(
-                    "<html>"+
-                      "<table width='4500px' border='0' align='center' cellpadding='1px' cellspacing='0' class='tbl_form'>"+
-                       htmlContent.toString()+
-                      "</table>"+
-                    "</html>"
-                );
 
-                File g = new File("file2.css");            
+                LoadHTML.setText(
+                        "<html>" +
+                                "<table width='4500px' border='0' align='center' cellpadding='1px' cellspacing='0' class='tbl_form'>"
+                                +
+                                htmlContent.toString() +
+                                "</table>" +
+                                "</html>");
+
+                File g = new File("file2.css");
                 BufferedWriter bg = new BufferedWriter(new FileWriter(g));
                 bg.write(
-                    ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                    ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}"+
-                    ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                    ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                    ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}"+
-                    ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}"+
-                    ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}"+
-                    ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}"+
-                    ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}"
-                );
+                        ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                                +
+                                ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}"
+                                +
+                                ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                                +
+                                ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                                +
+                                ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}"
+                                +
+                                ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}"
+                                +
+                                ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}"
+                                +
+                                ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}"
+                                +
+                                ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}");
                 bg.close();
 
-                File f = new File("DataPenilaianPreAnestesi.html");            
-                BufferedWriter bw = new BufferedWriter(new FileWriter(f));            
-                bw.write(LoadHTML.getText().replaceAll("<head>","<head>"+
-                            "<link href=\"file2.css\" rel=\"stylesheet\" type=\"text/css\" />"+
-                            "<table width='4500px' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"+
-                                "<tr class='isi2'>"+
-                                    "<td valign='top' align='center'>"+
-                                        "<font size='4' face='Tahoma'>"+akses.getnamars()+"</font><br>"+
-                                        akses.getalamatrs()+", "+akses.getkabupatenrs()+", "+akses.getpropinsirs()+"<br>"+
-                                        akses.getkontakrs()+", E-mail : "+akses.getemailrs()+"<br><br>"+
-                                        "<font size='2' face='Tahoma'>DATA PENILAIAN PRE ANESTESI<br><br></font>"+        
-                                    "</td>"+
-                               "</tr>"+
-                            "</table>")
-                );
-                bw.close();                         
+                File f = new File("DataPenilaianPreAnestesi.html");
+                BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+                bw.write(LoadHTML.getText().replaceAll("<head>", "<head>" +
+                        "<link href=\"file2.css\" rel=\"stylesheet\" type=\"text/css\" />" +
+                        "<table width='4500px' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
+                        +
+                        "<tr class='isi2'>" +
+                        "<td valign='top' align='center'>" +
+                        "<font size='4' face='Tahoma'>" + akses.getnamars() + "</font><br>" +
+                        akses.getalamatrs() + ", " + akses.getkabupatenrs() + ", " + akses.getpropinsirs() + "<br>" +
+                        akses.getkontakrs() + ", E-mail : " + akses.getemailrs() + "<br><br>" +
+                        "<font size='2' face='Tahoma'>DATA PENILAIAN PRE ANESTESI<br><br></font>" +
+                        "</td>" +
+                        "</tr>" +
+                        "</table>"));
+                bw.close();
                 Desktop.getDesktop().browse(f.toURI());
 
-            }catch(Exception e){
-                System.out.println("Notifikasi : "+e);
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
             }
         }
         this.setCursor(Cursor.getDefaultCursor());
-}//GEN-LAST:event_BtnPrintActionPerformed
+    }// GEN-LAST:event_BtnPrintActionPerformed
 
-    private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnPrintKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnPrintKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnPrintActionPerformed(null);
-        }else{
+        } else {
             Valid.pindah(evt, BtnEdit, BtnKeluar);
         }
-}//GEN-LAST:event_BtnPrintKeyPressed
+    }// GEN-LAST:event_BtnPrintKeyPressed
 
-    private void TCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+    private void TCariKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TCariKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             BtnCariActionPerformed(null);
-        }else if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
+        } else if (evt.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
             BtnCari.requestFocus();
-        }else if(evt.getKeyCode()==KeyEvent.VK_PAGE_UP){
+        } else if (evt.getKeyCode() == KeyEvent.VK_PAGE_UP) {
             BtnKeluar.requestFocus();
         }
-}//GEN-LAST:event_TCariKeyPressed
+    }// GEN-LAST:event_TCariKeyPressed
 
-    private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariActionPerformed
+    private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnCariActionPerformed
         tampil();
-}//GEN-LAST:event_BtnCariActionPerformed
+    }// GEN-LAST:event_BtnCariActionPerformed
 
-    private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnCariKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnCariKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnCariActionPerformed(null);
-        }else{
+        } else {
             Valid.pindah(evt, TCari, BtnAll);
         }
-}//GEN-LAST:event_BtnCariKeyPressed
+    }// GEN-LAST:event_BtnCariKeyPressed
 
-    private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAllActionPerformed
+    private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnAllActionPerformed
         TCari.setText("");
         tampil();
-}//GEN-LAST:event_BtnAllActionPerformed
+    }// GEN-LAST:event_BtnAllActionPerformed
 
-    private void BtnAllKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnAllKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnAllKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnAllKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             TCari.setText("");
             tampil();
-        }else{
+        } else {
             Valid.pindah(evt, BtnCari, TPasien);
         }
-}//GEN-LAST:event_BtnAllKeyPressed
+    }// GEN-LAST:event_BtnAllKeyPressed
 
-    private void tbObatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbObatMouseClicked
-        if(tabMode.getRowCount()!=0){
+    private void tbObatMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tbObatMouseClicked
+        if (tabMode.getRowCount() != 0) {
             try {
                 getData();
             } catch (java.lang.NullPointerException e) {
             }
-            if((evt.getClickCount()==2)&&(tbObat.getSelectedColumn()==0)){
+            if ((evt.getClickCount() == 2) && (tbObat.getSelectedColumn() == 0)) {
                 TabRawat.setSelectedIndex(0);
             }
         }
-}//GEN-LAST:event_tbObatMouseClicked
+    }// GEN-LAST:event_tbObatMouseClicked
 
-    private void tbObatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbObatKeyPressed
-        if(tabMode.getRowCount()!=0){
-            if((evt.getKeyCode()==KeyEvent.VK_ENTER)||(evt.getKeyCode()==KeyEvent.VK_UP)||(evt.getKeyCode()==KeyEvent.VK_DOWN)){
+    private void tbObatKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_tbObatKeyPressed
+        if (tabMode.getRowCount() != 0) {
+            if ((evt.getKeyCode() == KeyEvent.VK_ENTER) || (evt.getKeyCode() == KeyEvent.VK_UP)
+                    || (evt.getKeyCode() == KeyEvent.VK_DOWN)) {
                 try {
                     getData();
                 } catch (java.lang.NullPointerException e) {
                 }
-            }else if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+            } else if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
                 try {
                     getData();
                     TabRawat.setSelectedIndex(0);
@@ -1982,281 +2072,293 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
                 }
             }
         }
-}//GEN-LAST:event_tbObatKeyPressed
+    }// GEN-LAST:event_tbObatKeyPressed
 
-    private void BtnDokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDokterActionPerformed
+    private void BtnDokterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnDokterActionPerformed
         dokter.isCek();
-        dokter.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+        dokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
         dokter.setLocationRelativeTo(internalFrame1);
         dokter.setAlwaysOnTop(false);
         dokter.setVisible(true);
-    }//GEN-LAST:event_BtnDokterActionPerformed
+    }// GEN-LAST:event_BtnDokterActionPerformed
 
-    private void BtnDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnDokterKeyPressed
-        //Valid.pindah(evt,Edukasi,Hubungan);
-    }//GEN-LAST:event_BtnDokterKeyPressed
+    private void BtnDokterKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnDokterKeyPressed
+        // Valid.pindah(evt,Edukasi,Hubungan);
+    }// GEN-LAST:event_BtnDokterKeyPressed
 
-    private void TglAsuhanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TglAsuhanKeyPressed
-        Valid.pindah(evt,BtnDokter,Diagnosa);
-    }//GEN-LAST:event_TglAsuhanKeyPressed
+    private void TglAsuhanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TglAsuhanKeyPressed
+        Valid.pindah(evt, BtnDokter, Diagnosa);
+    }// GEN-LAST:event_TglAsuhanKeyPressed
 
-    private void MnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnCetakActionPerformed
-    /*    if(tbObat.getSelectedRow()>-1){
-            Map<String, Object> param = new HashMap<>();
-            param.put("namars",akses.getnamars());
-            param.put("alamatrs",akses.getalamatrs());
-            param.put("kotars",akses.getkabupatenrs());
-            param.put("propinsirs",akses.getpropinsirs());
-            param.put("kontakrs",akses.getkontakrs());
-            param.put("emailrs",akses.getemailrs());          
-            param.put("logo",Sequel.cariGambar("select setting.logo from setting")); 
-            finger=Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",tbObat.getValueAt(tbObat.getSelectedRow(),5).toString());
-            param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.getValueAt(tbObat.getSelectedRow(),6).toString()+"\nID "+(finger.equals("")?tbObat.getValueAt(tbObat.getSelectedRow(),5).toString():finger)+"\n"+Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString())); 
-            
-            Valid.MyReportqry("rptCetakPenilaianPreAnestesi.jasper","report","::[ Laporan Penilaian Pre Anestesi ]::",
-                "SELECT\n" +
-"	penilaian_pre_anestesi_sedasi.no_rawat,
-"	penilaian_pre_anestesi_sedasi.kd_dokter,
-"	penilaian_pre_anestesi_sedasi.tanggal,
-"	penilaian_pre_anestesi_sedasi.diagnosa,
-"	penilaian_pre_anestesi_sedasi.tindakan_bedah,
-"	penilaian_pre_anestesi_sedasi.bb,
-"	penilaian_pre_anestesi_sedasi.tanggal_operasi,
-"	penilaian_pre_anestesi_sedasi.tb,
-"	penilaian_pre_anestesi_sedasi.anemnesis,
-"	penilaian_pre_anestesi_sedasi.astma,
-"	penilaian_pre_anestesi_sedasi.dm,
-"	penilaian_pre_anestesi_sedasi.alergi,
-"	penilaian_pre_anestesi_sedasi.hipertensi,
-"	penilaian_pre_anestesi_sedasi.riwayatoperasi,
-"	penilaian_pre_anestesi_sedasi.jenisanestesi,
-"	penilaian_pre_anestesi_sedasi.komplikasi,
-"	penilaian_pre_anestesi_sedasi.pemeriksaanfisik,
-"	penilaian_pre_anestesi_sedasi.keadaaanumum,
-"	penilaian_pre_anestesi_sedasi.tensi,
-"	penilaian_pre_anestesi_sedasi.nadi,
-"	penilaian_pre_anestesi_sedasi.rr,
-"	penilaian_pre_anestesi_sedasi.suhu,
-"	penilaian_pre_anestesi_sedasi.conjungtiva,
-"	penilaian_pre_anestesi_sedasi.sklera,
-"	penilaian_pre_anestesi_sedasi.malmapati,
-"	penilaian_pre_anestesi_sedasi.thorax,
-"	penilaian_pre_anestesi_sedasi.abdomen,
-"	penilaian_pre_anestesi_sedasi.ekstremitas,
-"	penilaian_pre_anestesi_sedasi.laboratorium,
-"	penilaian_pre_anestesi_sedasi.rothorax,
-"	penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang,
-"	penilaian_pre_anestesi_sedasi.asa,
-"	penilaian_pre_anestesi_sedasi.premedikasi,
-"	penilaian_pre_anestesi_sedasi.puasa,
-"	penilaian_pre_anestesi_sedasi.rencanatindakan,
-"	penilaian_pre_anestesi_sedasi.sedasi,
-"	penilaian_pre_anestesi_sedasi.ga,
-"	penilaian_pre_anestesi_sedasi.regional,
-"	penilaian_pre_anestesi_sedasi.persediaandarah,
-"	penilaian_pre_anestesi_sedasi.teknikkhusus,
-"	penilaian_pre_anestesi_sedasi.teknikkhususket,
-"	penilaian_pre_anestesi_sedasi.monitoring,
-"	penilaian_pre_anestesi_sedasi.monitoringket,
-"	penilaian_pre_anestesi_sedasi.perawatan,
-"	reg_periksa.no_rawat,
-"	pasien.nm_pasien,
-"	pasien.no_rkm_medis,
-"	if(pasien.jk='L','Laki-Laki','Perempuan') as jk,\n" +
-"	pasien.tgl_lahir,
-"	dokter.kd_dokter,
-"	dokter.nm_dokter\n" +
-"FROM\n" +
-"	penilaian_pre_anestesi_sedasi\n" +
-"	INNER JOIN\n" +
-"	reg_periksa\n" +
-"	ON
-"		penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat\n" +
-"	INNER JOIN\n" +
-"	pasien\n" +
-"	ON
-"		reg_periksa.no_rkm_medis = pasien.no_rkm_medis\n" +
-"	INNER JOIN\n" +
-"	dokter\n" +
-"	on penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter where penilaian_pre_anestesi_sedasi.no_rawat='"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"' "+
-                "and penilaian_pre_anestesi_sedasi.tanggal='"+tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()+"'",param);
-        } */
-    }//GEN-LAST:event_MnCetakActionPerformed
+    private void MnCetakActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MnCetakActionPerformed
+        /*
+         * if(tbObat.getSelectedRow()>-1){
+         * Map<String, Object> param = new HashMap<>();
+         * param.put("namars",akses.getnamars());
+         * param.put("alamatrs",akses.getalamatrs());
+         * param.put("kotars",akses.getkabupatenrs());
+         * param.put("propinsirs",akses.getpropinsirs());
+         * param.put("kontakrs",akses.getkontakrs());
+         * param.put("emailrs",akses.getemailrs());
+         * param.put("logo",Sequel.cariGambar("select setting.logo from setting"));
+         * finger=Sequel.
+         * cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?"
+         * ,tbObat.getValueAt(tbObat.getSelectedRow(),5).toString());
+         * param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "
+         * +akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.
+         * getValueAt(tbObat.getSelectedRow(),6).toString()+"\nID "+(finger.equals("")?
+         * tbObat.getValueAt(tbObat.getSelectedRow(),5).toString():finger)+"\n"+Valid.
+         * SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()));
+         * 
+         * Valid.MyReportqry("rptCetakPenilaianPreAnestesi.jasper",
+         * "report","::[ Laporan Penilaian Pre Anestesi ]::",
+         * "SELECT\n" +
+         * " penilaian_pre_anestesi_sedasi.no_rawat,
+         * " penilaian_pre_anestesi_sedasi.kd_dokter,
+         * " penilaian_pre_anestesi_sedasi.tanggal,
+         * " penilaian_pre_anestesi_sedasi.diagnosa,
+         * " penilaian_pre_anestesi_sedasi.tindakan_bedah,
+         * " penilaian_pre_anestesi_sedasi.bb,
+         * " penilaian_pre_anestesi_sedasi.tanggal_operasi,
+         * " penilaian_pre_anestesi_sedasi.tb,
+         * " penilaian_pre_anestesi_sedasi.anemnesis,
+         * " penilaian_pre_anestesi_sedasi.astma,
+         * " penilaian_pre_anestesi_sedasi.dm,
+         * " penilaian_pre_anestesi_sedasi.alergi,
+         * " penilaian_pre_anestesi_sedasi.hipertensi,
+         * " penilaian_pre_anestesi_sedasi.riwayatoperasi,
+         * " penilaian_pre_anestesi_sedasi.jenisanestesi,
+         * " penilaian_pre_anestesi_sedasi.komplikasi,
+         * " penilaian_pre_anestesi_sedasi.pemeriksaanfisik,
+         * " penilaian_pre_anestesi_sedasi.keadaaanumum,
+         * " penilaian_pre_anestesi_sedasi.tensi,
+         * " penilaian_pre_anestesi_sedasi.nadi,
+         * " penilaian_pre_anestesi_sedasi.rr,
+         * " penilaian_pre_anestesi_sedasi.suhu,
+         * " penilaian_pre_anestesi_sedasi.conjungtiva,
+         * " penilaian_pre_anestesi_sedasi.sklera,
+         * " penilaian_pre_anestesi_sedasi.malmapati,
+         * " penilaian_pre_anestesi_sedasi.thorax,
+         * " penilaian_pre_anestesi_sedasi.abdomen,
+         * " penilaian_pre_anestesi_sedasi.ekstremitas,
+         * " penilaian_pre_anestesi_sedasi.laboratorium,
+         * " penilaian_pre_anestesi_sedasi.rothorax,
+         * " penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang,
+         * " penilaian_pre_anestesi_sedasi.asa,
+         * " penilaian_pre_anestesi_sedasi.premedikasi,
+         * " penilaian_pre_anestesi_sedasi.puasa,
+         * " penilaian_pre_anestesi_sedasi.rencanatindakan,
+         * " penilaian_pre_anestesi_sedasi.sedasi,
+         * " penilaian_pre_anestesi_sedasi.ga,
+         * " penilaian_pre_anestesi_sedasi.regional,
+         * " penilaian_pre_anestesi_sedasi.persediaandarah,
+         * " penilaian_pre_anestesi_sedasi.teknikkhusus,
+         * " penilaian_pre_anestesi_sedasi.teknikkhususket,
+         * " penilaian_pre_anestesi_sedasi.monitoring,
+         * " penilaian_pre_anestesi_sedasi.monitoringket,
+         * " penilaian_pre_anestesi_sedasi.perawatan,
+         * " reg_periksa.no_rawat,
+         * " pasien.nm_pasien,
+         * " pasien.no_rkm_medis,
+         * "	if(pasien.jk='L','Laki-Laki','Perempuan') as jk,\n" +
+         * " pasien.tgl_lahir,
+         * " dokter.kd_dokter,
+         * "	dokter.nm_dokter\n" +
+         * "FROM\n" +
+         * "	penilaian_pre_anestesi_sedasi\n" +
+         * "	INNER JOIN\n" +
+         * "	reg_periksa\n" +
+         * " ON
+         * "		penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat\n" +
+         * "	INNER JOIN\n" +
+         * "	pasien\n" +
+         * " ON
+         * "		reg_periksa.no_rkm_medis = pasien.no_rkm_medis\n" +
+         * "	INNER JOIN\n" +
+         * "	dokter\n" +
+         * "	on penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter where penilaian_pre_anestesi_sedasi.no_rawat='"
+         * +tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"' "+
+         * "and penilaian_pre_anestesi_sedasi.tanggal='"+tbObat.getValueAt(tbObat.
+         * getSelectedRow(),7).toString()+"'",param);
+         * }
+         */
+    }// GEN-LAST:event_MnCetakActionPerformed
 
-    private void TglOperasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TglOperasiKeyPressed
-        Valid.pindah(evt,TindakanBedah,Tb);
-    }//GEN-LAST:event_TglOperasiKeyPressed
+    private void TglOperasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TglOperasiKeyPressed
+        Valid.pindah(evt, TindakanBedah, Tb);
+    }// GEN-LAST:event_TglOperasiKeyPressed
 
-    private void DiagnosaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DiagnosaKeyPressed
-        Valid.pindah(evt,TglAsuhan,TindakanBedah);
-    }//GEN-LAST:event_DiagnosaKeyPressed
+    private void DiagnosaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_DiagnosaKeyPressed
+        Valid.pindah(evt, TglAsuhan, TindakanBedah);
+    }// GEN-LAST:event_DiagnosaKeyPressed
 
-    private void TindakanBedahKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TindakanBedahKeyPressed
-        Valid.pindah(evt,Diagnosa,Tb);
-    }//GEN-LAST:event_TindakanBedahKeyPressed
+    private void TindakanBedahKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TindakanBedahKeyPressed
+        Valid.pindah(evt, Diagnosa, Tb);
+    }// GEN-LAST:event_TindakanBedahKeyPressed
 
-    private void TbKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TbKeyPressed
-        Valid.pindah(evt,TindakanBedah,Bb);
-    }//GEN-LAST:event_TbKeyPressed
+    private void TbKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TbKeyPressed
+        Valid.pindah(evt, TindakanBedah, Bb);
+    }// GEN-LAST:event_TbKeyPressed
 
-    private void BbKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BbKeyPressed
-        Valid.pindah(evt,Tb,Anamnesis);
-    }//GEN-LAST:event_BbKeyPressed
+    private void BbKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BbKeyPressed
+        Valid.pindah(evt, Tb, Anamnesis);
+    }// GEN-LAST:event_BbKeyPressed
 
-    private void AnamnesisKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AnamnesisKeyPressed
-        Valid.pindah(evt,Bb,KeadaanUmum);
-    }//GEN-LAST:event_AnamnesisKeyPressed
+    private void AnamnesisKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AnamnesisKeyPressed
+        Valid.pindah(evt, Bb, KeadaanUmum);
+    }// GEN-LAST:event_AnamnesisKeyPressed
 
-    private void RiwayatOperasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_RiwayatOperasiKeyPressed
-        Valid.pindah(evt,KeadaanUmum,JenisAnestesi);
-    }//GEN-LAST:event_RiwayatOperasiKeyPressed
+    private void RiwayatOperasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_RiwayatOperasiKeyPressed
+        Valid.pindah(evt, KeadaanUmum, JenisAnestesi);
+    }// GEN-LAST:event_RiwayatOperasiKeyPressed
 
-    private void JenisAnestesiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JenisAnestesiKeyPressed
-        Valid.pindah(evt,RiwayatOperasi,PemeriksaanFisik);
-    }//GEN-LAST:event_JenisAnestesiKeyPressed
+    private void JenisAnestesiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_JenisAnestesiKeyPressed
+        Valid.pindah(evt, RiwayatOperasi, PemeriksaanFisik);
+    }// GEN-LAST:event_JenisAnestesiKeyPressed
 
-    private void KeadaanUmumKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KeadaanUmumKeyPressed
-        Valid.pindah(evt,Anamnesis,RiwayatOperasi);
-    }//GEN-LAST:event_KeadaanUmumKeyPressed
+    private void KeadaanUmumKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KeadaanUmumKeyPressed
+        Valid.pindah(evt, Anamnesis, RiwayatOperasi);
+    }// GEN-LAST:event_KeadaanUmumKeyPressed
 
-    private void PemeriksaanFisikKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PemeriksaanFisikKeyPressed
-        Valid.pindah(evt,JenisAnestesi,Komplikasi);
-    }//GEN-LAST:event_PemeriksaanFisikKeyPressed
+    private void PemeriksaanFisikKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PemeriksaanFisikKeyPressed
+        Valid.pindah(evt, JenisAnestesi, Komplikasi);
+    }// GEN-LAST:event_PemeriksaanFisikKeyPressed
 
-    private void KomplikasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KomplikasiKeyPressed
-        Valid.pindah(evt,PemeriksaanFisik,Td);
-    }//GEN-LAST:event_KomplikasiKeyPressed
+    private void KomplikasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KomplikasiKeyPressed
+        Valid.pindah(evt, PemeriksaanFisik, Td);
+    }// GEN-LAST:event_KomplikasiKeyPressed
 
-    private void TdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TdKeyPressed
-        Valid.pindah(evt,Komplikasi,Nadi);
-    }//GEN-LAST:event_TdKeyPressed
+    private void TdKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TdKeyPressed
+        Valid.pindah(evt, Komplikasi, Nadi);
+    }// GEN-LAST:event_TdKeyPressed
 
-    private void NadiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NadiKeyPressed
-        Valid.pindah(evt,Td,Rr);
-    }//GEN-LAST:event_NadiKeyPressed
+    private void NadiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NadiKeyPressed
+        Valid.pindah(evt, Td, Rr);
+    }// GEN-LAST:event_NadiKeyPressed
 
-    private void RrKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_RrKeyPressed
-        Valid.pindah(evt,Nadi,Suhu);
-    }//GEN-LAST:event_RrKeyPressed
+    private void RrKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_RrKeyPressed
+        Valid.pindah(evt, Nadi, Suhu);
+    }// GEN-LAST:event_RrKeyPressed
 
-    private void SuhuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SuhuKeyPressed
-        Valid.pindah(evt,Rr,Thorax);
-    }//GEN-LAST:event_SuhuKeyPressed
+    private void SuhuKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SuhuKeyPressed
+        Valid.pindah(evt, Rr, Thorax);
+    }// GEN-LAST:event_SuhuKeyPressed
 
-    private void ThoraxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ThoraxKeyPressed
-        Valid.pindah(evt,Suhu,Abdomen);
-    }//GEN-LAST:event_ThoraxKeyPressed
+    private void ThoraxKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_ThoraxKeyPressed
+        Valid.pindah(evt, Suhu, Abdomen);
+    }// GEN-LAST:event_ThoraxKeyPressed
 
-    private void AbdomenKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AbdomenKeyPressed
-        Valid.pindah(evt,Thorax,Premedikasi);
-    }//GEN-LAST:event_AbdomenKeyPressed
+    private void AbdomenKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AbdomenKeyPressed
+        Valid.pindah(evt, Thorax, Premedikasi);
+    }// GEN-LAST:event_AbdomenKeyPressed
 
-    private void PremedikasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PremedikasiKeyPressed
-        Valid.pindah(evt,Abdomen,Puasa);
-    }//GEN-LAST:event_PremedikasiKeyPressed
+    private void PremedikasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PremedikasiKeyPressed
+        Valid.pindah(evt, Abdomen, Puasa);
+    }// GEN-LAST:event_PremedikasiKeyPressed
 
-    private void PuasaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PuasaKeyPressed
-        Valid.pindah(evt,Premedikasi,Conjungtiva);
-    }//GEN-LAST:event_PuasaKeyPressed
+    private void PuasaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PuasaKeyPressed
+        Valid.pindah(evt, Premedikasi, Conjungtiva);
+    }// GEN-LAST:event_PuasaKeyPressed
 
-    private void ConjungtivaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ConjungtivaKeyPressed
-        Valid.pindah(evt,Puasa,Sklera);
-    }//GEN-LAST:event_ConjungtivaKeyPressed
+    private void ConjungtivaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_ConjungtivaKeyPressed
+        Valid.pindah(evt, Puasa, Sklera);
+    }// GEN-LAST:event_ConjungtivaKeyPressed
 
-    private void SkleraKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SkleraKeyPressed
-        Valid.pindah(evt,Conjungtiva,Mallmapati);
-    }//GEN-LAST:event_SkleraKeyPressed
+    private void SkleraKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SkleraKeyPressed
+        Valid.pindah(evt, Conjungtiva, Mallmapati);
+    }// GEN-LAST:event_SkleraKeyPressed
 
-    private void MallmapatiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MallmapatiKeyPressed
-        Valid.pindah(evt,Sklera,Astma);
-    }//GEN-LAST:event_MallmapatiKeyPressed
+    private void MallmapatiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_MallmapatiKeyPressed
+        Valid.pindah(evt, Sklera, Astma);
+    }// GEN-LAST:event_MallmapatiKeyPressed
 
-    private void AstmaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AstmaKeyPressed
-        Valid.pindah(evt,Mallmapati,Ekstremitas);
-    }//GEN-LAST:event_AstmaKeyPressed
+    private void AstmaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AstmaKeyPressed
+        Valid.pindah(evt, Mallmapati, Ekstremitas);
+    }// GEN-LAST:event_AstmaKeyPressed
 
-    private void EkstremitasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_EkstremitasKeyPressed
-        Valid.pindah(evt,Astma,Dm);
-    }//GEN-LAST:event_EkstremitasKeyPressed
+    private void EkstremitasKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_EkstremitasKeyPressed
+        Valid.pindah(evt, Astma, Dm);
+    }// GEN-LAST:event_EkstremitasKeyPressed
 
-    private void DmKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DmKeyPressed
-        Valid.pindah(evt,Ekstremitas,Laboratorium);
-    }//GEN-LAST:event_DmKeyPressed
+    private void DmKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_DmKeyPressed
+        Valid.pindah(evt, Ekstremitas, Laboratorium);
+    }// GEN-LAST:event_DmKeyPressed
 
-    private void LaboratoriumKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_LaboratoriumKeyPressed
-        Valid.pindah(evt,Dm,Regional);
-    }//GEN-LAST:event_LaboratoriumKeyPressed
+    private void LaboratoriumKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_LaboratoriumKeyPressed
+        Valid.pindah(evt, Dm, Regional);
+    }// GEN-LAST:event_LaboratoriumKeyPressed
 
-    private void RegionalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_RegionalKeyPressed
-        Valid.pindah(evt,Laboratorium,Asa);
-    }//GEN-LAST:event_RegionalKeyPressed
+    private void RegionalKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_RegionalKeyPressed
+        Valid.pindah(evt, Laboratorium, Asa);
+    }// GEN-LAST:event_RegionalKeyPressed
 
-    private void AsaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AsaKeyPressed
-        Valid.pindah(evt,Regional,RoThorax);
-    }//GEN-LAST:event_AsaKeyPressed
+    private void AsaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AsaKeyPressed
+        Valid.pindah(evt, Regional, RoThorax);
+    }// GEN-LAST:event_AsaKeyPressed
 
-    private void RoThoraxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_RoThoraxKeyPressed
-        Valid.pindah(evt,Asa,PemeriksaanPenunjang);
-    }//GEN-LAST:event_RoThoraxKeyPressed
+    private void RoThoraxKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_RoThoraxKeyPressed
+        Valid.pindah(evt, Asa, PemeriksaanPenunjang);
+    }// GEN-LAST:event_RoThoraxKeyPressed
 
-    private void PemeriksaanPenunjangKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PemeriksaanPenunjangKeyPressed
-        Valid.pindah(evt,RoThorax,RencanaTindakan);
-    }//GEN-LAST:event_PemeriksaanPenunjangKeyPressed
+    private void PemeriksaanPenunjangKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PemeriksaanPenunjangKeyPressed
+        Valid.pindah(evt, RoThorax, RencanaTindakan);
+    }// GEN-LAST:event_PemeriksaanPenunjangKeyPressed
 
-    private void RencanaTindakanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_RencanaTindakanKeyPressed
-        Valid.pindah(evt,PemeriksaanPenunjang,Sedasi);
-    }//GEN-LAST:event_RencanaTindakanKeyPressed
+    private void RencanaTindakanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_RencanaTindakanKeyPressed
+        Valid.pindah(evt, PemeriksaanPenunjang, Sedasi);
+    }// GEN-LAST:event_RencanaTindakanKeyPressed
 
-    private void SedasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SedasiKeyPressed
-        Valid.pindah(evt,RencanaTindakan,Hipertensi);
-    }//GEN-LAST:event_SedasiKeyPressed
+    private void SedasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SedasiKeyPressed
+        Valid.pindah(evt, RencanaTindakan, Hipertensi);
+    }// GEN-LAST:event_SedasiKeyPressed
 
-    private void HipertensiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HipertensiKeyPressed
-        Valid.pindah(evt,Sedasi,Alergi);
-    }//GEN-LAST:event_HipertensiKeyPressed
+    private void HipertensiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_HipertensiKeyPressed
+        Valid.pindah(evt, Sedasi, Alergi);
+    }// GEN-LAST:event_HipertensiKeyPressed
 
-    private void AlergiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AlergiKeyPressed
-        Valid.pindah(evt,Hipertensi,TeknikKhususKet);
-    }//GEN-LAST:event_AlergiKeyPressed
+    private void AlergiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AlergiKeyPressed
+        Valid.pindah(evt, Hipertensi, TeknikKhususKet);
+    }// GEN-LAST:event_AlergiKeyPressed
 
-    private void TeknikKhususKetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TeknikKhususKetKeyPressed
-        Valid.pindah(evt,Alergi,PersediaanDarah);
-    }//GEN-LAST:event_TeknikKhususKetKeyPressed
+    private void TeknikKhususKetKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TeknikKhususKetKeyPressed
+        Valid.pindah(evt, Alergi, PersediaanDarah);
+    }// GEN-LAST:event_TeknikKhususKetKeyPressed
 
-    private void PersediaanDarahKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PersediaanDarahKeyPressed
-        Valid.pindah(evt,TeknikKhususKet,BtnSimpan);
-    }//GEN-LAST:event_PersediaanDarahKeyPressed
+    private void PersediaanDarahKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PersediaanDarahKeyPressed
+        Valid.pindah(evt, TeknikKhususKet, BtnSimpan);
+    }// GEN-LAST:event_PersediaanDarahKeyPressed
 
-    private void TeknikKhususKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TeknikKhususKeyPressed
+    private void TeknikKhususKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TeknikKhususKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TeknikKhususKeyPressed
+    }// GEN-LAST:event_TeknikKhususKeyPressed
 
-    private void GaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GaKeyPressed
+    private void GaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_GaKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_GaKeyPressed
+    }// GEN-LAST:event_GaKeyPressed
 
-    private void MonitoringKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MonitoringKeyPressed
+    private void MonitoringKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_MonitoringKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MonitoringKeyPressed
+    }// GEN-LAST:event_MonitoringKeyPressed
 
-    private void MonitoringKetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MonitoringKetKeyPressed
+    private void MonitoringKetKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_MonitoringKetKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MonitoringKetKeyPressed
+    }// GEN-LAST:event_MonitoringKetKeyPressed
 
-    private void PerawatanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PerawatanKeyPressed
+    private void PerawatanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PerawatanKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PerawatanKeyPressed
+    }// GEN-LAST:event_PerawatanKeyPressed
 
-    private void EkstremitasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EkstremitasActionPerformed
+    private void EkstremitasActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_EkstremitasActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_EkstremitasActionPerformed
+    }// GEN-LAST:event_EkstremitasActionPerformed
 
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            RMPenilaianPraAnastesidanSedasi dialog = new RMPenilaianPraAnastesidanSedasi(new javax.swing.JFrame(), true);
+            RMPenilaianPraAnastesidanSedasi dialog = new RMPenilaianPraAnastesidanSedasi(new javax.swing.JFrame(),
+                    true);
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -2422,79 +2524,117 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
 
     public void tampil() {
         Valid.tabelKosong(tabMode);
-        try{
-            if(TCari.getText().trim().equals("")){
-                ps=koneksi.prepareStatement("SELECT penilaian_pre_anestesi_sedasi.no_rawat,penilaian_pre_anestesi_sedasi.kd_dokter,penilaian_pre_anestesi_sedasi.tanggal,"+
-                   "penilaian_pre_anestesi_sedasi.diagnosa,penilaian_pre_anestesi_sedasi.tindakan_bedah,penilaian_pre_anestesi_sedasi.bb,penilaian_pre_anestesi_sedasi.tanggal_operasi,"+
-                   "penilaian_pre_anestesi_sedasi.tb,penilaian_pre_anestesi_sedasi.anemnesis,penilaian_pre_anestesi_sedasi.astma,penilaian_pre_anestesi_sedasi.dm,penilaian_pre_anestesi_sedasi.alergi,"+
-                   "penilaian_pre_anestesi_sedasi.hipertensi,penilaian_pre_anestesi_sedasi.riwayatoperasi,penilaian_pre_anestesi_sedasi.jenisanestesi,penilaian_pre_anestesi_sedasi.komplikasi,"+
-                   "penilaian_pre_anestesi_sedasi.pemeriksaanfisik,penilaian_pre_anestesi_sedasi.keadaaanumum,penilaian_pre_anestesi_sedasi.tensi,penilaian_pre_anestesi_sedasi.nadi,"+
-                   "penilaian_pre_anestesi_sedasi.rr,penilaian_pre_anestesi_sedasi.suhu,penilaian_pre_anestesi_sedasi.conjungtiva,penilaian_pre_anestesi_sedasi.sklera,penilaian_pre_anestesi_sedasi.malmapati,"+
-                   "penilaian_pre_anestesi_sedasi.thorax,penilaian_pre_anestesi_sedasi.abdomen,penilaian_pre_anestesi_sedasi.ekstremitas,penilaian_pre_anestesi_sedasi.laboratorium,penilaian_pre_anestesi_sedasi.rothorax,"+
-                   "penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang,penilaian_pre_anestesi_sedasi.asa,penilaian_pre_anestesi_sedasi.premedikasi,penilaian_pre_anestesi_sedasi.puasa,penilaian_pre_anestesi_sedasi.rencanatindakan,"+
-                   "penilaian_pre_anestesi_sedasi.sedasi,penilaian_pre_anestesi_sedasi.ga,penilaian_pre_anestesi_sedasi.regional,penilaian_pre_anestesi_sedasi.persediaandarah,penilaian_pre_anestesi_sedasi.teknikkhusus,"+
-                   "penilaian_pre_anestesi_sedasi.teknikkhususket,penilaian_pre_anestesi_sedasi.monitoring,penilaian_pre_anestesi_sedasi.monitoringket,penilaian_pre_anestesi_sedasi.perawatan,reg_periksa.no_rawat,pasien.nm_pasien,"+
-                   "pasien.no_rkm_medis,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,dokter.kd_dokter,dokter.nm_dokter FROM penilaian_pre_anestesi_sedasi inner join reg_periksa on penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat " +
-                   "inner join pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis INNER JOIN dokter on penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter where penilaian_pre_anestesi_sedasi.tanggal between ? and ? order by penilaian_pre_anestesi_sedasi.tanggal");
-            }else{
-                ps=koneksi.prepareStatement(
-                   "select penilaian_pre_anestesi_sedasi.no_rawat,penilaian_pre_anestesi_sedasi.kd_dokter,penilaian_pre_anestesi_sedasi.tanggal,"+
-                   "penilaian_pre_anestesi_sedasi.diagnosa,penilaian_pre_anestesi_sedasi.tindakan_bedah,penilaian_pre_anestesi_sedasi.bb,penilaian_pre_anestesi_sedasi.tanggal_operasi,"+
-                   "penilaian_pre_anestesi_sedasi.tb,penilaian_pre_anestesi_sedasi.anemnesis,penilaian_pre_anestesi_sedasi.astma,penilaian_pre_anestesi_sedasi.dm,penilaian_pre_anestesi_sedasi.alergi,"+
-                   "penilaian_pre_anestesi_sedasi.hipertensi,penilaian_pre_anestesi_sedasi.riwayatoperasi,penilaian_pre_anestesi_sedasi.jenisanestesi,penilaian_pre_anestesi_sedasi.komplikasi,"+
-                   "penilaian_pre_anestesi_sedasi.pemeriksaanfisik,penilaian_pre_anestesi_sedasi.keadaaanumum,penilaian_pre_anestesi_sedasi.tensi,penilaian_pre_anestesi_sedasi.nadi,"+
-                   "penilaian_pre_anestesi_sedasi.rr,penilaian_pre_anestesi_sedasi.suhu,penilaian_pre_anestesi_sedasi.conjungtiva,penilaian_pre_anestesi_sedasi.sklera,penilaian_pre_anestesi_sedasi.malmapati,"+
-                   "penilaian_pre_anestesi_sedasi.thorax,penilaian_pre_anestesi_sedasi.abdomen,penilaian_pre_anestesi_sedasi.ekstremitas,penilaian_pre_anestesi_sedasi.laboratorium,penilaian_pre_anestesi_sedasi.rothorax,"+
-                   "penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang,penilaian_pre_anestesi_sedasi.asa,penilaian_pre_anestesi_sedasi.premedikasi,penilaian_pre_anestesi_sedasi.puasa,penilaian_pre_anestesi_sedasi.rencanatindakan,"+
-                   "penilaian_pre_anestesi_sedasi.sedasi,penilaian_pre_anestesi_sedasi.ga,penilaian_pre_anestesi_sedasi.regional,penilaian_pre_anestesi_sedasi.persediaandarah,penilaian_pre_anestesi_sedasi.teknikkhusus,"+
-                   "penilaian_pre_anestesi_sedasi.teknikkhususket,penilaian_pre_anestesi_sedasi.monitoring,penilaian_pre_anestesi_sedasi.monitoringket,penilaian_pre_anestesi_sedasi.perawatan,reg_periksa.no_rawat,pasien.nm_pasien,"+
-                   "pasien.no_rkm_medis,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,dokter.kd_dokter,dokter.nm_dokter FROM penilaian_pre_anestesi_sedasi inner join reg_periksa on penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat " +
-                   "inner join pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis INNER JOIN dokter on penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter where "+
-                   "penilaian_pre_anestesi_sedasi.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "+
-                   "penilaian_pre_anestesi_sedasi.kd_dokter like ? or dokter.nm_dokter like ?) order by penilaian_pre_anestesi_sedasi.tanggal");
+        try {
+            if (TCari.getText().trim().equals("")) {
+                ps = koneksi.prepareStatement(
+                        "SELECT penilaian_pre_anestesi_sedasi.no_rawat,penilaian_pre_anestesi_sedasi.kd_dokter,penilaian_pre_anestesi_sedasi.tanggal,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.diagnosa,penilaian_pre_anestesi_sedasi.tindakan_bedah,penilaian_pre_anestesi_sedasi.bb,penilaian_pre_anestesi_sedasi.tanggal_operasi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.tb,penilaian_pre_anestesi_sedasi.anemnesis,penilaian_pre_anestesi_sedasi.astma,penilaian_pre_anestesi_sedasi.dm,penilaian_pre_anestesi_sedasi.alergi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.hipertensi,penilaian_pre_anestesi_sedasi.riwayatoperasi,penilaian_pre_anestesi_sedasi.jenisanestesi,penilaian_pre_anestesi_sedasi.komplikasi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.pemeriksaanfisik,penilaian_pre_anestesi_sedasi.keadaaanumum,penilaian_pre_anestesi_sedasi.tensi,penilaian_pre_anestesi_sedasi.nadi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.rr,penilaian_pre_anestesi_sedasi.suhu,penilaian_pre_anestesi_sedasi.conjungtiva,penilaian_pre_anestesi_sedasi.sklera,penilaian_pre_anestesi_sedasi.malmapati,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.thorax,penilaian_pre_anestesi_sedasi.abdomen,penilaian_pre_anestesi_sedasi.ekstremitas,penilaian_pre_anestesi_sedasi.laboratorium,penilaian_pre_anestesi_sedasi.rothorax,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang,penilaian_pre_anestesi_sedasi.asa,penilaian_pre_anestesi_sedasi.premedikasi,penilaian_pre_anestesi_sedasi.puasa,penilaian_pre_anestesi_sedasi.rencanatindakan,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.sedasi,penilaian_pre_anestesi_sedasi.ga,penilaian_pre_anestesi_sedasi.regional,penilaian_pre_anestesi_sedasi.persediaandarah,penilaian_pre_anestesi_sedasi.teknikkhusus,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.teknikkhususket,penilaian_pre_anestesi_sedasi.monitoring,penilaian_pre_anestesi_sedasi.monitoringket,penilaian_pre_anestesi_sedasi.perawatan,reg_periksa.no_rawat,pasien.nm_pasien,"
+                                +
+                                "pasien.no_rkm_medis,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,dokter.kd_dokter,dokter.nm_dokter FROM penilaian_pre_anestesi_sedasi inner join reg_periksa on penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat "
+                                +
+                                "inner join pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis INNER JOIN dokter on penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter where penilaian_pre_anestesi_sedasi.tanggal between ? and ? order by penilaian_pre_anestesi_sedasi.tanggal");
+            } else {
+                ps = koneksi.prepareStatement(
+                        "select penilaian_pre_anestesi_sedasi.no_rawat,penilaian_pre_anestesi_sedasi.kd_dokter,penilaian_pre_anestesi_sedasi.tanggal,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.diagnosa,penilaian_pre_anestesi_sedasi.tindakan_bedah,penilaian_pre_anestesi_sedasi.bb,penilaian_pre_anestesi_sedasi.tanggal_operasi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.tb,penilaian_pre_anestesi_sedasi.anemnesis,penilaian_pre_anestesi_sedasi.astma,penilaian_pre_anestesi_sedasi.dm,penilaian_pre_anestesi_sedasi.alergi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.hipertensi,penilaian_pre_anestesi_sedasi.riwayatoperasi,penilaian_pre_anestesi_sedasi.jenisanestesi,penilaian_pre_anestesi_sedasi.komplikasi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.pemeriksaanfisik,penilaian_pre_anestesi_sedasi.keadaaanumum,penilaian_pre_anestesi_sedasi.tensi,penilaian_pre_anestesi_sedasi.nadi,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.rr,penilaian_pre_anestesi_sedasi.suhu,penilaian_pre_anestesi_sedasi.conjungtiva,penilaian_pre_anestesi_sedasi.sklera,penilaian_pre_anestesi_sedasi.malmapati,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.thorax,penilaian_pre_anestesi_sedasi.abdomen,penilaian_pre_anestesi_sedasi.ekstremitas,penilaian_pre_anestesi_sedasi.laboratorium,penilaian_pre_anestesi_sedasi.rothorax,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang,penilaian_pre_anestesi_sedasi.asa,penilaian_pre_anestesi_sedasi.premedikasi,penilaian_pre_anestesi_sedasi.puasa,penilaian_pre_anestesi_sedasi.rencanatindakan,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.sedasi,penilaian_pre_anestesi_sedasi.ga,penilaian_pre_anestesi_sedasi.regional,penilaian_pre_anestesi_sedasi.persediaandarah,penilaian_pre_anestesi_sedasi.teknikkhusus,"
+                                +
+                                "penilaian_pre_anestesi_sedasi.teknikkhususket,penilaian_pre_anestesi_sedasi.monitoring,penilaian_pre_anestesi_sedasi.monitoringket,penilaian_pre_anestesi_sedasi.perawatan,reg_periksa.no_rawat,pasien.nm_pasien,"
+                                +
+                                "pasien.no_rkm_medis,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,dokter.kd_dokter,dokter.nm_dokter FROM penilaian_pre_anestesi_sedasi inner join reg_periksa on penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat "
+                                +
+                                "inner join pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis INNER JOIN dokter on penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter where "
+                                +
+                                "penilaian_pre_anestesi_sedasi.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "
+                                +
+                                "penilaian_pre_anestesi_sedasi.kd_dokter like ? or dokter.nm_dokter like ?) order by penilaian_pre_anestesi_sedasi.tanggal");
             }
-                
+
             try {
-                if(TCari.getText().trim().equals("")){
-                    ps.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+"")+" 00:00:00");
-                    ps.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+"")+" 23:59:59");
-                }else{
-                    ps.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+"")+" 00:00:00");
-                    ps.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+"")+" 23:59:59");
-                    ps.setString(3,"%"+TCari.getText()+"%");
-                    ps.setString(4,"%"+TCari.getText()+"%");
-                    ps.setString(5,"%"+TCari.getText()+"%");
-                    ps.setString(6,"%"+TCari.getText()+"%");
-                    ps.setString(7,"%"+TCari.getText()+"%");
-                }   
-                rs=ps.executeQuery();
-                while(rs.next()){
-                    tabMode.addRow(new String[]{
-                        rs.getString("no_rawat"),rs.getString("no_rkm_medis"),rs.getString("nm_pasien"),rs.getString("tgl_lahir"),rs.getString("jk"),rs.getString("kd_dokter"),rs.getString("nm_dokter"),
-                        rs.getString("tanggal"),rs.getString("diagnosa"),rs.getString("tindakan_bedah"),rs.getString("tanggal_operasi"),rs.getString("bb"),rs.getString("tb"),rs.getString("anemnesis"),
-                        rs.getString("astma"),rs.getString("dm"),rs.getString("alergi"),rs.getString("hipertensi"),rs.getString("riwayatoperasi"),rs.getString("jenisanestesi"),rs.getString("komplikasi"),
-                        rs.getString("pemeriksaanfisik"),rs.getString("keadaaanumum"),rs.getString("tensi"),rs.getString("nadi"),rs.getString("rr"),rs.getString("suhu"),rs.getString("conjungtiva"),
-                        rs.getString("sklera"),rs.getString("malmapati"),rs.getString("thorax"),rs.getString("abdomen"),rs.getString("ekstremitas"),rs.getString("laboratorium"),rs.getString("rothorax"),
-                        rs.getString("pemeriksaanpenunjang"),rs.getString("asa"),rs.getString("premedikasi"),rs.getString("puasa"),rs.getString("rencanatindakan"),rs.getString("sedasi"),rs.getString("ga"),
-                        rs.getString("regional"),rs.getString("persediaandarah"),rs.getString("teknikkhusus"),rs.getString("teknikkhususket"),rs.getString("monitoring"),rs.getString("monitoringket"),rs.getString("perawatan"),
-                        rs.getString("no_rawat")
+                if (TCari.getText().trim().equals("")) {
+                    ps.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + "") + " 00:00:00");
+                    ps.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + "") + " 23:59:59");
+                } else {
+                    ps.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + "") + " 00:00:00");
+                    ps.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + "") + " 23:59:59");
+                    ps.setString(3, "%" + TCari.getText() + "%");
+                    ps.setString(4, "%" + TCari.getText() + "%");
+                    ps.setString(5, "%" + TCari.getText() + "%");
+                    ps.setString(6, "%" + TCari.getText() + "%");
+                    ps.setString(7, "%" + TCari.getText() + "%");
+                }
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    tabMode.addRow(new String[] {
+                            rs.getString("no_rawat"), rs.getString("no_rkm_medis"), rs.getString("nm_pasien"),
+                            rs.getString("tgl_lahir"), rs.getString("jk"), rs.getString("kd_dokter"),
+                            rs.getString("nm_dokter"),
+                            rs.getString("tanggal"), rs.getString("diagnosa"), rs.getString("tindakan_bedah"),
+                            rs.getString("tanggal_operasi"), rs.getString("bb"), rs.getString("tb"),
+                            rs.getString("anemnesis"),
+                            rs.getString("astma"), rs.getString("dm"), rs.getString("alergi"),
+                            rs.getString("hipertensi"), rs.getString("riwayatoperasi"), rs.getString("jenisanestesi"),
+                            rs.getString("komplikasi"),
+                            rs.getString("pemeriksaanfisik"), rs.getString("keadaaanumum"), rs.getString("tensi"),
+                            rs.getString("nadi"), rs.getString("rr"), rs.getString("suhu"), rs.getString("conjungtiva"),
+                            rs.getString("sklera"), rs.getString("malmapati"), rs.getString("thorax"),
+                            rs.getString("abdomen"), rs.getString("ekstremitas"), rs.getString("laboratorium"),
+                            rs.getString("rothorax"),
+                            rs.getString("pemeriksaanpenunjang"), rs.getString("asa"), rs.getString("premedikasi"),
+                            rs.getString("puasa"), rs.getString("rencanatindakan"), rs.getString("sedasi"),
+                            rs.getString("ga"),
+                            rs.getString("regional"), rs.getString("persediaandarah"), rs.getString("teknikkhusus"),
+                            rs.getString("teknikkhususket"), rs.getString("monitoring"), rs.getString("monitoringket"),
+                            rs.getString("perawatan"),
+                            rs.getString("no_rawat")
                     });
                 }
             } catch (Exception e) {
-                System.out.println("Notif : "+e);
-            } finally{
-                if(rs!=null){
+                System.out.println("Notif : " + e);
+            } finally {
+                if (rs != null) {
                     rs.close();
                 }
-                if(ps!=null){
+                if (ps != null) {
                     ps.close();
                 }
             }
-            
-        }catch(Exception e){
-            System.out.println("Notifikasi : "+e);
+
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
         }
-        LCount.setText(""+tabMode.getRowCount());
+        LCount.setText("" + tabMode.getRowCount());
     }
 
     public void emptTeks() {
@@ -2537,81 +2677,86 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
         TeknikKhususKet.setText("");
         MonitoringKet.setText("");
         Diagnosa.requestFocus();
-    } 
+    }
 
     private void getData() {
-        if(tbObat.getSelectedRow()!= -1){
+        if (tbObat.getSelectedRow() != -1) {
             /*
-            "No.Rawat","No.RM","Nama Pasien","Tgl.Lahir","J.K.","Kode Dokter","Nama Dokter","Tanggal","Diagnosa","Tindakan Bedah","Tanggal Operasi",
-            "BB","TB","Anamnesa","Astma","DM","Alergi","Hipertensi","Riwayat Operasi","Jenis Anestesi","Komplikasi","Pemeriksaan Fisik","Keadaan Umum",
-            "TD","Nadi","RR","Suhu","Konjuntiva","Sklera","Mallmapati","Thorax","Abdomen","Ektremitas","Lab","Ro Thorax","Periksaan Penunjang",
-            "ASA","Premedikasi","Puasa","Tidak Setuju: Rencana Tindakan","Sedasi","GA","Regional","Persediaan Darah","Teknik Khusus","Keterangan",
-            "Monitoring","Keterangan Monitoring","Perawatan Pasca Anestesi"
-            */
-            
-            TNoRw.setText(tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()); 
-            TNoRM.setText(tbObat.getValueAt(tbObat.getSelectedRow(),1).toString());
-            TPasien.setText(tbObat.getValueAt(tbObat.getSelectedRow(),2).toString());
-            TglLahir.setText(tbObat.getValueAt(tbObat.getSelectedRow(),3).toString());
-            Jk.setText(tbObat.getValueAt(tbObat.getSelectedRow(),4).toString()); 
-            KdDokter.setText(tbObat.getValueAt(tbObat.getSelectedRow(),5).toString()); 
-            NmDokter.setText(tbObat.getValueAt(tbObat.getSelectedRow(),6).toString());
-            Diagnosa.setText(tbObat.getValueAt(tbObat.getSelectedRow(),8).toString());
-            TindakanBedah.setText(tbObat.getValueAt(tbObat.getSelectedRow(),9).toString());
-            Tb.setText(tbObat.getValueAt(tbObat.getSelectedRow(),11).toString());
-            Bb.setText(tbObat.getValueAt(tbObat.getSelectedRow(),12).toString());
-            Anamnesis.setText(tbObat.getValueAt(tbObat.getSelectedRow(),13).toString());
-            Astma.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),14).toString());
-            Dm.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),15).toString());
-            Alergi.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),16).toString());
-            Hipertensi.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),17).toString());
-            RiwayatOperasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),18).toString());
-            JenisAnestesi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),19).toString());
-            Komplikasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),20).toString());
-            PemeriksaanFisik.setText(tbObat.getValueAt(tbObat.getSelectedRow(),21).toString());
-            KeadaanUmum.setText(tbObat.getValueAt(tbObat.getSelectedRow(),22).toString());
-            Td.setText(tbObat.getValueAt(tbObat.getSelectedRow(),23).toString());
-            Nadi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),24).toString());
-            Rr.setText(tbObat.getValueAt(tbObat.getSelectedRow(),25).toString());
-            Suhu.setText(tbObat.getValueAt(tbObat.getSelectedRow(),26).toString());
-            Conjungtiva.setText(tbObat.getValueAt(tbObat.getSelectedRow(),27).toString());
-            Sklera.setText(tbObat.getValueAt(tbObat.getSelectedRow(),28).toString());
-            Mallmapati.setText(tbObat.getValueAt(tbObat.getSelectedRow(),29).toString());
-            Thorax.setText(tbObat.getValueAt(tbObat.getSelectedRow(),30).toString());
-            Abdomen.setText(tbObat.getValueAt(tbObat.getSelectedRow(),31).toString());
-            Ekstremitas.setText(tbObat.getValueAt(tbObat.getSelectedRow(),32).toString());            
-            Laboratorium.setText(tbObat.getValueAt(tbObat.getSelectedRow(),33).toString());
-            RoThorax.setText(tbObat.getValueAt(tbObat.getSelectedRow(),34).toString());
-            PemeriksaanPenunjang.setText(tbObat.getValueAt(tbObat.getSelectedRow(),35).toString());            
-            Asa.setText(tbObat.getValueAt(tbObat.getSelectedRow(),36).toString());
-            Premedikasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),37).toString());
-            Puasa.setText(tbObat.getValueAt(tbObat.getSelectedRow(),38).toString());
-            RencanaTindakan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),39).toString());
-            Sedasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),40).toString());
-            Ga.setText(tbObat.getValueAt(tbObat.getSelectedRow(),41).toString());
-            Regional.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),42).toString());
-            PersediaanDarah.setText(tbObat.getValueAt(tbObat.getSelectedRow(),43).toString());
-            TeknikKhusus.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),44).toString());
-            TeknikKhususKet.setText(tbObat.getValueAt(tbObat.getSelectedRow(),45).toString());
-            Monitoring.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),46).toString());
-            MonitoringKet.setText(tbObat.getValueAt(tbObat.getSelectedRow(),47).toString());
-            Ekstremitas.setText(tbObat.getValueAt(tbObat.getSelectedRow(),48).toString());            
-            Perawatan.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),49).toString());
-            Valid.SetTgl2(TglAsuhan,tbObat.getValueAt(tbObat.getSelectedRow(),7).toString());
-            Valid.SetTgl2(TglOperasi,tbObat.getValueAt(tbObat.getSelectedRow(),10).toString());
+             * "No.Rawat","No.RM","Nama Pasien","Tgl.Lahir","J.K.","Kode Dokter"
+             * ,"Nama Dokter","Tanggal","Diagnosa","Tindakan Bedah","Tanggal Operasi",
+             * "BB","TB","Anamnesa","Astma","DM","Alergi","Hipertensi","Riwayat Operasi"
+             * ,"Jenis Anestesi","Komplikasi","Pemeriksaan Fisik","Keadaan Umum",
+             * "TD","Nadi","RR","Suhu","Konjuntiva","Sklera","Mallmapati","Thorax","Abdomen"
+             * ,"Ektremitas","Lab","Ro Thorax","Periksaan Penunjang",
+             * "ASA","Premedikasi","Puasa","Tidak Setuju: Rencana Tindakan","Sedasi","GA",
+             * "Regional","Persediaan Darah","Teknik Khusus","Keterangan",
+             * "Monitoring","Keterangan Monitoring","Perawatan Pasca Anestesi"
+             */
+
+            TNoRw.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+            TNoRM.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 1).toString());
+            TPasien.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 2).toString());
+            TglLahir.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 3).toString());
+            Jk.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 4).toString());
+            KdDokter.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString());
+            NmDokter.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString());
+            Diagnosa.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 8).toString());
+            TindakanBedah.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 9).toString());
+            Tb.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 11).toString());
+            Bb.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 12).toString());
+            Anamnesis.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 13).toString());
+            Astma.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 14).toString());
+            Dm.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 15).toString());
+            Alergi.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 16).toString());
+            Hipertensi.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 17).toString());
+            RiwayatOperasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 18).toString());
+            JenisAnestesi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 19).toString());
+            Komplikasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 20).toString());
+            PemeriksaanFisik.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 21).toString());
+            KeadaanUmum.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 22).toString());
+            Td.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 23).toString());
+            Nadi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 24).toString());
+            Rr.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 25).toString());
+            Suhu.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 26).toString());
+            Conjungtiva.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 27).toString());
+            Sklera.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 28).toString());
+            Mallmapati.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 29).toString());
+            Thorax.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 30).toString());
+            Abdomen.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 31).toString());
+            Ekstremitas.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 32).toString());
+            Laboratorium.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 33).toString());
+            RoThorax.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 34).toString());
+            PemeriksaanPenunjang.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 35).toString());
+            Asa.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 36).toString());
+            Premedikasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 37).toString());
+            Puasa.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 38).toString());
+            RencanaTindakan.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 39).toString());
+            Sedasi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 40).toString());
+            Ga.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 41).toString());
+            Regional.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 42).toString());
+            PersediaanDarah.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 43).toString());
+            TeknikKhusus.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 44).toString());
+            TeknikKhususKet.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 45).toString());
+            Monitoring.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 46).toString());
+            MonitoringKet.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 47).toString());
+            Ekstremitas.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 48).toString());
+            Perawatan.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 49).toString());
+            Valid.SetTgl2(TglAsuhan, tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString());
+            Valid.SetTgl2(TglOperasi, tbObat.getValueAt(tbObat.getSelectedRow(), 10).toString());
         }
     }
 
     private void isRawat() {
         try {
-            ps=koneksi.prepareStatement(
-                    "select reg_periksa.no_rkm_medis,pasien.nm_pasien, if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,reg_periksa.tgl_registrasi "+
-                    "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                    "where reg_periksa.no_rawat=?");
+            ps = koneksi.prepareStatement(
+                    "select reg_periksa.no_rkm_medis,pasien.nm_pasien, if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,reg_periksa.tgl_registrasi "
+                            +
+                            "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "where reg_periksa.no_rawat=?");
             try {
-                ps.setString(1,TNoRw.getText());
-                rs=ps.executeQuery();
-                if(rs.next()){
+                ps.setString(1, TNoRw.getText());
+                rs = ps.executeQuery();
+                if (rs.next()) {
                     TNoRM.setText(rs.getString("no_rkm_medis"));
                     DTPCari1.setDate(rs.getDate("tgl_registrasi"));
                     TPasien.setText(rs.getString("nm_pasien"));
@@ -2619,122 +2764,155 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
                     TglLahir.setText(rs.getString("tgl_lahir"));
                 }
             } catch (Exception e) {
-                System.out.println("Notif : "+e);
-            } finally{
-                if(rs!=null){
+                System.out.println("Notif : " + e);
+            } finally {
+                if (rs != null) {
                     rs.close();
                 }
-                if(ps!=null){
+                if (ps != null) {
                     ps.close();
                 }
             }
         } catch (Exception e) {
-            System.out.println("Notif : "+e);
+            System.out.println("Notif : " + e);
         }
     }
- 
-    public void setNoRm(String norwt,Date tgl2) {
+
+    public void setNoRm(String norwt, Date tgl2) {
         TNoRw.setText(norwt);
         TCari.setText(norwt);
-        DTPCari2.setDate(tgl2);    
-        isRawat(); 
+        DTPCari2.setDate(tgl2);
+        isRawat();
     }
-    
-    public void isCek(){
+
+    public void setNoRm(String norwt, Date tgl2, String kdDokter, String nmDokter) {
+        TNoRw.setText(norwt);
+        TCari.setText(norwt);
+        DTPCari2.setDate(tgl2);
+        isRawat();
+        KdDokter.setText(kdDokter);
+        NmDokter.setText(nmDokter);
+    }
+
+    public void isCek() {
         BtnSimpan.setEnabled(akses.getpenilaian_pre_anestesi());
         BtnHapus.setEnabled(akses.getpenilaian_pre_anestesi());
         BtnEdit.setEnabled(akses.getpenilaian_pre_anestesi());
         BtnEdit.setEnabled(akses.getpenilaian_pre_anestesi());
-        if(akses.getjml2()>=1){
+        if (akses.getjml2() >= 1) {
             KdDokter.setEditable(false);
             BtnDokter.setEnabled(false);
             KdDokter.setText(akses.getkode());
             NmDokter.setText(dokter.tampil3(KdDokter.getText()));
-            if(NmDokter.getText().equals("")){
+            if (NmDokter.getText().equals("")) {
                 KdDokter.setText("");
-                JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
+                JOptionPane.showMessageDialog(null, "User login bukan Dokter...!!");
             }
-        }            
+        }
     }
-    
-    public void setTampil(){
-       TabRawat.setSelectedIndex(1);
+
+    public void setTampil() {
+        TabRawat.setSelectedIndex(1);
     }
 
     private void hapus() {
 
-        if(Sequel.queryu2tf("delete from penilaian_pre_anestesi_sedasi where no_rawat=? and tanggal=?",2,new String[]{
-            tbObat.getValueAt(tbObat.getSelectedRow(),0).toString(),tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()
-        })==true){
+        if (Sequel.queryu2tf("delete from penilaian_pre_anestesi_sedasi where no_rawat=? and tanggal=?", 2,
+                new String[] {
+                        tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString(),
+                        tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString()
+                }) == true) {
             tabMode.removeRow(tbObat.getSelectedRow());
-            LCount.setText(""+tabMode.getRowCount());
+            LCount.setText("" + tabMode.getRowCount());
             TabRawat.setSelectedIndex(1);
-        }else{
-            JOptionPane.showMessageDialog(null,"Gagal menghapus..!!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Gagal menghapus..!!");
         }
     }
 
     private void ganti() {
-        if(Sequel.mengedittf("penilaian_pre_anestesi_sedasi","no_rawat=? and tanggal=?","no_rawat=?, kd_dokter=?, tanggal=?, diagnosa=?, tindakan_bedah=?, tanggal_operasi=?,"+
-                "bb=?, tb=?, anemnesis=?, astma=?, dm=?, alergi=?, hipertensi=?, riwayatoperasi=?, jenisanestesi=?, komplikasi=?, pemeriksaanfisik=?, keadaaanumum=?, tensi=?,"+
-                "nadi=?, rr=?, suhu=?, conjungtiva=?, sklera=?, malmapati=?, thorax=?, abdomen=?, ekstremitas=?, laboratorium=?, rothorax=?, pemeriksaanpenunjang=?, asa=?,"+ 
-                "premedikasi=?, puasa=?, rencanatindakan=?, sedasi=?, ga=?, regional=?, persediaandarah=?, teknikkhusus=?, teknikkhususket=?, monitoring=?, monitoringket=?,"+ 
-                "perawatan",42,new String[]{
-                TNoRw.getText(),KdDokter.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),Diagnosa.getText(),
-                    TindakanBedah.getText(),Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),Bb.getText(),Tb.getText(),
-                    Anamnesis.getText(),Astma.getSelectedItem().toString(),Dm.getSelectedItem().toString(),Alergi.getSelectedItem().toString(),Hipertensi.getSelectedItem().toString(),
-                    RiwayatOperasi.getText(),JenisAnestesi.getText(),Komplikasi.getText(),PemeriksaanFisik.getText(),KeadaanUmum.getText(),Td.getText(),Nadi.getText(),Rr.getText(),Suhu.getText(),
-                    Conjungtiva.getText(),Sklera.getText(),Mallmapati.getText(),Thorax.getText(),Abdomen.getText(),Ekstremitas.getText(),Laboratorium.getText(),RoThorax.getText(),PemeriksaanPenunjang.getText(),
-                    Asa.getText(),Premedikasi.getText(),Puasa.getText(),RencanaTindakan.getText(),Sedasi.getText(),Ga.getText(),Regional.getSelectedItem().toString(),
-                    PersediaanDarah.getText(),TeknikKhusus.getSelectedItem().toString(),TeknikKhususKet.getText(),Monitoring.getSelectedItem().toString(),MonitoringKet.getText(),Perawatan.getSelectedItem().toString()
-            })==true){
-                tbObat.setValueAt(TNoRw.getText(),tbObat.getSelectedRow(),0);
-                tbObat.setValueAt(TNoRM.getText(),tbObat.getSelectedRow(),1);
-                tbObat.setValueAt(TPasien.getText(),tbObat.getSelectedRow(),2);
-                tbObat.setValueAt(TglLahir.getText(),tbObat.getSelectedRow(),3);
-                tbObat.setValueAt(Jk.getText(),tbObat.getSelectedRow(),4);
-                tbObat.setValueAt(KdDokter.getText(),tbObat.getSelectedRow(),5);
-                tbObat.setValueAt(NmDokter.getText(),tbObat.getSelectedRow(),6);
-                tbObat.setValueAt(Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),7);
-                tbObat.setValueAt(Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),8);
-                tbObat.setValueAt(Diagnosa.getText(),tbObat.getSelectedRow(),9);
-                tbObat.setValueAt(TindakanBedah.getText(),tbObat.getSelectedRow(),10);
-                tbObat.setValueAt(Tb.getText(),tbObat.getSelectedRow(),11);
-                tbObat.setValueAt(Bb.getText(),tbObat.getSelectedRow(),12);
-                tbObat.setValueAt(Anamnesis.getText(),tbObat.getSelectedRow(),13);
-                tbObat.setValueAt(KeadaanUmum.getText(),tbObat.getSelectedRow(),14);
-                tbObat.setValueAt(RiwayatOperasi.getText(),tbObat.getSelectedRow(),15);
-                tbObat.setValueAt(PemeriksaanFisik.getText(),tbObat.getSelectedRow(),16);
-                tbObat.setValueAt(JenisAnestesi.getText(),tbObat.getSelectedRow(),17);
-                tbObat.setValueAt(Komplikasi.getText(),tbObat.getSelectedRow(),18);
-                tbObat.setValueAt(Td.getText(),tbObat.getSelectedRow(),19);
-                tbObat.setValueAt(Nadi.getText(),tbObat.getSelectedRow(),20);
-                tbObat.setValueAt(Rr.getText(),tbObat.getSelectedRow(),21);
-                tbObat.setValueAt(Suhu.getText(),tbObat.getSelectedRow(),22);
-                tbObat.setValueAt(Thorax.getText(),tbObat.getSelectedRow(),23);
-                tbObat.setValueAt(Abdomen.getText(),tbObat.getSelectedRow(),24);
-                tbObat.setValueAt(Premedikasi.getText(),tbObat.getSelectedRow(),25);
-                tbObat.setValueAt(Puasa.getText(),tbObat.getSelectedRow(),26);
-                tbObat.setValueAt(Conjungtiva.getText(),tbObat.getSelectedRow(),27);
-                tbObat.setValueAt(Sklera.getText(),tbObat.getSelectedRow(),28);
-                tbObat.setValueAt(Mallmapati.getText(),tbObat.getSelectedRow(),29);
-                tbObat.setValueAt(Astma.getSelectedItem().toString(),tbObat.getSelectedRow(),30);
-                tbObat.setValueAt(Ekstremitas.getText(),tbObat.getSelectedRow(),31);
-                tbObat.setValueAt(Dm.getSelectedItem().toString(),tbObat.getSelectedRow(),32);
-                tbObat.setValueAt(Laboratorium.getText(),tbObat.getSelectedRow(),33);
-                tbObat.setValueAt(Regional.getSelectedItem().toString(),tbObat.getSelectedRow(),34);
-                tbObat.setValueAt(Asa.getText(),tbObat.getSelectedRow(),35);
-                tbObat.setValueAt(RoThorax.getText(),tbObat.getSelectedRow(),36);
-                tbObat.setValueAt(PemeriksaanPenunjang.getText(),tbObat.getSelectedRow(),37);
-                tbObat.setValueAt(RencanaTindakan.getText(),tbObat.getSelectedRow(),38);
-                tbObat.setValueAt(Sedasi.getText(),tbObat.getSelectedRow(),39);
-                tbObat.setValueAt(Alergi.getSelectedItem().toString(),tbObat.getSelectedRow(),40);
-            //    tbObat.setValueAt(Valid.SetTgl(TglPuasa.getSelectedItem()+"")+" "+TglPuasa.getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),41);
-                tbObat.setValueAt(Hipertensi.getSelectedItem().toString(),tbObat.getSelectedRow(),42);
-                tbObat.setValueAt(TeknikKhususKet.getText(),tbObat.getSelectedRow(),43);
-                tbObat.setValueAt(PersediaanDarah.getText(),tbObat.getSelectedRow(),44);
-                emptTeks();
-                TabRawat.setSelectedIndex(1);
+        if (Sequel.mengedittf("penilaian_pre_anestesi_sedasi", "no_rawat=? and tanggal=?",
+                "no_rawat=?, kd_dokter=?, tanggal=?, diagnosa=?, tindakan_bedah=?, tanggal_operasi=?," +
+                        "bb=?, tb=?, anemnesis=?, astma=?, dm=?, alergi=?, hipertensi=?, riwayatoperasi=?, jenisanestesi=?, komplikasi=?, pemeriksaanfisik=?, keadaaanumum=?, tensi=?,"
+                        +
+                        "nadi=?, rr=?, suhu=?, conjungtiva=?, sklera=?, malmapati=?, thorax=?, abdomen=?, ekstremitas=?, laboratorium=?, rothorax=?, pemeriksaanpenunjang=?, asa=?,"
+                        +
+                        "premedikasi=?, puasa=?, rencanatindakan=?, sedasi=?, ga=?, regional=?, persediaandarah=?, teknikkhusus=?, teknikkhususket=?, monitoring=?, monitoringket=?,"
+                        +
+                        "perawatan",
+                42, new String[] {
+                        TNoRw.getText(), KdDokter.getText(),
+                        Valid.SetTgl(TglAsuhan.getSelectedItem() + "") + " "
+                                + TglAsuhan.getSelectedItem().toString().substring(11, 19),
+                        Diagnosa.getText(),
+                        TindakanBedah.getText(),
+                        Valid.SetTgl(TglOperasi.getSelectedItem() + "") + " "
+                                + TglOperasi.getSelectedItem().toString().substring(11, 19),
+                        Bb.getText(), Tb.getText(),
+                        Anamnesis.getText(), Astma.getSelectedItem().toString(), Dm.getSelectedItem().toString(),
+                        Alergi.getSelectedItem().toString(), Hipertensi.getSelectedItem().toString(),
+                        RiwayatOperasi.getText(), JenisAnestesi.getText(), Komplikasi.getText(),
+                        PemeriksaanFisik.getText(), KeadaanUmum.getText(), Td.getText(), Nadi.getText(), Rr.getText(),
+                        Suhu.getText(),
+                        Conjungtiva.getText(), Sklera.getText(), Mallmapati.getText(), Thorax.getText(),
+                        Abdomen.getText(), Ekstremitas.getText(), Laboratorium.getText(), RoThorax.getText(),
+                        PemeriksaanPenunjang.getText(),
+                        Asa.getText(), Premedikasi.getText(), Puasa.getText(), RencanaTindakan.getText(),
+                        Sedasi.getText(), Ga.getText(), Regional.getSelectedItem().toString(),
+                        PersediaanDarah.getText(), TeknikKhusus.getSelectedItem().toString(), TeknikKhususKet.getText(),
+                        Monitoring.getSelectedItem().toString(), MonitoringKet.getText(),
+                        Perawatan.getSelectedItem().toString()
+                }) == true) {
+            tbObat.setValueAt(TNoRw.getText(), tbObat.getSelectedRow(), 0);
+            tbObat.setValueAt(TNoRM.getText(), tbObat.getSelectedRow(), 1);
+            tbObat.setValueAt(TPasien.getText(), tbObat.getSelectedRow(), 2);
+            tbObat.setValueAt(TglLahir.getText(), tbObat.getSelectedRow(), 3);
+            tbObat.setValueAt(Jk.getText(), tbObat.getSelectedRow(), 4);
+            tbObat.setValueAt(KdDokter.getText(), tbObat.getSelectedRow(), 5);
+            tbObat.setValueAt(NmDokter.getText(), tbObat.getSelectedRow(), 6);
+            tbObat.setValueAt(Valid.SetTgl(TglAsuhan.getSelectedItem() + "") + " "
+                    + TglAsuhan.getSelectedItem().toString().substring(11, 19), tbObat.getSelectedRow(), 7);
+            tbObat.setValueAt(Valid.SetTgl(TglOperasi.getSelectedItem() + "") + " "
+                    + TglOperasi.getSelectedItem().toString().substring(11, 19), tbObat.getSelectedRow(), 8);
+            tbObat.setValueAt(Diagnosa.getText(), tbObat.getSelectedRow(), 9);
+            tbObat.setValueAt(TindakanBedah.getText(), tbObat.getSelectedRow(), 10);
+            tbObat.setValueAt(Tb.getText(), tbObat.getSelectedRow(), 11);
+            tbObat.setValueAt(Bb.getText(), tbObat.getSelectedRow(), 12);
+            tbObat.setValueAt(Anamnesis.getText(), tbObat.getSelectedRow(), 13);
+            tbObat.setValueAt(KeadaanUmum.getText(), tbObat.getSelectedRow(), 14);
+            tbObat.setValueAt(RiwayatOperasi.getText(), tbObat.getSelectedRow(), 15);
+            tbObat.setValueAt(PemeriksaanFisik.getText(), tbObat.getSelectedRow(), 16);
+            tbObat.setValueAt(JenisAnestesi.getText(), tbObat.getSelectedRow(), 17);
+            tbObat.setValueAt(Komplikasi.getText(), tbObat.getSelectedRow(), 18);
+            tbObat.setValueAt(Td.getText(), tbObat.getSelectedRow(), 19);
+            tbObat.setValueAt(Nadi.getText(), tbObat.getSelectedRow(), 20);
+            tbObat.setValueAt(Rr.getText(), tbObat.getSelectedRow(), 21);
+            tbObat.setValueAt(Suhu.getText(), tbObat.getSelectedRow(), 22);
+            tbObat.setValueAt(Thorax.getText(), tbObat.getSelectedRow(), 23);
+            tbObat.setValueAt(Abdomen.getText(), tbObat.getSelectedRow(), 24);
+            tbObat.setValueAt(Premedikasi.getText(), tbObat.getSelectedRow(), 25);
+            tbObat.setValueAt(Puasa.getText(), tbObat.getSelectedRow(), 26);
+            tbObat.setValueAt(Conjungtiva.getText(), tbObat.getSelectedRow(), 27);
+            tbObat.setValueAt(Sklera.getText(), tbObat.getSelectedRow(), 28);
+            tbObat.setValueAt(Mallmapati.getText(), tbObat.getSelectedRow(), 29);
+            tbObat.setValueAt(Astma.getSelectedItem().toString(), tbObat.getSelectedRow(), 30);
+            tbObat.setValueAt(Ekstremitas.getText(), tbObat.getSelectedRow(), 31);
+            tbObat.setValueAt(Dm.getSelectedItem().toString(), tbObat.getSelectedRow(), 32);
+            tbObat.setValueAt(Laboratorium.getText(), tbObat.getSelectedRow(), 33);
+            tbObat.setValueAt(Regional.getSelectedItem().toString(), tbObat.getSelectedRow(), 34);
+            tbObat.setValueAt(Asa.getText(), tbObat.getSelectedRow(), 35);
+            tbObat.setValueAt(RoThorax.getText(), tbObat.getSelectedRow(), 36);
+            tbObat.setValueAt(PemeriksaanPenunjang.getText(), tbObat.getSelectedRow(), 37);
+            tbObat.setValueAt(RencanaTindakan.getText(), tbObat.getSelectedRow(), 38);
+            tbObat.setValueAt(Sedasi.getText(), tbObat.getSelectedRow(), 39);
+            tbObat.setValueAt(Alergi.getSelectedItem().toString(), tbObat.getSelectedRow(), 40);
+            // tbObat.setValueAt(Valid.SetTgl(TglPuasa.getSelectedItem()+"")+"
+            // "+TglPuasa.getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),41);
+            tbObat.setValueAt(Hipertensi.getSelectedItem().toString(), tbObat.getSelectedRow(), 42);
+            tbObat.setValueAt(TeknikKhususKet.getText(), tbObat.getSelectedRow(), 43);
+            tbObat.setValueAt(PersediaanDarah.getText(), tbObat.getSelectedRow(), 44);
+            emptTeks();
+            TabRawat.setSelectedIndex(1);
         }
     }
 }

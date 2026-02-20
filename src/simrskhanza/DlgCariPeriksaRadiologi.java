@@ -3267,10 +3267,13 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
     private widget.ComboBox cmbStatus;
     private widget.Label labelStatus;
     private widget.Label LCount;
+    private widget.ComboBox cmbDokter;
+    private widget.Label labelDokter;
 
     private void tampil() {
         try {
             Valid.tabelKosong(tabMode);
+            
             String statusFilter = "";
             if (cmbStatus.getSelectedItem().equals("Sudah Expertise")) {
                 statusFilter = " and exists (select 1 from hasil_radiologi where hasil_radiologi.no_rawat=periksa_radiologi.no_rawat and hasil_radiologi.tgl_periksa=periksa_radiologi.tgl_periksa and hasil_radiologi.jam=periksa_radiologi.jam) ";
@@ -3288,6 +3291,11 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
                 filterKategori = " and jns_perawatan_radiologi.nm_perawatan not like '%USG%' and jns_perawatan_radiologi.nm_perawatan not like '%CT Scan%' ";
             }
 
+            String filterDokter = "";
+            if (cmbDokter.getSelectedItem() != null && !cmbDokter.getSelectedItem().equals("Semua")) {
+                filterDokter = " and dokter.nm_dokter='" + cmbDokter.getSelectedItem() + "' ";
+            }
+
             if (NoRawat.getText().equals("") && kdmem.getText().equals("") && kdptg.getText().equals("")
                     && TCari.getText().equals("")) {
                 ps = koneksi.prepareStatement(
@@ -3303,6 +3311,7 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
                                 + "where periksa_radiologi.tgl_periksa between ? and ? "
                                 + statusFilter
                                 + filterKategori
+                                + filterDokter 
                                 + " group by concat(periksa_radiologi.no_rawat,periksa_radiologi.tgl_periksa,periksa_radiologi.jam) "
                                 + "order by periksa_radiologi.tgl_periksa desc,periksa_radiologi.jam desc");
             } else {
@@ -3320,6 +3329,7 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
                                 + "and petugas.nip like ? and (pasien.nm_pasien like ? or petugas.nama like ? or reg_periksa.no_rkm_medis like ? or penjab.png_jawab like ? ) "
                                 + statusFilter
                                 + filterKategori
+                                + filterDokter 
                                 + " group by concat(periksa_radiologi.no_rawat,periksa_radiologi.tgl_periksa,periksa_radiologi.jam) "
                                 + "order by periksa_radiologi.tgl_periksa desc,periksa_radiologi.jam desc");
             }
@@ -3354,8 +3364,8 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
 
                 while (rs.next()) {
                     recordCount++;
-                    kamar = Sequel
-                            .cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat='"
+                    
+                    kamar = Sequel.cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat='"
                                     + rs.getString("no_rawat") + "' order by kamar_inap.tgl_masuk desc limit 1");
                     if (!kamar.equals("")) {
                         namakamar = kamar + ", " + Sequel.cariIsi(
@@ -3394,7 +3404,7 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
                                     + "if(periksa_radiologi.dosis<>'',concat('Dosis Radiasi : ',periksa_radiologi.dosis),'')) as proyeksi from periksa_radiologi "
                                     + "inner join jns_perawatan_radiologi on periksa_radiologi.kd_jenis_prw=jns_perawatan_radiologi.kd_jenis_prw "
                                     + "where periksa_radiologi.no_rawat=? and periksa_radiologi.tgl_periksa=? and periksa_radiologi.jam=? "
-                                    + filterKategori);
+                                    + filterKategori); // Tetap pakai filter kategori disini
                     try {
                         ps2.setString(1, rs.getString("no_rawat"));
                         ps2.setString(2, rs.getString("tgl_periksa"));
@@ -3408,12 +3418,8 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
                     } catch (Exception e) {
                         System.out.println("Error ps2 : " + e);
                     } finally {
-                        if (rs2 != null) {
-                            rs2.close();
-                        }
-                        if (ps2 != null) {
-                            ps2.close();
-                        }
+                        if (rs2 != null) rs2.close();
+                        if (ps2 != null) ps2.close();
                     }
 
                     ps3 = koneksi.prepareStatement(
@@ -3437,12 +3443,8 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
                     } catch (Exception e) {
                         System.out.println("Error ps3 : " + e);
                     } finally {
-                        if (rs3 != null) {
-                            rs3.close();
-                        }
-                        if (ps3 != null) {
-                            ps3.close();
-                        }
+                        if (rs3 != null) rs3.close();
+                        if (ps3 != null) ps3.close();
                     }
 
                     try {
@@ -3462,24 +3464,16 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
                     } catch (Exception e) {
                         System.out.println("Error Expertise : " + e);
                     } finally {
-                        if (rsHasil != null) {
-                            rsHasil.close();
-                        }
-                        if (psHasil != null) {
-                            psHasil.close();
-                        }
+                        if (rsHasil != null) rsHasil.close();
+                        if (psHasil != null) psHasil.close();
                     }
                 }
                 LCount.setText("Jumlah : " + recordCount);
             } catch (Exception e) {
                 System.out.println("simrskhanza.DlgCariPeriksaRadiologi.tampil() PS : " + e);
             } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
             }
 
             if (ttl > 0) {
@@ -3696,10 +3690,9 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
         cmbStatus.addItem("Belum Expertise");
         cmbStatus.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                // Biarkan kosong atau pindah ke komponen lain
+                
             }
         });
-        // Tambahkan listener agar tabel langsung refresh saat status diubah
         cmbStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tampil();
@@ -3709,6 +3702,48 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
         label9.setName("label9");
         label9.setPreferredSize(new java.awt.Dimension(100, 30));
         panelisi1.add(label9);
+        
+        cmbStatus.addItemListener(new java.awt.event.ItemListener() {
+            @Override
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                tampil();
+            }
+        });
+        panelisi1.add(cmbStatus);
+        
+        labelDokter = new widget.Label();
+        labelDokter.setText("Dr. Radiologi :");
+        labelDokter.setName("labelDokter");
+        labelDokter.setPreferredSize(new java.awt.Dimension(80, 23));
+        panelisi1.add(labelDokter);
+        
+        cmbDokter = new widget.ComboBox();
+        cmbDokter.setName("cmbDokter");
+        cmbDokter.setPreferredSize(new java.awt.Dimension(200, 23));
+        cmbDokter.addItem("Semua");
+        
+        try {
+            ps = koneksi.prepareStatement(
+                "select dokter.nm_dokter from dokter inner join spesialis " +
+                "on dokter.kd_sps=spesialis.kd_sps " +
+                "where spesialis.nm_sps like '%radiologi%' or spesialis.nm_sps like '%rad%' " +
+                "order by dokter.nm_dokter"
+            );
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                cmbDokter.addItem(rs.getString(1));
+            }
+        } catch (Exception e) {
+            System.out.println("Error load dokter: " + e);
+        }
+
+        cmbDokter.addItemListener(new java.awt.event.ItemListener() {
+            @Override
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                tampil();
+            }
+        });
+        panelisi1.add(cmbDokter);
 
         LCount = new widget.Label();
         LCount.setText("Jumlah : 0");

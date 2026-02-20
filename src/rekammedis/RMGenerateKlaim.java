@@ -158,6 +158,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -175,6 +176,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         BtnAll = new widget.Button();
         BtnPrint = new widget.Button();
         BtnKeluar = new widget.Button();
+        BtnTTD = new widget.Button();
+        BtnHapusTTD = new widget.Button();
         TabRawat = new javax.swing.JTabbedPane();
         Scroll2 = new widget.ScrollPane();
         LoadHTMLSOAPI = new widget.editorpane();
@@ -340,7 +343,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                 javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)),
                 "::[ Data Riwayat/Rincian Tindakan/Terapi Pasien ]::",
                 javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION,
-                new java.awt.Font("Helvetica Neue", 0, 13), new java.awt.Color(50, 50, 50))); // NOI18N
+                new java.awt.Font("VCR OSD Mono", 0, 16), new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setLayout(new java.awt.BorderLayout(1, 1));
 
@@ -468,6 +471,32 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             }
         });
         panelGlass5.add(BtnKeluar);
+
+        BtnTTD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/inventaris.png"))); // NOI18N
+        BtnTTD.setMnemonic('T');
+        BtnTTD.setText("TTD");
+        BtnTTD.setToolTipText("Alt+T");
+        BtnTTD.setName("BtnTTD"); // NOI18N
+        BtnTTD.setPreferredSize(new java.awt.Dimension(80, 23));
+        BtnTTD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnTTDActionPerformed(evt);
+            }
+        });
+        panelGlass5.add(BtnTTD);
+
+        BtnHapusTTD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/keluar.png"))); // NOI18N
+        BtnHapusTTD.setMnemonic('T');
+        BtnHapusTTD.setText("HAPUS TTD");
+        BtnHapusTTD.setToolTipText("Alt+T");
+        BtnHapusTTD.setName("BtnHapusTTD"); // NOI18N
+        BtnHapusTTD.setPreferredSize(new java.awt.Dimension(115, 23));
+        BtnHapusTTD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnHapusTTDActionPerformed(evt);
+            }
+        });
+        panelGlass5.add(BtnHapusTTD);
 
         internalFrame1.add(panelGlass5, java.awt.BorderLayout.PAGE_END);
 
@@ -639,6 +668,11 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         chkHasilRad.setName("chkHasilRad"); // NOI18N
         chkHasilRad.setOpaque(false);
         chkHasilRad.setPreferredSize(new java.awt.Dimension(245, 22));
+        chkHasilRad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkHasilRadActionPerformed(evt);
+            }
+        });
         FormMenu.add(chkHasilRad);
 
         chkOperasiVK.setSelected(true);
@@ -1615,6 +1649,56 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void chkHasilRadActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_chkHasilRadActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_chkHasilRadActionPerformed
+
+    private void BtnTTDActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnTTDActionPerformed
+        if (NoRawat.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih data pasien terlebih dahulu");
+        } else {
+            freehand.DlgTTDDokter form = new freehand.DlgTTDDokter(null, true);
+            form.setNoRawat(NoRawat.getText());
+            form.setVisible(true);
+
+            if (!form.getNamaFile().equals("")) {
+                BtnCari1ActionPerformed(null);
+            }
+        }
+    }// GEN-LAST:event_BtnTTDActionPerformed
+
+    private void BtnHapusTTDActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnHapusTTDActionPerformed
+        if (NoRawat.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih data pasien terlebih dahulu");
+        } else {
+            String fileTTD = Sequel.cariIsi(
+                    "SELECT file_ttd FROM ttd_dokter_ralan WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1",
+                    NoRawat.getText());
+
+            if (fileTTD.equals("")) {
+                JOptionPane.showMessageDialog(null, "Tidak ada tanda tangan untuk data ini");
+            } else {
+                int confirm = JOptionPane.showConfirmDialog(null,
+                        "Apakah Anda yakin ingin menghapus tanda tangan?",
+                        "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    if (Sequel.queryu2tf("DELETE FROM ttd_dokter_ralan WHERE no_rawat=?", 1,
+                            new String[] { NoRawat.getText() })) {
+                        JOptionPane.showMessageDialog(null, "Tanda tangan berhasil dihapus");
+                        // Reset button ke state awal
+                        BtnTTD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/inventaris.png")));
+                        BtnTTD.setText("TTD");
+                        // Refresh tampilan file klaim untuk menghapus TTD dari display
+                        BtnCari1ActionPerformed(null);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Gagal menghapus tanda tangan");
+                    }
+                }
+            }
+        }
+    }// GEN-LAST:event_BtnHapusTTDActionPerformed
+
     private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnKeluarActionPerformed
         dispose();
     }// GEN-LAST:event_BtnKeluarActionPerformed
@@ -2012,10 +2096,12 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
     private widget.TextBox Bahasa;
     private widget.Button BtnAll;
     private widget.Button BtnCari1;
+    private widget.Button BtnHapusTTD;
     private widget.Button BtnKeluar;
     private widget.Button BtnPasien;
     private widget.Button BtnPrint;
     private widget.Button BtnSeekPegawai1;
+    private widget.Button BtnTTD;
     private widget.TextBox CacatFisik;
     private widget.CekBox ChkAccor;
     private widget.CekBox ChkInput;

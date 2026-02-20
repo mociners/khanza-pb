@@ -1218,12 +1218,12 @@ public class frmUtama extends javax.swing.JFrame {
         initComponents();
         initKhanza();
         
-//        java.awt.event.ActionListener taskPerformer = new java.awt.event.ActionListener() {
-//            @Override
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                int nilai_detik = java.util.Calendar.getInstance().getTime().getSeconds();
-//                if (nilai_detik % 10 == 0) {
-//                    try {
+        java.awt.event.ActionListener taskPerformer = new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int nilai_detik = java.util.Calendar.getInstance().getTime().getSeconds();
+                if (nilai_detik % 10 == 0) {
+                    try {
 //                        if (fungsi.koneksiDB.ALARMLAB().equals("yes")) {
 //                            if (Sequel.cariInteger("select count(noorder) from permintaan_lab where tgl_permintaan=current_date() and (jam_sampel='00:00:00' or tgl_sampel='0000-00-00')") > 0) {
 //                                new fungsi.BackgroundMusic("./suara/pk.mp3").start();
@@ -1231,16 +1231,16 @@ public class frmUtama extends javax.swing.JFrame {
 //                        }
 //                        if (fungsi.koneksiDB.ALARMRADIOLOGI().equals("yes")) {
 //                            if (Sequel.cariInteger("select count(noorder) from permintaan_radiologi where tgl_permintaan=current_date() and (jam_sampel='00:00:00' or tgl_sampel='0000-00-00')") > 0) {
-//                                new fungsi.BackgroundMusic("./suara/alarm_radiologi.mp3").start();
+//                                new fungsi.BackgroundMusic("./suara/radiologi.mp3").start();
 //                            }
 //                        }
-//                    } catch (Exception ex) {
-//                        System.out.println(ex);
-//                    }
-//                }
-//            }
-//        };
-//        new javax.swing.Timer(1000, taskPerformer).start();
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                }
+            }
+        };
+        new javax.swing.Timer(1000, taskPerformer).start();
 
         akses.setFrame(this);
         setIconImage(new ImageIcon(super.getClass().getResource("/picture/yaski24.png")).getImage());

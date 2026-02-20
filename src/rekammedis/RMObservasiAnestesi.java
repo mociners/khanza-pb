@@ -2,7 +2,6 @@
  * By Mas Elkhanza
  */
 
-
 package rekammedis;
 
 import fungsi.WarnaTable;
@@ -40,121 +39,152 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import kepegawaian.DlgCariDokter;
 
-
 /**
  *
  * @author perpustakaan
  */
 public final class RMObservasiAnestesi extends javax.swing.JDialog {
     private final DefaultTableModel tabMode;
-    private Connection koneksi=koneksiDB.condb();
-    private sekuel Sequel=new sekuel();
-    private validasi Valid=new validasi();
+    private Connection koneksi = koneksiDB.condb();
+    private sekuel Sequel = new sekuel();
+    private validasi Valid = new validasi();
     private PreparedStatement ps;
     private ResultSet rs;
-    private int i=0;
-    private DlgCariDokter dokter=new DlgCariDokter(null,false);
+    private int i = 0;
+    private DlgCariDokter dokter = new DlgCariDokter(null, false);
     private StringBuilder htmlContent;
-    private String finger="";
-    
-    /** Creates new form DlgRujuk
+    private String finger = "";
+
+    /**
+     * Creates new form DlgRujuk
+     * 
      * @param parent
-     * @param modal */
+     * @param modal
+     */
     public RMObservasiAnestesi(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
-        tabMode=new DefaultTableModel(null,new Object[]{
-            "No.Rawat","No.RM","Nama Pasien","Tgl.Lahir","J.K.","Kode Dokter","Nama Dokter","Tanggal","Tgl.Operasi","Diagnosa","Rencana Tindakan", 
-            "TB","BB","TD","IO2","Nadi","Pernapasan","Suhu","Asesmen Fisik Cardiovasculer","Asesmen Fisik Paru","Asesmen Fisik Abdomen", 
-            "Asesmen Fisik Extrimitas","Asesmen Fisik Endokrin","Asesmen Fisik Ginjal","Asesmen Fisik Obat-obatan","Asesmen Fisik Laborat", 
-            "Asesmen Fisik Penunjang","Riwayat Penyakit Alergi Obat","Riwayat Penyakit Alergi Lainnya","Riwayat Penyakit Terapi", 
-            "Kebiasaan Merokok","Jml.Rokok","Kebiasaan Alkohol","Jml.Alko","Penggunaan Obat","Obat Dikonsumsi","Riwayat Medis Cardiovasculer", 
-            "Riwayat Medis Respiratory","Riwayat Medis Endocrine","Riwayat Medis Lainnya","Angka ASA","Mulai Puasa","Rencana Anestesi", 
-            "Rencana Perawatan","Catatan Khusus"
-        }){
-              @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
+
+        tabMode = new DefaultTableModel(null, new Object[] {
+                "No.Rawat", "No.RM", "Nama Pasien", "Tgl.Lahir", "J.K.", "Kode Dokter", "Nama Dokter", "Tanggal",
+                "Tgl.Operasi", "Diagnosa", "Rencana Tindakan",
+                "TB", "BB", "TD", "IO2", "Nadi", "Pernapasan", "Suhu", "Asesmen Fisik Cardiovasculer",
+                "Asesmen Fisik Paru", "Asesmen Fisik Abdomen",
+                "Asesmen Fisik Extrimitas", "Asesmen Fisik Endokrin", "Asesmen Fisik Ginjal",
+                "Asesmen Fisik Obat-obatan", "Asesmen Fisik Laborat",
+                "Asesmen Fisik Penunjang", "Riwayat Penyakit Alergi Obat", "Riwayat Penyakit Alergi Lainnya",
+                "Riwayat Penyakit Terapi",
+                "Kebiasaan Merokok", "Jml.Rokok", "Kebiasaan Alkohol", "Jml.Alko", "Penggunaan Obat", "Obat Dikonsumsi",
+                "Riwayat Medis Cardiovasculer",
+                "Riwayat Medis Respiratory", "Riwayat Medis Endocrine", "Riwayat Medis Lainnya", "Angka ASA",
+                "Mulai Puasa", "Rencana Anestesi",
+                "Rencana Perawatan", "Catatan Khusus"
+        }) {
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
         };
-        
-        
-        TNoRw.setDocument(new batasInput((byte)17).getKata(TNoRw));
- //       Pernapasan.setDocument(new batasInput((byte)5).getKata(Pernapasan));
-    //    TCari.setDocument(new batasInput((int)100).getKata(TCari));
-        
-        if(koneksiDB.CARICEPAT().equals("aktif")){
-        /*    TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
-                        tampil();
-                    }
-                }
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
-                        tampil();
-                    }
-                }
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
-                        tampil();
-                    }
-                }
-            }); */
+
+        TNoRw.setDocument(new batasInput((byte) 17).getKata(TNoRw));
+        // Pernapasan.setDocument(new batasInput((byte)5).getKata(Pernapasan));
+        // TCari.setDocument(new batasInput((int)100).getKata(TCari));
+
+        if (koneksiDB.CARICEPAT().equals("aktif")) {
+            /*
+             * TCari.getDocument().addDocumentListener(new
+             * javax.swing.event.DocumentListener(){
+             * 
+             * @Override
+             * public void insertUpdate(DocumentEvent e) {
+             * if(TCari.getText().length()>2){
+             * tampil();
+             * }
+             * }
+             * 
+             * @Override
+             * public void removeUpdate(DocumentEvent e) {
+             * if(TCari.getText().length()>2){
+             * tampil();
+             * }
+             * }
+             * 
+             * @Override
+             * public void changedUpdate(DocumentEvent e) {
+             * if(TCari.getText().length()>2){
+             * tampil();
+             * }
+             * }
+             * });
+             */
         }
-        
+
         dokter.addWindowListener(new WindowListener() {
             @Override
-            public void windowOpened(WindowEvent e) {}
+            public void windowOpened(WindowEvent e) {
+            }
+
             @Override
-            public void windowClosing(WindowEvent e) {}
+            public void windowClosing(WindowEvent e) {
+            }
+
             @Override
             public void windowClosed(WindowEvent e) {
-                if(dokter.getTable().getSelectedRow()!= -1){
-                    KdDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),0).toString());
-                    NmDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),1).toString());
+                if (dokter.getTable().getSelectedRow() != -1) {
+                    KdDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 0).toString());
+                    NmDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(), 1).toString());
                     KdDokter.requestFocus();
                 }
             }
+
             @Override
-            public void windowIconified(WindowEvent e) {}
+            public void windowIconified(WindowEvent e) {
+            }
+
             @Override
-            public void windowDeiconified(WindowEvent e) {}
+            public void windowDeiconified(WindowEvent e) {
+            }
+
             @Override
-            public void windowActivated(WindowEvent e) {}
+            public void windowActivated(WindowEvent e) {
+            }
+
             @Override
-            public void windowDeactivated(WindowEvent e) {}
+            public void windowDeactivated(WindowEvent e) {
+            }
         });
-        
+
         HTMLEditorKit kit = new HTMLEditorKit();
         LoadHTML.setEditable(true);
         LoadHTML.setEditorKit(kit);
         StyleSheet styleSheet = kit.getStyleSheet();
         styleSheet.addRule(
-                ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}"+
-                ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}"+
-                ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}"+
-                ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}"+
-                ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}"+
-                ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}"
-        );
+                ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                        +
+                        ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}" +
+                        ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                        +
+                        ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+                        +
+                        ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}" +
+                        ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}" +
+                        ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}" +
+                        ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}" +
+                        ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}");
         Document doc = kit.createDefaultDocument();
         LoadHTML.setDocument(doc);
         jam();
     }
 
-
-    /** This method is called from within the constructor to
+    /**
+     * This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         LoadHTML = new widget.editorpane();
@@ -414,7 +444,11 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         setUndecorated(true);
         setResizable(false);
 
-        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Lembar Observasi Anestesi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
+        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)),
+                "::[ Lembar Observasi Anestesi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11),
+                new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame1.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setPreferredSize(new java.awt.Dimension(467, 500));
@@ -623,12 +657,14 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput3.add(jLabel33);
         jLabel33.setBounds(540, 160, 170, 23);
 
-        BilaSpontan1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hipotensi", "Bronchoscopi", "HCL", "Glidescope", "CPB", "Stimulator Syaraf", "Ventilasi paru-paru", "Lainnya", " ", " " }));
+        BilaSpontan1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hipotensi", "Bronchoscopi", "HCL",
+                "Glidescope", "CPB", "Stimulator Syaraf", "Ventilasi paru-paru", "Lainnya", " ", " " }));
         BilaSpontan1.setName("BilaSpontan1"); // NOI18N
         FormInput3.add(BilaSpontan1);
         BilaSpontan1.setBounds(100, 130, 130, 20);
 
-        Kesadaran2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EKG lead", "CVP", "NGT", "Arteri line", "Cath A pulmo", "BIS", "Et CO2", "SPO2", "Stetoscope", "Kateter Urina", "NIBP", "Temp", "Lainnya" }));
+        Kesadaran2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EKG lead", "CVP", "NGT", "Arteri line",
+                "Cath A pulmo", "BIS", "Et CO2", "SPO2", "Stetoscope", "Kateter Urina", "NIBP", "Temp", "Lainnya" }));
         Kesadaran2.setName("Kesadaran2"); // NOI18N
         FormInput3.add(Kesadaran2);
         Kesadaran2.setBounds(100, 160, 130, 20);
@@ -936,7 +972,8 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput3.add(BtnDokter3);
         BtnDokter3.setBounds(390, 40, 28, 23);
 
-        Pernapasan2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sedasi", "Spinal", "Anestesi umum", "Epidural", "Kaudal", "Lainnya" }));
+        Pernapasan2.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Sedasi", "Spinal", "Anestesi umum", "Epidural", "Kaudal", "Lainnya" }));
         Pernapasan2.setName("Pernapasan2"); // NOI18N
         FormInput3.add(Pernapasan2);
         Pernapasan2.setBounds(100, 100, 130, 20);
@@ -1065,7 +1102,8 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput4.add(jLabel44);
         jLabel44.setBounds(640, 10, 80, 23);
 
-        Pernapasan4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Terlentang", "Lithotomi", "Prone kanan", "Prone kiri", "Lateral", "Lain-lain", "Perlindungan mata" }));
+        Pernapasan4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Terlentang", "Lithotomi",
+                "Prone kanan", "Prone kiri", "Lateral", "Lain-lain", "Perlindungan mata" }));
         Pernapasan4.setName("Pernapasan4"); // NOI18N
         FormInput4.add(Pernapasan4);
         Pernapasan4.setBounds(520, 10, 110, 20);
@@ -1226,7 +1264,8 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput4.add(jLabel86);
         jLabel86.setBounds(690, 140, 70, 23);
 
-        Pernapasan7.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ETT", "Oral", "Nasal", "LM", "Trakheostomi", "Lain-lain" }));
+        Pernapasan7.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "ETT", "Oral", "Nasal", "LM", "Trakheostomi", "Lain-lain" }));
         Pernapasan7.setName("Pernapasan7"); // NOI18N
         FormInput4.add(Pernapasan7);
         Pernapasan7.setBounds(760, 140, 110, 20);
@@ -1236,7 +1275,8 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput4.add(jLabel87);
         jLabel87.setBounds(700, 220, 70, 23);
 
-        Pernapasan8.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Spontan", "Spontan assisted", "Ventilator", "Lain-lain" }));
+        Pernapasan8.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Spontan", "Spontan assisted", "Ventilator", "Lain-lain" }));
         Pernapasan8.setName("Pernapasan8"); // NOI18N
         FormInput4.add(Pernapasan8);
         Pernapasan8.setBounds(770, 220, 110, 20);
@@ -1343,7 +1383,9 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput4.add(jLabel93);
         jLabel93.setBounds(720, 370, 40, 23);
 
-        Pernapasan9.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sesudah tidur", "Oral", "Fiber optik", "Preksigenasi", "Mudah masukventilasi", "Mudah intubasi", "Sulit intubasi", "Dengan stilet", "Tekanan luar laring", "Pack", "Blind", "Trakeostomi", "Nasal kanan", "Nasal kiri" }));
+        Pernapasan9.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sesudah tidur", "Oral", "Fiber optik",
+                "Preksigenasi", "Mudah masukventilasi", "Mudah intubasi", "Sulit intubasi", "Dengan stilet",
+                "Tekanan luar laring", "Pack", "Blind", "Trakeostomi", "Nasal kanan", "Nasal kiri" }));
         Pernapasan9.setName("Pernapasan9"); // NOI18N
         FormInput4.add(Pernapasan9);
         Pernapasan9.setBounds(760, 170, 110, 20);
@@ -1455,7 +1497,8 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput.add(jLabel30);
         jLabel30.setBounds(510, 10, 70, 23);
 
-        BilaSpontan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Adekuat bersuara", "Penyumbat", "Tidur dalam", " ", " " }));
+        BilaSpontan.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Adekuat bersuara", "Penyumbat", "Tidur dalam", " ", " " }));
         BilaSpontan.setName("BilaSpontan"); // NOI18N
         FormInput.add(BilaSpontan);
         BilaSpontan.setBounds(590, 10, 130, 20);
@@ -2124,7 +2167,8 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         FormInput2.add(jLabel55);
         jLabel55.setBounds(40, 60, 50, 23);
 
-        Kesadaran1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ruang rawat", "ICU", "Langsung pulang" }));
+        Kesadaran1.setModel(
+                new javax.swing.DefaultComboBoxModel(new String[] { "Ruang rawat", "ICU", "Langsung pulang" }));
         Kesadaran1.setName("Kesadaran1"); // NOI18N
         FormInput2.add(Kesadaran1);
         Kesadaran1.setBounds(480, 100, 130, 20);
@@ -2217,7 +2261,9 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         });
         panelGlass10.add(DTPTgl);
 
-        cmbJam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cmbJam.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14",
+                        "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
         cmbJam.setName("cmbJam"); // NOI18N
         cmbJam.setPreferredSize(new java.awt.Dimension(62, 28));
         cmbJam.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -2227,7 +2273,11 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         });
         panelGlass10.add(cmbJam);
 
-        cmbMnt.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbMnt.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14",
+                        "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46",
+                        "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
         cmbMnt.setName("cmbMnt"); // NOI18N
         cmbMnt.setPreferredSize(new java.awt.Dimension(62, 28));
         cmbMnt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -2237,7 +2287,11 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         });
         panelGlass10.add(cmbMnt);
 
-        cmbDtk.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbDtk.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14",
+                        "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46",
+                        "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
         cmbDtk.setName("cmbDtk"); // NOI18N
         cmbDtk.setPreferredSize(new java.awt.Dimension(62, 28));
         cmbDtk.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -2269,768 +2323,881 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void TNoRwKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TNoRwKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
+    private void TNoRwKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TNoRwKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
             isRawat();
-        }else{            
-        //    Valid.pindah(evt,TCari,BtnDokter);
+        } else {
+            // Valid.pindah(evt,TCari,BtnDokter);
         }
-}//GEN-LAST:event_TNoRwKeyPressed
+    }// GEN-LAST:event_TNoRwKeyPressed
 
-    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
-/*        if(TNoRM.getText().trim().equals("")){
-            Valid.textKosong(TNoRw,"Nama Pasien");
-        }else if(NmDokter.getText().trim().equals("")){
-            Valid.textKosong(BtnDokter,"Dokter");
-        }else if(Diagnosa.getText().trim().equals("")){
-            Valid.textKosong(Diagnosa,"Diagnosa");
-        }else if(RencanaTindakan.getText().trim().equals("")){
-            Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
-        }else if(RencanaTindakan.getText().trim().equals("")){
-            Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
-        }else{
-            if(Sequel.menyimpantf("penilaian_pre_anestesi","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat, Tanggal & Jam",40,new String[]{
-                    TNoRw.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),KdDokter.getText(),
-                    Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),Diagnosa.getText(),RencanaTindakan.getText(), 
-                    TB.getText(),BB.getText(),TD.getText(),IO2.getText(),Nadi.getText(),Pernapasan.getText(),Suhu.getText(),FisikCardio.getText(),FisikParu.getText(),
-                    FisikAbdomen.getText(),FisikExtrimitas.getText(),FisikEndokrin.getText(),FisikGinjal.getText(),FisikObat.getText(),FisikLaborat.getText(), 
-                    FisikPenunjang.getText(),PenyakitAlergiObat.getText(),PenyakitAlergiLainnya.getText(),PenyakitTerapi.getText(),PenyakitKebiasaanMerokok.getSelectedItem().toString(), 
-                    PenyakitKebiasaanJumlahRokok.getText(),PenyakitKebiasaanAlkohol.getSelectedItem().toString(),PenyakitKebiasaanJumlahAlkohol.getText(),
-                    PenyakitKebiasaanObat.getSelectedItem().toString(),PenyakitKebiasaanObatDiminum.getText(),MedisCardio.getText(),MedisRespiratory.getText(),MedisEndocrine.getText(),
-                    MedisLainnya.getText(),AngkaASA.getSelectedItem().toString(),Valid.SetTgl(TglPuasa.getSelectedItem()+"")+" "+TglPuasa.getSelectedItem().toString().substring(11,19), 
-                    RencanaAnestesi.getSelectedItem().toString(),RencanaPerawatan.getText(),CatatanKhusus.getText()
-                })==true){
-                    tabMode.addRow(new String[]{
-                        TNoRw.getText(),TNoRM.getText(),TPasien.getText(),TglLahir.getText(),Jk.getText(),KdDokter.getText(),NmDokter.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),
-                        Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),Diagnosa.getText(),RencanaTindakan.getText(),TB.getText(),BB.getText(),TD.getText(),IO2.getText(),Nadi.getText(),
-                        Pernapasan.getText(),Suhu.getText(),FisikCardio.getText(),FisikParu.getText(),FisikAbdomen.getText(),FisikExtrimitas.getText(),FisikEndokrin.getText(),FisikGinjal.getText(),FisikObat.getText(),FisikLaborat.getText(), 
-                        FisikPenunjang.getText(),PenyakitAlergiObat.getText(),PenyakitAlergiLainnya.getText(),PenyakitTerapi.getText(),PenyakitKebiasaanMerokok.getSelectedItem().toString(),PenyakitKebiasaanJumlahRokok.getText(),
-                        PenyakitKebiasaanAlkohol.getSelectedItem().toString(),PenyakitKebiasaanJumlahAlkohol.getText(),PenyakitKebiasaanObat.getSelectedItem().toString(),PenyakitKebiasaanObatDiminum.getText(),MedisCardio.getText(),
-                        MedisRespiratory.getText(),MedisEndocrine.getText(),MedisLainnya.getText(),AngkaASA.getSelectedItem().toString(),Valid.SetTgl(TglPuasa.getSelectedItem()+"")+" "+TglPuasa.getSelectedItem().toString().substring(11,19), 
-                        RencanaAnestesi.getSelectedItem().toString(),RencanaPerawatan.getText(),CatatanKhusus.getText()
-                    });
-                    emptTeks();
-                    LCount.setText(""+tabMode.getRowCount());
-            }
-        }
-    */
-}//GEN-LAST:event_BtnSimpanActionPerformed
+    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnSimpanActionPerformed
+        /*
+         * if(TNoRM.getText().trim().equals("")){
+         * Valid.textKosong(TNoRw,"Nama Pasien");
+         * }else if(NmDokter.getText().trim().equals("")){
+         * Valid.textKosong(BtnDokter,"Dokter");
+         * }else if(Diagnosa.getText().trim().equals("")){
+         * Valid.textKosong(Diagnosa,"Diagnosa");
+         * }else if(RencanaTindakan.getText().trim().equals("")){
+         * Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
+         * }else if(RencanaTindakan.getText().trim().equals("")){
+         * Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
+         * }else{
+         * if(Sequel.menyimpantf("penilaian_pre_anestesi",
+         * "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat, Tanggal & Jam"
+         * ,40,new String[]{
+         * TNoRw.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.
+         * getSelectedItem().toString().substring(11,19),KdDokter.getText(),
+         * Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem(
+         * ).toString().substring(11,19),Diagnosa.getText(),RencanaTindakan.getText(),
+         * TB.getText(),BB.getText(),TD.getText(),IO2.getText(),Nadi.getText(),
+         * Pernapasan.getText(),Suhu.getText(),FisikCardio.getText(),FisikParu.getText()
+         * ,
+         * FisikAbdomen.getText(),FisikExtrimitas.getText(),FisikEndokrin.getText(),
+         * FisikGinjal.getText(),FisikObat.getText(),FisikLaborat.getText(),
+         * FisikPenunjang.getText(),PenyakitAlergiObat.getText(),PenyakitAlergiLainnya.
+         * getText(),PenyakitTerapi.getText(),PenyakitKebiasaanMerokok.getSelectedItem()
+         * .toString(),
+         * PenyakitKebiasaanJumlahRokok.getText(),PenyakitKebiasaanAlkohol.
+         * getSelectedItem().toString(),PenyakitKebiasaanJumlahAlkohol.getText(),
+         * PenyakitKebiasaanObat.getSelectedItem().toString(),
+         * PenyakitKebiasaanObatDiminum.getText(),MedisCardio.getText(),MedisRespiratory
+         * .getText(),MedisEndocrine.getText(),
+         * MedisLainnya.getText(),AngkaASA.getSelectedItem().toString(),Valid.SetTgl(
+         * TglPuasa.getSelectedItem()+"")+" "+TglPuasa.getSelectedItem().toString().
+         * substring(11,19),
+         * RencanaAnestesi.getSelectedItem().toString(),RencanaPerawatan.getText(),
+         * CatatanKhusus.getText()
+         * })==true){
+         * tabMode.addRow(new String[]{
+         * TNoRw.getText(),TNoRM.getText(),TPasien.getText(),TglLahir.getText(),Jk.
+         * getText(),KdDokter.getText(),NmDokter.getText(),Valid.SetTgl(TglAsuhan.
+         * getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11
+         * ,19),
+         * Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem(
+         * ).toString().substring(11,19),Diagnosa.getText(),RencanaTindakan.getText(),TB
+         * .getText(),BB.getText(),TD.getText(),IO2.getText(),Nadi.getText(),
+         * Pernapasan.getText(),Suhu.getText(),FisikCardio.getText(),FisikParu.getText()
+         * ,FisikAbdomen.getText(),FisikExtrimitas.getText(),FisikEndokrin.getText(),
+         * FisikGinjal.getText(),FisikObat.getText(),FisikLaborat.getText(),
+         * FisikPenunjang.getText(),PenyakitAlergiObat.getText(),PenyakitAlergiLainnya.
+         * getText(),PenyakitTerapi.getText(),PenyakitKebiasaanMerokok.getSelectedItem()
+         * .toString(),PenyakitKebiasaanJumlahRokok.getText(),
+         * PenyakitKebiasaanAlkohol.getSelectedItem().toString(),
+         * PenyakitKebiasaanJumlahAlkohol.getText(),PenyakitKebiasaanObat.
+         * getSelectedItem().toString(),PenyakitKebiasaanObatDiminum.getText(),
+         * MedisCardio.getText(),
+         * MedisRespiratory.getText(),MedisEndocrine.getText(),MedisLainnya.getText(),
+         * AngkaASA.getSelectedItem().toString(),Valid.SetTgl(TglPuasa.getSelectedItem()
+         * +"")+" "+TglPuasa.getSelectedItem().toString().substring(11,19),
+         * RencanaAnestesi.getSelectedItem().toString(),RencanaPerawatan.getText(),
+         * CatatanKhusus.getText()
+         * });
+         * emptTeks();
+         * LCount.setText(""+tabMode.getRowCount());
+         * }
+         * }
+         */
+    }// GEN-LAST:event_BtnSimpanActionPerformed
 
-    private void BtnSimpanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnSimpanKeyPressed
-    /*    if(evt.getKeyCode()==KeyEvent.VK_SPACE){
-            BtnSimpanActionPerformed(null);
-        }else{
-           Valid.pindah(evt,CatatanKhusus,BtnBatal);
-        } */
-}//GEN-LAST:event_BtnSimpanKeyPressed
+    private void BtnSimpanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnSimpanKeyPressed
+        /*
+         * if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+         * BtnSimpanActionPerformed(null);
+         * }else{
+         * Valid.pindah(evt,CatatanKhusus,BtnBatal);
+         * }
+         */
+    }// GEN-LAST:event_BtnSimpanKeyPressed
 
-    private void BtnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBatalActionPerformed
+    private void BtnBatalActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnBatalActionPerformed
         emptTeks();
-}//GEN-LAST:event_BtnBatalActionPerformed
+    }// GEN-LAST:event_BtnBatalActionPerformed
 
-    private void BtnBatalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnBatalKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnBatalKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnBatalKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             emptTeks();
-        }else{Valid.pindah(evt, BtnSimpan, BtnHapus);}
-}//GEN-LAST:event_BtnBatalKeyPressed
+        } else {
+            Valid.pindah(evt, BtnSimpan, BtnHapus);
+        }
+    }// GEN-LAST:event_BtnBatalKeyPressed
 
-    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
-/*        if(tbObat.getSelectedRow()>-1){
-            if(akses.getkode().equals("Admin Utama")){
-                hapus();
-            }else{
-                if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),5).toString())){
-                    hapus();
-                }else{
-                    JOptionPane.showMessageDialog(null,"Hanya bisa dihapus oleh dokter yang bersangkutan..!!");
-                }
-            }
-        }else{
-            JOptionPane.showMessageDialog(rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
-        }      */        
-            
-}//GEN-LAST:event_BtnHapusActionPerformed
+    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnHapusActionPerformed
+        /*
+         * if(tbObat.getSelectedRow()>-1){
+         * if(akses.getkode().equals("Admin Utama")){
+         * hapus();
+         * }else{
+         * if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),5).
+         * toString())){
+         * hapus();
+         * }else{
+         * JOptionPane.showMessageDialog(
+         * null,"Hanya bisa dihapus oleh dokter yang bersangkutan..!!");
+         * }
+         * }
+         * }else{
+         * JOptionPane.showMessageDialog(
+         * rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
+         * }
+         */
 
-    private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnHapusKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    }// GEN-LAST:event_BtnHapusActionPerformed
+
+    private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnHapusKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnHapusActionPerformed(null);
-        }else{
+        } else {
             Valid.pindah(evt, BtnBatal, BtnEdit);
         }
-}//GEN-LAST:event_BtnHapusKeyPressed
+    }// GEN-LAST:event_BtnHapusKeyPressed
 
-    private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditActionPerformed
-/*        if(TNoRM.getText().trim().equals("")){
-            Valid.textKosong(TNoRw,"Nama Pasien");
-        }else if(NmDokter.getText().trim().equals("")){
-            Valid.textKosong(BtnDokter,"Dokter");
-        }else if(Diagnosa.getText().trim().equals("")){
-            Valid.textKosong(Diagnosa,"Diagnosa");
-        }else if(RencanaTindakan.getText().trim().equals("")){
-            Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
-        }else if(RencanaTindakan.getText().trim().equals("")){
-            Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
-        }else{
-            if(tbObat.getSelectedRow()>-1){
-                if(akses.getkode().equals("Admin Utama")){
-                    ganti();
-                }else{
-                    if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),5).toString())){
-                        ganti();
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Hanya bisa diganti oleh dokter yang bersangkutan..!!");
-                    }
-                }
-            }else{
-                JOptionPane.showMessageDialog(rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
-            }
-        } */
-}//GEN-LAST:event_BtnEditActionPerformed
+    private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnEditActionPerformed
+        /*
+         * if(TNoRM.getText().trim().equals("")){
+         * Valid.textKosong(TNoRw,"Nama Pasien");
+         * }else if(NmDokter.getText().trim().equals("")){
+         * Valid.textKosong(BtnDokter,"Dokter");
+         * }else if(Diagnosa.getText().trim().equals("")){
+         * Valid.textKosong(Diagnosa,"Diagnosa");
+         * }else if(RencanaTindakan.getText().trim().equals("")){
+         * Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
+         * }else if(RencanaTindakan.getText().trim().equals("")){
+         * Valid.textKosong(RencanaTindakan,"Rencana Tindakan");
+         * }else{
+         * if(tbObat.getSelectedRow()>-1){
+         * if(akses.getkode().equals("Admin Utama")){
+         * ganti();
+         * }else{
+         * if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),5).
+         * toString())){
+         * ganti();
+         * }else{
+         * JOptionPane.showMessageDialog(
+         * null,"Hanya bisa diganti oleh dokter yang bersangkutan..!!");
+         * }
+         * }
+         * }else{
+         * JOptionPane.showMessageDialog(
+         * rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
+         * }
+         * }
+         */
+    }// GEN-LAST:event_BtnEditActionPerformed
 
-    private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnEditKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnEditKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnEditActionPerformed(null);
-        }else{
+        } else {
             Valid.pindah(evt, BtnHapus, BtnPrint);
         }
-}//GEN-LAST:event_BtnEditKeyPressed
+    }// GEN-LAST:event_BtnEditKeyPressed
 
-    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
+    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnKeluarActionPerformed
         dispose();
-}//GEN-LAST:event_BtnKeluarActionPerformed
+    }// GEN-LAST:event_BtnKeluarActionPerformed
 
-    private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnKeluarKeyPressed
-   /*     if(evt.getKeyCode()==KeyEvent.VK_SPACE){
-            BtnKeluarActionPerformed(null);
-        }else{Valid.pindah(evt,BtnEdit,TCari);} */
-}//GEN-LAST:event_BtnKeluarKeyPressed
+    private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnKeluarKeyPressed
+        /*
+         * if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+         * BtnKeluarActionPerformed(null);
+         * }else{Valid.pindah(evt,BtnEdit,TCari);}
+         */
+    }// GEN-LAST:event_BtnKeluarKeyPressed
 
-    private void BtnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrintActionPerformed
-/*        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        if(tabMode.getRowCount()==0){
-            JOptionPane.showMessageDialog(null,"Maaf, data sudah habis. Tidak ada data yang bisa anda print...!!!!");
-            BtnBatal.requestFocus();
-        }else if(tabMode.getRowCount()!=0){
-            try{
-                htmlContent = new StringBuilder();
-                htmlContent.append(                             
-                    "<tr class='isi'>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.Rawat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.RM</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Pasien</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Lahir</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>J.K.</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kode Dokter</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Dokter</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tanggal</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Operasi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Diagnosa</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Tindakan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TB</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>BB</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TD</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>IO2</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nadi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Pernapasan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Suhu</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Cardiovasculer</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Paru</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Abdomen</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Extrimitas</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Endokrin</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Ginjal</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Obat-obatan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Laborat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Penunjang</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Obat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Lainnya</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Terapi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Merokok</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Rokok</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Alkohol</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Alko</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Penggunaan Obat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Obat Dikonsumsi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Cardiovasculer</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Respiratory</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Endocrine</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Lainnya</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Angka ASA</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Mulai Puasa</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Anestesi</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Perawatan</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Catatan Khusus</b></td>"+
-                    "</tr>"
-                );
-                
-                for (i = 0; i < tabMode.getRowCount(); i++) {
-                    htmlContent.append(
-                        "<tr class='isi'>"+
-                           "<td valign='top'>"+tbObat.getValueAt(i,0).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,1).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,2).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,3).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,4).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,5).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,6).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,7).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,8).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,9).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,10).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,11).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,12).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,13).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,14).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,15).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,16).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,17).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,18).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,19).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,20).toString()+"</td>"+ 
-                            "<td valign='top'>"+tbObat.getValueAt(i,21).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,22).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,23).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,24).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,25).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,26).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,27).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,28).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,29).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,30).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,31).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,32).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,33).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,34).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,35).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,36).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,37).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,38).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,39).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,40).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,41).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,42).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,43).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,44).toString()+"</td>"+ 
-                        "</tr>");
-                }
-                
-                LoadHTML.setText(
-                    "<html>"+
-                      "<table width='4500px' border='0' align='center' cellpadding='1px' cellspacing='0' class='tbl_form'>"+
-                       htmlContent.toString()+
-                      "</table>"+
-                    "</html>"
-                );
+    private void BtnPrintActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnPrintActionPerformed
+        /*
+         * this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+         * if(tabMode.getRowCount()==0){
+         * JOptionPane.showMessageDialog(
+         * null,"Maaf, data sudah habis. Tidak ada data yang bisa anda print...!!!!");
+         * BtnBatal.requestFocus();
+         * }else if(tabMode.getRowCount()!=0){
+         * try{
+         * htmlContent = new StringBuilder();
+         * htmlContent.append(
+         * "<tr class='isi'>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.Rawat</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.RM</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Pasien</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Lahir</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>J.K.</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kode Dokter</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Dokter</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tanggal</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Operasi</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Diagnosa</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Tindakan</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TB</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>BB</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TD</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>IO2</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nadi</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Pernapasan</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Suhu</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Cardiovasculer</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Paru</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Abdomen</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Extrimitas</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Endokrin</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Ginjal</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Obat-obatan</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Laborat</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Asesmen Fisik Penunjang</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Obat</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Alergi Lainnya</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit Terapi</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Merokok</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Rokok</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebiasaan Alkohol</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Jml.Alko</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Penggunaan Obat</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Obat Dikonsumsi</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Cardiovasculer</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Respiratory</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Endocrine</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Medis Lainnya</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Angka ASA</b></td>"+
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Mulai Puasa</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Anestesi</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Rencana Perawatan</b></td>"
+         * +
+         * "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Catatan Khusus</b></td>"
+         * +
+         * "</tr>"
+         * );
+         * 
+         * for (i = 0; i < tabMode.getRowCount(); i++) {
+         * htmlContent.append(
+         * "<tr class='isi'>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,0).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,1).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,2).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,3).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,4).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,5).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,6).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,7).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,8).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,9).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,10).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,11).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,12).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,13).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,14).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,15).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,16).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,17).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,18).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,19).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,20).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,21).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,22).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,23).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,24).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,25).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,26).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,27).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,28).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,29).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,30).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,31).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,32).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,33).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,34).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,35).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,36).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,37).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,38).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,39).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,40).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,41).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,42).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,43).toString()+"</td>"+
+         * "<td valign='top'>"+tbObat.getValueAt(i,44).toString()+"</td>"+
+         * "</tr>");
+         * }
+         * 
+         * LoadHTML.setText(
+         * "<html>"+
+         * "<table width='4500px' border='0' align='center' cellpadding='1px' cellspacing='0' class='tbl_form'>"
+         * +
+         * htmlContent.toString()+
+         * "</table>"+
+         * "</html>"
+         * );
+         * 
+         * File g = new File("file2.css");
+         * BufferedWriter bg = new BufferedWriter(new FileWriter(g));
+         * bg.write(
+         * ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+         * +
+         * ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}"
+         * +
+         * ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+         * +
+         * ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"
+         * +
+         * ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}"
+         * +
+         * ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}"
+         * +
+         * ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}"
+         * +
+         * ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}"
+         * +
+         * ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}"
+         * );
+         * bg.close();
+         * 
+         * File f = new File("DataPenilaianPreAnestesi.html");
+         * BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+         * bw.write(LoadHTML.getText().replaceAll("<head>","<head>"+
+         * "<link href=\"file2.css\" rel=\"stylesheet\" type=\"text/css\" />"+
+         * "<table width='4500px' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
+         * +
+         * "<tr class='isi2'>"+
+         * "<td valign='top' align='center'>"+
+         * "<font size='4' face='Tahoma'>"+akses.getnamars()+"</font><br>"+
+         * akses.getalamatrs()+", "+akses.getkabupatenrs()+", "+akses.getpropinsirs()+
+         * "<br>"+
+         * akses.getkontakrs()+", E-mail : "+akses.getemailrs()+"<br><br>"+
+         * "<font size='2' face='Tahoma'>DATA PENILAIAN PRE ANESTESI<br><br></font>"+
+         * "</td>"+
+         * "</tr>"+
+         * "</table>")
+         * );
+         * bw.close();
+         * Desktop.getDesktop().browse(f.toURI());
+         * 
+         * }catch(Exception e){
+         * System.out.println("Notifikasi : "+e);
+         * }
+         * }
+         * this.setCursor(Cursor.getDefaultCursor());
+         */
+    }// GEN-LAST:event_BtnPrintActionPerformed
 
-                File g = new File("file2.css");            
-                BufferedWriter bg = new BufferedWriter(new FileWriter(g));
-                bg.write(
-                    ".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                    ".isi2 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#323232;}"+
-                    ".isi3 td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                    ".isi4 td{font: 11px tahoma;height:12px;border-top: 1px solid #e2e7dd;background: #ffffff;color:#323232;}"+
-                    ".isi5 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#AA0000;}"+
-                    ".isi6 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#FF0000;}"+
-                    ".isi7 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#C8C800;}"+
-                    ".isi8 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#00AA00;}"+
-                    ".isi9 td{font: 8.5px tahoma;border:none;height:12px;background: #ffffff;color:#969696;}"
-                );
-                bg.close();
-
-                File f = new File("DataPenilaianPreAnestesi.html");            
-                BufferedWriter bw = new BufferedWriter(new FileWriter(f));            
-                bw.write(LoadHTML.getText().replaceAll("<head>","<head>"+
-                            "<link href=\"file2.css\" rel=\"stylesheet\" type=\"text/css\" />"+
-                            "<table width='4500px' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"+
-                                "<tr class='isi2'>"+
-                                    "<td valign='top' align='center'>"+
-                                        "<font size='4' face='Tahoma'>"+akses.getnamars()+"</font><br>"+
-                                        akses.getalamatrs()+", "+akses.getkabupatenrs()+", "+akses.getpropinsirs()+"<br>"+
-                                        akses.getkontakrs()+", E-mail : "+akses.getemailrs()+"<br><br>"+
-                                        "<font size='2' face='Tahoma'>DATA PENILAIAN PRE ANESTESI<br><br></font>"+        
-                                    "</td>"+
-                               "</tr>"+
-                            "</table>")
-                );
-                bw.close();                         
-                Desktop.getDesktop().browse(f.toURI());
-
-            }catch(Exception e){
-                System.out.println("Notifikasi : "+e);
-            }
-        }
-        this.setCursor(Cursor.getDefaultCursor()); */
-}//GEN-LAST:event_BtnPrintActionPerformed
-
-    private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnPrintKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnPrintKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnPrintActionPerformed(null);
-        }else{
+        } else {
             Valid.pindah(evt, BtnEdit, BtnKeluar);
         }
-}//GEN-LAST:event_BtnPrintKeyPressed
+    }// GEN-LAST:event_BtnPrintKeyPressed
 
-    private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAllActionPerformed
-    //    TCari.setText("");
+    private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnAllActionPerformed
+        // TCari.setText("");
         tampil();
-}//GEN-LAST:event_BtnAllActionPerformed
+    }// GEN-LAST:event_BtnAllActionPerformed
 
-    private void BtnAllKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnAllKeyPressed
-    /*    if(evt.getKeyCode()==KeyEvent.VK_SPACE){
-            TCari.setText("");
-            tampil();
-        }else{
-            Valid.pindah(evt, BtnCari, TPasien);
-        } */
-}//GEN-LAST:event_BtnAllKeyPressed
+    private void BtnAllKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnAllKeyPressed
+        /*
+         * if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+         * TCari.setText("");
+         * tampil();
+         * }else{
+         * Valid.pindah(evt, BtnCari, TPasien);
+         * }
+         */
+    }// GEN-LAST:event_BtnAllKeyPressed
 
-    private void BtnDokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDokterActionPerformed
+    private void BtnDokterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnDokterActionPerformed
         dokter.isCek();
-        dokter.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+        dokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
         dokter.setLocationRelativeTo(internalFrame1);
         dokter.setAlwaysOnTop(false);
         dokter.setVisible(true);
-    }//GEN-LAST:event_BtnDokterActionPerformed
-
-    private void BtnDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnDokterKeyPressed
-        //Valid.pindah(evt,Edukasi,Hubungan);
-    }//GEN-LAST:event_BtnDokterKeyPressed
-
-    private void MnPenilaianMedisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPenilaianMedisActionPerformed
-    /*    if(tbObat.getSelectedRow()>-1){
-            Map<String, Object> param = new HashMap<>();
-            param.put("namars",akses.getnamars());
-            param.put("alamatrs",akses.getalamatrs());
-            param.put("kotars",akses.getkabupatenrs());
-            param.put("propinsirs",akses.getpropinsirs());
-            param.put("kontakrs",akses.getkontakrs());
-            param.put("emailrs",akses.getemailrs());          
-            param.put("logo",Sequel.cariGambar("select setting.logo from setting")); 
-            finger=Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",tbObat.getValueAt(tbObat.getSelectedRow(),5).toString());
-            param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.getValueAt(tbObat.getSelectedRow(),6).toString()+"\nID "+(finger.equals("")?tbObat.getValueAt(tbObat.getSelectedRow(),5).toString():finger)+"\n"+Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString())); 
-            
-            Valid.MyReportqry("rptCetakPenilaianPreAnestesi.jasper","report","::[ Laporan Penilaian Pre Anestesi ]::",
-                "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,penilaian_pre_anestesi.tanggal,"+
-                "penilaian_pre_anestesi.kd_dokter,DATE_FORMAT(penilaian_pre_anestesi.tanggal_operasi,'%d-%m-%Y %H:%m:%s') as tanggal_operasi,penilaian_pre_anestesi.diagnosa,"+
-                "penilaian_pre_anestesi.rencana_tindakan,penilaian_pre_anestesi.tb,penilaian_pre_anestesi.bb,penilaian_pre_anestesi.td,penilaian_pre_anestesi.io2,"+
-                "penilaian_pre_anestesi.nadi,penilaian_pre_anestesi.pernapasan,penilaian_pre_anestesi.suhu,penilaian_pre_anestesi.fisik_cardiovasculer,penilaian_pre_anestesi.fisik_paru,"+
-                "penilaian_pre_anestesi.fisik_abdomen,penilaian_pre_anestesi.fisik_extrimitas,penilaian_pre_anestesi.fisik_endokrin,penilaian_pre_anestesi.fisik_ginjal,"+
-                "penilaian_pre_anestesi.fisik_obatobatan,penilaian_pre_anestesi.fisik_laborat,penilaian_pre_anestesi.fisik_penunjang,penilaian_pre_anestesi.riwayat_penyakit_alergiobat,"+
-                "penilaian_pre_anestesi.riwayat_penyakit_alergilainnya,penilaian_pre_anestesi.riwayat_penyakit_terapi,penilaian_pre_anestesi.riwayat_kebiasaan_merokok,"+
-                "penilaian_pre_anestesi.riwayat_kebiasaan_ket_merokok,penilaian_pre_anestesi.riwayat_kebiasaan_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_ket_alkohol,"+
-                "penilaian_pre_anestesi.riwayat_kebiasaan_obat,penilaian_pre_anestesi.riwayat_kebiasaan_ket_obat,penilaian_pre_anestesi.riwayat_medis_cardiovasculer,"+
-                "penilaian_pre_anestesi.riwayat_medis_respiratory,penilaian_pre_anestesi.riwayat_medis_endocrine,penilaian_pre_anestesi.riwayat_medis_lainnya,"+
-                "penilaian_pre_anestesi.asa,DATE_FORMAT(penilaian_pre_anestesi.puasa,'%d-%m-%Y %H:%m:%s') as puasa,penilaian_pre_anestesi.rencana_anestesi,penilaian_pre_anestesi.rencana_perawatan,"+
-                "penilaian_pre_anestesi.catatan_khusus,dokter.nm_dokter from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                "inner join penilaian_pre_anestesi on reg_periksa.no_rawat=penilaian_pre_anestesi.no_rawat "+
-                "inner join dokter on penilaian_pre_anestesi.kd_dokter=dokter.kd_dokter where penilaian_pre_anestesi.no_rawat='"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"' "+
-                "and penilaian_pre_anestesi.tanggal='"+tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()+"'",param);
-        } */
-    }//GEN-LAST:event_MnPenilaianMedisActionPerformed
+    }// GEN-LAST:event_BtnDokterActionPerformed
+
+    private void BtnDokterKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnDokterKeyPressed
+        // Valid.pindah(evt,Edukasi,Hubungan);
+    }// GEN-LAST:event_BtnDokterKeyPressed
+
+    private void MnPenilaianMedisActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MnPenilaianMedisActionPerformed
+        /*
+         * if(tbObat.getSelectedRow()>-1){
+         * Map<String, Object> param = new HashMap<>();
+         * param.put("namars",akses.getnamars());
+         * param.put("alamatrs",akses.getalamatrs());
+         * param.put("kotars",akses.getkabupatenrs());
+         * param.put("propinsirs",akses.getpropinsirs());
+         * param.put("kontakrs",akses.getkontakrs());
+         * param.put("emailrs",akses.getemailrs());
+         * param.put("logo",Sequel.cariGambar("select setting.logo from setting"));
+         * finger=Sequel.
+         * cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?"
+         * ,tbObat.getValueAt(tbObat.getSelectedRow(),5).toString());
+         * param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "
+         * +akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.
+         * getValueAt(tbObat.getSelectedRow(),6).toString()+"\nID "+(finger.equals("")?
+         * tbObat.getValueAt(tbObat.getSelectedRow(),5).toString():finger)+"\n"+Valid.
+         * SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()));
+         * 
+         * Valid.MyReportqry("rptCetakPenilaianPreAnestesi.jasper",
+         * "report","::[ Laporan Penilaian Pre Anestesi ]::",
+         * "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,penilaian_pre_anestesi.tanggal,"
+         * +
+         * "penilaian_pre_anestesi.kd_dokter,DATE_FORMAT(penilaian_pre_anestesi.tanggal_operasi,'%d-%m-%Y %H:%m:%s') as tanggal_operasi,penilaian_pre_anestesi.diagnosa,"
+         * +
+         * "penilaian_pre_anestesi.rencana_tindakan,penilaian_pre_anestesi.tb,penilaian_pre_anestesi.bb,penilaian_pre_anestesi.td,penilaian_pre_anestesi.io2,"+
+         * "penilaian_pre_anestesi.nadi,penilaian_pre_anestesi.pernapasan,penilaian_pre_anestesi.suhu,penilaian_pre_anestesi.fisik_cardiovasculer,penilaian_pre_anestesi.fisik_paru,"+
+         * "penilaian_pre_anestesi.fisik_abdomen,penilaian_pre_anestesi.fisik_extrimitas,penilaian_pre_anestesi.fisik_endokrin,penilaian_pre_anestesi.fisik_ginjal,"+
+         * "penilaian_pre_anestesi.fisik_obatobatan,penilaian_pre_anestesi.fisik_laborat,penilaian_pre_anestesi.fisik_penunjang,penilaian_pre_anestesi.riwayat_penyakit_alergiobat,"+
+         * "penilaian_pre_anestesi.riwayat_penyakit_alergilainnya,penilaian_pre_anestesi.riwayat_penyakit_terapi,penilaian_pre_anestesi.riwayat_kebiasaan_merokok,"+
+         * "penilaian_pre_anestesi.riwayat_kebiasaan_ket_merokok,penilaian_pre_anestesi.riwayat_kebiasaan_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_ket_alkohol,"+
+         * "penilaian_pre_anestesi.riwayat_kebiasaan_obat,penilaian_pre_anestesi.riwayat_kebiasaan_ket_obat,penilaian_pre_anestesi.riwayat_medis_cardiovasculer,"+
+         * "penilaian_pre_anestesi.riwayat_medis_respiratory,penilaian_pre_anestesi.riwayat_medis_endocrine,penilaian_pre_anestesi.riwayat_medis_lainnya,"+
+         * "penilaian_pre_anestesi.asa,DATE_FORMAT(penilaian_pre_anestesi.puasa,'%d-%m-%Y %H:%m:%s') as puasa,penilaian_pre_anestesi.rencana_anestesi,penilaian_pre_anestesi.rencana_perawatan,"
+         * +
+         * "penilaian_pre_anestesi.catatan_khusus,dokter.nm_dokter from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+         * +
+         * "inner join penilaian_pre_anestesi on reg_periksa.no_rawat=penilaian_pre_anestesi.no_rawat "
+         * +
+         * "inner join dokter on penilaian_pre_anestesi.kd_dokter=dokter.kd_dokter where penilaian_pre_anestesi.no_rawat='"
+         * +tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"' "+
+         * "and penilaian_pre_anestesi.tanggal='"+tbObat.getValueAt(tbObat.
+         * getSelectedRow(),7).toString()+"'",param);
+         * }
+         */
+    }// GEN-LAST:event_MnPenilaianMedisActionPerformed
 
-    private void TglOperasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TglOperasiKeyPressed
- //       Valid.pindah(evt,RencanaTindakan,TB);
-    }//GEN-LAST:event_TglOperasiKeyPressed
+    private void TglOperasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TglOperasiKeyPressed
+        // Valid.pindah(evt,RencanaTindakan,TB);
+    }// GEN-LAST:event_TglOperasiKeyPressed
+
+    private void AktifitasMasukKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AktifitasMasukKeyPressed
+        // Valid.pindah(evt,btnPetugas,SirkulasiMasuk);
+    }// GEN-LAST:event_AktifitasMasukKeyPressed
+
+    private void SirkulasiMasukKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasukKeyPressed
+        Valid.pindah(evt, AktifitasMasuk, PernapasanMasuk);
+    }// GEN-LAST:event_SirkulasiMasukKeyPressed
+
+    private void PernapasanMasukKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasukKeyPressed
+        Valid.pindah(evt, SirkulasiMasuk, WarnaKulitMasuk);
+    }// GEN-LAST:event_PernapasanMasukKeyPressed
+
+    private void KesadaranMasukKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesadaranMasukKeyPressed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_KesadaranMasukKeyPressed
+
+    private void WarnaKulitMasukKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_WarnaKulitMasukKeyPressed
+        Valid.pindah(evt, PernapasanMasuk, TotalMasuk);
+    }// GEN-LAST:event_WarnaKulitMasukKeyPressed
+
+    private void TotalMasukKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TotalMasukKeyPressed
+        // Valid.pindah(evt,WarnaKulitMasuk,Catatan);
+    }// GEN-LAST:event_TotalMasukKeyPressed
+
+    private void DTPTglKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_DTPTglKeyPressed
+        // Valid.pindah(evt,BtnSeekDokter,cmbJam);
+    }// GEN-LAST:event_DTPTglKeyPressed
 
-    private void AktifitasMasukKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AktifitasMasukKeyPressed
-    //    Valid.pindah(evt,btnPetugas,SirkulasiMasuk);
-    }//GEN-LAST:event_AktifitasMasukKeyPressed
+    private void cmbJamKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbJamKeyPressed
+        Valid.pindah(evt, DTPTgl, cmbMnt);
+    }// GEN-LAST:event_cmbJamKeyPressed
 
-    private void SirkulasiMasukKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasukKeyPressed
-        Valid.pindah(evt,AktifitasMasuk,PernapasanMasuk);
-    }//GEN-LAST:event_SirkulasiMasukKeyPressed
+    private void cmbMntKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbMntKeyPressed
+        Valid.pindah(evt, cmbJam, cmbDtk);
+    }// GEN-LAST:event_cmbMntKeyPressed
 
-    private void PernapasanMasukKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasukKeyPressed
-        Valid.pindah(evt,SirkulasiMasuk,WarnaKulitMasuk);
-    }//GEN-LAST:event_PernapasanMasukKeyPressed
+    private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbDtkKeyPressed
+        // Valid.pindah(evt,cmbMnt,TCari);
+    }// GEN-LAST:event_cmbDtkKeyPressed
 
-    private void KesadaranMasukKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesadaranMasukKeyPressed
+    private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ChkJlnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesadaranMasukKeyPressed
+    }// GEN-LAST:event_ChkJlnActionPerformed
 
-    private void WarnaKulitMasukKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_WarnaKulitMasukKeyPressed
-        Valid.pindah(evt,PernapasanMasuk,TotalMasuk);
-    }//GEN-LAST:event_WarnaKulitMasukKeyPressed
-
-    private void TotalMasukKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TotalMasukKeyPressed
-    //    Valid.pindah(evt,WarnaKulitMasuk,Catatan);
-    }//GEN-LAST:event_TotalMasukKeyPressed
-
-    private void DTPTglKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DTPTglKeyPressed
-     //   Valid.pindah(evt,BtnSeekDokter,cmbJam);
-    }//GEN-LAST:event_DTPTglKeyPressed
-
-    private void cmbJamKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbJamKeyPressed
-        Valid.pindah(evt,DTPTgl,cmbMnt);
-    }//GEN-LAST:event_cmbJamKeyPressed
-
-    private void cmbMntKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbMntKeyPressed
-        Valid.pindah(evt,cmbJam,cmbDtk);
-    }//GEN-LAST:event_cmbMntKeyPressed
-
-    private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbDtkKeyPressed
-     //   Valid.pindah(evt,cmbMnt,TCari);
-    }//GEN-LAST:event_cmbDtkKeyPressed
-
-    private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkJlnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ChkJlnActionPerformed
-
-    private void AktifitasMasuk1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AktifitasMasuk1KeyPressed
+    private void AktifitasMasuk1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AktifitasMasuk1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_AktifitasMasuk1KeyPressed
+    }// GEN-LAST:event_AktifitasMasuk1KeyPressed
 
-    private void SirkulasiMasuk1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk1KeyPressed
+    private void SirkulasiMasuk1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk1KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk1KeyPressed
 
-    private void PernapasanMasuk1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk1KeyPressed
+    private void PernapasanMasuk1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk1KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk1KeyPressed
 
-    private void KesadaranMasuk1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesadaranMasuk1KeyPressed
+    private void KesadaranMasuk1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesadaranMasuk1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesadaranMasuk1KeyPressed
+    }// GEN-LAST:event_KesadaranMasuk1KeyPressed
 
-    private void WarnaKulitMasuk1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_WarnaKulitMasuk1KeyPressed
+    private void WarnaKulitMasuk1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_WarnaKulitMasuk1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_WarnaKulitMasuk1KeyPressed
+    }// GEN-LAST:event_WarnaKulitMasuk1KeyPressed
 
-    private void TotalMasuk1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TotalMasuk1KeyPressed
+    private void TotalMasuk1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TotalMasuk1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TotalMasuk1KeyPressed
+    }// GEN-LAST:event_TotalMasuk1KeyPressed
 
-    private void AktifitasMasuk2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AktifitasMasuk2KeyPressed
+    private void AktifitasMasuk2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AktifitasMasuk2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_AktifitasMasuk2KeyPressed
+    }// GEN-LAST:event_AktifitasMasuk2KeyPressed
 
-    private void SirkulasiMasuk2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk2KeyPressed
+    private void SirkulasiMasuk2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk2KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk2KeyPressed
 
-    private void PernapasanMasuk2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk2KeyPressed
+    private void PernapasanMasuk2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk2KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk2KeyPressed
 
-    private void KesadaranMasuk2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesadaranMasuk2KeyPressed
+    private void KesadaranMasuk2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesadaranMasuk2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesadaranMasuk2KeyPressed
+    }// GEN-LAST:event_KesadaranMasuk2KeyPressed
 
-    private void KesadaranMasuk3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesadaranMasuk3KeyPressed
+    private void KesadaranMasuk3KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesadaranMasuk3KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesadaranMasuk3KeyPressed
+    }// GEN-LAST:event_KesadaranMasuk3KeyPressed
 
-    private void NIPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NIPKeyPressed
-    /*    if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
-            NamaPegawai.setText(petugas.tampil3(NIP.getText()));
-        }else if(evt.getKeyCode()==KeyEvent.VK_PAGE_UP){
-            DetikMasuk.requestFocus();
-        }else if(evt.getKeyCode()==KeyEvent.VK_ENTER){
-            AktifitasMasuk.requestFocus();
-        }else if(evt.getKeyCode()==KeyEvent.VK_UP){
-            btnPetugasActionPerformed(null);
-        } */
-    }//GEN-LAST:event_NIPKeyPressed
+    private void NIPKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NIPKeyPressed
+        /*
+         * if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
+         * NamaPegawai.setText(petugas.tampil3(NIP.getText()));
+         * }else if(evt.getKeyCode()==KeyEvent.VK_PAGE_UP){
+         * DetikMasuk.requestFocus();
+         * }else if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+         * AktifitasMasuk.requestFocus();
+         * }else if(evt.getKeyCode()==KeyEvent.VK_UP){
+         * btnPetugasActionPerformed(null);
+         * }
+         */
+    }// GEN-LAST:event_NIPKeyPressed
 
-    private void btnPetugasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPetugasActionPerformed
-    /*    petugas.emptTeks();
-        petugas.isCek();
-        petugas.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
-        petugas.setLocationRelativeTo(internalFrame1);
-        petugas.setVisible(true); */
-    }//GEN-LAST:event_btnPetugasActionPerformed
+    private void btnPetugasActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPetugasActionPerformed
+        /*
+         * petugas.emptTeks();
+         * petugas.isCek();
+         * petugas.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+         * petugas.setLocationRelativeTo(internalFrame1);
+         * petugas.setVisible(true);
+         */
+    }// GEN-LAST:event_btnPetugasActionPerformed
 
-    private void btnPetugasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnPetugasKeyPressed
-     //   Valid.pindah(evt,DetikMasuk,AktifitasMasuk);
-    }//GEN-LAST:event_btnPetugasKeyPressed
+    private void btnPetugasKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_btnPetugasKeyPressed
+        // Valid.pindah(evt,DetikMasuk,AktifitasMasuk);
+    }// GEN-LAST:event_btnPetugasKeyPressed
 
-    private void KesakitanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KesakitanActionPerformed
+    private void KesakitanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_KesakitanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesakitanActionPerformed
+    }// GEN-LAST:event_KesakitanActionPerformed
 
-    private void KesakitanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesakitanKeyPressed
+    private void KesakitanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesakitanKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesakitanKeyPressed
+    }// GEN-LAST:event_KesakitanKeyPressed
 
-    private void MualMuntahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MualMuntahActionPerformed
+    private void MualMuntahActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MualMuntahActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MualMuntahActionPerformed
+    }// GEN-LAST:event_MualMuntahActionPerformed
 
-    private void MualMuntahKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MualMuntahKeyPressed
+    private void MualMuntahKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_MualMuntahKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MualMuntahKeyPressed
+    }// GEN-LAST:event_MualMuntahKeyPressed
 
-    private void ObatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ObatActionPerformed
+    private void ObatActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ObatActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ObatActionPerformed
+    }// GEN-LAST:event_ObatActionPerformed
 
-    private void ObatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ObatKeyPressed
+    private void ObatKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_ObatKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ObatKeyPressed
+    }// GEN-LAST:event_ObatKeyPressed
 
-    private void InfusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InfusActionPerformed
+    private void InfusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_InfusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_InfusActionPerformed
+    }// GEN-LAST:event_InfusActionPerformed
 
-    private void InfusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_InfusKeyPressed
+    private void InfusKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_InfusKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_InfusKeyPressed
+    }// GEN-LAST:event_InfusKeyPressed
 
-    private void PemantauanNadiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PemantauanNadiActionPerformed
+    private void PemantauanNadiActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_PemantauanNadiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PemantauanNadiActionPerformed
+    }// GEN-LAST:event_PemantauanNadiActionPerformed
 
-    private void PemantauanNadiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PemantauanNadiKeyPressed
+    private void PemantauanNadiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PemantauanNadiKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PemantauanNadiKeyPressed
+    }// GEN-LAST:event_PemantauanNadiKeyPressed
 
-    private void LainnyaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LainnyaActionPerformed
+    private void LainnyaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_LainnyaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_LainnyaActionPerformed
+    }// GEN-LAST:event_LainnyaActionPerformed
 
-    private void LainnyaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_LainnyaKeyPressed
+    private void LainnyaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_LainnyaKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_LainnyaKeyPressed
+    }// GEN-LAST:event_LainnyaKeyPressed
 
-    private void SelamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelamaActionPerformed
+    private void SelamaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SelamaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SelamaActionPerformed
+    }// GEN-LAST:event_SelamaActionPerformed
 
-    private void SelamaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SelamaKeyPressed
+    private void SelamaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SelamaKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SelamaKeyPressed
+    }// GEN-LAST:event_SelamaKeyPressed
 
-    private void BtnDokter1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDokter1ActionPerformed
+    private void BtnDokter1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnDokter1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnDokter1ActionPerformed
+    }// GEN-LAST:event_BtnDokter1ActionPerformed
 
-    private void BtnDokter1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnDokter1KeyPressed
+    private void BtnDokter1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnDokter1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnDokter1KeyPressed
+    }// GEN-LAST:event_BtnDokter1KeyPressed
 
-    private void TglOperasi1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TglOperasi1KeyPressed
+    private void TglOperasi1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TglOperasi1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TglOperasi1KeyPressed
+    }// GEN-LAST:event_TglOperasi1KeyPressed
 
-    private void AktifitasMasuk3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AktifitasMasuk3KeyPressed
+    private void AktifitasMasuk3KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AktifitasMasuk3KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_AktifitasMasuk3KeyPressed
+    }// GEN-LAST:event_AktifitasMasuk3KeyPressed
 
-    private void SirkulasiMasuk3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk3KeyPressed
+    private void SirkulasiMasuk3KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk3KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk3KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk3KeyPressed
 
-    private void PernapasanMasuk3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk3KeyPressed
+    private void PernapasanMasuk3KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk3KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk3KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk3KeyPressed
 
-    private void KesadaranMasuk4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesadaranMasuk4KeyPressed
+    private void KesadaranMasuk4KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesadaranMasuk4KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesadaranMasuk4KeyPressed
+    }// GEN-LAST:event_KesadaranMasuk4KeyPressed
 
-    private void WarnaKulitMasuk2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_WarnaKulitMasuk2KeyPressed
+    private void WarnaKulitMasuk2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_WarnaKulitMasuk2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_WarnaKulitMasuk2KeyPressed
+    }// GEN-LAST:event_WarnaKulitMasuk2KeyPressed
 
-    private void TotalMasuk2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TotalMasuk2KeyPressed
+    private void TotalMasuk2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TotalMasuk2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TotalMasuk2KeyPressed
+    }// GEN-LAST:event_TotalMasuk2KeyPressed
 
-    private void PernapasanMasuk4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk4KeyPressed
+    private void PernapasanMasuk4KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk4KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk4KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk4KeyPressed
 
-    private void BtnDokter2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDokter2ActionPerformed
+    private void BtnDokter2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnDokter2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnDokter2ActionPerformed
+    }// GEN-LAST:event_BtnDokter2ActionPerformed
 
-    private void BtnDokter2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnDokter2KeyPressed
+    private void BtnDokter2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnDokter2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnDokter2KeyPressed
+    }// GEN-LAST:event_BtnDokter2KeyPressed
 
-    private void AktifitasMasuk4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AktifitasMasuk4KeyPressed
+    private void AktifitasMasuk4KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_AktifitasMasuk4KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_AktifitasMasuk4KeyPressed
+    }// GEN-LAST:event_AktifitasMasuk4KeyPressed
 
-    private void SirkulasiMasuk4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk4KeyPressed
+    private void SirkulasiMasuk4KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk4KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk4KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk4KeyPressed
 
-    private void PernapasanMasuk5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk5KeyPressed
+    private void PernapasanMasuk5KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk5KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk5KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk5KeyPressed
 
-    private void KesadaranMasuk5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesadaranMasuk5KeyPressed
+    private void KesadaranMasuk5KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesadaranMasuk5KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesadaranMasuk5KeyPressed
+    }// GEN-LAST:event_KesadaranMasuk5KeyPressed
 
-    private void WarnaKulitMasuk3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_WarnaKulitMasuk3KeyPressed
+    private void WarnaKulitMasuk3KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_WarnaKulitMasuk3KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_WarnaKulitMasuk3KeyPressed
+    }// GEN-LAST:event_WarnaKulitMasuk3KeyPressed
 
-    private void TotalMasuk3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TotalMasuk3KeyPressed
+    private void TotalMasuk3KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TotalMasuk3KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TotalMasuk3KeyPressed
+    }// GEN-LAST:event_TotalMasuk3KeyPressed
 
-    private void NIP1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NIP1KeyPressed
+    private void NIP1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NIP1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_NIP1KeyPressed
+    }// GEN-LAST:event_NIP1KeyPressed
 
-    private void btnPetugas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPetugas1ActionPerformed
+    private void btnPetugas1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPetugas1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnPetugas1ActionPerformed
+    }// GEN-LAST:event_btnPetugas1ActionPerformed
 
-    private void btnPetugas1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnPetugas1KeyPressed
+    private void btnPetugas1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_btnPetugas1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnPetugas1KeyPressed
+    }// GEN-LAST:event_btnPetugas1KeyPressed
 
-    private void Kesakitan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Kesakitan1ActionPerformed
+    private void Kesakitan1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Kesakitan1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Kesakitan1ActionPerformed
+    }// GEN-LAST:event_Kesakitan1ActionPerformed
 
-    private void Kesakitan1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Kesakitan1KeyPressed
+    private void Kesakitan1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_Kesakitan1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Kesakitan1KeyPressed
+    }// GEN-LAST:event_Kesakitan1KeyPressed
 
-    private void MualMuntah1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MualMuntah1ActionPerformed
+    private void MualMuntah1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MualMuntah1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MualMuntah1ActionPerformed
+    }// GEN-LAST:event_MualMuntah1ActionPerformed
 
-    private void MualMuntah1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MualMuntah1KeyPressed
+    private void MualMuntah1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_MualMuntah1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MualMuntah1KeyPressed
+    }// GEN-LAST:event_MualMuntah1KeyPressed
 
-    private void Obat1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Obat1ActionPerformed
+    private void Obat1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Obat1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Obat1ActionPerformed
+    }// GEN-LAST:event_Obat1ActionPerformed
 
-    private void Obat1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Obat1KeyPressed
+    private void Obat1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_Obat1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Obat1KeyPressed
+    }// GEN-LAST:event_Obat1KeyPressed
 
-    private void Infus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Infus1ActionPerformed
+    private void Infus1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Infus1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Infus1ActionPerformed
+    }// GEN-LAST:event_Infus1ActionPerformed
 
-    private void Infus1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Infus1KeyPressed
+    private void Infus1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_Infus1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Infus1KeyPressed
+    }// GEN-LAST:event_Infus1KeyPressed
 
-    private void PemantauanNadi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PemantauanNadi1ActionPerformed
+    private void PemantauanNadi1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_PemantauanNadi1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PemantauanNadi1ActionPerformed
+    }// GEN-LAST:event_PemantauanNadi1ActionPerformed
 
-    private void PemantauanNadi1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PemantauanNadi1KeyPressed
+    private void PemantauanNadi1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PemantauanNadi1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PemantauanNadi1KeyPressed
+    }// GEN-LAST:event_PemantauanNadi1KeyPressed
 
-    private void Lainnya1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Lainnya1ActionPerformed
+    private void Lainnya1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Lainnya1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Lainnya1ActionPerformed
+    }// GEN-LAST:event_Lainnya1ActionPerformed
 
-    private void Lainnya1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Lainnya1KeyPressed
+    private void Lainnya1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_Lainnya1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Lainnya1KeyPressed
+    }// GEN-LAST:event_Lainnya1KeyPressed
 
-    private void Selama1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Selama1ActionPerformed
+    private void Selama1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Selama1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Selama1ActionPerformed
+    }// GEN-LAST:event_Selama1ActionPerformed
 
-    private void Selama1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Selama1KeyPressed
+    private void Selama1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_Selama1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_Selama1KeyPressed
+    }// GEN-LAST:event_Selama1KeyPressed
 
-    private void BtnDokter3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDokter3ActionPerformed
+    private void BtnDokter3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnDokter3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnDokter3ActionPerformed
+    }// GEN-LAST:event_BtnDokter3ActionPerformed
 
-    private void BtnDokter3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnDokter3KeyPressed
+    private void BtnDokter3KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnDokter3KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnDokter3KeyPressed
+    }// GEN-LAST:event_BtnDokter3KeyPressed
 
-    private void SirkulasiMasuk5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk5KeyPressed
+    private void SirkulasiMasuk5KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk5KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk5KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk5KeyPressed
 
-    private void PernapasanMasuk6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk6KeyPressed
+    private void PernapasanMasuk6KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk6KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk6KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk6KeyPressed
 
-    private void KesadaranMasuk6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesadaranMasuk6KeyPressed
+    private void KesadaranMasuk6KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KesadaranMasuk6KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_KesadaranMasuk6KeyPressed
+    }// GEN-LAST:event_KesadaranMasuk6KeyPressed
 
-    private void WarnaKulitMasuk4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_WarnaKulitMasuk4KeyPressed
+    private void WarnaKulitMasuk4KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_WarnaKulitMasuk4KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_WarnaKulitMasuk4KeyPressed
+    }// GEN-LAST:event_WarnaKulitMasuk4KeyPressed
 
-    private void MualMuntah2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MualMuntah2ActionPerformed
+    private void MualMuntah2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MualMuntah2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MualMuntah2ActionPerformed
+    }// GEN-LAST:event_MualMuntah2ActionPerformed
 
-    private void MualMuntah2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MualMuntah2KeyPressed
+    private void MualMuntah2KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_MualMuntah2KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MualMuntah2KeyPressed
+    }// GEN-LAST:event_MualMuntah2KeyPressed
 
-    private void SirkulasiMasuk6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk6KeyPressed
+    private void SirkulasiMasuk6KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk6KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk6KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk6KeyPressed
 
-    private void PernapasanMasuk7KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk7KeyPressed
+    private void PernapasanMasuk7KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk7KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk7KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk7KeyPressed
 
-    private void SirkulasiMasuk7KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk7KeyPressed
+    private void SirkulasiMasuk7KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk7KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk7KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk7KeyPressed
 
-    private void PernapasanMasuk8KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk8KeyPressed
+    private void PernapasanMasuk8KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk8KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk8KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk8KeyPressed
 
-    private void SirkulasiMasuk8KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk8KeyPressed
+    private void SirkulasiMasuk8KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk8KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk8KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk8KeyPressed
 
-    private void PernapasanMasuk9KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk9KeyPressed
+    private void PernapasanMasuk9KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk9KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk9KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk9KeyPressed
 
-    private void PernapasanMasuk10KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk10KeyPressed
+    private void PernapasanMasuk10KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk10KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk10KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk10KeyPressed
 
-    private void PernapasanMasuk11KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk11KeyPressed
+    private void PernapasanMasuk11KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk11KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk11KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk11KeyPressed
 
-    private void SirkulasiMasuk9KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk9KeyPressed
+    private void SirkulasiMasuk9KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk9KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk9KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk9KeyPressed
 
-    private void PernapasanMasuk13KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PernapasanMasuk13KeyPressed
+    private void PernapasanMasuk13KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_PernapasanMasuk13KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_PernapasanMasuk13KeyPressed
+    }// GEN-LAST:event_PernapasanMasuk13KeyPressed
 
-    private void SirkulasiMasuk10KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk10KeyPressed
+    private void SirkulasiMasuk10KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk10KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk10KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk10KeyPressed
 
-    private void SirkulasiMasuk11KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk11KeyPressed
+    private void SirkulasiMasuk11KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk11KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk11KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk11KeyPressed
 
-    private void SirkulasiMasuk12KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk12KeyPressed
+    private void SirkulasiMasuk12KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk12KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk12KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk12KeyPressed
 
-    private void SirkulasiMasuk13KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SirkulasiMasuk13KeyPressed
+    private void SirkulasiMasuk13KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_SirkulasiMasuk13KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SirkulasiMasuk13KeyPressed
+    }// GEN-LAST:event_SirkulasiMasuk13KeyPressed
 
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             RMObservasiAnestesi dialog = new RMObservasiAnestesi(new javax.swing.JFrame(), true);
@@ -3282,305 +3449,414 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void tampil() {
-    /*    Valid.tabelKosong(tabMode);
-        try{
-            if(TCari.getText().trim().equals("")){
-                ps=koneksi.prepareStatement(
-                        "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,penilaian_pre_anestesi.tanggal,"+
-                        "penilaian_pre_anestesi.kd_dokter,penilaian_pre_anestesi.tanggal_operasi,penilaian_pre_anestesi.diagnosa,penilaian_pre_anestesi.rencana_tindakan,penilaian_pre_anestesi.tb,"+
-                        "penilaian_pre_anestesi.bb,penilaian_pre_anestesi.td,penilaian_pre_anestesi.io2,penilaian_pre_anestesi.nadi,penilaian_pre_anestesi.pernapasan,penilaian_pre_anestesi.suhu,"+
-                        "penilaian_pre_anestesi.fisik_cardiovasculer,penilaian_pre_anestesi.fisik_paru,penilaian_pre_anestesi.fisik_abdomen,penilaian_pre_anestesi.fisik_extrimitas,"+
-                        "penilaian_pre_anestesi.fisik_endokrin,penilaian_pre_anestesi.fisik_ginjal,penilaian_pre_anestesi.fisik_obatobatan,penilaian_pre_anestesi.fisik_laborat,"+
-                        "penilaian_pre_anestesi.fisik_penunjang,penilaian_pre_anestesi.riwayat_penyakit_alergiobat,penilaian_pre_anestesi.riwayat_penyakit_alergilainnya,"+
-                        "penilaian_pre_anestesi.riwayat_penyakit_terapi,penilaian_pre_anestesi.riwayat_kebiasaan_merokok,penilaian_pre_anestesi.riwayat_kebiasaan_ket_merokok,"+
-                        "penilaian_pre_anestesi.riwayat_kebiasaan_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_ket_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_obat,"+
-                        "penilaian_pre_anestesi.riwayat_kebiasaan_ket_obat,penilaian_pre_anestesi.riwayat_medis_cardiovasculer,penilaian_pre_anestesi.riwayat_medis_respiratory,"+
-                        "penilaian_pre_anestesi.riwayat_medis_endocrine,penilaian_pre_anestesi.riwayat_medis_lainnya,penilaian_pre_anestesi.asa,penilaian_pre_anestesi.puasa,"+
-                        "penilaian_pre_anestesi.rencana_anestesi,penilaian_pre_anestesi.rencana_perawatan,penilaian_pre_anestesi.catatan_khusus,dokter.nm_dokter "+
-                        "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                        "inner join penilaian_pre_anestesi on reg_periksa.no_rawat=penilaian_pre_anestesi.no_rawat "+
-                        "inner join dokter on penilaian_pre_anestesi.kd_dokter=dokter.kd_dokter where "+
-                        "penilaian_pre_anestesi.tanggal between ? and ? order by penilaian_pre_anestesi.tanggal");
-            }else{
-                ps=koneksi.prepareStatement(
-                        "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,penilaian_pre_anestesi.tanggal,"+
-                        "penilaian_pre_anestesi.kd_dokter,penilaian_pre_anestesi.tanggal_operasi,penilaian_pre_anestesi.diagnosa,penilaian_pre_anestesi.rencana_tindakan,penilaian_pre_anestesi.tb,"+
-                        "penilaian_pre_anestesi.bb,penilaian_pre_anestesi.td,penilaian_pre_anestesi.io2,penilaian_pre_anestesi.nadi,penilaian_pre_anestesi.pernapasan,penilaian_pre_anestesi.suhu,"+
-                        "penilaian_pre_anestesi.fisik_cardiovasculer,penilaian_pre_anestesi.fisik_paru,penilaian_pre_anestesi.fisik_abdomen,penilaian_pre_anestesi.fisik_extrimitas,"+
-                        "penilaian_pre_anestesi.fisik_endokrin,penilaian_pre_anestesi.fisik_ginjal,penilaian_pre_anestesi.fisik_obatobatan,penilaian_pre_anestesi.fisik_laborat,"+
-                        "penilaian_pre_anestesi.fisik_penunjang,penilaian_pre_anestesi.riwayat_penyakit_alergiobat,penilaian_pre_anestesi.riwayat_penyakit_alergilainnya,"+
-                        "penilaian_pre_anestesi.riwayat_penyakit_terapi,penilaian_pre_anestesi.riwayat_kebiasaan_merokok,penilaian_pre_anestesi.riwayat_kebiasaan_ket_merokok,"+
-                        "penilaian_pre_anestesi.riwayat_kebiasaan_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_ket_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_obat,"+
-                        "penilaian_pre_anestesi.riwayat_kebiasaan_ket_obat,penilaian_pre_anestesi.riwayat_medis_cardiovasculer,penilaian_pre_anestesi.riwayat_medis_respiratory,"+
-                        "penilaian_pre_anestesi.riwayat_medis_endocrine,penilaian_pre_anestesi.riwayat_medis_lainnya,penilaian_pre_anestesi.asa,penilaian_pre_anestesi.puasa,"+
-                        "penilaian_pre_anestesi.rencana_anestesi,penilaian_pre_anestesi.rencana_perawatan,penilaian_pre_anestesi.catatan_khusus,dokter.nm_dokter "+
-                        "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                        "inner join penilaian_pre_anestesi on reg_periksa.no_rawat=penilaian_pre_anestesi.no_rawat "+
-                        "inner join dokter on penilaian_pre_anestesi.kd_dokter=dokter.kd_dokter where "+
-                        "penilaian_pre_anestesi.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "+
-                        "penilaian_pre_anestesi.kd_dokter like ? or dokter.nm_dokter like ?) order by penilaian_pre_anestesi.tanggal");
-            }
-                
-            try {
-                if(TCari.getText().trim().equals("")){
-                    ps.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+"")+" 00:00:00");
-                    ps.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+"")+" 23:59:59");
-                }else{
-                    ps.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+"")+" 00:00:00");
-                    ps.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+"")+" 23:59:59");
-                    ps.setString(3,"%"+TCari.getText()+"%");
-                    ps.setString(4,"%"+TCari.getText()+"%");
-                    ps.setString(5,"%"+TCari.getText()+"%");
-                    ps.setString(6,"%"+TCari.getText()+"%");
-                    ps.setString(7,"%"+TCari.getText()+"%");
-                }   
-                rs=ps.executeQuery();
-                while(rs.next()){
-                    tabMode.addRow(new String[]{
-                        rs.getString("no_rawat"),rs.getString("no_rkm_medis"),rs.getString("nm_pasien"),rs.getString("tgl_lahir"),rs.getString("jk"),rs.getString("kd_dokter"),rs.getString("nm_dokter"),rs.getString("tanggal"),
-                        rs.getString("tanggal_operasi"),rs.getString("diagnosa"),rs.getString("rencana_tindakan"),rs.getString("tb"),rs.getString("bb"),rs.getString("td"),rs.getString("io2"),rs.getString("nadi"),rs.getString("pernapasan"),
-                        rs.getString("suhu"),rs.getString("fisik_cardiovasculer"),rs.getString("fisik_paru"),rs.getString("fisik_abdomen"),rs.getString("fisik_extrimitas"),rs.getString("fisik_endokrin"),rs.getString("fisik_ginjal"),
-                        rs.getString("fisik_obatobatan"),rs.getString("fisik_laborat"),rs.getString("fisik_penunjang"),rs.getString("riwayat_penyakit_alergiobat"),rs.getString("riwayat_penyakit_alergilainnya"),
-                        rs.getString("riwayat_penyakit_terapi"),rs.getString("riwayat_kebiasaan_merokok"),rs.getString("riwayat_kebiasaan_ket_merokok"),rs.getString("riwayat_kebiasaan_alkohol"),rs.getString("riwayat_kebiasaan_ket_alkohol"),
-                        rs.getString("riwayat_kebiasaan_obat"),rs.getString("riwayat_kebiasaan_ket_obat"),rs.getString("riwayat_medis_cardiovasculer"),rs.getString("riwayat_medis_respiratory"),rs.getString("riwayat_medis_endocrine"),
-                        rs.getString("riwayat_medis_lainnya"),rs.getString("asa"),rs.getString("puasa"),rs.getString("rencana_anestesi"),rs.getString("rencana_perawatan"),rs.getString("catatan_khusus")
-                    });
-                }
-            } catch (Exception e) {
-                System.out.println("Notif : "+e);
-            } finally{
-                if(rs!=null){
-                    rs.close();
-                }
-                if(ps!=null){
-                    ps.close();
-                }
-            }
-            
-        }catch(Exception e){
-            System.out.println("Notifikasi : "+e);
-        }
-        LCount.setText(""+tabMode.getRowCount()); */
+        /*
+         * Valid.tabelKosong(tabMode);
+         * try{
+         * if(TCari.getText().trim().equals("")){
+         * ps=koneksi.prepareStatement(
+         * "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,penilaian_pre_anestesi.tanggal,"
+         * +
+         * "penilaian_pre_anestesi.kd_dokter,penilaian_pre_anestesi.tanggal_operasi,penilaian_pre_anestesi.diagnosa,penilaian_pre_anestesi.rencana_tindakan,penilaian_pre_anestesi.tb,"+
+         * "penilaian_pre_anestesi.bb,penilaian_pre_anestesi.td,penilaian_pre_anestesi.io2,penilaian_pre_anestesi.nadi,penilaian_pre_anestesi.pernapasan,penilaian_pre_anestesi.suhu,"+
+         * "penilaian_pre_anestesi.fisik_cardiovasculer,penilaian_pre_anestesi.fisik_paru,penilaian_pre_anestesi.fisik_abdomen,penilaian_pre_anestesi.fisik_extrimitas,"+
+         * "penilaian_pre_anestesi.fisik_endokrin,penilaian_pre_anestesi.fisik_ginjal,penilaian_pre_anestesi.fisik_obatobatan,penilaian_pre_anestesi.fisik_laborat,"+
+         * "penilaian_pre_anestesi.fisik_penunjang,penilaian_pre_anestesi.riwayat_penyakit_alergiobat,penilaian_pre_anestesi.riwayat_penyakit_alergilainnya,"+
+         * "penilaian_pre_anestesi.riwayat_penyakit_terapi,penilaian_pre_anestesi.riwayat_kebiasaan_merokok,penilaian_pre_anestesi.riwayat_kebiasaan_ket_merokok,"+
+         * "penilaian_pre_anestesi.riwayat_kebiasaan_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_ket_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_obat,"+
+         * "penilaian_pre_anestesi.riwayat_kebiasaan_ket_obat,penilaian_pre_anestesi.riwayat_medis_cardiovasculer,penilaian_pre_anestesi.riwayat_medis_respiratory,"+
+         * "penilaian_pre_anestesi.riwayat_medis_endocrine,penilaian_pre_anestesi.riwayat_medis_lainnya,penilaian_pre_anestesi.asa,penilaian_pre_anestesi.puasa,"+
+         * "penilaian_pre_anestesi.rencana_anestesi,penilaian_pre_anestesi.rencana_perawatan,penilaian_pre_anestesi.catatan_khusus,dokter.nm_dokter "
+         * +
+         * "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+         * +
+         * "inner join penilaian_pre_anestesi on reg_periksa.no_rawat=penilaian_pre_anestesi.no_rawat "
+         * +
+         * "inner join dokter on penilaian_pre_anestesi.kd_dokter=dokter.kd_dokter where "
+         * +
+         * "penilaian_pre_anestesi.tanggal between ? and ? order by penilaian_pre_anestesi.tanggal"
+         * );
+         * }else{
+         * ps=koneksi.prepareStatement(
+         * "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,penilaian_pre_anestesi.tanggal,"
+         * +
+         * "penilaian_pre_anestesi.kd_dokter,penilaian_pre_anestesi.tanggal_operasi,penilaian_pre_anestesi.diagnosa,penilaian_pre_anestesi.rencana_tindakan,penilaian_pre_anestesi.tb,"+
+         * "penilaian_pre_anestesi.bb,penilaian_pre_anestesi.td,penilaian_pre_anestesi.io2,penilaian_pre_anestesi.nadi,penilaian_pre_anestesi.pernapasan,penilaian_pre_anestesi.suhu,"+
+         * "penilaian_pre_anestesi.fisik_cardiovasculer,penilaian_pre_anestesi.fisik_paru,penilaian_pre_anestesi.fisik_abdomen,penilaian_pre_anestesi.fisik_extrimitas,"+
+         * "penilaian_pre_anestesi.fisik_endokrin,penilaian_pre_anestesi.fisik_ginjal,penilaian_pre_anestesi.fisik_obatobatan,penilaian_pre_anestesi.fisik_laborat,"+
+         * "penilaian_pre_anestesi.fisik_penunjang,penilaian_pre_anestesi.riwayat_penyakit_alergiobat,penilaian_pre_anestesi.riwayat_penyakit_alergilainnya,"+
+         * "penilaian_pre_anestesi.riwayat_penyakit_terapi,penilaian_pre_anestesi.riwayat_kebiasaan_merokok,penilaian_pre_anestesi.riwayat_kebiasaan_ket_merokok,"+
+         * "penilaian_pre_anestesi.riwayat_kebiasaan_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_ket_alkohol,penilaian_pre_anestesi.riwayat_kebiasaan_obat,"+
+         * "penilaian_pre_anestesi.riwayat_kebiasaan_ket_obat,penilaian_pre_anestesi.riwayat_medis_cardiovasculer,penilaian_pre_anestesi.riwayat_medis_respiratory,"+
+         * "penilaian_pre_anestesi.riwayat_medis_endocrine,penilaian_pre_anestesi.riwayat_medis_lainnya,penilaian_pre_anestesi.asa,penilaian_pre_anestesi.puasa,"+
+         * "penilaian_pre_anestesi.rencana_anestesi,penilaian_pre_anestesi.rencana_perawatan,penilaian_pre_anestesi.catatan_khusus,dokter.nm_dokter "
+         * +
+         * "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+         * +
+         * "inner join penilaian_pre_anestesi on reg_periksa.no_rawat=penilaian_pre_anestesi.no_rawat "
+         * +
+         * "inner join dokter on penilaian_pre_anestesi.kd_dokter=dokter.kd_dokter where "
+         * +
+         * "penilaian_pre_anestesi.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "
+         * +
+         * "penilaian_pre_anestesi.kd_dokter like ? or dokter.nm_dokter like ?) order by penilaian_pre_anestesi.tanggal"
+         * );
+         * }
+         * 
+         * try {
+         * if(TCari.getText().trim().equals("")){
+         * ps.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+"")+" 00:00:00");
+         * ps.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+"")+" 23:59:59");
+         * }else{
+         * ps.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+"")+" 00:00:00");
+         * ps.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+"")+" 23:59:59");
+         * ps.setString(3,"%"+TCari.getText()+"%");
+         * ps.setString(4,"%"+TCari.getText()+"%");
+         * ps.setString(5,"%"+TCari.getText()+"%");
+         * ps.setString(6,"%"+TCari.getText()+"%");
+         * ps.setString(7,"%"+TCari.getText()+"%");
+         * }
+         * rs=ps.executeQuery();
+         * while(rs.next()){
+         * tabMode.addRow(new String[]{
+         * rs.getString("no_rawat"),rs.getString("no_rkm_medis"),rs.getString(
+         * "nm_pasien"),rs.getString("tgl_lahir"),rs.getString("jk"),rs.getString(
+         * "kd_dokter"),rs.getString("nm_dokter"),rs.getString("tanggal"),
+         * rs.getString("tanggal_operasi"),rs.getString("diagnosa"),rs.getString(
+         * "rencana_tindakan"),rs.getString("tb"),rs.getString("bb"),rs.getString("td"),
+         * rs.getString("io2"),rs.getString("nadi"),rs.getString("pernapasan"),
+         * rs.getString("suhu"),rs.getString("fisik_cardiovasculer"),rs.getString(
+         * "fisik_paru"),rs.getString("fisik_abdomen"),rs.getString("fisik_extrimitas"),
+         * rs.getString("fisik_endokrin"),rs.getString("fisik_ginjal"),
+         * rs.getString("fisik_obatobatan"),rs.getString("fisik_laborat"),rs.getString(
+         * "fisik_penunjang"),rs.getString("riwayat_penyakit_alergiobat"),rs.getString(
+         * "riwayat_penyakit_alergilainnya"),
+         * rs.getString("riwayat_penyakit_terapi"),rs.getString(
+         * "riwayat_kebiasaan_merokok"),rs.getString("riwayat_kebiasaan_ket_merokok"),rs
+         * .getString("riwayat_kebiasaan_alkohol"),rs.getString(
+         * "riwayat_kebiasaan_ket_alkohol"),
+         * rs.getString("riwayat_kebiasaan_obat"),rs.getString(
+         * "riwayat_kebiasaan_ket_obat"),rs.getString("riwayat_medis_cardiovasculer"),rs
+         * .getString("riwayat_medis_respiratory"),rs.getString(
+         * "riwayat_medis_endocrine"),
+         * rs.getString("riwayat_medis_lainnya"),rs.getString("asa"),rs.getString(
+         * "puasa"),rs.getString("rencana_anestesi"),rs.getString("rencana_perawatan"),
+         * rs.getString("catatan_khusus")
+         * });
+         * }
+         * } catch (Exception e) {
+         * System.out.println("Notif : "+e);
+         * } finally{
+         * if(rs!=null){
+         * rs.close();
+         * }
+         * if(ps!=null){
+         * ps.close();
+         * }
+         * }
+         * 
+         * }catch(Exception e){
+         * System.out.println("Notifikasi : "+e);
+         * }
+         * LCount.setText(""+tabMode.getRowCount());
+         */
     }
 
     public void emptTeks() {
-        
-    //    Pernapasan.setText("");
-        
+
+        // Pernapasan.setText("");
+
         TglOperasi.setDate(new Date());
-        
+
         TabRawat.setSelectedIndex(0);
-        
-    } 
+
+    }
 
     private void getData() {
-    /*    if(tbObat.getSelectedRow()!= -1){
-            TNoRw.setText(tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()); 
-            TNoRM.setText(tbObat.getValueAt(tbObat.getSelectedRow(),1).toString());
-            TPasien.setText(tbObat.getValueAt(tbObat.getSelectedRow(),2).toString());
-            TglLahir.setText(tbObat.getValueAt(tbObat.getSelectedRow(),3).toString());
-            Jk.setText(tbObat.getValueAt(tbObat.getSelectedRow(),4).toString()); 
-            Diagnosa.setText(tbObat.getValueAt(tbObat.getSelectedRow(),9).toString());
-            RencanaTindakan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),10).toString());
-            TB.setText(tbObat.getValueAt(tbObat.getSelectedRow(),11).toString());
-            BB.setText(tbObat.getValueAt(tbObat.getSelectedRow(),12).toString());
-            TD.setText(tbObat.getValueAt(tbObat.getSelectedRow(),13).toString());
-            IO2.setText(tbObat.getValueAt(tbObat.getSelectedRow(),14).toString());
-            Nadi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),15).toString());
-            Pernapasan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),16).toString());
-            Suhu.setText(tbObat.getValueAt(tbObat.getSelectedRow(),17).toString());
-            FisikCardio.setText(tbObat.getValueAt(tbObat.getSelectedRow(),18).toString());
-            FisikParu.setText(tbObat.getValueAt(tbObat.getSelectedRow(),19).toString());
-            FisikAbdomen.setText(tbObat.getValueAt(tbObat.getSelectedRow(),20).toString());
-            FisikExtrimitas.setText(tbObat.getValueAt(tbObat.getSelectedRow(),21).toString());
-            FisikEndokrin.setText(tbObat.getValueAt(tbObat.getSelectedRow(),22).toString());
-            FisikGinjal.setText(tbObat.getValueAt(tbObat.getSelectedRow(),23).toString());
-            FisikObat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),24).toString());
-            FisikLaborat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),25).toString());
-            FisikPenunjang.setText(tbObat.getValueAt(tbObat.getSelectedRow(),26).toString());
-            PenyakitAlergiObat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),27).toString());
-            PenyakitAlergiLainnya.setText(tbObat.getValueAt(tbObat.getSelectedRow(),28).toString());
-            PenyakitTerapi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),29).toString());
-            PenyakitKebiasaanMerokok.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),30).toString());
-            PenyakitKebiasaanJumlahRokok.setText(tbObat.getValueAt(tbObat.getSelectedRow(),31).toString());
-            PenyakitKebiasaanAlkohol.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),32).toString());
-            PenyakitKebiasaanJumlahAlkohol.setText(tbObat.getValueAt(tbObat.getSelectedRow(),33).toString());
-            PenyakitKebiasaanObat.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),34).toString());
-            PenyakitKebiasaanObatDiminum.setText(tbObat.getValueAt(tbObat.getSelectedRow(),35).toString());
-            MedisCardio.setText(tbObat.getValueAt(tbObat.getSelectedRow(),36).toString());
-            MedisRespiratory.setText(tbObat.getValueAt(tbObat.getSelectedRow(),37).toString());
-            MedisEndocrine.setText(tbObat.getValueAt(tbObat.getSelectedRow(),38).toString());
-            MedisLainnya.setText(tbObat.getValueAt(tbObat.getSelectedRow(),39).toString());
-            AngkaASA.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),40).toString());
-            RencanaAnestesi.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),42).toString());
-            RencanaPerawatan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),43).toString());
-            CatatanKhusus.setText(tbObat.getValueAt(tbObat.getSelectedRow(),44).toString());
-            Valid.SetTgl2(TglAsuhan,tbObat.getValueAt(tbObat.getSelectedRow(),7).toString());
-            Valid.SetTgl2(TglOperasi,tbObat.getValueAt(tbObat.getSelectedRow(),8).toString());
-            Valid.SetTgl2(TglPuasa,tbObat.getValueAt(tbObat.getSelectedRow(),41).toString());
-        } */
+        /*
+         * if(tbObat.getSelectedRow()!= -1){
+         * TNoRw.setText(tbObat.getValueAt(tbObat.getSelectedRow(),0).toString());
+         * TNoRM.setText(tbObat.getValueAt(tbObat.getSelectedRow(),1).toString());
+         * TPasien.setText(tbObat.getValueAt(tbObat.getSelectedRow(),2).toString());
+         * TglLahir.setText(tbObat.getValueAt(tbObat.getSelectedRow(),3).toString());
+         * Jk.setText(tbObat.getValueAt(tbObat.getSelectedRow(),4).toString());
+         * Diagnosa.setText(tbObat.getValueAt(tbObat.getSelectedRow(),9).toString());
+         * RencanaTindakan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),10).
+         * toString());
+         * TB.setText(tbObat.getValueAt(tbObat.getSelectedRow(),11).toString());
+         * BB.setText(tbObat.getValueAt(tbObat.getSelectedRow(),12).toString());
+         * TD.setText(tbObat.getValueAt(tbObat.getSelectedRow(),13).toString());
+         * IO2.setText(tbObat.getValueAt(tbObat.getSelectedRow(),14).toString());
+         * Nadi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),15).toString());
+         * Pernapasan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),16).toString());
+         * Suhu.setText(tbObat.getValueAt(tbObat.getSelectedRow(),17).toString());
+         * FisikCardio.setText(tbObat.getValueAt(tbObat.getSelectedRow(),18).toString())
+         * ;
+         * FisikParu.setText(tbObat.getValueAt(tbObat.getSelectedRow(),19).toString());
+         * FisikAbdomen.setText(tbObat.getValueAt(tbObat.getSelectedRow(),20).toString()
+         * );
+         * FisikExtrimitas.setText(tbObat.getValueAt(tbObat.getSelectedRow(),21).
+         * toString());
+         * FisikEndokrin.setText(tbObat.getValueAt(tbObat.getSelectedRow(),22).toString(
+         * ));
+         * FisikGinjal.setText(tbObat.getValueAt(tbObat.getSelectedRow(),23).toString())
+         * ;
+         * FisikObat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),24).toString());
+         * FisikLaborat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),25).toString()
+         * );
+         * FisikPenunjang.setText(tbObat.getValueAt(tbObat.getSelectedRow(),26).toString
+         * ());
+         * PenyakitAlergiObat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),27).
+         * toString());
+         * PenyakitAlergiLainnya.setText(tbObat.getValueAt(tbObat.getSelectedRow(),28).
+         * toString());
+         * PenyakitTerapi.setText(tbObat.getValueAt(tbObat.getSelectedRow(),29).toString
+         * ());
+         * PenyakitKebiasaanMerokok.setSelectedItem(tbObat.getValueAt(tbObat.
+         * getSelectedRow(),30).toString());
+         * PenyakitKebiasaanJumlahRokok.setText(tbObat.getValueAt(tbObat.getSelectedRow(
+         * ),31).toString());
+         * PenyakitKebiasaanAlkohol.setSelectedItem(tbObat.getValueAt(tbObat.
+         * getSelectedRow(),32).toString());
+         * PenyakitKebiasaanJumlahAlkohol.setText(tbObat.getValueAt(tbObat.
+         * getSelectedRow(),33).toString());
+         * PenyakitKebiasaanObat.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow
+         * (),34).toString());
+         * PenyakitKebiasaanObatDiminum.setText(tbObat.getValueAt(tbObat.getSelectedRow(
+         * ),35).toString());
+         * MedisCardio.setText(tbObat.getValueAt(tbObat.getSelectedRow(),36).toString())
+         * ;
+         * MedisRespiratory.setText(tbObat.getValueAt(tbObat.getSelectedRow(),37).
+         * toString());
+         * MedisEndocrine.setText(tbObat.getValueAt(tbObat.getSelectedRow(),38).toString
+         * ());
+         * MedisLainnya.setText(tbObat.getValueAt(tbObat.getSelectedRow(),39).toString()
+         * );
+         * AngkaASA.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),40).
+         * toString());
+         * RencanaAnestesi.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),42)
+         * .toString());
+         * RencanaPerawatan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),43).
+         * toString());
+         * CatatanKhusus.setText(tbObat.getValueAt(tbObat.getSelectedRow(),44).toString(
+         * ));
+         * Valid.SetTgl2(TglAsuhan,tbObat.getValueAt(tbObat.getSelectedRow(),7).toString
+         * ());
+         * Valid.SetTgl2(TglOperasi,tbObat.getValueAt(tbObat.getSelectedRow(),8).
+         * toString());
+         * Valid.SetTgl2(TglPuasa,tbObat.getValueAt(tbObat.getSelectedRow(),41).toString
+         * ());
+         * }
+         */
     }
 
     private void isRawat() {
         try {
-            ps=koneksi.prepareStatement(
-                    "select reg_periksa.no_rkm_medis,pasien.nm_pasien, if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,reg_periksa.tgl_registrasi "+
-                    "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                    "where reg_periksa.no_rawat=?");
+            ps = koneksi.prepareStatement(
+                    "select reg_periksa.no_rkm_medis,pasien.nm_pasien, if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,reg_periksa.tgl_registrasi "
+                            +
+                            "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "where reg_periksa.no_rawat=?");
             try {
-                ps.setString(1,TNoRw.getText());
-                rs=ps.executeQuery();
-                if(rs.next()){
+                ps.setString(1, TNoRw.getText());
+                rs = ps.executeQuery();
+                if (rs.next()) {
                     TNoRM.setText(rs.getString("no_rkm_medis"));
-                    //DTPCari1.setDate(rs.getDate("tgl_registrasi"));
+                    // DTPCari1.setDate(rs.getDate("tgl_registrasi"));
                     TPasien.setText(rs.getString("nm_pasien"));
                     Jk.setText(rs.getString("jk"));
                     TglLahir.setText(rs.getString("tgl_lahir"));
                 }
             } catch (Exception e) {
-                System.out.println("Notif : "+e);
-            } finally{
-                if(rs!=null){
+                System.out.println("Notif : " + e);
+            } finally {
+                if (rs != null) {
                     rs.close();
                 }
-                if(ps!=null){
+                if (ps != null) {
                     ps.close();
                 }
             }
         } catch (Exception e) {
-            System.out.println("Notif : "+e);
+            System.out.println("Notif : " + e);
         }
     }
- 
-    public void setNoRm(String norwt,Date tgl2) {
+
+    public void setNoRm(String norwt, Date tgl2) {
         TNoRw.setText(norwt);
-        //TCari.setText(norwt);
-        //DTPCari2.setDate(tgl2);    
-        isRawat(); 
+        // TCari.setText(norwt);
+        // DTPCari2.setDate(tgl2);
+        isRawat();
     }
-    
-    public void isCek(){
+
+    public void setNoRm(String norwt, Date tgl2, String kdDokter, String nmDokter) {
+        TNoRw.setText(norwt);
+        // TCari.setText(norwt);
+        // DTPCari2.setDate(tgl2);
+        isRawat();
+        KdDokter.setText(kdDokter);
+        NmDokter.setText(nmDokter);
+    }
+
+    public void isCek() {
         BtnSimpan.setEnabled(akses.getpenilaian_pre_anestesi());
         BtnHapus.setEnabled(akses.getpenilaian_pre_anestesi());
         BtnEdit.setEnabled(akses.getpenilaian_pre_anestesi());
         BtnEdit.setEnabled(akses.getpenilaian_pre_anestesi());
-        if(akses.getjml2()>=1){
+        if (akses.getjml2() >= 1) {
             KdDokter.setEditable(false);
             BtnDokter.setEnabled(false);
             KdDokter.setText(akses.getkode());
             NmDokter.setText(dokter.tampil3(KdDokter.getText()));
-            if(NmDokter.getText().equals("")){
+            if (NmDokter.getText().equals("")) {
                 KdDokter.setText("");
-                JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
+                JOptionPane.showMessageDialog(null, "User login bukan Dokter...!!");
             }
-        }            
+        }
     }
-    
-    public void setTampil(){
-       TabRawat.setSelectedIndex(1);
+
+    public void setTampil() {
+        TabRawat.setSelectedIndex(1);
     }
 
     private void hapus() {
-    /*    if(Sequel.queryu2tf("delete from penilaian_pre_anestesi where no_rawat=? and tanggal=?",2,new String[]{
-            tbObat.getValueAt(tbObat.getSelectedRow(),0).toString(),tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()
-        })==true){
-            tabMode.removeRow(tbObat.getSelectedRow());
-            LCount.setText(""+tabMode.getRowCount());
-            TabRawat.setSelectedIndex(1);
-        }else{
-            JOptionPane.showMessageDialog(null,"Gagal menghapus..!!");
-        } */
+        /*
+         * if(Sequel.
+         * queryu2tf("delete from penilaian_pre_anestesi where no_rawat=? and tanggal=?"
+         * ,2,new String[]{
+         * tbObat.getValueAt(tbObat.getSelectedRow(),0).toString(),tbObat.getValueAt(
+         * tbObat.getSelectedRow(),7).toString()
+         * })==true){
+         * tabMode.removeRow(tbObat.getSelectedRow());
+         * LCount.setText(""+tabMode.getRowCount());
+         * TabRawat.setSelectedIndex(1);
+         * }else{
+         * JOptionPane.showMessageDialog(null,"Gagal menghapus..!!");
+         * }
+         */
     }
 
     private void ganti() {
-    /*    if(Sequel.mengedittf("penilaian_pre_anestesi","no_rawat=? and tanggal=?","no_rawat=?,tanggal=?,kd_dokter=?,tanggal_operasi=?,diagnosa=?,rencana_tindakan=?,tb=?,bb=?,td=?,io2=?,nadi=?,"+
-                "pernapasan=?,suhu=?,fisik_cardiovasculer=?,fisik_paru=?,fisik_abdomen=?,fisik_extrimitas=?,fisik_endokrin=?,fisik_ginjal=?,fisik_obatobatan=?,fisik_laborat=?,fisik_penunjang=?,"+
-                "riwayat_penyakit_alergiobat=?,riwayat_penyakit_alergilainnya=?,riwayat_penyakit_terapi=?,riwayat_kebiasaan_merokok=?,riwayat_kebiasaan_ket_merokok=?,riwayat_kebiasaan_alkohol=?,"+
-                "riwayat_kebiasaan_ket_alkohol=?,riwayat_kebiasaan_obat=?,riwayat_kebiasaan_ket_obat=?,riwayat_medis_cardiovasculer=?,riwayat_medis_respiratory=?,riwayat_medis_endocrine=?,"+
-                "riwayat_medis_lainnya=?,asa=?,puasa=?,rencana_anestesi=?,rencana_perawatan=?,catatan_khusus=?",42,new String[]{
-                TNoRw.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),KdDokter.getText(),
-                Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),Diagnosa.getText(),RencanaTindakan.getText(), 
-                TB.getText(),BB.getText(),TD.getText(),IO2.getText(),Nadi.getText(),Pernapasan.getText(),Suhu.getText(),FisikCardio.getText(),FisikParu.getText(),
-                FisikAbdomen.getText(),FisikExtrimitas.getText(),FisikEndokrin.getText(),FisikGinjal.getText(),FisikObat.getText(),FisikLaborat.getText(), 
-                FisikPenunjang.getText(),PenyakitAlergiObat.getText(),PenyakitAlergiLainnya.getText(),PenyakitTerapi.getText(),PenyakitKebiasaanMerokok.getSelectedItem().toString(), 
-                PenyakitKebiasaanJumlahRokok.getText(),PenyakitKebiasaanAlkohol.getSelectedItem().toString(),PenyakitKebiasaanJumlahAlkohol.getText(),
-                PenyakitKebiasaanObat.getSelectedItem().toString(),PenyakitKebiasaanObatDiminum.getText(),MedisCardio.getText(),MedisRespiratory.getText(),MedisEndocrine.getText(),
-                MedisLainnya.getText(),AngkaASA.getSelectedItem().toString(),Valid.SetTgl(TglPuasa.getSelectedItem()+"")+" "+TglPuasa.getSelectedItem().toString().substring(11,19), 
-                RencanaAnestesi.getSelectedItem().toString(),RencanaPerawatan.getText(),CatatanKhusus.getText(),tbObat.getValueAt(tbObat.getSelectedRow(),0).toString(),
-                tbObat.getValueAt(tbObat.getSelectedRow(),7).toString() 
-            })==true){
-                tbObat.setValueAt(TNoRw.getText(),tbObat.getSelectedRow(),0);
-                tbObat.setValueAt(TNoRM.getText(),tbObat.getSelectedRow(),1);
-                tbObat.setValueAt(TPasien.getText(),tbObat.getSelectedRow(),2);
-                tbObat.setValueAt(TglLahir.getText(),tbObat.getSelectedRow(),3);
-                tbObat.setValueAt(Jk.getText(),tbObat.getSelectedRow(),4);
-                tbObat.setValueAt(KdDokter.getText(),tbObat.getSelectedRow(),5);
-                tbObat.setValueAt(NmDokter.getText(),tbObat.getSelectedRow(),6);
-                tbObat.setValueAt(Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),7);
-                tbObat.setValueAt(Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),8);
-                tbObat.setValueAt(Diagnosa.getText(),tbObat.getSelectedRow(),9);
-                tbObat.setValueAt(RencanaTindakan.getText(),tbObat.getSelectedRow(),10);
-                tbObat.setValueAt(TB.getText(),tbObat.getSelectedRow(),11);
-                tbObat.setValueAt(BB.getText(),tbObat.getSelectedRow(),12);
-                tbObat.setValueAt(TD.getText(),tbObat.getSelectedRow(),13);
-                tbObat.setValueAt(IO2.getText(),tbObat.getSelectedRow(),14);
-                tbObat.setValueAt(Nadi.getText(),tbObat.getSelectedRow(),15);
-                tbObat.setValueAt(Pernapasan.getText(),tbObat.getSelectedRow(),16);
-                tbObat.setValueAt(Suhu.getText(),tbObat.getSelectedRow(),17);
-                tbObat.setValueAt(FisikCardio.getText(),tbObat.getSelectedRow(),18);
-                tbObat.setValueAt(FisikParu.getText(),tbObat.getSelectedRow(),19);
-                tbObat.setValueAt(FisikAbdomen.getText(),tbObat.getSelectedRow(),20);
-                tbObat.setValueAt(FisikExtrimitas.getText(),tbObat.getSelectedRow(),21);
-                tbObat.setValueAt(FisikEndokrin.getText(),tbObat.getSelectedRow(),22);
-                tbObat.setValueAt(FisikGinjal.getText(),tbObat.getSelectedRow(),23);
-                tbObat.setValueAt(FisikObat.getText(),tbObat.getSelectedRow(),24);
-                tbObat.setValueAt(FisikLaborat.getText(),tbObat.getSelectedRow(),25);
-                tbObat.setValueAt(FisikPenunjang.getText(),tbObat.getSelectedRow(),26);
-                tbObat.setValueAt(PenyakitAlergiObat.getText(),tbObat.getSelectedRow(),27);
-                tbObat.setValueAt(PenyakitAlergiLainnya.getText(),tbObat.getSelectedRow(),28);
-                tbObat.setValueAt(PenyakitTerapi.getText(),tbObat.getSelectedRow(),29);
-                tbObat.setValueAt(PenyakitKebiasaanMerokok.getSelectedItem().toString(),tbObat.getSelectedRow(),30);
-                tbObat.setValueAt(PenyakitKebiasaanJumlahRokok.getText(),tbObat.getSelectedRow(),31);
-                tbObat.setValueAt(PenyakitKebiasaanAlkohol.getSelectedItem().toString(),tbObat.getSelectedRow(),32);
-                tbObat.setValueAt(PenyakitKebiasaanJumlahAlkohol.getText(),tbObat.getSelectedRow(),33);
-                tbObat.setValueAt(PenyakitKebiasaanObat.getSelectedItem().toString(),tbObat.getSelectedRow(),34);
-                tbObat.setValueAt(PenyakitKebiasaanObatDiminum.getText(),tbObat.getSelectedRow(),35);
-                tbObat.setValueAt(MedisCardio.getText(),tbObat.getSelectedRow(),36);
-                tbObat.setValueAt(MedisRespiratory.getText(),tbObat.getSelectedRow(),37);
-                tbObat.setValueAt(MedisEndocrine.getText(),tbObat.getSelectedRow(),38);
-                tbObat.setValueAt(MedisLainnya.getText(),tbObat.getSelectedRow(),39);
-                tbObat.setValueAt(AngkaASA.getSelectedItem().toString(),tbObat.getSelectedRow(),40);
-                tbObat.setValueAt(Valid.SetTgl(TglPuasa.getSelectedItem()+"")+" "+TglPuasa.getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),41);
-                tbObat.setValueAt(RencanaAnestesi.getSelectedItem().toString(),tbObat.getSelectedRow(),42);
-                tbObat.setValueAt(RencanaPerawatan.getText(),tbObat.getSelectedRow(),43);
-                tbObat.setValueAt(CatatanKhusus.getText(),tbObat.getSelectedRow(),44);
-                emptTeks();
-                TabRawat.setSelectedIndex(1);
-        } */
+        /*
+         * if(Sequel.mengedittf("penilaian_pre_anestesi","no_rawat=? and tanggal=?"
+         * ,"no_rawat=?,tanggal=?,kd_dokter=?,tanggal_operasi=?,diagnosa=?,rencana_tindakan=?,tb=?,bb=?,td=?,io2=?,nadi=?,"+
+         * "pernapasan=?,suhu=?,fisik_cardiovasculer=?,fisik_paru=?,fisik_abdomen=?,fisik_extrimitas=?,fisik_endokrin=?,fisik_ginjal=?,fisik_obatobatan=?,fisik_laborat=?,fisik_penunjang=?,"+
+         * "riwayat_penyakit_alergiobat=?,riwayat_penyakit_alergilainnya=?,riwayat_penyakit_terapi=?,riwayat_kebiasaan_merokok=?,riwayat_kebiasaan_ket_merokok=?,riwayat_kebiasaan_alkohol=?,"+
+         * "riwayat_kebiasaan_ket_alkohol=?,riwayat_kebiasaan_obat=?,riwayat_kebiasaan_ket_obat=?,riwayat_medis_cardiovasculer=?,riwayat_medis_respiratory=?,riwayat_medis_endocrine=?,"+
+         * "riwayat_medis_lainnya=?,asa=?,puasa=?,rencana_anestesi=?,rencana_perawatan=?,catatan_khusus=?"
+         * ,42,new String[]{
+         * TNoRw.getText(),Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.
+         * getSelectedItem().toString().substring(11,19),KdDokter.getText(),
+         * Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "+TglOperasi.getSelectedItem(
+         * ).toString().substring(11,19),Diagnosa.getText(),RencanaTindakan.getText(),
+         * TB.getText(),BB.getText(),TD.getText(),IO2.getText(),Nadi.getText(),
+         * Pernapasan.getText(),Suhu.getText(),FisikCardio.getText(),FisikParu.getText()
+         * ,
+         * FisikAbdomen.getText(),FisikExtrimitas.getText(),FisikEndokrin.getText(),
+         * FisikGinjal.getText(),FisikObat.getText(),FisikLaborat.getText(),
+         * FisikPenunjang.getText(),PenyakitAlergiObat.getText(),PenyakitAlergiLainnya.
+         * getText(),PenyakitTerapi.getText(),PenyakitKebiasaanMerokok.getSelectedItem()
+         * .toString(),
+         * PenyakitKebiasaanJumlahRokok.getText(),PenyakitKebiasaanAlkohol.
+         * getSelectedItem().toString(),PenyakitKebiasaanJumlahAlkohol.getText(),
+         * PenyakitKebiasaanObat.getSelectedItem().toString(),
+         * PenyakitKebiasaanObatDiminum.getText(),MedisCardio.getText(),MedisRespiratory
+         * .getText(),MedisEndocrine.getText(),
+         * MedisLainnya.getText(),AngkaASA.getSelectedItem().toString(),Valid.SetTgl(
+         * TglPuasa.getSelectedItem()+"")+" "+TglPuasa.getSelectedItem().toString().
+         * substring(11,19),
+         * RencanaAnestesi.getSelectedItem().toString(),RencanaPerawatan.getText(),
+         * CatatanKhusus.getText(),tbObat.getValueAt(tbObat.getSelectedRow(),0).toString
+         * (),
+         * tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()
+         * })==true){
+         * tbObat.setValueAt(TNoRw.getText(),tbObat.getSelectedRow(),0);
+         * tbObat.setValueAt(TNoRM.getText(),tbObat.getSelectedRow(),1);
+         * tbObat.setValueAt(TPasien.getText(),tbObat.getSelectedRow(),2);
+         * tbObat.setValueAt(TglLahir.getText(),tbObat.getSelectedRow(),3);
+         * tbObat.setValueAt(Jk.getText(),tbObat.getSelectedRow(),4);
+         * tbObat.setValueAt(KdDokter.getText(),tbObat.getSelectedRow(),5);
+         * tbObat.setValueAt(NmDokter.getText(),tbObat.getSelectedRow(),6);
+         * tbObat.setValueAt(Valid.SetTgl(TglAsuhan.getSelectedItem()+"")+" "+TglAsuhan.
+         * getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),7);
+         * tbObat.setValueAt(Valid.SetTgl(TglOperasi.getSelectedItem()+"")+" "
+         * +TglOperasi.getSelectedItem().toString().substring(11,19),tbObat.
+         * getSelectedRow(),8);
+         * tbObat.setValueAt(Diagnosa.getText(),tbObat.getSelectedRow(),9);
+         * tbObat.setValueAt(RencanaTindakan.getText(),tbObat.getSelectedRow(),10);
+         * tbObat.setValueAt(TB.getText(),tbObat.getSelectedRow(),11);
+         * tbObat.setValueAt(BB.getText(),tbObat.getSelectedRow(),12);
+         * tbObat.setValueAt(TD.getText(),tbObat.getSelectedRow(),13);
+         * tbObat.setValueAt(IO2.getText(),tbObat.getSelectedRow(),14);
+         * tbObat.setValueAt(Nadi.getText(),tbObat.getSelectedRow(),15);
+         * tbObat.setValueAt(Pernapasan.getText(),tbObat.getSelectedRow(),16);
+         * tbObat.setValueAt(Suhu.getText(),tbObat.getSelectedRow(),17);
+         * tbObat.setValueAt(FisikCardio.getText(),tbObat.getSelectedRow(),18);
+         * tbObat.setValueAt(FisikParu.getText(),tbObat.getSelectedRow(),19);
+         * tbObat.setValueAt(FisikAbdomen.getText(),tbObat.getSelectedRow(),20);
+         * tbObat.setValueAt(FisikExtrimitas.getText(),tbObat.getSelectedRow(),21);
+         * tbObat.setValueAt(FisikEndokrin.getText(),tbObat.getSelectedRow(),22);
+         * tbObat.setValueAt(FisikGinjal.getText(),tbObat.getSelectedRow(),23);
+         * tbObat.setValueAt(FisikObat.getText(),tbObat.getSelectedRow(),24);
+         * tbObat.setValueAt(FisikLaborat.getText(),tbObat.getSelectedRow(),25);
+         * tbObat.setValueAt(FisikPenunjang.getText(),tbObat.getSelectedRow(),26);
+         * tbObat.setValueAt(PenyakitAlergiObat.getText(),tbObat.getSelectedRow(),27);
+         * tbObat.setValueAt(PenyakitAlergiLainnya.getText(),tbObat.getSelectedRow(),28)
+         * ;
+         * tbObat.setValueAt(PenyakitTerapi.getText(),tbObat.getSelectedRow(),29);
+         * tbObat.setValueAt(PenyakitKebiasaanMerokok.getSelectedItem().toString(),
+         * tbObat.getSelectedRow(),30);
+         * tbObat.setValueAt(PenyakitKebiasaanJumlahRokok.getText(),tbObat.
+         * getSelectedRow(),31);
+         * tbObat.setValueAt(PenyakitKebiasaanAlkohol.getSelectedItem().toString(),
+         * tbObat.getSelectedRow(),32);
+         * tbObat.setValueAt(PenyakitKebiasaanJumlahAlkohol.getText(),tbObat.
+         * getSelectedRow(),33);
+         * tbObat.setValueAt(PenyakitKebiasaanObat.getSelectedItem().toString(),tbObat.
+         * getSelectedRow(),34);
+         * tbObat.setValueAt(PenyakitKebiasaanObatDiminum.getText(),tbObat.
+         * getSelectedRow(),35);
+         * tbObat.setValueAt(MedisCardio.getText(),tbObat.getSelectedRow(),36);
+         * tbObat.setValueAt(MedisRespiratory.getText(),tbObat.getSelectedRow(),37);
+         * tbObat.setValueAt(MedisEndocrine.getText(),tbObat.getSelectedRow(),38);
+         * tbObat.setValueAt(MedisLainnya.getText(),tbObat.getSelectedRow(),39);
+         * tbObat.setValueAt(AngkaASA.getSelectedItem().toString(),tbObat.getSelectedRow
+         * (),40);
+         * tbObat.setValueAt(Valid.SetTgl(TglPuasa.getSelectedItem()+"")+" "+TglPuasa.
+         * getSelectedItem().toString().substring(11,19),tbObat.getSelectedRow(),41);
+         * tbObat.setValueAt(RencanaAnestesi.getSelectedItem().toString(),tbObat.
+         * getSelectedRow(),42);
+         * tbObat.setValueAt(RencanaPerawatan.getText(),tbObat.getSelectedRow(),43);
+         * tbObat.setValueAt(CatatanKhusus.getText(),tbObat.getSelectedRow(),44);
+         * emptTeks();
+         * TabRawat.setSelectedIndex(1);
+         * }
+         */
     }
-    private void jam(){
-        ActionListener taskPerformer = new ActionListener(){
+
+    private void jam() {
+        ActionListener taskPerformer = new ActionListener() {
             private int nilai_jam;
             private int nilai_menit;
             private int nilai_detik;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nol_jam = "";
                 String nol_menit = "";
                 String nol_detik = "";
                 // Membuat Date
-                //Date dt = new Date();
+                // Date dt = new Date();
                 Date now = Calendar.getInstance().getTime();
 
                 // Mengambil nilaj JAM, MENIT, dan DETIK Sekarang
-                if(ChkJln.isSelected()==true){
+                if (ChkJln.isSelected() == true) {
                     nilai_jam = now.getHours();
                     nilai_menit = now.getMinutes();
                     nilai_detik = now.getSeconds();
-                }else if(ChkJln.isSelected()==false){
-                    nilai_jam =cmbJam.getSelectedIndex();
-                    nilai_menit =cmbMnt.getSelectedIndex();
-                    nilai_detik =cmbDtk.getSelectedIndex();
+                } else if (ChkJln.isSelected() == false) {
+                    nilai_jam = cmbJam.getSelectedIndex();
+                    nilai_menit = cmbMnt.getSelectedIndex();
+                    nilai_detik = cmbDtk.getSelectedIndex();
                 }
 
                 // Jika nilai JAM lebih kecil dari 10 (hanya 1 digit)
@@ -3603,7 +3879,7 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
                 String menit = nol_menit + Integer.toString(nilai_menit);
                 String detik = nol_detik + Integer.toString(nilai_detik);
                 // Menampilkan pada Layar
-                //tampil_jam.setText("  " + jam + " : " + menit + " : " + detik + "  ");
+                // tampil_jam.setText(" " + jam + " : " + menit + " : " + detik + " ");
                 cmbJam.setSelectedItem(jam);
                 cmbMnt.setSelectedItem(menit);
                 cmbDtk.setSelectedItem(detik);
@@ -3612,5 +3888,5 @@ public final class RMObservasiAnestesi extends javax.swing.JDialog {
         // Timer
         new Timer(1000, taskPerformer).start();
     }
-    
+
 }

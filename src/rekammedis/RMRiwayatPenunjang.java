@@ -184,6 +184,7 @@ public final class RMRiwayatPenunjang extends javax.swing.JDialog {
         chkSemua = new widget.CekBox();
         chkPemeriksaanRadiologi = new widget.CekBox();
         chkPemeriksaanLaborat = new widget.CekBox();
+        chkBerkasDigital = new widget.CekBox();
         PanelInput = new javax.swing.JPanel();
         ChkInput = new widget.CekBox();
         FormInput = new widget.panelisi();
@@ -437,6 +438,14 @@ public final class RMRiwayatPenunjang extends javax.swing.JDialog {
         chkPemeriksaanLaborat.setOpaque(false);
         chkPemeriksaanLaborat.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkPemeriksaanLaborat);
+
+        chkBerkasDigital.setSelected(true);
+        chkBerkasDigital.setText("Berkas Digital");
+        chkBerkasDigital.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        chkBerkasDigital.setName("chkBerkasDigital"); // NOI18N
+        chkBerkasDigital.setOpaque(false);
+        chkBerkasDigital.setPreferredSize(new java.awt.Dimension(245, 22));
+        FormMenu.add(chkBerkasDigital);
 
         ScrollMenu.setViewportView(FormMenu);
 
@@ -758,11 +767,11 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         if(chkSemua.isSelected()==true){
             chkPemeriksaanRadiologi.setSelected(true);
             chkPemeriksaanLaborat.setSelected(true);
-          
+            chkBerkasDigital.setSelected(true);          
         }else{
             chkPemeriksaanRadiologi.setSelected(false);
             chkPemeriksaanLaborat.setSelected(false);
-            
+            chkBerkasDigital.setSelected(false);            
         }
     }//GEN-LAST:event_chkSemuaItemStateChanged
 
@@ -819,6 +828,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.Tanggal Tgl1;
     private widget.Tanggal Tgl2;
     private javax.swing.ButtonGroup buttonGroup1;
+    private widget.CekBox chkBerkasDigital;
     private widget.CekBox chkPemeriksaanLaborat;
     private widget.CekBox chkPemeriksaanRadiologi;
     private widget.CekBox chkSemua;
@@ -1494,6 +1504,8 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                         "<tr class='isi'><td></td><td colspan='3' align='right'>&nbsp;</tr>"
                     );
                     
+                    menampilkanBerkasDigital(rs.getString("no_rawat"));
+                    
                 }
                 
                 LoadHTMLRiwayatPerawatan.setText(
@@ -1612,6 +1624,68 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             PanelInput.setPreferredSize(new Dimension(WIDTH,126));
             FormInput.setVisible(true);      
             ChkInput.setVisible(true);
+        }
+    }
+    
+    private void menampilkanBerkasDigital(String norawat) {
+        try {
+            if (chkBerkasDigital.isSelected() == true) {
+                ps2 = koneksi.prepareStatement(
+                        "select master_berkas_digital.nama, berkas_digital_perawatan.lokasi_file "
+                        + "from berkas_digital_perawatan inner join master_berkas_digital "
+                        + "on berkas_digital_perawatan.kode = master_berkas_digital.kode "
+                        + "where berkas_digital_perawatan.no_rawat = ?");
+                try {
+                    ps2.setString(1, norawat);
+                    rs2 = ps2.executeQuery();
+                    if (rs2.next()) {
+                        htmlContent.append(
+                                "<tr class='isi'>"
+                                + "<td valign='top' width='2%'></td>"
+                                + "<td valign='top' width='18%'>Berkas Digital Perawatan</td>"
+                                + "<td valign='top' width='1%' align='center'>:</td>"
+                                + "<td valign='top' width='79%'>"
+                                + "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>");
+
+                        rs2.beforeFirst();
+                        while (rs2.next()) {
+                            String lokasiFile = rs2.getString("lokasi_file");
+                            String namaBerkas = rs2.getString("nama");
+                            String urlBerkas = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/berkasrawat/" + lokasiFile;
+                            String ekstensi = lokasiFile.toLowerCase();
+
+                            htmlContent.append("<tr><td width='100%' border='0'>");
+
+                            if (ekstensi.endsWith(".jpg") || ekstensi.endsWith(".jpeg") || 
+                                ekstensi.endsWith(".png") || ekstensi.endsWith(".gif")) {
+                                htmlContent.append(
+                                        "<b>" + namaBerkas + " :</b><br>"
+                                        + "<img src='" + urlBerkas + "' width='500px'><br>" 
+                                        + "<a href='" + urlBerkas + "'>Lihat Ukuran Penuh</a><br/><br/>"
+                                );
+                            } else {
+                                htmlContent.append(
+                                        "<a href='" + urlBerkas + "'>" + namaBerkas + " (Klik untuk buka)</a><br/><br/>"
+                                );
+                            }
+
+                            htmlContent.append("</td></tr>");
+                        }
+
+                        htmlContent.append(
+                                "</table>"
+                                + "</td>"
+                                + "</tr>");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notifikasi Berkas Digital : " + e);
+                } finally {
+                    if (rs2 != null) rs2.close();
+                    if (ps2 != null) ps2.close();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notif Berkas Digital : " + e);
         }
     }
 }

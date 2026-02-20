@@ -699,18 +699,22 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             public void windowDeactivated(WindowEvent e) {
             }
         });
-        
+
         tbKasirRalan.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e) {}
+            public void keyTyped(KeyEvent e) {
+            }
+
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     dispose();
                 }
             }
+
             @Override
-            public void keyReleased(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {
+            }
         });
 
         DlgCatatan.setSize(595, 34);
@@ -10522,7 +10526,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                     form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                     form.setLocationRelativeTo(internalFrame1);
                     form.setNoRm(TNoRw.getText(), TNoRMCari.getText(), TPasienCari.getText(),
-                            tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 4).toString(), "Ralan");
+                            tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 5).toString(), "Ralan");
                     form.setVisible(true);
                 }
             }
@@ -17641,15 +17645,15 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             }
         }
     }
-    
+
     public JTable getTable() {
         return tbKasirRalan;
     }
-    
+
     public void tampil() {
         DTPCari1.setDate(new Date());
         DTPCari2.setDate(new Date());
 
-        tampilkasir(); 
+        tampilkasir();
     }
 }

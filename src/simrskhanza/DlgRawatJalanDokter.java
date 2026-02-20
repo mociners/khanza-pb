@@ -227,7 +227,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
 
         java.awt.Color darkTextColor = java.awt.Color.BLACK;
 
-        int inputFieldFontSize = 12;
+        int inputFieldFontSize = 14;
 
         java.awt.Font newFont = new java.awt.Font("Tahoma", java.awt.Font.PLAIN, inputFieldFontSize);
 

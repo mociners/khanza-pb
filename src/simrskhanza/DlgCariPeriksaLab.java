@@ -7188,7 +7188,7 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                     param.put("emailrs", akses.getemailrs());
                     param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
 
-                    String reportPermintaan = namaFileReport.replace(".jasper", "Permintaan.jasper");
+                    String reportPermintaan = namaFileReport.replace(".jasper", ".jasper");
 
                     pspermintaan = koneksi.prepareStatement(
                             "select noorder,DATE_FORMAT(tgl_permintaan,'%d-%m-%Y') as tgl_permintaan,jam_permintaan from permintaan_lab where "

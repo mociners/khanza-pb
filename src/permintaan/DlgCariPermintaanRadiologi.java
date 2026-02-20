@@ -1995,9 +1995,9 @@ private void tbRadiologiRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     DokterPerujuk=tbRadiologiRalan.getValueAt(tbRadiologiRalan.getSelectedRow(), 10).toString();
                     param.put("pengirim", DokterPerujuk);
                   //  param.put("pengirim", Sequel.cariIsi("select dokter.nm_dokter from permintaan_radiologi inner join dokter on permintaan_radiologi.dokter_perujuk=dokter.kd_dokter where permintaan_radiologi.no_rawat=?", NoRawat));
-                    param.put("informasitambahan", tbRadiologiRalan.getValueAt(tbRadiologiRalan.getSelectedRow(), 12).toString());
+                    param.put("informasitambahan", tbRadiologiRalan.getValueAt(tbRadiologiRalan.getSelectedRow(), 13).toString());
                  //   param.put("informasitambahan", Sequel.cariIsi("select permintaan_radiologi.informasi_tambahan from permintaan_radiologi where permintaan_radiologi.no_rawat=?", NoRawat));
-                    param.put("diagnosa", tbRadiologiRalan.getValueAt(tbRadiologiRalan.getSelectedRow(), 13).toString());
+                    param.put("diagnosa", tbRadiologiRalan.getValueAt(tbRadiologiRalan.getSelectedRow(), 14).toString());
                  //   param.put("diagnosa", Sequel.cariIsi("select permintaan_radiologi.diagnosa_klinis from permintaan_radiologi where permintaan_radiologi.no_rawat=?", NoRawat));
                     param.put("tanggal", Valid.SetTgl3(Permintaan));
                     param.put("alamat", Sequel.cariIsi("select concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab) as alamat from pasien inner join kelurahan inner join kecamatan inner join kabupaten on pasien.kd_kel=kelurahan.kd_kel and pasien.kd_kec=kecamatan.kd_kec and pasien.kd_kab=kabupaten.kd_kab where no_rkm_medis=? ", norm));
@@ -2796,7 +2796,7 @@ private void tbRadiologiRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private widget.Table tbRadiologiRanap;
     private widget.Table tbRadiologiRanap2;
     // End of variables declaration//GEN-END:variables
-
+    
     private void tampil() {
         Valid.tabelKosong(tabMode);
         try {

@@ -2928,7 +2928,7 @@ public final class RMPenilaianAwalKeperawatanIGD extends javax.swing.JDialog {
                 if (akses.getkode().equals("Admin Utama")) {
                     ganti();
                 } else {
-                    if (KdPetugas.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(), 79).toString())) {
+                    if (KdPetugas.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(), 91).toString())) {
                         ganti();
                     } else {
                         JOptionPane.showMessageDialog(null, "Hanya bisa diganti oleh petugas yang bersangkutan..!!");
