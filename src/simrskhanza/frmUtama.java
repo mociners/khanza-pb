@@ -1217,20 +1217,30 @@ public class frmUtama extends javax.swing.JFrame {
         super();
         initComponents();
         initKhanza();
-        
+
         java.awt.event.ActionListener taskPerformer = new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                int nilai_detik = java.util.Calendar.getInstance().getTime().getSeconds();
+                int nilai_detik = java.util.Calendar.getInstance().get(java.util.Calendar.SECOND);
+
                 if (nilai_detik % 10 == 0) {
                     try {
 //                        if (fungsi.koneksiDB.ALARMLAB().equals("yes")) {
-//                            if (Sequel.cariInteger("select count(noorder) from permintaan_lab where tgl_permintaan=current_date() and (jam_sampel='00:00:00' or tgl_sampel='0000-00-00')") > 0) {
+//                            String sqlLab = "select count(noorder) from permintaan_lab where " +
+//                                            "tgl_permintaan=current_date() and " +
+//                                            "(jam_sampel='00:00:00' or tgl_sampel='0000-00-00')";
+//
+//                            if (Sequel.cariInteger(sqlLab) > 0) {
 //                                new fungsi.BackgroundMusic("./suara/pk.mp3").start();
 //                            }
 //                        }
+
 //                        if (fungsi.koneksiDB.ALARMRADIOLOGI().equals("yes")) {
-//                            if (Sequel.cariInteger("select count(noorder) from permintaan_radiologi where tgl_permintaan=current_date() and (jam_sampel='00:00:00' or tgl_sampel='0000-00-00')") > 0) {
+//                            String sqlRadiologi = "select count(noorder) from permintaan_radiologi where " +
+//                                                   "tgl_permintaan=current_date() and " +
+//                                                  "(jam_sampel='00:00:00' or tgl_sampel='0000-00-00')";
+//
+//                            if (Sequel.cariInteger(sqlRadiologi) > 0) {
 //                                new fungsi.BackgroundMusic("./suara/radiologi.mp3").start();
 //                            }
 //                        }
@@ -13570,6 +13580,7 @@ public class frmUtama extends javax.swing.JFrame {
         isTutup();
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         DlgBookingOperasi form = new DlgBookingOperasi(this, false);
+        form.isCek();
         form.setSize(PanelUtama.getWidth(), PanelUtama.getHeight());
         form.setLocationRelativeTo(PanelUtama);
         form.setVisible(true);

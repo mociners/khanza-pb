@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSuratPermintaanRawatInap" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a30b35c0-08b9-44ac-a719-25f05a16b9b3">
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSuratPermintaanRawatInap" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a30b35c0-08b9-44ac-a719-25f05a16b9b3">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="144"/>
@@ -213,7 +213,7 @@
 				</textElement>
 				<text><![CDATA[Diagnosa]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="121" y="273" width="434" height="20" uuid="d9e13350-f8d9-43c2-9097-fddff223403a"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma"/>
@@ -227,7 +227,7 @@
 				</textElement>
 				<text><![CDATA[Indikasi Rawat Inap / Rencana Terapi :]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="21" y="313" width="534" height="39" uuid="2a59e9ec-d1ad-4674-89c0-eb89325988e0"/>
 				<textElement>
 					<font fontName="Tahoma"/>
@@ -241,7 +241,7 @@
 				</textElement>
 				<text><![CDATA[Rencana Perawatan di :]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="21" y="382" width="534" height="40" uuid="0e81c1c9-7d8b-4b2a-8c9e-178c3c2a8f7c"/>
 				<textElement>
 					<font fontName="Tahoma"/>

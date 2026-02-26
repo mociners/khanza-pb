@@ -10647,7 +10647,23 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             param.put("kontakrs", akses.getkontakrs());
             param.put("emailrs", akses.getemailrs());
             Valid.MyReportqry("rptBarcodeRawat.jasper", "report", "::[ Barcode No.Rawat ]::",
-                    "select reg_periksa.no_rawat from reg_periksa where no_rawat='" + TNoRw.getText() + "'", param);
+                    "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, pasien.no_ktp, "
+                            +
+                            "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, "
+                            +
+                            "concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, poliklinik.nm_poli, date_format(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, "
+                            +
+                            "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, "
+                            +
+                            "reg_periksa.stts_daftar, penjab.png_jawab, pasien.no_tlp, reg_periksa.stts, reg_periksa.status_poli, "
+                            +
+                            "reg_periksa.kd_poli, reg_periksa.kd_pj " +
+                            "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
+                            "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
+                            "where reg_periksa.no_rawat='" + TNoRw.getText() + "'",
+                    param);
             this.setCursor(Cursor.getDefaultCursor());
         }
     }// GEN-LAST:event_MnBarcodeActionPerformed
@@ -15488,6 +15504,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     private widget.CekBox ChkJln;
     private javax.swing.JMenuItem MnPeriksaLabCairanTubuh, MnPeriksaLabMDT;
     private widget.Button BtnSRB;
+    private widget.Button BtnTombolRujuk;
+    private widget.Button BtnAssKepRalan;
 
     private void tampilkasir() {
         Valid.tabelKosong(tabModekasir);
@@ -16648,6 +16666,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                 BtnReviewSEPActionPerformed(evt);
             }
         });
+        panelGlass6.add(BtnReviewSEP);
 
         MnCatatanKeseimbanganCairan = new javax.swing.JMenuItem();
         MnCatatanKeseimbanganCairan.setBackground(new java.awt.Color(255, 255, 254));
@@ -17065,7 +17084,6 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnPenilaianLain.add(MnPenilaianPasienImunitasRendah);
 
         panelGlass7.add(BtnSurkon);
-        panelGlass7.add(BtnReviewSEP);
 
         BtnSRB = new widget.Button();
         BtnSRB.setGlassColor(new java.awt.Color(255, 153, 153));
@@ -17074,10 +17092,38 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         BtnSRB.setToolTipText("Program Rujuk Balik (PRB)");
         BtnSRB.setPreferredSize(new java.awt.Dimension(80, 23));
 
+        BtnTombolRujuk = new widget.Button();
+        BtnTombolRujuk.setGlassColor(new java.awt.Color(255, 153, 153));
+        BtnTombolRujuk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/farmasi.png")));
+        BtnTombolRujuk.setText("RUJUK BPJS");
+        BtnTombolRujuk.setToolTipText("Rujuk BPJS");
+        BtnTombolRujuk.setPreferredSize(new java.awt.Dimension(110, 23));
+
+        BtnAssKepRalan = new widget.Button();
+        BtnAssKepRalan.setGlassColor(new java.awt.Color(255, 153, 153));
+        BtnAssKepRalan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/1360485894_add-notes.png")));
+        BtnAssKepRalan.setText("ASS. KEP. RALAN");
+        BtnAssKepRalan.setToolTipText("Penilaian Awal Keperawatan Rawat Jalan");
+        BtnAssKepRalan.setPreferredSize(new java.awt.Dimension(140, 23));
+
         BtnSRB.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ppProgramPRBActionPerformed(evt);
+            }
+        });
+
+        BtnTombolRujuk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnTombolRujukActionPerformed(evt);
+            }
+        });
+
+        BtnAssKepRalan.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAssKepRalanActionPerformed(evt);
             }
         });
 
@@ -17091,12 +17137,56 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         if (index != -1) {
             panelGlass7.add(BtnSRB, index);
+            panelGlass7.add(BtnTombolRujuk, index + 1);
+            panelGlass7.add(BtnAssKepRalan, index + 2);
         } else {
             panelGlass7.add(BtnSRB);
+            panelGlass7.add(BtnTombolRujuk);
+            panelGlass7.add(BtnAssKepRalan);
         }
 
         panelGlass7.revalidate();
         panelGlass7.repaint();
+    }
+
+    private void BtnAssKepRalanActionPerformed(java.awt.event.ActionEvent evt) {
+        MnPenilaianAwalKeperawatanRalanActionPerformed(evt);
+    }
+
+    private void BtnTombolRujukActionPerformed(java.awt.event.ActionEvent evt) {
+        if (tbKasirRalan.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null,
+                    "Maaf, silahkan pilih data registrasi pada tabel terlebih dahulu...!!!!");
+            tbKasirRalan.requestFocus();
+            return;
+        }
+
+        Object sepValue = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 7); // No. SEP pada DlgKasirRalan Index
+                                                                                     // ke-7
+        String noSEP = "";
+        String noRawat = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 17).toString(); // No.Rawat pada
+                                                                                                // DlgKasirRalan Index
+                                                                                                // ke-17
+
+        if (sepValue != null) {
+            noSEP = sepValue.toString();
+        }
+
+        if (noSEP.trim().isEmpty() || noSEP.trim().equals("-")) {
+            JOptionPane.showMessageDialog(null,
+                    "Pasien yang dipilih belum memiliki No. SEP. Silahkan buat SEP terlebih dahulu.");
+            return;
+        }
+
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        BPJSDataSEP formSEP = new BPJSDataSEP(null, false);
+
+        formSEP.cariDanTampilkanRujukan(noRawat, DTPCari2.getDate(), this);
+
+        tampilkasir();
+
+        this.setCursor(Cursor.getDefaultCursor());
     }
 
     private void BtnReviewSEPActionPerformed(java.awt.event.ActionEvent evt) {

@@ -3249,6 +3249,151 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
         BtnSkorAldrettePascaAnestesi.setVisible(akses.getskor_aldrette_pasca_anestesi());
         BtnSkorStewardPascaAnestesi.setVisible(akses.getskor_steward_pasca_anestesi());
         BtnSkorBromagePascaAnestesi.setVisible(akses.getskor_bromage_pasca_anestesi());
+        aturVisibilitasTombolFormMenu();
+    }
+
+    /**
+     * Mengatur visibilitas tombol di FormMenu berdasarkan role user yang login.
+     * Role: Perawat OK, Dokter Bedah, Dokter Anestesi, Perawat RR, Penata Anestesi.
+     * Dokter diidentifikasi dari awalan ID 'D0', spesialis dari tabel spesialis.
+     * Perawat diidentifikasi dari tabel petugas, jabatan dari tabel jabatan.
+     */
+    private void aturVisibilitasTombolFormMenu() {
+        String kodeLogin = akses.getkode();
+        System.out.println("DEBUG aturVisibilitas: kodeLogin = [" + kodeLogin + "]");
+        if (kodeLogin == null || kodeLogin.trim().isEmpty()) {
+            System.out.println("DEBUG aturVisibilitas: kodeLogin kosong, RETURN");
+            return; // belum login, biarkan default permission
+        }
+
+        boolean isDokter = kodeLogin.toUpperCase().startsWith("D0");
+        boolean isDokterAnestesi = false;
+        boolean isDokterBedah = false;
+        boolean isPerawat = false;
+        boolean isPerawatRR = false;
+        boolean isPenataAnestesi = false;
+        boolean isPerawatOK = false;
+
+        if (isDokter) {
+            // Cek spesialis dokter dari tabel spesialis
+            String nmSps = Sequel.cariIsi(
+                    "select spesialis.nm_sps from spesialis inner join dokter " +
+                            "on dokter.kd_sps=spesialis.kd_sps where dokter.kd_dokter=?",
+                    kodeLogin);
+            System.out.println("DEBUG aturVisibilitas: isDokter=true, nmSps = [" + nmSps + "]");
+            if (nmSps.toLowerCase().contains("anestesi")) {
+                isDokterAnestesi = true;
+            } else {
+                isDokterBedah = true;
+            }
+        } else {
+            // Cek jabatan petugas dari tabel petugas dan jabatan
+            String nmJbtn = Sequel.cariIsi(
+                    "select jabatan.nm_jbtn from jabatan inner join petugas " +
+                            "on petugas.kd_jbtn=jabatan.kd_jbtn where petugas.nip=?",
+                    kodeLogin);
+            System.out.println("DEBUG aturVisibilitas: isPerawat check, nmJbtn = [" + nmJbtn + "]");
+            if (!nmJbtn.trim().isEmpty()) {
+                isPerawat = true;
+                String jbtLower = nmJbtn.toLowerCase();
+                if (jbtLower.contains("penata anestesi") || jbtLower.contains("anestesi")) {
+                    isPenataAnestesi = true;
+                } else if (jbtLower.contains("rr") || jbtLower.contains("recovery") || jbtLower.contains("pemulihan")) {
+                    isPerawatRR = true;
+                } else {
+                    isPerawatOK = true;
+                }
+            }
+        }
+
+        System.out.println(
+                "DEBUG aturVisibilitas: isDokterBedah=" + isDokterBedah + ", isDokterAnestesi=" + isDokterAnestesi +
+                        ", isPerawatOK=" + isPerawatOK + ", isPerawatRR=" + isPerawatRR + ", isPenataAnestesi="
+                        + isPenataAnestesi);
+
+        // Jika bukan salah satu dari 5 role (misal admin), biarkan default permission
+        if (!isDokterBedah && !isDokterAnestesi && !isPerawatOK && !isPerawatRR && !isPenataAnestesi) {
+            return;
+        }
+
+        // Terapkan visibility berdasarkan list role (hide semua yang TIDAK ada di list)
+        if (isPerawatOK) {
+            BtnPermintaanLab.setVisible(false);
+            BtnPenilaianPreInduksi.setVisible(false);
+            BtnPreOperasi.setVisible(false);
+            BtnPreAnastesi.setVisible(false);
+            BtnPreAnastesi1.setVisible(false);
+            BtnLembarObservasiAnestesi.setVisible(false);
+            BtnInstrumen1.setVisible(false);
+            BtnSkorAldrettePascaAnestesi.setVisible(false);
+            BtnSkorStewardPascaAnestesi.setVisible(false);
+            BtnSkorBromagePascaAnestesi.setVisible(false);
+        } else if (isDokterBedah) {
+            BtnChecklistPreOperasi.setVisible(false);
+            BtnSignInSebelumAnestesi.setVisible(false);
+            BtnTimeOutSebelumInsisi.setVisible(false);
+            BtnSignOutSebelumMenutupLuka.setVisible(false);
+            BtnChecklistPostOperasi.setVisible(false);
+            BtnLembarObservasiAnestesi1.setVisible(false);
+            BtnTagihanOperasi.setVisible(false);
+            BtnInputObat.setVisible(false);
+            BtnTransferAntarRuang.setVisible(false);
+            BtnInstrumen.setVisible(false);
+            BtnInstrumen3.setVisible(false);
+            BtnCatatanKamarPemulihan.setVisible(false);
+            BtnPermintaanLab.setVisible(false);
+            BtnPenilaianPreInduksi.setVisible(false);
+            BtnPreOperasi.setVisible(false);
+            BtnPreAnastesi.setVisible(false);
+            BtnPreAnastesi1.setVisible(false);
+            BtnLembarObservasiAnestesi.setVisible(false);
+            BtnInstrumen1.setVisible(false);
+            BtnSkorAldrettePascaAnestesi.setVisible(false);
+            BtnSkorStewardPascaAnestesi.setVisible(false);
+            BtnSkorBromagePascaAnestesi.setVisible(false);
+        } else if (isDokterAnestesi) {
+            BtnPenandaanOperasi.setVisible(false);
+            BtnChecklistPreOperasi.setVisible(false);
+            BtnSignInSebelumAnestesi.setVisible(false);
+            BtnTimeOutSebelumInsisi.setVisible(false);
+            BtnSignOutSebelumMenutupLuka.setVisible(false);
+            BtnLembarObservasiAnestesi1.setVisible(false);
+            BtnTagihanOperasi.setVisible(false);
+            BtnLaporanOperasi.setVisible(false);
+            BtnInstrumen2.setVisible(false);
+            BtnInputObat.setVisible(false);
+            BtnTransferAntarRuang.setVisible(false);
+            BtnInstrumen.setVisible(false);
+            BtnInstrumen3.setVisible(false);
+            BtnCatatanKamarPemulihan.setVisible(false);
+            BtnPermintaanLab.setVisible(false);
+        } else if (isPerawatRR) {
+            BtnPenandaanOperasi.setVisible(false);
+            BtnSignInSebelumAnestesi.setVisible(false);
+            BtnTimeOutSebelumInsisi.setVisible(false);
+            BtnSignOutSebelumMenutupLuka.setVisible(false);
+            BtnTagihanOperasi.setVisible(false);
+            BtnLaporanOperasi.setVisible(false);
+            BtnInstrumen2.setVisible(false);
+            BtnObatBhp.setVisible(false);
+            BtnInputObat.setVisible(false);
+            BtnInstrumen.setVisible(false);
+            BtnInstrumen3.setVisible(false);
+            BtnPenilaianPreInduksi.setVisible(false);
+            BtnPreOperasi.setVisible(false);
+            BtnPreAnastesi.setVisible(false);
+            BtnPreAnastesi1.setVisible(false);
+            BtnLembarObservasiAnestesi.setVisible(false);
+            BtnInstrumen1.setVisible(false);
+        } else if (isPenataAnestesi) {
+            BtnPenandaanOperasi.setVisible(false);
+            BtnTimeOutSebelumInsisi.setVisible(false);
+            BtnSignOutSebelumMenutupLuka.setVisible(false);
+            BtnLaporanOperasi.setVisible(false);
+            BtnInstrumen2.setVisible(false);
+            BtnInstrumen.setVisible(false);
+            BtnInstrumen3.setVisible(false);
+        }
     }
 
     private void isMenu() {

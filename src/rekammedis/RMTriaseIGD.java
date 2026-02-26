@@ -3310,8 +3310,6 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
         if (tabMode.getRowCount() != 0) {
             if (tbTriase.getSelectedRow() != -1) {
                 try {
-                    // PERBAIKAN: Copy logic dari tbTriaseKeyPressed SPACE handler
-                    // Karena di RMTriaseIGD, populate form ada di SPACE handler bukan di getData()
                     Valid.tabelKosong(tabModeSkala1);
                     Valid.tabelKosong(tabModeSkala2);
                     Valid.tabelKosong(tabModeSkala3);
@@ -3328,7 +3326,6 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                     KdKasus.setText(tbTriase.getValueAt(tbTriase.getSelectedRow(), 8).toString());
                     NmKasus.setText(tbTriase.getValueAt(tbTriase.getSelectedRow(), 9).toString());
 
-                    // Ambil dan tampilkan data riwayat dari database
                     try {
                         PreparedStatement psRiwayat = koneksi.prepareStatement(
                                 "select riwayat_alergi, riwayat_penyakit, id_pasien_khusus from data_triase_igd where no_rawat=?");
@@ -3353,9 +3350,6 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                         System.out.println("Notif Riwayat: " + e);
                     }
 
-                    TabPilihan.setSelectedIndex(0);
-
-                    // Query dan populate form PRIMER
                     try {
                         ps = koneksi.prepareStatement(
                                 "select data_triase_igdprimer.keluhan_utama,data_triase_igdprimer.kebutuhan_khusus,data_triase_igdprimer.catatan,"
@@ -3386,7 +3380,6 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                                 KebutuhanRestrain.setSelectedItem(rs.getString("kebutuhan_restrain"));
                                 SekunderRestrain.setSelectedItem(rs.getString("kebutuhan_restrain"));
                                 TabTriase.setSelectedIndex(0);
-                                // Skip populate tabel pemeriksaan dan skala untuk menghindari clear form
                             }
                         } finally {
                             if (rs != null) {
@@ -3400,7 +3393,6 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                         System.out.println("Notif Primer: " + e);
                     }
 
-                    // Query dan populate form SEKUNDER
                     try {
                         ps = koneksi.prepareStatement(
                                 "select data_triase_igdsekunder.anamnesa_singkat,data_triase_igdsekunder.catatan," +
@@ -3429,7 +3421,6 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                                 SekunderRestrain.setSelectedItem(rs.getString("kebutuhan_restrain"));
                                 KebutuhanRestrain.setSelectedItem(rs.getString("kebutuhan_restrain"));
                                 TabTriase.setSelectedIndex(1);
-                                // Skip populate tabel pemeriksaan dan skala untuk menghindari clear form
                             }
                         } finally {
                             if (rs != null) {
@@ -3442,12 +3433,9 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                     } catch (Exception e) {
                         System.out.println("Notif Sekunder: " + e);
                     }
-
-                    TNoRM1.setText("");
-                    TPasien1.setText("");
-                    LoadHTML.setText("");
-                    ChkAccor.setSelected(false);
-                    isMenu();
+                    
+                    getData();
+                    
                 } catch (java.lang.NullPointerException e) {
                     System.out.println("Error populate form: " + e);
                     e.printStackTrace();

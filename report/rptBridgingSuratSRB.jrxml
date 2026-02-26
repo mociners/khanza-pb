@@ -79,6 +79,7 @@
     <parameter name="prb" class="java.lang.String"/>
     <parameter name="finger" class="java.lang.String"/>
     <parameter name="obatpasien" class="java.lang.String"/>
+    <parameter name="no_sep" class="java.lang.String"/>
     <queryString>
 		<![CDATA[select bridging_sep.no_rawat,bridging_sep.nomr,bridging_sep.nama_pasien,bridging_srb_bpjs.alamat,bridging_sep.tanggal_lahir,
 bridging_srb_bpjs.email,bridging_sep.no_kartu,bridging_sep.no_sep,bridging_srb_bpjs.no_srb,bridging_srb_bpjs.tgl_srb,bridging_sep.diagawal,bridging_sep.nmdiagnosaawal,
@@ -405,7 +406,7 @@ on bridging_srb_bpjs.no_sep=bridging_sep.no_sep]]>
                 <textFieldExpression><![CDATA[$P{namars}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="372" y="52" width="39" height="17" uuid="f4fe3a89-b93d-4ca9-9de7-e7e6bcb5ac4b">
+                <reportElement x="372" y="67" width="39" height="17" uuid="f4fe3a89-b93d-4ca9-9de7-e7e6bcb5ac4b">
                     <property name="com.jaspersoft.studio.unit.width" value="px"/>
                 </reportElement>
                 <textElement textAlignment="Left">
@@ -415,7 +416,7 @@ on bridging_srb_bpjs.no_sep=bridging_sep.no_sep]]>
                 <text><![CDATA[Tanggal]]></text>
             </staticText>
             <textField pattern="d MMMM yyyy">
-                <reportElement x="418" y="52" width="112" height="17" uuid="dd13847f-b05d-4309-bcd9-0963ba69de4d"/>
+                <reportElement x="418" y="67" width="112" height="17" uuid="dd13847f-b05d-4309-bcd9-0963ba69de4d"/>
                 <textElement textAlignment="Left">
                     <font fontName="Tahoma" size="11"/>
                     <paragraph lineSpacing="Single"/>
@@ -559,6 +560,16 @@ on bridging_srb_bpjs.no_sep=bridging_sep.no_sep]]>
                 <text><![CDATA[No.SRB]]></text>
             </staticText>
             <staticText>
+                <reportElement x="372" y="52" width="39" height="17" uuid="aa430349-f53e-4d51-8930-cf2201e523f2">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Left">
+                    <font fontName="Tahoma" size="11"/>
+                    <paragraph lineSpacing="Single"/>
+                </textElement>
+                <text><![CDATA[No.SEP]]></text>
+            </staticText>
+            <staticText>
                 <reportElement x="412" y="37" width="4" height="17" uuid="74c93986-38fa-4791-b839-279300ef5959"/>
                 <textElement textAlignment="Left">
                     <font fontName="Tahoma" size="11"/>
@@ -566,8 +577,24 @@ on bridging_srb_bpjs.no_sep=bridging_sep.no_sep]]>
                 </textElement>
                 <text><![CDATA[:]]></text>
             </staticText>
+            <textField>
+                <reportElement x="418" y="52" width="112" height="17" uuid="b5c46892-1234-5678-abcd-1160f14f706c"/>
+                <textElement textAlignment="Left">
+                    <font fontName="Tahoma" size="11"/>
+                    <paragraph lineSpacing="Single"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{no_sep}]]></textFieldExpression>
+            </textField>
             <staticText>
-                <reportElement x="412" y="52" width="4" height="17" uuid="584ebe70-c17c-49ef-b2d7-952d7a99d35c"/>
+                <reportElement x="412" y="52" width="4" height="17" uuid="4567abcd-ef01-2345-6789-9876543210ab"/>
+                <textElement textAlignment="Left">
+                    <font fontName="Tahoma" size="11"/>
+                    <paragraph lineSpacing="Single"/>
+                </textElement>
+                <text><![CDATA[:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="412" y="67" width="4" height="17" uuid="584ebe70-c17c-49ef-b2d7-952d7a99d35c"/>
                 <textElement textAlignment="Left">
                     <font fontName="Tahoma" size="11"/>
                     <paragraph lineSpacing="Single"/>
