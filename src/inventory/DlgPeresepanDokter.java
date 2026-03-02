@@ -54,24 +54,29 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
     private Connection koneksiwa;
     private PreparedStatement ps, psresep, pscarikapasitas, psresepasuransi, ps2, psWa;
     private ResultSet rs, rsobat, carikapasitas, rs2;
-    private double x = 0, y = 0, kenaikan = 0, ttl = 0, ppnobat = 0, jumlahracik = 0, persenracik = 0, kapasitasracik = 0;
+    private double x = 0, y = 0, kenaikan = 0, ttl = 0, ppnobat = 0, jumlahracik = 0, persenracik = 0,
+            kapasitasracik = 0;
     private int i = 0, z = 0, row2 = 0, r = 0;
     private boolean ubah = false, copy = false, sukses = true;
     private boolean[] pilih;
     private double[] jumlah, harga, beli, stok, kapasitas, p1, p2;
-    private String[] no, kodebarang, namabarang, kodesatuan, kandungan, letakbarang, namajenis, aturan, industri, komposisi;
+    private String[] no, kodebarang, namabarang, kodesatuan, kandungan, letakbarang, namajenis, aturan, industri,
+            komposisi;
     public DlgCariAturanPakai aturanpakai = new DlgCariAturanPakai(null, false);
     private WarnaTable2 warna = new WarnaTable2();
     private WarnaTable2 warna2 = new WarnaTable2();
     private WarnaTable2 warna3 = new WarnaTable2();
     private DlgCariMetodeRacik metoderacik = new DlgCariMetodeRacik(null, false);
     public DlgCariDokter dokter = new DlgCariDokter(null, false);
-    private String noracik = "", aktifkanbatch = "no", STOKKOSONGRESEP = "no", qrystokkosong = "", tampilkan_ppnobat_ralan = "", status = "", bangsal = "", resep = "", DEPOAKTIFOBAT = "",
-            kamar = "", norawatibu = "", kelas, bangsaldefault = Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi limit 1"), RESEPRAJALKEPLAN = "no", notifwapasien = "";
+    private String noracik = "", aktifkanbatch = "no", STOKKOSONGRESEP = "no", qrystokkosong = "",
+            tampilkan_ppnobat_ralan = "", status = "", bangsal = "", resep = "", DEPOAKTIFOBAT = "",
+            kamar = "", norawatibu = "", kelas,
+            bangsaldefault = Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi limit 1"),
+            RESEPRAJALKEPLAN = "no", notifwapasien = "";
 
     private DlgCariTemplateResep caritemplate = new DlgCariTemplateResep(null, false);
     private String kd_template = "";
-    
+
     /**
      * Creates new form DlgPenyakit
      *
@@ -83,34 +88,47 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         initComponents();
         this.setLocation(10, 2);
         setSize(656, 250);
-        
+
         caritemplate.addWindowListener(new WindowListener() {
             @Override
-            public void windowOpened(WindowEvent e) {}
+            public void windowOpened(WindowEvent e) {
+            }
+
             @Override
-            public void windowClosing(WindowEvent e) {}
+            public void windowClosing(WindowEvent e) {
+            }
+
             @Override
             public void windowClosed(WindowEvent e) {
                 if (caritemplate.getTable().getSelectedRow() != -1) {
                     // Ambil kode template yang dipilih
-                    kd_template = caritemplate.getTable().getValueAt(caritemplate.getTable().getSelectedRow(), 0).toString();
+                    kd_template = caritemplate.getTable().getValueAt(caritemplate.getTable().getSelectedRow(), 0)
+                            .toString();
                     // Panggil metode untuk memuat data template
                     loadTemplate();
                 }
             }
+
             @Override
-            public void windowIconified(WindowEvent e) {}
+            public void windowIconified(WindowEvent e) {
+            }
+
             @Override
-            public void windowDeiconified(WindowEvent e) {}
+            public void windowDeiconified(WindowEvent e) {
+            }
+
             @Override
-            public void windowActivated(WindowEvent e) {}
+            public void windowActivated(WindowEvent e) {
+            }
+
             @Override
-            public void windowDeactivated(WindowEvent e) {}
+            public void windowDeactivated(WindowEvent e) {
+            }
         });
-        
-        tabModeResep = new DefaultTableModel(null, new Object[]{
-            "K", "Jumlah", "Aturan Pakai", "Kode Barang", "Nama Barang", "Satuan",
-            "Komposisi", "Harga(Rp)", "Jenis Obat", "I.F.", "H.Beli", "Stok"
+
+        tabModeResep = new DefaultTableModel(null, new Object[] {
+                "K", "Jumlah", "Aturan Pakai", "Kode Barang", "Nama Barang", "Satuan",
+                "Komposisi", "Harga(Rp)", "Jenis Obat", "I.F.", "H.Beli", "Stok"
         }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -120,22 +138,27 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
                 }
                 return a;
             }
-            Class[] types = new Class[]{
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Double.class,
-                java.lang.Object.class, java.lang.Object.class, java.lang.Double.class, java.lang.Double.class
+
+            Class[] types = new Class[] {
+                    java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Double.class,
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Double.class, java.lang.Double.class
             };
 
-            /*Class[] types = new Class[] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-             };*/
+            /*
+             * Class[] types = new Class[] {
+             * java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class,
+             * java.lang.Object.class
+             * };
+             */
             @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
         };
         tbResep.setModel(tabModeResep);
-        //tbPenyakit.setDefaultRenderer(Object.class, new WarnaTable(panelJudul.getBackground(),tbPenyakit.getBackground()));
+        // tbPenyakit.setDefaultRenderer(Object.class, new
+        // WarnaTable(panelJudul.getBackground(),tbPenyakit.getBackground()));
         tbResep.setPreferredScrollableViewportSize(new Dimension(500, 500));
         tbResep.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         for (i = 0; i < 12; i++) {
@@ -170,9 +193,9 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         warna.kolom = 1;
         tbResep.setDefaultRenderer(Object.class, warna);
 
-        tabModeResepRacikan = new DefaultTableModel(null, new Object[]{
-            "No", "Nama Racikan", "Kode Racik", "Metode Racik", "Jml.Racik",
-            "Aturan Pakai", "Keterangan", "TemplateID", "TemplateNoRacik"
+        tabModeResepRacikan = new DefaultTableModel(null, new Object[] {
+                "No", "Nama Racikan", "Kode Racik", "Metode Racik", "Jml.Racik",
+                "Aturan Pakai", "Keterangan", "TemplateID", "TemplateNoRacik"
         }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -182,9 +205,10 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
                 }
                 return a;
             }
-            Class[] types = new Class[]{
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+
+            Class[] types = new Class[] {
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             @Override
@@ -226,10 +250,10 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         warna2.kolom = 4;
         tbObatResepRacikan.setDefaultRenderer(Object.class, warna2);
 
-        tabModeDetailResepRacikan = new DefaultTableModel(null, new Object[]{
-            "No", "Kode Barang", "Nama Barang", "Satuan", "Harga(Rp)", "H.Beli",
-            "Jenis Obat", "Stok", "Kps", "P1", "/", "P2", "Kandungan", "Jml", "I.F.",
-            "Komposisi"
+        tabModeDetailResepRacikan = new DefaultTableModel(null, new Object[] {
+                "No", "Kode Barang", "Nama Barang", "Satuan", "Harga(Rp)", "H.Beli",
+                "Jenis Obat", "Stok", "Sediaan (mg)", "P1", "/", "P2", "Dosis (mg)", "Jml", "I.F.",
+                "Komposisi"
         }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -239,13 +263,14 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
                 }
                 return a;
             }
-            Class[] types = new Class[]{
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
-                java.lang.Object.class, java.lang.Double.class, java.lang.Double.class,
-                java.lang.Object.class, java.lang.Double.class, java.lang.Double.class,
-                java.lang.Double.class, java.lang.Object.class, java.lang.Double.class,
-                java.lang.Object.class, java.lang.Double.class, java.lang.Object.class,
-                java.lang.Object.class
+
+            Class[] types = new Class[] {
+                    java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,
+                    java.lang.Object.class, java.lang.Double.class, java.lang.Double.class,
+                    java.lang.Object.class, java.lang.Double.class, java.lang.Double.class,
+                    java.lang.Double.class, java.lang.Object.class, java.lang.Double.class,
+                    java.lang.Object.class, java.lang.Double.class, java.lang.Object.class,
+                    java.lang.Object.class
             };
 
             @Override
@@ -253,6 +278,20 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
                 return types[columnIndex];
             }
         };
+
+        tabModeDetailResepRacikan.addTableModelListener(new javax.swing.event.TableModelListener() {
+            @Override
+            public void tableChanged(javax.swing.event.TableModelEvent e) {
+                if (e.getType() == javax.swing.event.TableModelEvent.UPDATE) {
+                    int col = e.getColumn();
+                    if (col == 12 || col == 8 || col == 9 || col == 11) {
+                        calculateSemuaRacikan();
+                        getCekStokRacikan();
+                        hitungResep();
+                    }
+                }
+            }
+        });
 
         tbDetailResepObatRacikan.setModel(tabModeDetailResepRacikan);
         tbDetailResepObatRacikan.setPreferredScrollableViewportSize(new Dimension(500, 500));
@@ -278,7 +317,7 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
             } else if (i == 7) {
                 column.setPreferredWidth(50);
             } else if (i == 8) {
-                column.setPreferredWidth(40);
+                column.setPreferredWidth(80);
             } else if (i == 9) {
                 column.setPreferredWidth(25);
             } else if (i == 10) {
@@ -287,7 +326,7 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
             } else if (i == 11) {
                 column.setPreferredWidth(25);
             } else if (i == 12) {
-                column.setPreferredWidth(60);
+                column.setPreferredWidth(70);
             } else if (i == 13) {
                 column.setPreferredWidth(40);
             } else if (i == 14) {
@@ -299,6 +338,39 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
 
         warna3.kolom = 9;
         tbDetailResepObatRacikan.setDefaultRenderer(Object.class, warna3);
+
+        // Custom cell editor yang otomatis select-all saat mulai edit (double-click)
+        // dan mengembalikan Double supaya tidak error DoubleRenderer
+        javax.swing.JTextField tfEditor = new javax.swing.JTextField();
+        tfEditor.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        tfEditor.selectAll();
+                    }
+                });
+            }
+        });
+        javax.swing.DefaultCellEditor selectAllEditor = new javax.swing.DefaultCellEditor(tfEditor) {
+            @Override
+            public Object getCellEditorValue() {
+                String val = tfEditor.getText().trim();
+                if (val.isEmpty()) {
+                    return 0.0;
+                }
+                try {
+                    return Double.parseDouble(val);
+                } catch (NumberFormatException ex) {
+                    return 0.0;
+                }
+            }
+        };
+        selectAllEditor.setClickCountToStart(2);
+        tbDetailResepObatRacikan.getColumnModel().getColumn(9).setCellEditor(selectAllEditor);
+        tbDetailResepObatRacikan.getColumnModel().getColumn(11).setCellEditor(selectAllEditor);
+        tbDetailResepObatRacikan.getColumnModel().getColumn(12).setCellEditor(selectAllEditor);
+        tbDetailResepObatRacikan.getColumnModel().getColumn(13).setCellEditor(selectAllEditor);
 
         TCari.setDocument(new batasInput((byte) 100).getKata(TCari));
         if (koneksiDB.CARICEPAT().equals("aktif")) {
@@ -339,10 +411,13 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
             public void windowClosed(WindowEvent e) {
                 if (aturanpakai.getTable().getSelectedRow() != -1) {
                     if (TabRawat.getSelectedIndex() == 0) {
-                        tbResep.setValueAt(aturanpakai.getTable().getValueAt(aturanpakai.getTable().getSelectedRow(), 0).toString(), tbResep.getSelectedRow(), 2);
+                        tbResep.setValueAt(aturanpakai.getTable().getValueAt(aturanpakai.getTable().getSelectedRow(), 0)
+                                .toString(), tbResep.getSelectedRow(), 2);
                         tbResep.requestFocus();
                     } else if (TabRawat.getSelectedIndex() == 1) {
-                        tbObatResepRacikan.setValueAt(aturanpakai.getTable().getValueAt(aturanpakai.getTable().getSelectedRow(), 0).toString(), tbObatResepRacikan.getSelectedRow(), 5);
+                        tbObatResepRacikan.setValueAt(aturanpakai.getTable()
+                                .getValueAt(aturanpakai.getTable().getSelectedRow(), 0).toString(),
+                                tbObatResepRacikan.getSelectedRow(), 5);
                         tbObatResepRacikan.requestFocus();
                     }
                 }
@@ -412,8 +487,12 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent e) {
                 if (metoderacik.getTable().getSelectedRow() != -1) {
-                    tbObatResepRacikan.setValueAt(metoderacik.getTable().getValueAt(metoderacik.getTable().getSelectedRow(), 1).toString(), tbObatResepRacikan.getSelectedRow(), 2);
-                    tbObatResepRacikan.setValueAt(metoderacik.getTable().getValueAt(metoderacik.getTable().getSelectedRow(), 2).toString(), tbObatResepRacikan.getSelectedRow(), 3);
+                    tbObatResepRacikan.setValueAt(
+                            metoderacik.getTable().getValueAt(metoderacik.getTable().getSelectedRow(), 1).toString(),
+                            tbObatResepRacikan.getSelectedRow(), 2);
+                    tbObatResepRacikan.setValueAt(
+                            metoderacik.getTable().getValueAt(metoderacik.getTable().getSelectedRow(), 2).toString(),
+                            tbObatResepRacikan.getSelectedRow(), 3);
                     tbObatResepRacikan.requestFocus();
                 }
             }
@@ -491,7 +570,8 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         Popup = new javax.swing.JPopupMenu();
@@ -611,7 +691,11 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
             }
         });
 
-        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Peresepan Obat Oleh Dokter ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
+        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)),
+                "::[ Peresepan Obat Oleh Dokter ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11),
+                new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame1.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setLayout(new java.awt.BorderLayout(1, 1));
@@ -674,7 +758,8 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         label12.setPreferredSize(new java.awt.Dimension(50, 23));
         panelisi3.add(label12);
 
-        Jeniskelas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Rawat Jalan", "Beli Luar", "Karyawan", "Utama/BPJS", "Kelas 1", "Kelas 2", "Kelas 3", "VIP", "VVIP" }));
+        Jeniskelas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Rawat Jalan", "Beli Luar", "Karyawan",
+                "Utama/BPJS", "Kelas 1", "Kelas 2", "Kelas 3", "VIP", "VVIP" }));
         Jeniskelas.setName("Jeniskelas"); // NOI18N
         Jeniskelas.setPreferredSize(new java.awt.Dimension(120, 23));
         Jeniskelas.addItemListener(new java.awt.event.ItemListener() {
@@ -888,7 +973,9 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         FormInput.add(DTPBeri);
         DTPBeri.setBounds(75, 42, 90, 23);
 
-        cmbJam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cmbJam.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14",
+                        "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
         cmbJam.setName("cmbJam"); // NOI18N
         cmbJam.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -898,7 +985,11 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         FormInput.add(cmbJam);
         cmbJam.setBounds(168, 42, 62, 23);
 
-        cmbMnt.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbMnt.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14",
+                        "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46",
+                        "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
         cmbMnt.setName("cmbMnt"); // NOI18N
         cmbMnt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -908,7 +999,11 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         FormInput.add(cmbMnt);
         cmbMnt.setBounds(233, 42, 62, 23);
 
-        cmbDtk.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbDtk.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14",
+                        "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46",
+                        "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
         cmbDtk.setName("cmbDtk"); // NOI18N
         cmbDtk.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1088,6 +1183,11 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
                 tbObatResepRacikanKeyPressed(evt);
             }
         });
+        tbObatResepRacikan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbObatResepRacikanMouseClicked(evt);
+            }
+        });
         Scroll1.setViewportView(tbObatResepRacikan);
 
         jPanel3.add(Scroll1, java.awt.BorderLayout.PAGE_START);
@@ -1110,6 +1210,11 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
                 tbDetailResepObatRacikanKeyPressed(evt);
             }
         });
+        tbDetailResepObatRacikan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbDetailResepObatRacikanMouseClicked(evt);
+            }
+        });
         Scroll2.setViewportView(tbDetailResepObatRacikan);
 
         jPanel3.add(Scroll2, java.awt.BorderLayout.CENTER);
@@ -1123,8 +1228,7 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
-    private void TCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariKeyPressed
+    private void TCariKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TCariKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             BtnCariActionPerformed(null);
         } else if (evt.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
@@ -1134,65 +1238,65 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             tbResep.requestFocus();
         }
-}//GEN-LAST:event_TCariKeyPressed
+    }// GEN-LAST:event_TCariKeyPressed
 
-    private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariActionPerformed
+    private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnCariActionPerformed
         if (TabRawat.getSelectedIndex() == 0) {
-        tampilobat();
-    } else if (TabRawat.getSelectedIndex() == 1) {
-        if (tbObatResepRacikan.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Silahkan masukkan racikan terlebih dahulu..!!");
-            return;
-        }
-        
-        if (tbObatResepRacikan.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(null, "Silahkan pilih baris racikan yang ingin diisi..!!");
-            return;
-        }
+            tampilobat();
+        } else if (TabRawat.getSelectedIndex() == 1) {
+            if (tbObatResepRacikan.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "Silahkan masukkan racikan terlebih dahulu..!!");
+                return;
+            }
 
-        // Cek apakah "Nama Racikan" (kolom 1) sudah diisi
-        Object namaRacik = tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 1);
-        if (namaRacik == null || namaRacik.toString().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Silahkan isi Nama Racikan (kolom 2) terlebih dahulu..!!");
-            tbObatResepRacikan.requestFocus();
-        } else {
-            // Jika Nama Racikan sudah ada, jalankan pencarian.
-            tampildetailracikanresep();
-        }
-    }
-}//GEN-LAST:event_BtnCariActionPerformed
+            if (tbObatResepRacikan.getSelectedRow() == -1) {
+                JOptionPane.showMessageDialog(null, "Silahkan pilih baris racikan yang ingin diisi..!!");
+                return;
+            }
 
-    private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnCariKeyPressed
+            // Cek apakah "Nama Racikan" (kolom 1) sudah diisi
+            Object namaRacik = tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 1);
+            if (namaRacik == null || namaRacik.toString().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Silahkan isi Nama Racikan (kolom 2) terlebih dahulu..!!");
+                tbObatResepRacikan.requestFocus();
+            } else {
+                // Jika Nama Racikan sudah ada, jalankan pencarian.
+                tampildetailracikanresep();
+            }
+        }
+    }// GEN-LAST:event_BtnCariActionPerformed
+
+    private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnCariKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnCariActionPerformed(null);
         } else {
             Valid.pindah(evt, TCari, BtnAll);
         }
-}//GEN-LAST:event_BtnCariKeyPressed
+    }// GEN-LAST:event_BtnCariKeyPressed
 
-    private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAllActionPerformed
+    private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnAllActionPerformed
         TCari.setText("");
         BtnCariActionPerformed(evt);
-}//GEN-LAST:event_BtnAllActionPerformed
+    }// GEN-LAST:event_BtnAllActionPerformed
 
-    private void BtnAllKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnAllKeyPressed
+    private void BtnAllKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnAllKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             BtnAllActionPerformed(null);
         } else {
             Valid.pindah(evt, BtnCari, TCari);
         }
-}//GEN-LAST:event_BtnAllKeyPressed
+    }// GEN-LAST:event_BtnAllKeyPressed
 
-    private void tbResepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbResepMouseClicked
+    private void tbResepMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tbResepMouseClicked
         if (tbResep.getRowCount() != 0) {
             try {
                 getCekStok();
             } catch (java.lang.NullPointerException e) {
             }
         }
-}//GEN-LAST:event_tbResepMouseClicked
+    }// GEN-LAST:event_tbResepMouseClicked
 
-    private void tbResepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbResepKeyPressed
+    private void tbResepKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_tbResepKeyPressed
         if (tbResep.getRowCount() != 0) {
             try {
                 if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -1229,13 +1333,13 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
             } catch (Exception e) {
             }
         }
-}//GEN-LAST:event_tbResepKeyPressed
+    }// GEN-LAST:event_tbResepKeyPressed
 
-    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
+    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnKeluarActionPerformed
         dispose();
-    }//GEN-LAST:event_BtnKeluarActionPerformed
+    }// GEN-LAST:event_BtnKeluarActionPerformed
 
-    private void BtnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTambahActionPerformed
+    private void BtnTambahActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnTambahActionPerformed
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         DlgBarang barang = new DlgBarang(null, false);
         barang.emptTeks();
@@ -1245,224 +1349,249 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
         barang.setAlwaysOnTop(false);
         barang.setVisible(true);
         this.setCursor(Cursor.getDefaultCursor());
-    }//GEN-LAST:event_BtnTambahActionPerformed
+    }// GEN-LAST:event_BtnTambahActionPerformed
 
-private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
-    if (TNoRw.getText().trim().equals("") || TPasien.getText().trim().equals("")) {
-        Valid.textKosong(TNoRw, "pasien");
-    } else if (KdDokter.getText().trim().equals("") || NmDokter.getText().trim().equals("")) {
-        Valid.textKosong(KdDokter, "Dokter");
-    } else if (NoResep.getText().trim().equals("")) {
-        Valid.textKosong(NoResep, "No.Resep");
-    } else if (ttl <= 0) {
-        JOptionPane.showMessageDialog(null, "Maaf, silahkan masukkan terlebih dahulu obat yang mau diberikan...!!!");
-        TCari.requestFocus();
-    } else {
-        int reply = JOptionPane.showConfirmDialog(rootPane, "Eeiiiiiits, udah bener belum data yang mau disimpan..??", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-        if (reply == JOptionPane.YES_OPTION) {
-            ChkJln.setSelected(false);
-            Sequel.AutoComitFalse();
-            sukses = true;
-            if (ubah == false) {
-                if (Sequel.menyimpantf2("resep_obat", "?,?,?,?,?,?,?,?,?,?", "Nomer Resep", 10, new String[]{
-                    NoResep.getText(), "0000-00-00", "00:00:00", TNoRw.getText(), KdDokter.getText(), Valid.SetTgl(DTPBeri.getSelectedItem() + ""),
-                    cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(), status, "0000-00-00", "00:00:00"
-                }) == true) {
-                    simpandata();
-                    SimpanTemplateResep();
-                } else {
-                    emptTeksobat();
-                    if (Sequel.menyimpantf2("resep_obat", "?,?,?,?,?,?,?,?,?,?", "Nomer Resep", 10, new String[]{
-                        NoResep.getText(), "0000-00-00", "00:00:00", TNoRw.getText(), KdDokter.getText(), Valid.SetTgl(DTPBeri.getSelectedItem() + ""),
-                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(), status, "0000-00-00", "00:00:00"
+    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnSimpanActionPerformed
+        if (TNoRw.getText().trim().equals("") || TPasien.getText().trim().equals("")) {
+            Valid.textKosong(TNoRw, "pasien");
+        } else if (KdDokter.getText().trim().equals("") || NmDokter.getText().trim().equals("")) {
+            Valid.textKosong(KdDokter, "Dokter");
+        } else if (NoResep.getText().trim().equals("")) {
+            Valid.textKosong(NoResep, "No.Resep");
+        } else if (ttl <= 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Maaf, silahkan masukkan terlebih dahulu obat yang mau diberikan...!!!");
+            TCari.requestFocus();
+        } else {
+            int reply = JOptionPane.showConfirmDialog(rootPane,
+                    "Eeiiiiiits, udah bener belum data yang mau disimpan..??", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                ChkJln.setSelected(false);
+                Sequel.AutoComitFalse();
+                sukses = true;
+                if (ubah == false) {
+                    if (Sequel.menyimpantf2("resep_obat", "?,?,?,?,?,?,?,?,?,?", "Nomer Resep", 10, new String[] {
+                            NoResep.getText(), "0000-00-00", "00:00:00", TNoRw.getText(), KdDokter.getText(),
+                            Valid.SetTgl(DTPBeri.getSelectedItem() + ""),
+                            cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(),
+                            status, "0000-00-00", "00:00:00"
                     }) == true) {
                         simpandata();
                         SimpanTemplateResep();
                     } else {
                         emptTeksobat();
-                        if (Sequel.menyimpantf2("resep_obat", "?,?,?,?,?,?,?,?,?,?", "Nomer Resep", 10, new String[]{
-                            NoResep.getText(), "0000-00-00", "00:00:00", TNoRw.getText(), KdDokter.getText(), Valid.SetTgl(DTPBeri.getSelectedItem() + ""),
-                            cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(), status, "0000-00-00", "00:00:00"
+                        if (Sequel.menyimpantf2("resep_obat", "?,?,?,?,?,?,?,?,?,?", "Nomer Resep", 10, new String[] {
+                                NoResep.getText(), "0000-00-00", "00:00:00", TNoRw.getText(), KdDokter.getText(),
+                                Valid.SetTgl(DTPBeri.getSelectedItem() + ""),
+                                cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
+                                        + cmbDtk.getSelectedItem(),
+                                status, "0000-00-00", "00:00:00"
                         }) == true) {
                             simpandata();
                             SimpanTemplateResep();
                         } else {
                             emptTeksobat();
-                            sukses = false;
+                            if (Sequel.menyimpantf2("resep_obat", "?,?,?,?,?,?,?,?,?,?", "Nomer Resep", 10,
+                                    new String[] {
+                                            NoResep.getText(), "0000-00-00", "00:00:00", TNoRw.getText(),
+                                            KdDokter.getText(), Valid.SetTgl(DTPBeri.getSelectedItem() + ""),
+                                            cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
+                                                    + cmbDtk.getSelectedItem(),
+                                            status, "0000-00-00", "00:00:00"
+                                    }) == true) {
+                                simpandata();
+                                SimpanTemplateResep();
+                            } else {
+                                emptTeksobat();
+                                sukses = false;
+                            }
                         }
                     }
+                } else if (ubah == true) {
+                    Sequel.meghapus("resep_dokter", "no_resep", NoResep.getText());
+                    Sequel.meghapus("resep_dokter_racikan", "no_resep", NoResep.getText());
+                    Sequel.meghapus("resep_dokter_racikan_detail", "no_resep", NoResep.getText());
+                    ubah = false;
+                    simpandata();
                 }
-            } else if (ubah == true) {
-                Sequel.meghapus("resep_dokter", "no_resep", NoResep.getText());
-                Sequel.meghapus("resep_dokter_racikan", "no_resep", NoResep.getText());
-                Sequel.meghapus("resep_dokter_racikan_detail", "no_resep", NoResep.getText());
-                ubah = false;
-                simpandata();
-            }
 
-            if (sukses == true) {
-                if (RESEPRAJALKEPLAN.equals("yes") && status.equals("ralan") && (ubah == false)) {
-                    try {
-                        ps2 = koneksi.prepareStatement(
-                                "select pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat from pemeriksaan_ralan where pemeriksaan_ralan.no_rawat=? and pemeriksaan_ralan.nip=? order by pemeriksaan_ralan.tgl_perawatan desc,pemeriksaan_ralan.jam_rawat desc limit 1");
+                if (sukses == true) {
+                    if (RESEPRAJALKEPLAN.equals("yes") && status.equals("ralan") && (ubah == false)) {
                         try {
-                            ps2.setString(1, TNoRw.getText());
-                            ps2.setString(2, KdDokter.getText());
-                            rs2 = ps2.executeQuery();
-                            if (rs2.next()) {
-                                resep = "Resep : \n";
-                                psresep = koneksi.prepareStatement(
-                                        "select databarang.nama_brng,resep_dokter.jml,resep_dokter.aturan_pakai from databarang inner join resep_dokter on databarang.kode_brng=resep_dokter.kode_brng where resep_dokter.no_resep=?");
-                                try {
-                                    psresep.setString(1, NoResep.getText());
-                                    rsobat = psresep.executeQuery();
-                                    while (rsobat.next()) {
-                                        resep = resep + rsobat.getString("nama_brng") + " Jumlah " + rsobat.getString("jml") + " Aturan Pakai " + rsobat.getString("aturan_pakai") + "\n";
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println("Notif : " + e);
-                                } finally {
-                                    if (rsobat != null) {
-                                        rsobat.close();
-                                    }
+                            ps2 = koneksi.prepareStatement(
+                                    "select pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat from pemeriksaan_ralan where pemeriksaan_ralan.no_rawat=? and pemeriksaan_ralan.nip=? order by pemeriksaan_ralan.tgl_perawatan desc,pemeriksaan_ralan.jam_rawat desc limit 1");
+                            try {
+                                ps2.setString(1, TNoRw.getText());
+                                ps2.setString(2, KdDokter.getText());
+                                rs2 = ps2.executeQuery();
+                                if (rs2.next()) {
+                                    resep = "Resep : \n";
+                                    psresep = koneksi.prepareStatement(
+                                            "select databarang.nama_brng,resep_dokter.jml,resep_dokter.aturan_pakai from databarang inner join resep_dokter on databarang.kode_brng=resep_dokter.kode_brng where resep_dokter.no_resep=?");
+                                    try {
+                                        psresep.setString(1, NoResep.getText());
+                                        rsobat = psresep.executeQuery();
+                                        while (rsobat.next()) {
+                                            resep = resep + rsobat.getString("nama_brng") + " Jumlah "
+                                                    + rsobat.getString("jml") + " Aturan Pakai "
+                                                    + rsobat.getString("aturan_pakai") + "\n";
+                                        }
+                                    } catch (Exception e) {
+                                        System.out.println("Notif : " + e);
+                                    } finally {
+                                        if (rsobat != null) {
+                                            rsobat.close();
+                                        }
 
-                                    if (psresep != null) {
-                                        psresep.close();
-                                    }
-                                }
-
-                                psresep = koneksi.prepareStatement(
-                                        "select resep_dokter_racikan.no_racik,resep_dokter_racikan.nama_racik,metode_racik.nm_racik as metode,resep_dokter_racikan.jml_dr,resep_dokter_racikan.aturan_pakai "
-                                        + "from resep_dokter_racikan inner join metode_racik on resep_dokter_racikan.kd_racik=metode_racik.kd_racik where resep_dokter_racikan.no_resep=?");
-                                try {
-                                    psresep.setString(1, NoResep.getText());
-                                    rsobat = psresep.executeQuery();
-                                    while (rsobat.next()) {
-                                        resep = resep + rsobat.getString("no_racik") + ". " + rsobat.getString("nama_racik") + " Jumlah " + rsobat.getString("jml_dr") + " " + rsobat.getString("metode") + " Aturan Pakai " + rsobat.getString("aturan_pakai") + "\n";
-                                        pscarikapasitas = koneksi.prepareStatement(
-                                                "select databarang.nama_brng,resep_dokter_racikan_detail.jml from resep_dokter_racikan_detail inner join databarang "
-                                                + "on resep_dokter_racikan_detail.kode_brng=databarang.kode_brng where resep_dokter_racikan_detail.no_resep=? and "
-                                                + "resep_dokter_racikan_detail.no_racik=?");
-                                        try {
-                                            pscarikapasitas.setString(1, NoResep.getText());
-                                            pscarikapasitas.setString(2, rsobat.getString("no_racik"));
-                                            carikapasitas = pscarikapasitas.executeQuery();
-                                            while (carikapasitas.next()) {
-                                                resep = resep + "-- " + carikapasitas.getString("nama_brng") + " " + carikapasitas.getString("jml") + "\n";
-                                            }
-                                        } catch (Exception e) {
-                                            System.out.println("Notif : " + e);
-                                        } finally {
-                                            if (carikapasitas != null) {
-                                                carikapasitas.close();
-                                            }
-
-                                            if (pscarikapasitas != null) {
-                                                pscarikapasitas.close();
-                                            }
+                                        if (psresep != null) {
+                                            psresep.close();
                                         }
                                     }
-                                } catch (Exception e) {
-                                    System.out.println("Notif : " + e);
-                                } finally {
-                                    if (rsobat != null) {
-                                        rsobat.close();
+
+                                    psresep = koneksi.prepareStatement(
+                                            "select resep_dokter_racikan.no_racik,resep_dokter_racikan.nama_racik,metode_racik.nm_racik as metode,resep_dokter_racikan.jml_dr,resep_dokter_racikan.aturan_pakai "
+                                                    + "from resep_dokter_racikan inner join metode_racik on resep_dokter_racikan.kd_racik=metode_racik.kd_racik where resep_dokter_racikan.no_resep=?");
+                                    try {
+                                        psresep.setString(1, NoResep.getText());
+                                        rsobat = psresep.executeQuery();
+                                        while (rsobat.next()) {
+                                            resep = resep + rsobat.getString("no_racik") + ". "
+                                                    + rsobat.getString("nama_racik") + " Jumlah "
+                                                    + rsobat.getString("jml_dr") + " " + rsobat.getString("metode")
+                                                    + " Aturan Pakai " + rsobat.getString("aturan_pakai") + "\n";
+                                            pscarikapasitas = koneksi.prepareStatement(
+                                                    "select databarang.nama_brng,resep_dokter_racikan_detail.jml from resep_dokter_racikan_detail inner join databarang "
+                                                            + "on resep_dokter_racikan_detail.kode_brng=databarang.kode_brng where resep_dokter_racikan_detail.no_resep=? and "
+                                                            + "resep_dokter_racikan_detail.no_racik=?");
+                                            try {
+                                                pscarikapasitas.setString(1, NoResep.getText());
+                                                pscarikapasitas.setString(2, rsobat.getString("no_racik"));
+                                                carikapasitas = pscarikapasitas.executeQuery();
+                                                while (carikapasitas.next()) {
+                                                    resep = resep + "-- " + carikapasitas.getString("nama_brng") + " "
+                                                            + carikapasitas.getString("jml") + "\n";
+                                                }
+                                            } catch (Exception e) {
+                                                System.out.println("Notif : " + e);
+                                            } finally {
+                                                if (carikapasitas != null) {
+                                                    carikapasitas.close();
+                                                }
+
+                                                if (pscarikapasitas != null) {
+                                                    pscarikapasitas.close();
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        System.out.println("Notif : " + e);
+                                    } finally {
+                                        if (rsobat != null) {
+                                            rsobat.close();
+                                        }
+
+                                        if (psresep != null) {
+                                            psresep.close();
+                                        }
                                     }
 
-                                    if (psresep != null) {
-                                        psresep.close();
-                                    }
+                                    Sequel.queryu2(
+                                            "update pemeriksaan_ralan set rtl=concat(rtl,' ',?) where no_rawat=? and tgl_perawatan=? and jam_rawat=? and nip=?",
+                                            5, new String[] {
+                                                    resep, TNoRw.getText(), rs2.getString("tgl_perawatan"),
+                                                    rs2.getString("jam_rawat"), KdDokter.getText()
+                                            });
+
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Notif : " + e);
+                            } finally {
+                                if (rs2 != null) {
+                                    rs2.close();
                                 }
 
-                                Sequel.queryu2("update pemeriksaan_ralan set rtl=concat(rtl,' ',?) where no_rawat=? and tgl_perawatan=? and jam_rawat=? and nip=?", 5, new String[]{
-                                    resep, TNoRw.getText(), rs2.getString("tgl_perawatan"), rs2.getString("jam_rawat"), KdDokter.getText()
-                                });
-
+                                if (ps2 != null) {
+                                    ps2.close();
+                                }
                             }
                         } catch (Exception e) {
                             System.out.println("Notif : " + e);
-                        } finally {
-                            if (rs2 != null) {
-                                rs2.close();
-                            }
-
-                            if (ps2 != null) {
-                                ps2.close();
-                            }
                         }
-                    } catch (Exception e) {
-                        System.out.println("Notif : " + e);
                     }
-                }
 
-                Sequel.Commit();
-                for (i = 0; i < tbResep.getRowCount(); i++) {
-                    tbResep.setValueAt("", i, 1);
-                    tbResep.setValueAt("", i, 2);
+                    Sequel.Commit();
+                    for (i = 0; i < tbResep.getRowCount(); i++) {
+                        tbResep.setValueAt("", i, 1);
+                        tbResep.setValueAt("", i, 2);
+                    }
+                    Valid.tabelKosong(tabModeResepRacikan);
+                    Valid.tabelKosong(tabModeDetailResepRacikan);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Terjadi kesalahan saat pemrosesan data, transaksi dibatalkan.\nPeriksa kembali data sebelum melanjutkan menyimpan..!!");
+                    Sequel.RollBack();
                 }
-                Valid.tabelKosong(tabModeResepRacikan);
-                Valid.tabelKosong(tabModeDetailResepRacikan);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Terjadi kesalahan saat pemrosesan data, transaksi dibatalkan.\nPeriksa kembali data sebelum melanjutkan menyimpan..!!");
-                Sequel.RollBack();
+                Sequel.AutoComitTrue();
+                Sequel.menyimpan("mutasi_berkas", "'" + TNoRw.getText()
+                        + "','Sudah Kembali',now(),'0000-00-00 00:00:00',now()+ INTERVAL 5 SECOND,'0000-00-00 00:00:00','0000-00-00 00:00:00'",
+                        "status='Sudah Kembali',kembali=now()+ INTERVAL 5 SECOND",
+                        "no_rawat='" + TNoRw.getText() + "'");
+                ChkJln.setSelected(true);
             }
-            Sequel.AutoComitTrue();
-            Sequel.menyimpan("mutasi_berkas", "'" + TNoRw.getText() + "','Sudah Kembali',now(),'0000-00-00 00:00:00',now()+ INTERVAL 5 SECOND,'0000-00-00 00:00:00','0000-00-00 00:00:00'", "status='Sudah Kembali',kembali=now()+ INTERVAL 5 SECOND", "no_rawat='" + TNoRw.getText() + "'");
-            ChkJln.setSelected(true);
         }
-    }
-}//GEN-LAST:event_BtnSimpanActionPerformed
+    }// GEN-LAST:event_BtnSimpanActionPerformed
 
-private void BtnSeek5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSeek5ActionPerformed
-    DlgCariKonversi carikonversi = new DlgCariKonversi(null, false);
-    carikonversi.setLocationRelativeTo(internalFrame1);
-    carikonversi.setAlwaysOnTop(false);
-    carikonversi.setVisible(true);
-}//GEN-LAST:event_BtnSeek5ActionPerformed
+    private void BtnSeek5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnSeek5ActionPerformed
+        DlgCariKonversi carikonversi = new DlgCariKonversi(null, false);
+        carikonversi.setLocationRelativeTo(internalFrame1);
+        carikonversi.setAlwaysOnTop(false);
+        carikonversi.setVisible(true);
+    }// GEN-LAST:event_BtnSeek5ActionPerformed
 
-private void BtnSeek5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnSeek5KeyPressed
-// TODO add your handling code here:
-}//GEN-LAST:event_BtnSeek5KeyPressed
+    private void BtnSeek5KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnSeek5KeyPressed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_BtnSeek5KeyPressed
 
-private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ppBersihkanActionPerformed
-    if (TabRawat.getSelectedIndex() == 0) {
-        for (i = 0; i < tbResep.getRowCount(); i++) {
-            tbResep.setValueAt(false, i, 0);
-            tbResep.setValueAt("", i, 1);
-            tbResep.setValueAt("", i, 2);
+    private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ppBersihkanActionPerformed
+        if (TabRawat.getSelectedIndex() == 0) {
+            for (i = 0; i < tbResep.getRowCount(); i++) {
+                tbResep.setValueAt(false, i, 0);
+                tbResep.setValueAt("", i, 1);
+                tbResep.setValueAt("", i, 2);
+            }
+        } else if (TabRawat.getSelectedIndex() == 1) {
+            for (i = 0; i < tbDetailResepObatRacikan.getRowCount(); i++) {
+                tbDetailResepObatRacikan.setValueAt(1, i, 9);
+                tbDetailResepObatRacikan.setValueAt(1, i, 11);
+                tbDetailResepObatRacikan.setValueAt("", i, 12);
+                tbDetailResepObatRacikan.setValueAt(0, i, 13);
+            }
         }
-    } else if (TabRawat.getSelectedIndex() == 1) {
-        for (i = 0; i < tbDetailResepObatRacikan.getRowCount(); i++) {
-            tbDetailResepObatRacikan.setValueAt(1, i, 9);
-            tbDetailResepObatRacikan.setValueAt(1, i, 11);
-            tbDetailResepObatRacikan.setValueAt("", i, 12);
-            tbDetailResepObatRacikan.setValueAt(0, i, 13);
-        }
-    }
-    hitungResep();
-}//GEN-LAST:event_ppBersihkanActionPerformed
+        hitungResep();
+    }// GEN-LAST:event_ppBersihkanActionPerformed
 
-    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowActivated
         TabRawatMouseClicked(null);
         if (ubah == false) {
             emptTeksobat();
         }
 
-    }//GEN-LAST:event_formWindowActivated
+    }// GEN-LAST:event_formWindowActivated
 
-    private void TNoRwKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TNoRwKeyPressed
+    private void TNoRwKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TNoRwKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
             Sequel.cariIsi("select concat(pasien.no_rkm_medis,' ',pasien.nm_pasien) from reg_periksa inner join pasien "
-                    + " on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where reg_periksa.no_rawat=? ", TPasien, TNoRw.getText());
+                    + " on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where reg_periksa.no_rawat=? ", TPasien,
+                    TNoRw.getText());
         } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             TCari.requestFocus();
         } else {
             Valid.pindah(evt, KdDokter, DTPBeri);
         }
-    }//GEN-LAST:event_TNoRwKeyPressed
+    }// GEN-LAST:event_TNoRwKeyPressed
 
-    private void KdDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KdDokterKeyPressed
+    private void KdDokterKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_KdDokterKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
             NmDokter.setText(dokter.tampil3(KdDokter.getText()));
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
@@ -1470,40 +1599,40 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         } else {
             Valid.pindah(evt, NoResep, BtnSimpan);
         }
-    }//GEN-LAST:event_KdDokterKeyPressed
+    }// GEN-LAST:event_KdDokterKeyPressed
 
-    private void btnDokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDokterActionPerformed
+    private void btnDokterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnDokterActionPerformed
         dokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
         dokter.isCek();
         dokter.setLocationRelativeTo(internalFrame1);
         dokter.setVisible(true);
-    }//GEN-LAST:event_btnDokterActionPerformed
+    }// GEN-LAST:event_btnDokterActionPerformed
 
-    private void btnDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnDokterKeyPressed
+    private void btnDokterKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_btnDokterKeyPressed
         Valid.pindah(evt, KdDokter, BtnSimpan);
-    }//GEN-LAST:event_btnDokterKeyPressed
+    }// GEN-LAST:event_btnDokterKeyPressed
 
-    private void NoResepKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NoResepKeyPressed
+    private void NoResepKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NoResepKeyPressed
         Valid.pindah(evt, cmbDtk, KdDokter);
-    }//GEN-LAST:event_NoResepKeyPressed
+    }// GEN-LAST:event_NoResepKeyPressed
 
-    private void DTPBeriKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DTPBeriKeyPressed
+    private void DTPBeriKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_DTPBeriKeyPressed
         Valid.pindah(evt, TNoRw, cmbJam);
-    }//GEN-LAST:event_DTPBeriKeyPressed
+    }// GEN-LAST:event_DTPBeriKeyPressed
 
-    private void cmbJamKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbJamKeyPressed
+    private void cmbJamKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbJamKeyPressed
         Valid.pindah(evt, DTPBeri, cmbMnt);
-    }//GEN-LAST:event_cmbJamKeyPressed
+    }// GEN-LAST:event_cmbJamKeyPressed
 
-    private void cmbMntKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbMntKeyPressed
+    private void cmbMntKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbMntKeyPressed
         Valid.pindah(evt, cmbJam, cmbDtk);
-    }//GEN-LAST:event_cmbMntKeyPressed
+    }// GEN-LAST:event_cmbMntKeyPressed
 
-    private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbDtkKeyPressed
+    private void cmbDtkKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbDtkKeyPressed
         Valid.pindah(evt, cmbMnt, NoResep);
-    }//GEN-LAST:event_cmbDtkKeyPressed
+    }// GEN-LAST:event_cmbDtkKeyPressed
 
-    private void ChkRMItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ChkRMItemStateChanged
+    private void ChkRMItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_ChkRMItemStateChanged
         if (ChkRM.isSelected() == true) {
             NoResep.setEditable(false);
             NoResep.setBackground(new Color(245, 250, 240));
@@ -1513,21 +1642,21 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             NoResep.setBackground(new Color(250, 255, 245));
             NoResep.setText("");
         }
-    }//GEN-LAST:event_ChkRMItemStateChanged
+    }// GEN-LAST:event_ChkRMItemStateChanged
 
-    private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkJlnActionPerformed
+    private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ChkJlnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ChkJlnActionPerformed
+    }// GEN-LAST:event_ChkJlnActionPerformed
 
-    private void JeniskelasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_JeniskelasItemStateChanged
+    private void JeniskelasItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_JeniskelasItemStateChanged
         tampilobat();
-    }//GEN-LAST:event_JeniskelasItemStateChanged
+    }// GEN-LAST:event_JeniskelasItemStateChanged
 
-    private void JeniskelasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JeniskelasKeyPressed
+    private void JeniskelasKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_JeniskelasKeyPressed
         Valid.pindah(evt, TCari, BtnKeluar);
-    }//GEN-LAST:event_JeniskelasKeyPressed
+    }// GEN-LAST:event_JeniskelasKeyPressed
 
-    private void TabRawatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabRawatMouseClicked
+    private void TabRawatMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_TabRawatMouseClicked
         if (TabRawat.getSelectedIndex() == 0) {
             BtnTambah1.setVisible(false);
             BtnHapus.setVisible(false);
@@ -1537,16 +1666,17 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             BtnHapus.setVisible(true);
             TCari.setPreferredSize(new Dimension(181, 23));
         }
-    }//GEN-LAST:event_TabRawatMouseClicked
+    }// GEN-LAST:event_TabRawatMouseClicked
 
-    private void tbObatResepRacikanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbObatResepRacikanKeyPressed
+    private void tbObatResepRacikanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_tbObatResepRacikanKeyPressed
         if (tbObatResepRacikan.getRowCount() != 0) {
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 if (tbObatResepRacikan.getSelectedRow() != -1) {
                     int barisRacikan = tbObatResepRacikan.getSelectedRow();
                     String templateId = "";
                     String templateNoRacik = "";
-                    String noRacikDiTabel = tbObatResepRacikan.getValueAt(barisRacikan, 0).toString(); // Ini adalah No baru
+                    String noRacikDiTabel = tbObatResepRacikan.getValueAt(barisRacikan, 0).toString(); // Ini adalah No
+                                                                                                       // baru
 
                     try {
                         // Ambil data dari kolom tersembunyi
@@ -1557,8 +1687,9 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
 
                     // Cek apakah baris ini berasal dari template
-                    if (templateId != null && !templateId.isEmpty() && templateNoRacik != null && !templateNoRacik.isEmpty()) {
-                        
+                    if (templateId != null && !templateId.isEmpty() && templateNoRacik != null
+                            && !templateNoRacik.isEmpty()) {
+
                         // Hapus detail LAMA untuk NoRacik ini sebelum memuat yang baru
                         // Ini penting jika Jml.Racik diubah
                         for (int j = tabModeDetailResepRacikan.getRowCount() - 1; j >= 0; j--) {
@@ -1566,10 +1697,11 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                 tabModeDetailResepRacikan.removeRow(j);
                             }
                         }
-                       
+
                         // Panggil metode kalkulasi template dengan parameter yang benar
-                        hitungDanTampilkanDetailRacikanTemplate(templateId, templateNoRacik, noRacikDiTabel); // Kirim No baru
-                        
+                        hitungDanTampilkanDetailRacikanTemplate(templateId, templateNoRacik, noRacikDiTabel); // Kirim
+                                                                                                              // No baru
+
                     } else {
                         // Jika tidak dari template (ini adalah racikan manual)
                         if (tbObatResepRacikan.getValueAt(barisRacikan, 1).toString().equals("")) {
@@ -1577,7 +1709,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             tbObatResepRacikan.requestFocus();
                         } else {
                             // Panggil metode untuk menampilkan/mencari bahan racikan manual
-                            tampildetailracikanresep(); 
+                            tampildetailracikanresep();
                         }
                     }
                 }
@@ -1596,38 +1728,73 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 }
             }
         }
-    }//GEN-LAST:event_tbObatResepRacikanKeyPressed
+    }// GEN-LAST:event_tbObatResepRacikanKeyPressed
 
-    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
-        if (tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 1).equals("") && tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 4).equals("") && tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 5).equals("") && tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 6).equals("")) {
+    private void tbObatResepRacikanMouseClicked(java.awt.event.MouseEvent evt) {
+        if (tbObatResepRacikan.getRowCount() != 0) {
+            if (evt.getClickCount() == 2) {
+                i = tbObatResepRacikan.getSelectedColumn();
+                if (i == 5) {
+                    aturanpakai.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                    aturanpakai.setLocationRelativeTo(internalFrame1);
+                    aturanpakai.setVisible(true);
+                } else if (i == 3) {
+                    metoderacik.isCek();
+                    metoderacik.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                    metoderacik.setLocationRelativeTo(internalFrame1);
+                    metoderacik.setVisible(true);
+                }
+            }
+        }
+    }
+
+    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnHapusActionPerformed
+        if (tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 1).equals("")
+                && tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 4).equals("")
+                && tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 5).equals("")
+                && tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 6).equals("")) {
             tabModeResepRacikan.removeRow(tbObatResepRacikan.getSelectedRow());
         } else {
             JOptionPane.showMessageDialog(null, "Maaf sudah terisi, gak boleh dihapus..!!");
         }
-    }//GEN-LAST:event_BtnHapusActionPerformed
+    }// GEN-LAST:event_BtnHapusActionPerformed
 
-    private void BtnTambah1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTambah1ActionPerformed
+    private void BtnTambah1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnTambah1ActionPerformed
         i = tabModeResepRacikan.getRowCount() + 1;
         if (i == 99) {
             JOptionPane.showMessageDialog(null, "Maksimal 98 Racikan..!!");
         } else {
-            tabModeResepRacikan.addRow(new Object[]{"" + i, "", "", "", "", "", ""});
+            tabModeResepRacikan.addRow(new Object[] { "" + i, "", "", "", "", "", "" });
         }
-    }//GEN-LAST:event_BtnTambah1ActionPerformed
+    }// GEN-LAST:event_BtnTambah1ActionPerformed
 
-    private void tbDetailResepObatRacikanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbDetailResepObatRacikanKeyPressed
+    private void tbDetailResepObatRacikanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_tbDetailResepObatRacikanKeyPressed
         if (tbDetailResepObatRacikan.getRowCount() != 0) {
             try {
-                if ((evt.getKeyCode() == KeyEvent.VK_ENTER) || (evt.getKeyCode() == KeyEvent.VK_RIGHT) || (evt.getKeyCode() == KeyEvent.VK_UP) || (evt.getKeyCode() == KeyEvent.VK_DOWN)) {
+                if ((evt.getKeyCode() == KeyEvent.VK_ENTER) || (evt.getKeyCode() == KeyEvent.VK_RIGHT)
+                        || (evt.getKeyCode() == KeyEvent.VK_UP) || (evt.getKeyCode() == KeyEvent.VK_DOWN)) {
                     i = tbDetailResepObatRacikan.getSelectedColumn();
                     if ((i == 11) || (i == 9) || (i == 13) || (i == 14)) {
                         try {
-                            if (!tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 11).toString().equals(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 9).toString())) {
-                                if (Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 8).toString()) == 0) {
+                            if (!tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 11)
+                                    .toString().equals(tbDetailResepObatRacikan
+                                            .getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 9).toString())) {
+                                if (Valid.SetAngka(tbDetailResepObatRacikan
+                                        .getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 8).toString()) == 0) {
                                     JOptionPane.showMessageDialog(null, "Kapasitas obat masih kosong..!!!");
                                 } else {
-                                    tbDetailResepObatRacikan.setValueAt(Valid.SetAngka8(Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 8).toString())
-                                            * (Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 9).toString()) / Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 11).toString())), 1),
+                                    tbDetailResepObatRacikan.setValueAt(
+                                            Valid.SetAngka8(Valid
+                                                    .SetAngka(tbDetailResepObatRacikan
+                                                            .getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 8)
+                                                            .toString())
+                                                    * (Valid.SetAngka(tbDetailResepObatRacikan
+                                                            .getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 9)
+                                                            .toString())
+                                                            / Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(
+                                                                    tbDetailResepObatRacikan.getSelectedRow(), 11)
+                                                                    .toString())),
+                                                    1),
                                             tbDetailResepObatRacikan.getSelectedRow(), 12);
                                 }
                             }
@@ -1636,10 +1803,11 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         }
                         getCekStokRacikan();
                     } else if (i == 12) {
-                        if (tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 12).toString().contains("%")) {
-                            getDatadetailresepracikan2();
+                        if (tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 12)
+                                .toString().contains("%")) {
+                            getDatadetailresepracikan2(tbDetailResepObatRacikan.getSelectedRow());
                         } else {
-                            getDatadetailresepracikan();
+                            getDatadetailresepracikan(tbDetailResepObatRacikan.getSelectedRow());
                         }
                         getCekStokRacikan();
                     }
@@ -1648,26 +1816,33 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             } catch (Exception e) {
             }
         }
-    }//GEN-LAST:event_tbDetailResepObatRacikanKeyPressed
+    }// GEN-LAST:event_tbDetailResepObatRacikanKeyPressed
 
-    private void tbDetailResepObatRacikanPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tbDetailResepObatRacikanPropertyChange
+    private void tbDetailResepObatRacikanMouseClicked(java.awt.event.MouseEvent evt) {
+        if (tbDetailResepObatRacikan.getRowCount() != 0) {
+            if (evt.getClickCount() == 2) {
+                int col = tbDetailResepObatRacikan.getSelectedColumn();
+                int row = tbDetailResepObatRacikan.getSelectedRow();
+                if (col == 15 && row != -1) {
+                    tbDetailResepObatRacikan.setValueAt("", row, 15);
+                }
+                // Kolom numerik 9,11,12,13 sudah ditangani oleh selectAllEditor
+            }
+        }
+    }
+
+    private void tbDetailResepObatRacikanPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_tbDetailResepObatRacikanPropertyChange
         if (this.isVisible() == true) {
             try {
-                if (tbDetailResepObatRacikan.getSelectedRow() != -1) {
-                    if (tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 12).toString().contains("%")) {
-                        getDatadetailresepracikan2();
-                    }
-                } else {
-                    getDatadetailresepracikan();
-                }
+                calculateSemuaRacikan();
                 getCekStokRacikan();
                 hitungResep();
             } catch (Exception e) {
             }
         }
-    }//GEN-LAST:event_tbDetailResepObatRacikanPropertyChange
+    }// GEN-LAST:event_tbDetailResepObatRacikanPropertyChange
 
-    private void tbResepPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tbResepPropertyChange
+    private void tbResepPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_tbResepPropertyChange
         if (this.isVisible() == true) {
             try {
                 getCekStok();
@@ -1675,9 +1850,9 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             } catch (Exception e) {
             }
         }
-    }//GEN-LAST:event_tbResepPropertyChange
+    }// GEN-LAST:event_tbResepPropertyChange
 
-    private void ppStok1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ppStok1ActionPerformed
+    private void ppStok1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ppStok1ActionPerformed
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         DlgCekStok ceksetok = new DlgCekStok(null, false);
         ceksetok.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
@@ -1685,47 +1860,47 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         ceksetok.setAlwaysOnTop(false);
         ceksetok.setVisible(true);
         this.setCursor(Cursor.getDefaultCursor());
-    }//GEN-LAST:event_ppStok1ActionPerformed
+    }// GEN-LAST:event_ppStok1ActionPerformed
 
-    private void DTPBeriItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_DTPBeriItemStateChanged
+    private void DTPBeriItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_DTPBeriItemStateChanged
         try {
             emptTeksobat();
         } catch (Exception e) {
         }
 
-    }//GEN-LAST:event_DTPBeriItemStateChanged
+    }// GEN-LAST:event_DTPBeriItemStateChanged
 
-    private void TglLahirKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TglLahirKeyPressed
+    private void TglLahirKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TglLahirKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TglLahirKeyPressed
+    }// GEN-LAST:event_TglLahirKeyPressed
 
-    private void ChkTemplateItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ChkTemplateItemStateChanged
+    private void ChkTemplateItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_ChkTemplateItemStateChanged
         if (ChkTemplate.isSelected() == true) {
             NamaTemplate.setVisible(true);
             lblTemplate.setVisible(true);
         } else {
             NamaTemplate.setVisible(false);
         }
-    }//GEN-LAST:event_ChkTemplateItemStateChanged
+    }// GEN-LAST:event_ChkTemplateItemStateChanged
 
-    private void NamaTemplateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NamaTemplateKeyPressed
+    private void NamaTemplateKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NamaTemplateKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_NamaTemplateKeyPressed
+    }// GEN-LAST:event_NamaTemplateKeyPressed
 
-    private void NoTelpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NoTelpKeyPressed
+    private void NoTelpKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NoTelpKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_NoTelpKeyPressed
+    }// GEN-LAST:event_NoTelpKeyPressed
 
-    private void BtnCariTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariTemplateActionPerformed
+    private void BtnCariTemplateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnCariTemplateActionPerformed
         caritemplate.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
         caritemplate.setLocationRelativeTo(internalFrame1);
         caritemplate.tampil();
         caritemplate.setVisible(true);
-    }//GEN-LAST:event_BtnCariTemplateActionPerformed
+    }// GEN-LAST:event_BtnCariTemplateActionPerformed
 
-    private void BtnCariTemplateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnCariTemplateKeyPressed
-        
-    }//GEN-LAST:event_BtnCariTemplateKeyPressed
+    private void BtnCariTemplateKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnCariTemplateKeyPressed
+
+    }// GEN-LAST:event_BtnCariTemplateKeyPressed
 
     /**
      * @param args the command line arguments
@@ -1880,8 +2055,9 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         Valid.tabelKosong(tabModeResep);
 
         for (i = 0; i < z; i++) {
-            tabModeResep.addRow(new Object[]{
-                pilih[i], jumlah[i], aturan[i], kodebarang[i], namabarang[i], kodesatuan[i], letakbarang[i], harga[i], namajenis[i], industri[i], beli[i], stok[i]
+            tabModeResep.addRow(new Object[] {
+                    pilih[i], jumlah[i], aturan[i], kodebarang[i], namabarang[i], kodesatuan[i], letakbarang[i],
+                    harga[i], namajenis[i], industri[i], beli[i], stok[i]
             });
         }
 
@@ -1892,25 +2068,29 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
                 }
 
                 try {
@@ -1922,10 +2102,12 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     psresepasuransi.setString(6, "%" + TCari.getText().trim() + "%");
                     rsobat = psresepasuransi.executeQuery();
                     while (rsobat.next()) {
-                        tabModeResep.addRow(new Object[]{
-                            false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                            rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100), rsobat.getString("nama"),
-                            rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                        tabModeResep.addRow(new Object[] {
+                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                rsobat.getString("kode_sat"),
+                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                rsobat.getString("nama"),
+                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                         });
                     }
                 } catch (Exception e) {
@@ -1947,14 +2129,15 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " where  databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " where  databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
@@ -1962,14 +2145,15 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " where  databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " where  databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
                 }
 
                 try {
@@ -1981,74 +2165,101 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     rsobat = psresep.executeQuery();
                     if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"), rsobat.getString("kode_sat"),
-                                rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100), rsobat.getString("nama"),
-                                rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, "", "", rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"),
+                                    rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100),
+                                    rsobat.getString("nama"),
+                                    rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"),
+                                    rsobat.getDouble("stok")
                             });
                         }
                     }
@@ -2071,8 +2282,14 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     public void emptTeksobat() {
         if (ChkRM.isSelected() == true) {
-            Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(resep_obat.no_resep,4),signed)),0) from resep_obat where resep_obat.tgl_peresepan='" + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' or resep_obat.tgl_perawatan='" + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' ",
-                    DTPBeri.getSelectedItem().toString().substring(6, 10) + DTPBeri.getSelectedItem().toString().substring(3, 5) + DTPBeri.getSelectedItem().toString().substring(0, 2), 4, NoResep);
+            Valid.autoNomer3(
+                    "select ifnull(MAX(CONVERT(RIGHT(resep_obat.no_resep,4),signed)),0) from resep_obat where resep_obat.tgl_peresepan='"
+                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' or resep_obat.tgl_perawatan='"
+                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' ",
+                    DTPBeri.getSelectedItem().toString().substring(6, 10)
+                            + DTPBeri.getSelectedItem().toString().substring(3, 5)
+                            + DTPBeri.getSelectedItem().toString().substring(0, 2),
+                    4, NoResep);
         }
     }
 
@@ -2092,7 +2309,10 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             bangsal = DEPOAKTIFOBAT;
         } else {
             if (status.equals("ralan")) {
-                bangsal = Sequel.cariIsi("select set_depo_ralan.kd_bangsal from set_depo_ralan where set_depo_ralan.kd_poli=?", Sequel.cariIsi("select reg_periksa.kd_poli from reg_periksa where reg_periksa.no_rawat=?", TNoRw.getText()));
+                bangsal = Sequel.cariIsi(
+                        "select set_depo_ralan.kd_bangsal from set_depo_ralan where set_depo_ralan.kd_poli=?",
+                        Sequel.cariIsi("select reg_periksa.kd_poli from reg_periksa where reg_periksa.no_rawat=?",
+                                TNoRw.getText()));
                 if (bangsal.equals("")) {
                     bangsal = bangsaldefault;
                 }
@@ -2102,12 +2322,17 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         }
     }
 
-    public void setNoRm(String norwt, Date tanggal, String jam, String menit, String detik, String KodeDokter, String NamaDokter, String status) {
+    public void setNoRm(String norwt, Date tanggal, String jam, String menit, String detik, String KodeDokter,
+            String NamaDokter, String status) {
         TNoRw.setText(norwt);
-        Sequel.cariIsi("select concat(pasien.no_rkm_medis,' ',pasien.nm_pasien,' (',pasien.umur,')') from reg_periksa inner join pasien "
-                + " on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where no_rawat=? ", TPasien, TNoRw.getText());
-        TNoRM.setText(Sequel.cariIsi("select reg_periksa.no_rkm_medis from reg_periksa where reg_periksa.no_rawat=?", norwt));
-        Sequel.cariIsi("select DATE_FORMAT(pasien.tgl_lahir,'%d-%m-%Y')as tgl_lahir from pasien where no_rkm_medis=? ", TglLahir, TNoRM.getText());
+        Sequel.cariIsi(
+                "select concat(pasien.no_rkm_medis,' ',pasien.nm_pasien,' (',pasien.umur,')') from reg_periksa inner join pasien "
+                        + " on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where no_rawat=? ",
+                TPasien, TNoRw.getText());
+        TNoRM.setText(
+                Sequel.cariIsi("select reg_periksa.no_rkm_medis from reg_periksa where reg_periksa.no_rawat=?", norwt));
+        Sequel.cariIsi("select DATE_FORMAT(pasien.tgl_lahir,'%d-%m-%Y')as tgl_lahir from pasien where no_rkm_medis=? ",
+                TglLahir, TNoRM.getText());
         Sequel.cariIsi("select pasien.no_tlp from pasien where no_rkm_medis=? ", NoTelp, TNoRM.getText());
         DTPBeri.setDate(tanggal);
         cmbJam.setSelectedItem(jam);
@@ -2123,7 +2348,8 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         copy = false;
     }
 
-    public void setNoRm(String norwt, String KodeDokter, String NamaDokter, String Pasien, String kodepj, String status) {
+    public void setNoRm(String norwt, String KodeDokter, String NamaDokter, String Pasien, String kodepj,
+            String status) {
         TNoRw.setText(norwt);
         TPasien.setText(Pasien);
         KdDokter.setText(KodeDokter);
@@ -2142,9 +2368,11 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 + " on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where no_rawat=? ", TPasien, TNoRw.getText());
 
         DTPBeri.setDate(tanggal);
-        KdDokter.setText(Sequel.cariIsi("select dpjp_ranap.kd_dokter from dpjp_ranap where dpjp_ranap.no_rawat=?", norwt));
+        KdDokter.setText(
+                Sequel.cariIsi("select dpjp_ranap.kd_dokter from dpjp_ranap where dpjp_ranap.no_rawat=?", norwt));
         if (KdDokter.getText().equals("")) {
-            KdDokter.setText(Sequel.cariIsi("select reg_periksa.kd_dokter from reg_periksa where reg_periksa.no_rawat=?", norwt));
+            KdDokter.setText(Sequel
+                    .cariIsi("select reg_periksa.kd_dokter from reg_periksa where reg_periksa.no_rawat=?", norwt));
         }
         NmDokter.setText(dokter.tampil3(KdDokter.getText()));
 
@@ -2168,7 +2396,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 String nol_menit = "";
                 String nol_detik = "";
                 // Membuat Date
-                //Date dt = new Date();
+                // Date dt = new Date();
                 Date now = Calendar.getInstance().getTime();
 
                 // Mengambil nilaj JAM, MENIT, dan DETIK Sekarang
@@ -2202,7 +2430,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 String menit = nol_menit + Integer.toString(nilai_menit);
                 String detik = nol_detik + Integer.toString(nilai_detik);
                 // Menampilkan pada Layar
-                //tampil_jam.setText("  " + jam + " : " + menit + " : " + detik + "  ");
+                // tampil_jam.setText(" " + jam + " : " + menit + " : " + detik + " ");
                 cmbJam.setSelectedItem(jam);
                 cmbMnt.setSelectedItem(menit);
                 cmbDtk.setSelectedItem(detik);
@@ -2214,11 +2442,11 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     public void tampildetailracikanresep() {
         String noRacikYangSedangDipilih = "";
-        if(tbObatResepRacikan.getSelectedRow() != -1) {
+        if (tbObatResepRacikan.getSelectedRow() != -1) {
             noRacikYangSedangDipilih = tbObatResepRacikan.getValueAt(tbObatResepRacikan.getSelectedRow(), 0).toString();
         } else {
-            JOptionPane.showMessageDialog(null,"Silahkan pilih salah satu racikan di tabel tengah!");
-            return; 
+            JOptionPane.showMessageDialog(null, "Silahkan pilih salah satu racikan di tabel tengah!");
+            return;
         }
         try {
             for (int j = tabModeDetailResepRacikan.getRowCount() - 1; j >= 0; j--) {
@@ -2241,31 +2469,35 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         }
 
         try {
-             if (kenaikan > 0) {
+            if (kenaikan > 0) {
                 if (aktifkanbatch.equals("yes")) {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas "
-                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
-                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                            + " and industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas "
+                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
+                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " and industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas "
-                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
-                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                            + " and industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas "
+                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
+                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " and industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
                 }
 
                 try {
@@ -2278,22 +2510,24 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     rsobat = psresepasuransi.executeQuery();
                     while (rsobat.next()) {
                         boolean sudahAda = false;
-                        for(int rowDetail = 0; rowDetail < tabModeDetailResepRacikan.getRowCount(); rowDetail++) {
-                            if(tabModeDetailResepRacikan.getValueAt(rowDetail, 0).toString().equals(noRacikYangSedangDipilih) && 
-                               tabModeDetailResepRacikan.getValueAt(rowDetail, 1).toString().equals(rsobat.getString("kode_brng"))) { 
+                        for (int rowDetail = 0; rowDetail < tabModeDetailResepRacikan.getRowCount(); rowDetail++) {
+                            if (tabModeDetailResepRacikan.getValueAt(rowDetail, 0).toString()
+                                    .equals(noRacikYangSedangDipilih) &&
+                                    tabModeDetailResepRacikan.getValueAt(rowDetail, 1).toString()
+                                            .equals(rsobat.getString("kode_brng"))) {
                                 sudahAda = true;
                                 break;
                             }
                         }
 
-                        if(!sudahAda) { 
-                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                noRacikYangSedangDipilih,
-                                rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                rsobat.getString("kode_sat"), Valid.roundUp(rsobat.getDouble("harga"), 100),
-                                rsobat.getDouble("h_beli"), rsobat.getString("nama"), rsobat.getDouble("stok"),
-                                rsobat.getDouble("kapasitas"), 1, "/", 1, "", 0, 
-                                rsobat.getString("nama_industri"), rsobat.getString("letak_barang")
+                        if (!sudahAda) {
+                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                    noRacikYangSedangDipilih,
+                                    rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"), Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                    rsobat.getDouble("h_beli"), rsobat.getString("nama"), rsobat.getDouble("stok"),
+                                    rsobat.getDouble("kapasitas"), 1, "/", 1, "", 0,
+                                    rsobat.getString("nama_industri"), rsobat.getString("letak_barang")
                             });
                         }
                     }
@@ -2308,21 +2542,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                 }
             } else {
-                 if (aktifkanbatch.equals("yes")) {
+                if (aktifkanbatch.equals("yes")) {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>0 ";
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas "
-                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
-                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                            + " and industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas "
+                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
+                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " and industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
@@ -2330,14 +2565,15 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas "
-                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
-                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                            + " and industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas "
+                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang "
+                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " and industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " (databarang.kode_brng like ? or databarang.nama_brng like ? or jenis.nama like ? or databarang.letak_barang like ?) order by databarang.nama_brng");
                 }
 
                 try {
@@ -2352,33 +2588,44 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
                     while (rsobat.next()) {
                         boolean sudahAda = false;
-                        for(int rowDetail = 0; rowDetail < tabModeDetailResepRacikan.getRowCount(); rowDetail++) {
-                             if(tabModeDetailResepRacikan.getValueAt(rowDetail, 0).toString().equals(noRacikYangSedangDipilih) && 
-                               tabModeDetailResepRacikan.getValueAt(rowDetail, 1).toString().equals(rsobat.getString("kode_brng"))) { 
+                        for (int rowDetail = 0; rowDetail < tabModeDetailResepRacikan.getRowCount(); rowDetail++) {
+                            if (tabModeDetailResepRacikan.getValueAt(rowDetail, 0).toString()
+                                    .equals(noRacikYangSedangDipilih) &&
+                                    tabModeDetailResepRacikan.getValueAt(rowDetail, 1).toString()
+                                            .equals(rsobat.getString("kode_brng"))) {
                                 sudahAda = true;
                                 break;
                             }
                         }
 
-                        if(!sudahAda) { 
+                        if (!sudahAda) {
                             double harga_jual = 0;
-                            if (pilihanHarga.equals("Karyawan")) harga_jual = rsobat.getDouble("karyawan");
-                            else if (pilihanHarga.equals("Beli Luar")) harga_jual = rsobat.getDouble("beliluar");
-                            else if (pilihanHarga.equals("Utama/BPJS")) harga_jual = rsobat.getDouble("utama");
-                            else if (pilihanHarga.equals("Kelas 1")) harga_jual = rsobat.getDouble("kelas1");
-                            else if (pilihanHarga.equals("Kelas 2")) harga_jual = rsobat.getDouble("kelas2");
-                            else if (pilihanHarga.equals("Kelas 3")) harga_jual = rsobat.getDouble("kelas3");
-                            else if (pilihanHarga.equals("VIP")) harga_jual = rsobat.getDouble("vip");
-                            else if (pilihanHarga.equals("VVIP")) harga_jual = rsobat.getDouble("vvip");
-                            else harga_jual = rsobat.getDouble("ralan");
+                            if (pilihanHarga.equals("Karyawan"))
+                                harga_jual = rsobat.getDouble("karyawan");
+                            else if (pilihanHarga.equals("Beli Luar"))
+                                harga_jual = rsobat.getDouble("beliluar");
+                            else if (pilihanHarga.equals("Utama/BPJS"))
+                                harga_jual = rsobat.getDouble("utama");
+                            else if (pilihanHarga.equals("Kelas 1"))
+                                harga_jual = rsobat.getDouble("kelas1");
+                            else if (pilihanHarga.equals("Kelas 2"))
+                                harga_jual = rsobat.getDouble("kelas2");
+                            else if (pilihanHarga.equals("Kelas 3"))
+                                harga_jual = rsobat.getDouble("kelas3");
+                            else if (pilihanHarga.equals("VIP"))
+                                harga_jual = rsobat.getDouble("vip");
+                            else if (pilihanHarga.equals("VVIP"))
+                                harga_jual = rsobat.getDouble("vvip");
+                            else
+                                harga_jual = rsobat.getDouble("ralan");
 
-                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                noRacikYangSedangDipilih,
-                                rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                rsobat.getString("kode_sat"), Valid.roundUp(harga_jual, 100),
-                                rsobat.getDouble("h_beli"), rsobat.getString("nama"), rsobat.getDouble("stok"),
-                                rsobat.getDouble("kapasitas"), 1, "/", 1, "", 0, 
-                                rsobat.getString("nama_industri"), rsobat.getString("letak_barang")
+                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                    noRacikYangSedangDipilih,
+                                    rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"), Valid.roundUp(harga_jual, 100),
+                                    rsobat.getDouble("h_beli"), rsobat.getString("nama"), rsobat.getDouble("stok"),
+                                    rsobat.getDouble("kapasitas"), 1, "/", 1, "", 0,
+                                    rsobat.getString("nama_industri"), rsobat.getString("letak_barang")
                             });
                         }
                     }
@@ -2398,79 +2645,109 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         }
     }
 
-    private void getDatadetailresepracikan() {
-        if (tbDetailResepObatRacikan.getSelectedRow() != -1) {
-            try {
-                // Ambil No Racik dari baris yang sedang diedit di tabel DETAIL
-                String noRacikDetail = tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 0).toString();
-                double jmlRacikHeader = 0;
-
-                // Cari baris di tabel HEADER (tbObatResepRacikan) yang cocok dengan No Racik dari DETAIL
-                for (int rowHeader = 0; rowHeader < tbObatResepRacikan.getRowCount(); rowHeader++) {
-                    if (tbObatResepRacikan.getValueAt(rowHeader, 0).toString().equals(noRacikDetail)) {
-                        // Ambil Jml.Racik dari baris header yang cocok
-                        jmlRacikHeader = Valid.SetAngka(tbObatResepRacikan.getValueAt(rowHeader, 4).toString()); 
-                        break; // Ditemukan, keluar dari loop
+    private void calculateSemuaRacikan() {
+        if (this.isVisible() == true) {
+            // First calculate all non-percent elements
+            for (int k = 0; k < tbDetailResepObatRacikan.getRowCount(); k++) {
+                if (tbDetailResepObatRacikan.getValueAt(k, 12) != null) {
+                    if (!tbDetailResepObatRacikan.getValueAt(k, 12).toString().contains("%")) {
+                        getDatadetailresepracikan(k);
                     }
                 }
-                
-                // Jika tidak ditemukan baris header atau Jml.Racik 0, jangan lakukan perhitungan
-                if (jmlRacikHeader <= 0) {
-                     // Jika Jml.Racik kosong, anggap 1 agar perhitungan P1/P2 tetap jalan
-                     jmlRacikHeader = 1; 
-                     // Jika ingin menghentikan kalkulasi jika Jml.Racik kosong, gunakan return di bawah
-                     // return; 
+            }
+            // Next calculate all percent elements (dependent on non-percent)
+            for (int k = 0; k < tbDetailResepObatRacikan.getRowCount(); k++) {
+                if (tbDetailResepObatRacikan.getValueAt(k, 12) != null) {
+                    if (tbDetailResepObatRacikan.getValueAt(k, 12).toString().contains("%")) {
+                        getDatadetailresepracikan2(k);
+                    }
                 }
-
-                // Ambil nilai P1, P2, dan Kapasitas dari baris DETAIL yang sedang diedit
-                double p1 = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 9).toString());
-                double p2 = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 11).toString());
-                double kapasitas = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 8).toString());
-                double kandungan = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 12).toString());
-
-                // Lakukan perhitungan Jml berdasarkan P1/P2 atau Kandungan
-                if (kapasitas > 0 && kandungan > 0) { // Prioritaskan perhitungan Kandungan jika ada
-                     tbDetailResepObatRacikan.setValueAt(Valid.SetAngka8((jmlRacikHeader * kandungan) / kapasitas, 1),
-                        tbDetailResepObatRacikan.getSelectedRow(), 13);
-                } else if (p1 > 0 && p2 > 0 && p1 != p2) { // Hitung berdasarkan P1/P2 jika berbeda
-                     // Perhitungan P1/P2 tidak secara langsung menentukan Jml, tapi Kandungan.
-                     // Jml biasanya dihitung dari Kandungan. Jika P1/P2 diubah, Kandungan harus dihitung dulu.
-                     // Untuk sementara, biarkan Jml dihitung dari Kandungan saja.
-                     // Jika ingin Jml dihitung dari P1/P2 (misal: Jml = Jml.Racik * P1/P2), kodenya:
-                     // tbDetailResepObatRacikan.setValueAt(Valid.SetAngka8(jmlRacikHeader * (p1/p2), 1),
-                     //    tbDetailResepObatRacikan.getSelectedRow(), 13);
-                     // Namun, ini mungkin tidak sesuai logika dosis. Sebaiknya biarkan Jml dihitung dari Kandungan.
-                } else {
-                     // Jika tidak ada Kandungan atau P1/P2 valid, mungkin set Jml ke 0 atau nilai default
-                     // tbDetailResepObatRacikan.setValueAt(0, tbDetailResepObatRacikan.getSelectedRow(), 13);
-                }
-
-            } catch (Exception e) {
-                tbDetailResepObatRacikan.setValueAt(0, tbDetailResepObatRacikan.getSelectedRow(), 13);
             }
         }
     }
 
-    private void getDatadetailresepracikan2() {
-        if (tbDetailResepObatRacikan.getSelectedRow() != -1) {
-             r = tbDetailResepObatRacikan.getSelectedRow(); // Baris di detail table
-             noracik = tbDetailResepObatRacikan.getValueAt(r, 0).toString(); // No Racik dari detail table
+    private void getDatadetailresepracikan(int baris) {
+        if (baris != -1 && baris < tbDetailResepObatRacikan.getRowCount()) {
+            try {
+                // Ambil No Racik dari baris yang sedang diedit di tabel DETAIL
+                String noRacikDetail = tbDetailResepObatRacikan.getValueAt(baris, 0).toString();
+                double jmlRacikHeader = 0;
+
+                // Cari baris di tabel HEADER (tbObatResepRacikan) yang cocok dengan No Racik
+                // dari DETAIL
+                for (int rowHeader = 0; rowHeader < tbObatResepRacikan.getRowCount(); rowHeader++) {
+                    if (tbObatResepRacikan.getValueAt(rowHeader, 0).toString().equals(noRacikDetail)) {
+                        // Ambil Jml.Racik dari baris header yang cocok
+                        jmlRacikHeader = Valid.SetAngka(tbObatResepRacikan.getValueAt(rowHeader, 4).toString());
+                        break; // Ditemukan, keluar dari loop
+                    }
+                }
+
+                // Jika tidak ditemukan baris header atau Jml.Racik 0, jangan lakukan
+                // perhitungan
+                if (jmlRacikHeader <= 0) {
+                    // Jika Jml.Racik kosong, anggap 1 agar perhitungan P1/P2 tetap jalan
+                    jmlRacikHeader = 1;
+                    // Jika ingin menghentikan kalkulasi jika Jml.Racik kosong, gunakan return di
+                    // bawah
+                    // return;
+                }
+
+                // Ambil nilai P1, P2, dan Kapasitas dari baris DETAIL yang sedang diedit
+                double p1 = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(baris, 9).toString());
+                double p2 = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(baris, 11).toString());
+                double kapasitas = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(baris, 8).toString());
+                double kandungan = Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(baris, 12).toString());
+
+                // Lakukan perhitungan Jml berdasarkan P1/P2 atau Kandungan
+                if (kapasitas > 0 && kandungan > 0) { // Prioritaskan perhitungan Kandungan jika ada
+                    tbDetailResepObatRacikan.setValueAt(Valid.SetAngka8((jmlRacikHeader * kandungan) / kapasitas, 1),
+                            baris, 13);
+                } else if (p1 > 0 && p2 > 0 && p1 != p2) { // Hitung berdasarkan P1/P2 jika berbeda
+                    // Perhitungan P1/P2 tidak secara langsung menentukan Jml, tapi Kandungan.
+                    // Jml biasanya dihitung dari Kandungan. Jika P1/P2 diubah, Kandungan harus
+                    // dihitung dulu.
+                    // Untuk sementara, biarkan Jml dihitung dari Kandungan saja.
+                    // Jika ingin Jml dihitung dari P1/P2 (misal: Jml = Jml.Racik * P1/P2), kodenya:
+                    // tbDetailResepObatRacikan.setValueAt(Valid.SetAngka8(jmlRacikHeader * (p1/p2),
+                    // 1),
+                    // baris, 13);
+                    // Namun, ini mungkin tidak sesuai logika dosis. Sebaiknya biarkan Jml dihitung
+                    // dari Kandungan.
+                } else {
+                    // Jika tidak ada Kandungan atau P1/P2 valid, mungkin set Jml ke 0 atau nilai
+                    // default
+                    // tbDetailResepObatRacikan.setValueAt(0, baris, 13);
+                }
+
+            } catch (Exception e) {
+                tbDetailResepObatRacikan.setValueAt(0, baris, 13);
+            }
+        }
+    }
+
+    private void getDatadetailresepracikan2(int baris) {
+        if (baris != -1 && baris < tbDetailResepObatRacikan.getRowCount()) {
+            r = baris; // Baris di detail table
+            noracik = tbDetailResepObatRacikan.getValueAt(r, 0).toString(); // No Racik dari detail table
             try {
                 // Ambil Jml.Racik dari header yang sesuai
                 double jmlRacikHeader = 0;
                 for (int rowHeader = 0; rowHeader < tbObatResepRacikan.getRowCount(); rowHeader++) {
                     if (tbObatResepRacikan.getValueAt(rowHeader, 0).toString().equals(noracik)) {
                         jmlRacikHeader = Valid.SetAngka(tbObatResepRacikan.getValueAt(rowHeader, 4).toString());
-                        break; 
+                        break;
                     }
                 }
                 // Jika Jml.Racik kosong, anggap 1
-                if(jmlRacikHeader <= 0) jmlRacikHeader = 1; 
+                if (jmlRacikHeader <= 0)
+                    jmlRacikHeader = 1;
 
                 // Ambil nilai dari baris detail yang diedit
-                persenracik = Double.parseDouble(tbDetailResepObatRacikan.getValueAt(r, 12).toString().replaceAll("%", ""));
+                persenracik = Double
+                        .parseDouble(tbDetailResepObatRacikan.getValueAt(r, 12).toString().replaceAll("%", ""));
                 kapasitasracik = Double.parseDouble(tbDetailResepObatRacikan.getValueAt(r, 8).toString());
-                
+
                 // Cari total kapasitas * bahan (non-persen) HANYA untuk NoRacik yang sama
                 jumlahracik = 0; // Reset jumlahracik (total kandungan non-persen)
                 for (int iLoop = 0; iLoop < tbDetailResepObatRacikan.getRowCount(); iLoop++) {
@@ -2478,23 +2755,26 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     if (noracik.equals(tbDetailResepObatRacikan.getValueAt(iLoop, 0).toString()) && iLoop != r) {
                         // Cek apakah kolom kandungan BUKAN persen
                         if (!tbDetailResepObatRacikan.getValueAt(iLoop, 12).toString().contains("%")) {
-                             // Akumulasi: Kapasitas Obat * Jumlah Obat
-                            jumlahracik = jumlahracik + (Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(iLoop, 8).toString()) 
+                            // Akumulasi: Kapasitas Obat * Jumlah Obat
+                            jumlahracik = jumlahracik + (Valid
+                                    .SetAngka(tbDetailResepObatRacikan.getValueAt(iLoop, 8).toString())
                                     * Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(iLoop, 13).toString()));
                         }
                     }
                 }
-                
-                // Hitung Jml untuk baris persen: (Total Kandungan Non-Persen * Persentase / 100) / Kapasitas Obat Persen
+
+                // Hitung Jml untuk baris persen: (Total Kandungan Non-Persen * Persentase /
+                // 100) / Kapasitas Obat Persen
                 // Perhitungan ini sepertinya kurang tepat jika tujuannya adalah dosis total.
                 // Logika yang lebih umum: Jml = (Total Dosis * Persentase / 100) / Kapasitas
                 // Mari kita gunakan Jml.Racik sebagai Total Dosis
-                 if (kapasitasracik > 0) {
-                     tbDetailResepObatRacikan.setValueAt(Valid.SetAngka8((jmlRacikHeader * (persenracik / 100)) / kapasitasracik, 1), r, 13);
-                 } else {
-                     tbDetailResepObatRacikan.setValueAt(0, r, 13); // Hindari division by zero
-                 }
-                 
+                if (kapasitasracik > 0) {
+                    tbDetailResepObatRacikan.setValueAt(
+                            Valid.SetAngka8((jmlRacikHeader * (persenracik / 100)) / kapasitasracik, 1), r, 13);
+                } else {
+                    tbDetailResepObatRacikan.setValueAt(0, r, 13); // Hindari division by zero
+                }
+
             } catch (Exception e) {
                 tbDetailResepObatRacikan.setValueAt(0, r, 13);
             }
@@ -2514,27 +2794,31 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? order by databarang.nama_brng");
                 }
                 try {
                     psresepasuransi.setDouble(1, kenaikan);
@@ -2545,25 +2829,34 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         while (rsobat.next()) {
                             if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                 JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                tabModeResep.addRow(new Object[]{
-                                    false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                        rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         }
                     } else {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100),
-                                rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                    rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                    Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                    rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                    rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                             });
                         }
                     }
@@ -2586,15 +2879,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where  databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where  databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
@@ -2602,15 +2896,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where  databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where  databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? order by databarang.nama_brng");
                 }
                 try {
                     psresep.setString(1, bangsal);
@@ -2621,16 +2916,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("karyawan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("karyawan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2638,16 +2939,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("ralan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("ralan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2655,17 +2962,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
-                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("beliluar"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("beliluar"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2673,16 +2985,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("utama"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("utama"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2690,16 +3008,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas1"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas1"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2707,16 +3031,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas2"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas2"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2724,16 +3054,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas3"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas3"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2741,16 +3077,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2758,16 +3100,22 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             while (rsobat.next()) {
                                 if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                     JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vvip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vvip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -2775,74 +3123,101 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     } else {
                         if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("karyawan"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("ralan"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("beliluar"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("utama"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("kelas1"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("kelas2"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("kelas3"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("vip"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
                             while (rsobat.next()) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("vvip"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         }
@@ -2861,19 +3236,19 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             }
             psresep = koneksi.prepareStatement(
                     "select resep_dokter_racikan.no_racik,resep_dokter_racikan.nama_racik,"
-                    + "resep_dokter_racikan.kd_racik,metode_racik.nm_racik as metode,"
-                    + "resep_dokter_racikan.jml_dr,resep_dokter_racikan.aturan_pakai,"
-                    + "resep_dokter_racikan.keterangan from resep_dokter_racikan inner join metode_racik "
-                    + "on resep_dokter_racikan.kd_racik=metode_racik.kd_racik where "
-                    + "resep_dokter_racikan.no_resep=? ");
+                            + "resep_dokter_racikan.kd_racik,metode_racik.nm_racik as metode,"
+                            + "resep_dokter_racikan.jml_dr,resep_dokter_racikan.aturan_pakai,"
+                            + "resep_dokter_racikan.keterangan from resep_dokter_racikan inner join metode_racik "
+                            + "on resep_dokter_racikan.kd_racik=metode_racik.kd_racik where "
+                            + "resep_dokter_racikan.no_resep=? ");
             try {
                 psresep.setString(1, no_resep);
                 rsobat = psresep.executeQuery();
                 while (rsobat.next()) {
-                    tabModeResepRacikan.addRow(new String[]{
-                        rsobat.getString("no_racik"), rsobat.getString("nama_racik"), rsobat.getString("kd_racik"),
-                        rsobat.getString("metode"), rsobat.getString("jml_dr"), rsobat.getString("aturan_pakai"),
-                        rsobat.getString("keterangan")
+                    tabModeResepRacikan.addRow(new String[] {
+                            rsobat.getString("no_racik"), rsobat.getString("nama_racik"), rsobat.getString("kd_racik"),
+                            rsobat.getString("metode"), rsobat.getString("jml_dr"), rsobat.getString("aturan_pakai"),
+                            rsobat.getString("keterangan")
                     });
                     if (kenaikan > 0) {
                         if (aktifkanbatch.equals("yes")) {
@@ -2881,27 +3256,31 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             if (STOKKOSONGRESEP.equals("no")) {
                                 qrystokkosong = " and gudangbarang.stok>0 ";
                             }
-                            ps2 = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                            ps2 = koneksi.prepareStatement(
+                                    "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                         } else {
                             qrystokkosong = "";
                             if (STOKKOSONGRESEP.equals("no")) {
                                 qrystokkosong = " and gudangbarang.stok>0 ";
                             }
-                            ps2 = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
+                            ps2 = koneksi.prepareStatement(
+                                    "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
                         }
                         try {
                             ps2.setDouble(1, kenaikan);
@@ -2913,31 +3292,39 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                 while (rs2.next()) {
                                     if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                         JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                rs2.getString("letak_barang")
                                         });
                                     } else {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("stok"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("stok"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 }
                             } else {
                                 while (rs2.next()) {
-                                    tabModeDetailResepRacikan.addRow(new Object[]{
-                                        rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                        rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
-                                        rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                        rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                        rs2.getString("kandungan"), rs2.getDouble("stok"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                    tabModeDetailResepRacikan.addRow(new Object[] {
+                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                            rs2.getString("nama_brng"),
+                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
+                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
+                                            rs2.getString("kandungan"), rs2.getDouble("stok"),
+                                            rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                     });
                                 }
                             }
@@ -2960,15 +3347,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             }
                             ps2 = koneksi.prepareStatement(
                                     "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                         } else {
                             qrystokkosong = "";
                             if (STOKKOSONGRESEP.equals("no")) {
@@ -2976,15 +3364,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             }
                             ps2 = koneksi.prepareStatement(
                                     "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
+                                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
                         }
                         try {
                             ps2.setString(1, bangsal);
@@ -2996,20 +3385,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("karyawan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("karyawan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("karyawan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("karyawan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3017,20 +3416,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("ralan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("ralan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3038,20 +3447,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("beliluar"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("beliluar"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("beliluar"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("beliluar"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3059,20 +3478,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("utama"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("utama"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3080,20 +3509,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas1"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas1"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3101,20 +3540,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas2"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas2"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3122,20 +3571,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas3"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas3"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3143,20 +3602,28 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3164,20 +3631,30 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     while (rs2.next()) {
                                         if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("vvip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("vvip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3185,92 +3662,121 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             } else {
                                 if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("karyawan"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"),
+                                                Valid.roundUp(rs2.getDouble("karyawan"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("beliluar"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"),
+                                                Valid.roundUp(rs2.getDouble("beliluar"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
                                     while (rs2.next()) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 }
@@ -3315,27 +3821,31 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>=0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
                         qrystokkosong = " and gudangbarang.stok>=0 ";
                     }
-                    psresepasuransi = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? order by databarang.nama_brng");
+                    psresepasuransi = koneksi.prepareStatement(
+                            "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? order by databarang.nama_brng");
                 }
 
                 try {
@@ -3347,25 +3857,34 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                         while (rsobat.next()) {
                             if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                 JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                tabModeResep.addRow(new Object[]{
-                                    false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                        rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         }
                     } else {
                         while (rsobat.next()) {
-                            tabModeResep.addRow(new Object[]{
-                                false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("harga"), 100),
-                                rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                            tabModeResep.addRow(new Object[] {
+                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                    rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                    Valid.roundUp(rsobat.getDouble("harga"), 100),
+                                    rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                    rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                             });
                         }
                     }
@@ -3388,15 +3907,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where  databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where  databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                 } else {
                     qrystokkosong = "";
                     if (STOKKOSONGRESEP.equals("no")) {
@@ -3404,15 +3924,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                     psresep = koneksi.prepareStatement(
                             "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
-                            + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
-                            + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
-                            + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
-                            + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
-                            + " where  databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                            + " resep_dokter.no_resep=? order by databarang.nama_brng");
+                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,resep_dokter.jml, resep_dokter.aturan_pakai "
+                                    + " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "
+                                    + " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "
+                                    + " inner join gudangbarang on databarang.kode_brng=gudangbarang.kode_brng "
+                                    + " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "
+                                    + " where  databarang.status='1' " + qrystokkosong
+                                    + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                    + " resep_dokter.no_resep=? order by databarang.nama_brng");
                 }
 
                 try {
@@ -3424,114 +3945,168 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             if (rsobat.getDouble("jml") > rsobat.getDouble("stok")) {
                                 JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
                                 if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("karyawan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("ralan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("beliluar"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("utama"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas1"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas2"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas3"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, "", rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"),
+                                            rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vvip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             } else {
                                 if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("karyawan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("ralan"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("beliluar"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("utama"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas1"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas2"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("kelas3"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
-                                    tabModeResep.addRow(new Object[]{
-                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100),
-                                        rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                    tabModeResep.addRow(new Object[] {
+                                            false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                            rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                            rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                            Valid.roundUp(rsobat.getDouble("vvip"), 100),
+                                            rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                            rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                     });
                                 }
                             }
@@ -3539,58 +4114,85 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     } else {
                         while (rsobat.next()) {
                             if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("karyawan"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("karyawan"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("ralan"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("ralan"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("beliluar"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("beliluar"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("utama"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("utama"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas1"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("kelas1"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas2"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("kelas2"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("kelas3"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("kelas3"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vip"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("vip"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
-                                tabModeResep.addRow(new Object[]{
-                                    false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"), rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
-                                    rsobat.getString("kode_sat"), rsobat.getString("letak_barang"), Valid.roundUp(rsobat.getDouble("vvip"), 100),
-                                    rsobat.getString("nama"), rsobat.getString("nama_industri"), rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
+                                tabModeResep.addRow(new Object[] {
+                                        false, rsobat.getDouble("jml"), rsobat.getString("aturan_pakai"),
+                                        rsobat.getString("kode_brng"), rsobat.getString("nama_brng"),
+                                        rsobat.getString("kode_sat"), rsobat.getString("letak_barang"),
+                                        Valid.roundUp(rsobat.getDouble("vvip"), 100),
+                                        rsobat.getString("nama"), rsobat.getString("nama_industri"),
+                                        rsobat.getDouble("h_beli"), rsobat.getDouble("stok")
                                 });
                             }
                         }
@@ -3609,19 +4211,19 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             }
             psresep = koneksi.prepareStatement(
                     "select resep_dokter_racikan.no_racik,resep_dokter_racikan.nama_racik,"
-                    + "resep_dokter_racikan.kd_racik,metode_racik.nm_racik as metode,"
-                    + "resep_dokter_racikan.jml_dr,resep_dokter_racikan.aturan_pakai,"
-                    + "resep_dokter_racikan.keterangan from resep_dokter_racikan inner join metode_racik "
-                    + "on resep_dokter_racikan.kd_racik=metode_racik.kd_racik where "
-                    + "resep_dokter_racikan.no_resep=? ");
+                            + "resep_dokter_racikan.kd_racik,metode_racik.nm_racik as metode,"
+                            + "resep_dokter_racikan.jml_dr,resep_dokter_racikan.aturan_pakai,"
+                            + "resep_dokter_racikan.keterangan from resep_dokter_racikan inner join metode_racik "
+                            + "on resep_dokter_racikan.kd_racik=metode_racik.kd_racik where "
+                            + "resep_dokter_racikan.no_resep=? ");
             try {
                 psresep.setString(1, no_resep);
                 rsobat = psresep.executeQuery();
                 while (rsobat.next()) {
-                    tabModeResepRacikan.addRow(new String[]{
-                        rsobat.getString("no_racik"), rsobat.getString("nama_racik"), rsobat.getString("kd_racik"),
-                        rsobat.getString("metode"), rsobat.getString("jml_dr"), rsobat.getString("aturan_pakai"),
-                        rsobat.getString("keterangan")
+                    tabModeResepRacikan.addRow(new String[] {
+                            rsobat.getString("no_racik"), rsobat.getString("nama_racik"), rsobat.getString("kd_racik"),
+                            rsobat.getString("metode"), rsobat.getString("jml_dr"), rsobat.getString("aturan_pakai"),
+                            rsobat.getString("keterangan")
                     });
                     if (kenaikan > 0) {
                         if (aktifkanbatch.equals("yes")) {
@@ -3629,27 +4231,31 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             if (STOKKOSONGRESEP.equals("no")) {
                                 qrystokkosong = " and gudangbarang.stok>=0 ";
                             }
-                            ps2 = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                            ps2 = koneksi.prepareStatement(
+                                    "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                         } else {
                             qrystokkosong = "";
                             if (STOKKOSONGRESEP.equals("no")) {
                                 qrystokkosong = " and gudangbarang.stok>=0 ";
                             }
-                            ps2 = koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
-                                    + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
+                            ps2 = koneksi.prepareStatement(
+                                    "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"
+                                            + " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
                         }
 
                         try {
@@ -3662,31 +4268,39 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                 while (rs2.next()) {
                                     if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                         JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                rs2.getString("letak_barang")
                                         });
                                     } else {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 }
                             } else {
                                 while (rs2.next()) {
-                                    tabModeDetailResepRacikan.addRow(new Object[]{
-                                        rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                        rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
-                                        rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                        rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                        rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                    tabModeDetailResepRacikan.addRow(new Object[] {
+                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                            rs2.getString("nama_brng"),
+                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("harga"), 100),
+                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
+                                            rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                            rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                     });
                                 }
                             }
@@ -3708,15 +4322,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             }
                             ps2 = koneksi.prepareStatement(
                                     "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
+                                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,sum(gudangbarang.stok) as stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch<>'' and gudangbarang.no_faktur<>'' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? group by gudangbarang.kode_brng order by databarang.nama_brng");
                         } else {
                             qrystokkosong = "";
                             if (STOKKOSONGRESEP.equals("no")) {
@@ -3724,15 +4339,16 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             }
                             ps2 = koneksi.prepareStatement(
                                     "select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,"
-                                    + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
-                                    + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
-                                    + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
-                                    + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
-                                    + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
-                                    + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
-                                    + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
-                                    + " where databarang.status='1' " + qrystokkosong + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
-                                    + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
+                                            + " databarang.karyawan,databarang.ralan,databarang.beliluar,databarang.kelas1,"
+                                            + " databarang.kelas2,databarang.kelas3,databarang.vip,databarang.vvip,"
+                                            + " databarang.letak_barang,databarang.utama,industrifarmasi.nama_industri,databarang.h_beli,gudangbarang.stok,databarang.kapasitas,resep_dokter_racikan_detail.p1,"
+                                            + " resep_dokter_racikan_detail.p2,resep_dokter_racikan_detail.kandungan,resep_dokter_racikan_detail.jml "
+                                            + " from databarang inner join jenis inner join industrifarmasi inner join gudangbarang inner join resep_dokter_racikan_detail "
+                                            + " on databarang.kdjns=jenis.kdjns and databarang.kode_brng=gudangbarang.kode_brng "
+                                            + " and industrifarmasi.kode_industri=databarang.kode_industri and resep_dokter_racikan_detail.kode_brng=databarang.kode_brng "
+                                            + " where databarang.status='1' " + qrystokkosong
+                                            + " and gudangbarang.no_batch='' and gudangbarang.no_faktur='' and gudangbarang.kd_bangsal=? and "
+                                            + " resep_dokter_racikan_detail.no_resep=? and resep_dokter_racikan_detail.no_racik=? order by databarang.nama_brng");
                         }
                         try {
                             ps2.setString(1, bangsal);
@@ -3744,150 +4360,238 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                     if (rs2.getDouble("jml") > rs2.getDouble("stok")) {
                                         JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
                                         if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("karyawan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("karyawan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("ralan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("beliluar"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("beliluar"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("utama"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas1"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas2"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas3"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), 0, rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("vvip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), 0, rs2.getString("nama_industri"),
+                                                    rs2.getString("letak_barang")
                                             });
                                         }
                                     } else {
                                         if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("karyawan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("karyawan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("ralan"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("beliluar"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("beliluar"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("utama"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas1"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas2"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("kelas3"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
-                                            tabModeDetailResepRacikan.addRow(new Object[]{
-                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
-                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                                rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                            tabModeDetailResepRacikan.addRow(new Object[] {
+                                                    rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                    rs2.getString("nama_brng"),
+                                                    rs2.getString("kode_sat"),
+                                                    Valid.roundUp(rs2.getDouble("vvip"), 100),
+                                                    rs2.getDouble("h_beli"), rs2.getString("nama"),
+                                                    rs2.getDouble("stok"),
+                                                    rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                    rs2.getDouble("p2"),
+                                                    rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                    rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                             });
                                         }
                                     }
@@ -3895,76 +4599,105 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             } else {
                                 while (rs2.next()) {
                                     if (Jeniskelas.getSelectedItem().equals("Karyawan")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("karyawan"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"),
+                                                Valid.roundUp(rs2.getDouble("karyawan"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("Rawat Jalan")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("ralan"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("Beli Luar")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("beliluar"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"),
+                                                Valid.roundUp(rs2.getDouble("beliluar"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("Utama/BPJS")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("utama"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("Kelas 1")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas1"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("Kelas 2")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas2"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("Kelas 3")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("kelas3"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("VIP")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vip"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     } else if (Jeniskelas.getSelectedItem().equals("VVIP")) {
-                                        tabModeDetailResepRacikan.addRow(new Object[]{
-                                            rsobat.getString("no_racik"), rs2.getString("kode_brng"), rs2.getString("nama_brng"),
-                                            rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
-                                            rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
-                                            rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/", rs2.getDouble("p2"),
-                                            rs2.getString("kandungan"), rs2.getDouble("jml"), rs2.getString("nama_industri"), rs2.getString("letak_barang")
+                                        tabModeDetailResepRacikan.addRow(new Object[] {
+                                                rsobat.getString("no_racik"), rs2.getString("kode_brng"),
+                                                rs2.getString("nama_brng"),
+                                                rs2.getString("kode_sat"), Valid.roundUp(rs2.getDouble("vvip"), 100),
+                                                rs2.getDouble("h_beli"), rs2.getString("nama"), rs2.getDouble("stok"),
+                                                rs2.getDouble("kapasitas"), rs2.getDouble("p1"), "/",
+                                                rs2.getDouble("p2"),
+                                                rs2.getString("kandungan"), rs2.getDouble("jml"),
+                                                rs2.getString("nama_industri"), rs2.getString("letak_barang")
                                         });
                                     }
                                 }
@@ -4002,23 +4735,25 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             for (i = 0; i < tbResep.getRowCount(); i++) {
                 if (Valid.SetAngka(tbResep.getValueAt(i, 1).toString()) > 0) {
                     if (tbResep.getValueAt(i, 0).toString().equals("true")) {
-                        pscarikapasitas = koneksi.prepareStatement("select IFNULL(databarang.kapasitas,1) from databarang where databarang.kode_brng=?");
+                        pscarikapasitas = koneksi.prepareStatement(
+                                "select IFNULL(databarang.kapasitas,1) from databarang where databarang.kode_brng=?");
                         try {
                             pscarikapasitas.setString(1, tbResep.getValueAt(i, 2).toString());
                             carikapasitas = pscarikapasitas.executeQuery();
                             if (carikapasitas.next()) {
-                                if (Sequel.menyimpantf2("resep_dokter", "?,?,?,?", "data", 4, new String[]{
-                                    NoResep.getText(), tbResep.getValueAt(i, 3).toString(),
-                                    "" + (Double.parseDouble(tbResep.getValueAt(i, 1).toString()) / carikapasitas.getDouble(1)),
-                                    tbResep.getValueAt(i, 2).toString()
+                                if (Sequel.menyimpantf2("resep_dokter", "?,?,?,?", "data", 4, new String[] {
+                                        NoResep.getText(), tbResep.getValueAt(i, 3).toString(),
+                                        "" + (Double.parseDouble(tbResep.getValueAt(i, 1).toString())
+                                                / carikapasitas.getDouble(1)),
+                                        tbResep.getValueAt(i, 2).toString()
                                 }) == false) {
                                     sukses = false;
                                 }
                             } else {
-                                if (Sequel.menyimpantf2("resep_dokter", "?,?,?,?", "data", 4, new String[]{
-                                    NoResep.getText(), tbResep.getValueAt(i, 3).toString(),
-                                    "" + (Double.parseDouble(tbResep.getValueAt(i, 1).toString())),
-                                    tbResep.getValueAt(i, 2).toString()
+                                if (Sequel.menyimpantf2("resep_dokter", "?,?,?,?", "data", 4, new String[] {
+                                        NoResep.getText(), tbResep.getValueAt(i, 3).toString(),
+                                        "" + (Double.parseDouble(tbResep.getValueAt(i, 1).toString())),
+                                        tbResep.getValueAt(i, 2).toString()
                                 }) == false) {
                                     sukses = false;
                                 }
@@ -4034,10 +4769,10 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                             }
                         }
                     } else {
-                        if (Sequel.menyimpantf2("resep_dokter", "?,?,?,?", "data", 4, new String[]{
-                            NoResep.getText(), tbResep.getValueAt(i, 3).toString(),
-                            "" + (Double.parseDouble(tbResep.getValueAt(i, 1).toString())),
-                            tbResep.getValueAt(i, 2).toString()
+                        if (Sequel.menyimpantf2("resep_dokter", "?,?,?,?", "data", 4, new String[] {
+                                NoResep.getText(), tbResep.getValueAt(i, 3).toString(),
+                                "" + (Double.parseDouble(tbResep.getValueAt(i, 1).toString())),
+                                tbResep.getValueAt(i, 2).toString()
                         }) == false) {
                             sukses = false;
                         }
@@ -4046,84 +4781,88 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             }
 
             for (i = 0; i < tbObatResepRacikan.getRowCount(); i++) {
-                
+
                 double jmlDosis = Valid.SetAngka(tbObatResepRacikan.getValueAt(i, 4).toString());
-                
-                if (!tbObatResepRacikan.getValueAt(i, 1).toString().trim().isEmpty()) { 
-                    
-                    if(jmlDosis <= 0) {
-                        jmlDosis = 1; 
+
+                if (!tbObatResepRacikan.getValueAt(i, 1).toString().trim().isEmpty()) {
+
+                    if (jmlDosis <= 0) {
+                        jmlDosis = 1;
                     }
-                    
+
                     String noRacikDiTabel = tbObatResepRacikan.getValueAt(i, 0).toString();
-                    
-                    if (Sequel.menyimpantf2("resep_dokter_racikan", "?,?,?,?,?,?,?", "resep obat racikan", 7, new String[]{
-                        NoResep.getText(), 
-                        noRacikDiTabel, 
-                        tbObatResepRacikan.getValueAt(i, 1).toString(), 
-                        tbObatResepRacikan.getValueAt(i, 2).toString(), 
-                        String.valueOf(jmlDosis), 
-                        tbObatResepRacikan.getValueAt(i, 5).toString(), 
-                        tbObatResepRacikan.getValueAt(i, 6).toString()  
-                    }) == false) {
+
+                    if (Sequel.menyimpantf2("resep_dokter_racikan", "?,?,?,?,?,?,?", "resep obat racikan", 7,
+                            new String[] {
+                                    NoResep.getText(),
+                                    noRacikDiTabel,
+                                    tbObatResepRacikan.getValueAt(i, 1).toString(),
+                                    tbObatResepRacikan.getValueAt(i, 2).toString(),
+                                    String.valueOf(jmlDosis),
+                                    tbObatResepRacikan.getValueAt(i, 5).toString(),
+                                    tbObatResepRacikan.getValueAt(i, 6).toString()
+                            }) == false) {
                         sukses = false;
-                        continue; 
+                        continue;
                     }
-                    
+
                     String templateId = "";
                     String templateNoRacik = "";
                     try {
                         templateId = tbObatResepRacikan.getValueAt(i, 7).toString();
                         templateNoRacik = tbObatResepRacikan.getValueAt(i, 8).toString();
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
 
-                    if (templateId != null && !templateId.isEmpty() && templateNoRacik != null && !templateNoRacik.isEmpty()) {
-                        
+                    if (templateId != null && !templateId.isEmpty() && templateNoRacik != null
+                            && !templateNoRacik.isEmpty()) {
+
                         try (PreparedStatement psDetail = koneksi.prepareStatement(
-                            "SELECT rd.kode_brng, rd.p1, rd.p2, rd.kandungan, rd.jml " +
-                            "FROM template_resep_dokter_racikan_detail rd " +
-                            "WHERE rd.kd_template = ? AND rd.no_racik = ?")) {
+                                "SELECT rd.kode_brng, rd.p1, rd.p2, rd.kandungan, rd.jml " +
+                                        "FROM template_resep_dokter_racikan_detail rd " +
+                                        "WHERE rd.kd_template = ? AND rd.no_racik = ?")) {
 
                             psDetail.setString(1, templateId);
                             psDetail.setString(2, templateNoRacik);
                             try (ResultSet rsDetail = psDetail.executeQuery()) {
-                                while(rsDetail.next()){
-                                     double jmlBahanTemplate = rsDetail.getDouble("jml");
-                                     double jmlBahanFinal = jmlBahanTemplate * jmlDosis; 
-                                     
-                                     if (Sequel.menyimpantf2("resep_dokter_racikan_detail", "?,?,?,?,?,?,?", "resep dokter racikan detail", 7, new String[]{
-                                        NoResep.getText(), 
-                                        noRacikDiTabel, 
-                                        rsDetail.getString("kode_brng"),
-                                        rsDetail.getString("p1"), 
-                                        rsDetail.getString("p2"),
-                                        rsDetail.getString("kandungan"), 
-                                        String.valueOf(jmlBahanFinal) 
-                                    }) == false) {
+                                while (rsDetail.next()) {
+                                    double jmlBahanTemplate = rsDetail.getDouble("jml");
+                                    double jmlBahanFinal = jmlBahanTemplate * jmlDosis;
+
+                                    if (Sequel.menyimpantf2("resep_dokter_racikan_detail", "?,?,?,?,?,?,?",
+                                            "resep dokter racikan detail", 7, new String[] {
+                                                    NoResep.getText(),
+                                                    noRacikDiTabel,
+                                                    rsDetail.getString("kode_brng"),
+                                                    rsDetail.getString("p1"),
+                                                    rsDetail.getString("p2"),
+                                                    rsDetail.getString("kandungan"),
+                                                    String.valueOf(jmlBahanFinal)
+                                            }) == false) {
                                         sukses = false;
                                     }
                                 }
                             }
                         } catch (Exception e) {
-                             System.out.println("Gagal menyimpan detail racikan template: " + e);
-                             sukses = false;
+                            System.out.println("Gagal menyimpan detail racikan template: " + e);
+                            sukses = false;
                         }
-                        
-                    } 
-                    else {
+
+                    } else {
                         for (int j = 0; j < tbDetailResepObatRacikan.getRowCount(); j++) {
-                            if(tbDetailResepObatRacikan.getValueAt(j, 0).toString().equals(noRacikDiTabel)) {
-                                if (Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(j, 13).toString()) > 0) { 
-                                    
-                                    if (Sequel.menyimpantf2("resep_dokter_racikan_detail", "?,?,?,?,?,?,?", "resep dokter racikan detail", 7, new String[]{
-                                        NoResep.getText(), 
-                                        noRacikDiTabel, 
-                                        tbDetailResepObatRacikan.getValueAt(j, 1).toString(), 
-                                        tbDetailResepObatRacikan.getValueAt(j, 9).toString(), 
-                                        tbDetailResepObatRacikan.getValueAt(j, 11).toString(),
-                                        tbDetailResepObatRacikan.getValueAt(j, 12).toString(),
-                                        tbDetailResepObatRacikan.getValueAt(j, 13).toString() 
-                                    }) == false) {
+                            if (tbDetailResepObatRacikan.getValueAt(j, 0).toString().equals(noRacikDiTabel)) {
+                                if (Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(j, 13).toString()) > 0) {
+
+                                    if (Sequel.menyimpantf2("resep_dokter_racikan_detail", "?,?,?,?,?,?,?",
+                                            "resep dokter racikan detail", 7, new String[] {
+                                                    NoResep.getText(),
+                                                    noRacikDiTabel,
+                                                    tbDetailResepObatRacikan.getValueAt(j, 1).toString(),
+                                                    tbDetailResepObatRacikan.getValueAt(j, 9).toString(),
+                                                    tbDetailResepObatRacikan.getValueAt(j, 11).toString(),
+                                                    tbDetailResepObatRacikan.getValueAt(j, 12).toString(),
+                                                    tbDetailResepObatRacikan.getValueAt(j, 13).toString()
+                                            }) == false) {
                                         sukses = false;
                                     }
                                 }
@@ -4132,7 +4871,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     }
                 }
             }
-            
+
             if (notifwapasien.equals("yes")) {
                 KirimWaPasien();
             }
@@ -4147,18 +4886,25 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     private void SetHarga() {
         if (status.equals("ranap")) {
-            norawatibu = Sequel.cariIsi("select ranap_gabung.no_rawat from ranap_gabung where ranap_gabung.no_rawat2=?", TNoRw.getText());
+            norawatibu = Sequel.cariIsi("select ranap_gabung.no_rawat from ranap_gabung where ranap_gabung.no_rawat2=?",
+                    TNoRw.getText());
             if (!norawatibu.equals("")) {
-                kamar = Sequel.cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk desc limit 1", norawatibu);
+                kamar = Sequel.cariIsi(
+                        "select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk desc limit 1",
+                        norawatibu);
             } else {
-                kamar = Sequel.cariIsi("select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk desc limit 1", TNoRw.getText());
+                kamar = Sequel.cariIsi(
+                        "select ifnull(kamar_inap.kd_kamar,'') from kamar_inap where kamar_inap.no_rawat=? order by kamar_inap.tgl_masuk desc limit 1",
+                        TNoRw.getText());
             }
             if (!norawatibu.equals("")) {
                 kelas = Sequel.cariIsi(
-                        "select kamar.kelas from kamar inner join kamar_inap on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? and kamar_inap.stts_pulang='-' order by STR_TO_DATE(concat(kamar_inap.tgl_masuk,' ',kamar_inap.jam_masuk),'%Y-%m-%d %H:%i:%s') desc limit 1", norawatibu);
+                        "select kamar.kelas from kamar inner join kamar_inap on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? and kamar_inap.stts_pulang='-' order by STR_TO_DATE(concat(kamar_inap.tgl_masuk,' ',kamar_inap.jam_masuk),'%Y-%m-%d %H:%i:%s') desc limit 1",
+                        norawatibu);
             } else {
                 kelas = Sequel.cariIsi(
-                        "select kamar.kelas from kamar inner join kamar_inap on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? and kamar_inap.stts_pulang='-' order by STR_TO_DATE(concat(kamar_inap.tgl_masuk,' ',kamar_inap.jam_masuk),'%Y-%m-%d %H:%i:%s') desc limit 1", TNoRw.getText());
+                        "select kamar.kelas from kamar inner join kamar_inap on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? and kamar_inap.stts_pulang='-' order by STR_TO_DATE(concat(kamar_inap.tgl_masuk,' ',kamar_inap.jam_masuk),'%Y-%m-%d %H:%i:%s') desc limit 1",
+                        TNoRw.getText());
             }
             if (kelas.equals("Kelas 1")) {
                 Jeniskelas.setSelectedItem("Kelas 1");
@@ -4173,10 +4919,14 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             } else if (kelas.equals("Kelas VVIP")) {
                 Jeniskelas.setSelectedItem("VVIP");
             }
-            kenaikan = Sequel.cariIsiAngka2("select (set_harga_obat_ranap.hargajual/100) from set_harga_obat_ranap where set_harga_obat_ranap.kd_pj=? and set_harga_obat_ranap.kelas=?", KdPj.getText(), kelas);
+            kenaikan = Sequel.cariIsiAngka2(
+                    "select (set_harga_obat_ranap.hargajual/100) from set_harga_obat_ranap where set_harga_obat_ranap.kd_pj=? and set_harga_obat_ranap.kelas=?",
+                    KdPj.getText(), kelas);
         } else if (status.equals("ralan")) {
             kelas = "Rawat Jalan";
-            kenaikan = Sequel.cariIsiAngka("select (set_harga_obat_ralan.hargajual/100) from set_harga_obat_ralan where set_harga_obat_ralan.kd_pj=?", KdPj.getText());
+            kenaikan = Sequel.cariIsiAngka(
+                    "select (set_harga_obat_ralan.hargajual/100) from set_harga_obat_ralan where set_harga_obat_ralan.kd_pj=?",
+                    KdPj.getText());
         }
     }
 
@@ -4225,7 +4975,8 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             if (STOKKOSONGRESEP.equals("no")) {
                 try {
                     if (Double.parseDouble(tbResep.getValueAt(tbResep.getSelectedRow(), 1).toString()) > 0) {
-                        if (Valid.SetAngka(tbResep.getValueAt(tbResep.getSelectedRow(), 1).toString()) > Valid.SetAngka(tbResep.getValueAt(tbResep.getSelectedRow(), 11).toString())) {
+                        if (Valid.SetAngka(tbResep.getValueAt(tbResep.getSelectedRow(), 1).toString()) > Valid
+                                .SetAngka(tbResep.getValueAt(tbResep.getSelectedRow(), 11).toString())) {
                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
                             tbResep.setValueAt("", tbResep.getSelectedRow(), 1);
                         }
@@ -4241,8 +4992,12 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         if (tbDetailResepObatRacikan.getSelectedRow() != -1) {
             if (STOKKOSONGRESEP.equals("no")) {
                 try {
-                    if (Double.parseDouble(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 13).toString()) > 0) {
-                        if (Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 13).toString()) > Valid.SetAngka(tbDetailResepObatRacikan.getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 7).toString())) {
+                    if (Double.parseDouble(tbDetailResepObatRacikan
+                            .getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 13).toString()) > 0) {
+                        if (Valid.SetAngka(tbDetailResepObatRacikan
+                                .getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 13).toString()) > Valid
+                                        .SetAngka(tbDetailResepObatRacikan
+                                                .getValueAt(tbDetailResepObatRacikan.getSelectedRow(), 7).toString())) {
                             JOptionPane.showMessageDialog(rootPane, "Maaf stok tidak mencukupi..!!");
                             tbDetailResepObatRacikan.setValueAt(0, tbDetailResepObatRacikan.getSelectedRow(), 13);
                         }
@@ -4258,9 +5013,9 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         if (ChkTemplate.isSelected() == true) {
             if (!NamaTemplate.getText().equals("")) {
                 if (Sequel.menyimpantf("resep_obat_template", "?,?,?", "No.Resep", 3,
-                        new String[]{NoResep.getText(), status, NamaTemplate.getText()}) == true) {
+                        new String[] { NoResep.getText(), status, NamaTemplate.getText() }) == true) {
                     JOptionPane.showMessageDialog(rootPane, "Template Resep Berhasil Di Simpan!");
-                    //noresepuntuktemplate = "";
+                    // noresepuntuktemplate = "";
                 }
 
             }
@@ -4269,8 +5024,10 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     public void setNoRmTemplate(String norwt, String KodeDokter, String NamaDokter, String kodepj, String status) {
         TNoRw.setText(norwt);
-        Sequel.cariIsi("select concat(pasien.no_rkm_medis,' ',pasien.nm_pasien,' (',pasien.umur,')') from reg_periksa inner join pasien "
-                + " on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where no_rawat=? ", TPasien, TNoRw.getText());
+        Sequel.cariIsi(
+                "select concat(pasien.no_rkm_medis,' ',pasien.nm_pasien,' (',pasien.umur,')') from reg_periksa inner join pasien "
+                        + " on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where no_rawat=? ",
+                TPasien, TNoRw.getText());
         KdDokter.setText(KodeDokter);
         NmDokter.setText(NamaDokter);
         KdPj.setText(kodepj);
@@ -4294,7 +5051,7 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             // Jika kurang dari 4 karakter, Anda bisa menangani sesuai kebutuhan
             empatDigitTerakhir = nomorResep; // Mengambil seluruh teks jika kurang dari 4
         }
-        
+
         // Membuat pesan WA
         String pesan = "============================\n"
                 + "Nomor Antrian Apotek\n"
@@ -4311,33 +5068,31 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 + " Harap Sabar Menunggu\n"
                 + " Selama Obat Sedang Di Persiapkan\n"
                 + "============================";
-        try{
+        try {
             String sql = "INSERT INTO wa_outbox (NOMOR, NOWA, PESAN, TANGGAL_JAM, STATUS, SOURCE, SENDER, SUCCESS, RESPONSE, REQUEST, TYPE, FILE) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                
-                psWa = koneksiwa.prepareStatement(sql);
-                psWa.setLong(1, 0);  // NOMOR, jika AUTO_INCREMENT, bisa diubah atau dihilangkan sesuai kebutuhan
-                psWa.setString(2, NoTelp.getText()+"@c.us");  // NOWA
-                psWa.setString(3, pesan);          // PESAN
-                psWa.setString(4, tanggaljamkirim);  // TANGGAL_JAM
-                psWa.setString(5, "ANTRIAN");                 // STATUS
-                psWa.setString(6, "KHANZA");  // SOURCE
-                psWa.setString(7, "NODEJS");                  // SENDER
-                psWa.setString(8, "");                        // SUCCESS
-                psWa.setString(9, "");                        // RESPONSE
-                psWa.setString(10, "");                       // REQUEST
-                psWa.setString(11, "TEXT");                   // TYPE
-                psWa.setString(12, "");                       // FILE
-                psWa.executeUpdate();
-            
-        }catch (Exception e){
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            psWa = koneksiwa.prepareStatement(sql);
+            psWa.setLong(1, 0); // NOMOR, jika AUTO_INCREMENT, bisa diubah atau dihilangkan sesuai kebutuhan
+            psWa.setString(2, NoTelp.getText() + "@c.us"); // NOWA
+            psWa.setString(3, pesan); // PESAN
+            psWa.setString(4, tanggaljamkirim); // TANGGAL_JAM
+            psWa.setString(5, "ANTRIAN"); // STATUS
+            psWa.setString(6, "KHANZA"); // SOURCE
+            psWa.setString(7, "NODEJS"); // SENDER
+            psWa.setString(8, ""); // SUCCESS
+            psWa.setString(9, ""); // RESPONSE
+            psWa.setString(10, ""); // REQUEST
+            psWa.setString(11, "TEXT"); // TYPE
+            psWa.setString(12, ""); // FILE
+            psWa.executeUpdate();
+
+        } catch (Exception e) {
             System.out.println("Error:" + e);
         }
-        
-        
 
     }
-    
+
     private void loadTemplate() {
         if (kd_template.isEmpty()) {
             return;
@@ -4346,145 +5101,185 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
         try {
             ps = koneksi.prepareStatement(
-                "SELECT d.kode_brng, db.nama_brng, db.kode_sat, db.letak_barang, j.nama AS jenis, " +
-                "db.ralan, db.kelas1, db.kelas2, db.kelas3, db.utama, db.vip, db.vvip, db.beliluar, db.karyawan, " +
-                "i.nama_industri, db.h_beli, SUM(gb.stok) AS stok, d.jml, d.aturan_pakai " +
-                "FROM template_resep_dokter_detail d " +
-                "LEFT JOIN databarang db ON d.kode_brng = db.kode_brng " +
-                "LEFT JOIN jenis j ON db.kdjns = j.kdjns " +
-                "LEFT JOIN industrifarmasi i ON db.kode_industri = i.kode_industri " +
-                "LEFT JOIN gudangbarang gb ON d.kode_brng = gb.kode_brng " +
-                "WHERE d.kd_template = ? GROUP BY d.kode_brng");
+                    "SELECT d.kode_brng, db.nama_brng, db.kode_sat, db.letak_barang, j.nama AS jenis, " +
+                            "db.ralan, db.kelas1, db.kelas2, db.kelas3, db.utama, db.vip, db.vvip, db.beliluar, db.karyawan, "
+                            +
+                            "i.nama_industri, db.h_beli, SUM(gb.stok) AS stok, d.jml, d.aturan_pakai " +
+                            "FROM template_resep_dokter_detail d " +
+                            "LEFT JOIN databarang db ON d.kode_brng = db.kode_brng " +
+                            "LEFT JOIN jenis j ON db.kdjns = j.kdjns " +
+                            "LEFT JOIN industrifarmasi i ON db.kode_industri = i.kode_industri " +
+                            "LEFT JOIN gudangbarang gb ON d.kode_brng = gb.kode_brng " +
+                            "WHERE d.kd_template = ? GROUP BY d.kode_brng");
 
             ps.setString(1, kd_template);
             rs = ps.executeQuery();
             while (rs.next()) {
                 double harga_jual = 0;
                 String pilihan = Jeniskelas.getSelectedItem().toString();
-                if (pilihan.equals("Karyawan")) harga_jual = rs.getDouble("karyawan");
-                else if (pilihan.equals("Beli Luar")) harga_jual = rs.getDouble("beliluar");
-                else if (pilihan.equals("Utama/BPJS")) harga_jual = rs.getDouble("utama");
-                else if (pilihan.equals("Kelas 1")) harga_jual = rs.getDouble("kelas1");
-                else if (pilihan.equals("Kelas 2")) harga_jual = rs.getDouble("kelas2");
-                else if (pilihan.equals("Kelas 3")) harga_jual = rs.getDouble("kelas3");
-                else if (pilihan.equals("VIP")) harga_jual = rs.getDouble("vip");
-                else if (pilihan.equals("VVIP")) harga_jual = rs.getDouble("vvip");
-                else harga_jual = rs.getDouble("ralan");
+                if (pilihan.equals("Karyawan"))
+                    harga_jual = rs.getDouble("karyawan");
+                else if (pilihan.equals("Beli Luar"))
+                    harga_jual = rs.getDouble("beliluar");
+                else if (pilihan.equals("Utama/BPJS"))
+                    harga_jual = rs.getDouble("utama");
+                else if (pilihan.equals("Kelas 1"))
+                    harga_jual = rs.getDouble("kelas1");
+                else if (pilihan.equals("Kelas 2"))
+                    harga_jual = rs.getDouble("kelas2");
+                else if (pilihan.equals("Kelas 3"))
+                    harga_jual = rs.getDouble("kelas3");
+                else if (pilihan.equals("VIP"))
+                    harga_jual = rs.getDouble("vip");
+                else if (pilihan.equals("VVIP"))
+                    harga_jual = rs.getDouble("vvip");
+                else
+                    harga_jual = rs.getDouble("ralan");
 
-                tabModeResep.addRow(new Object[]{
-                    false, rs.getDouble("jml"), rs.getString("aturan_pakai"), rs.getString("kode_brng"),
-                    rs.getString("nama_brng"), rs.getString("kode_sat"), rs.getString("letak_barang"),
-                    harga_jual, rs.getString("jenis"), rs.getString("nama_industri"),
-                    rs.getDouble("h_beli"), rs.getDouble("stok")
+                tabModeResep.addRow(new Object[] {
+                        false, rs.getDouble("jml"), rs.getString("aturan_pakai"), rs.getString("kode_brng"),
+                        rs.getString("nama_brng"), rs.getString("kode_sat"), rs.getString("letak_barang"),
+                        harga_jual, rs.getString("jenis"), rs.getString("nama_industri"),
+                        rs.getDouble("h_beli"), rs.getDouble("stok")
                 });
             }
-            if(rs != null) rs.close();
-            if(ps != null) ps.close();
+            if (rs != null)
+                rs.close();
+            if (ps != null)
+                ps.close();
 
             ps = koneksi.prepareStatement(
-                "SELECT r.no_racik, r.nama_racik, r.kd_racik, m.nm_racik, r.jml_dr, r.aturan_pakai, r.keterangan " +
-                "FROM template_resep_dokter_racikan r " +
-                "LEFT JOIN metode_racik m ON r.kd_racik = m.kd_racik " +
-                "WHERE r.kd_template = ? ORDER BY r.no_racik");
+                    "SELECT r.no_racik, r.nama_racik, r.kd_racik, m.nm_racik, r.jml_dr, r.aturan_pakai, r.keterangan " +
+                            "FROM template_resep_dokter_racikan r " +
+                            "LEFT JOIN metode_racik m ON r.kd_racik = m.kd_racik " +
+                            "WHERE r.kd_template = ? ORDER BY r.no_racik");
             ps.setString(1, kd_template);
             rs = ps.executeQuery();
-            
+
             String templateIdYangSedangDiproses = kd_template;
-            
+
             while (rs.next()) {
                 racikanIndexAwal++;
                 String newNoRacik = String.valueOf(racikanIndexAwal);
                 String templateNoRacik = rs.getString("no_racik");
 
-                tabModeResepRacikan.addRow(new Object[]{
-                    newNoRacik, // No. baru
-                    rs.getString("nama_racik"), 
-                    rs.getString("kd_racik"),
-                    rs.getString("nm_racik"), 
-                    "", 
-                    rs.getString("aturan_pakai"), 
-                    rs.getString("keterangan"),
-                    templateIdYangSedangDiproses,
-                    templateNoRacik
+                tabModeResepRacikan.addRow(new Object[] {
+                        newNoRacik, // No. baru
+                        rs.getString("nama_racik"),
+                        rs.getString("kd_racik"),
+                        rs.getString("nm_racik"),
+                        "",
+                        rs.getString("aturan_pakai"),
+                        rs.getString("keterangan"),
+                        templateIdYangSedangDiproses,
+                        templateNoRacik
                 });
             }
-            if(rs != null) rs.close();
-            if(ps != null) ps.close();
-            
+            if (rs != null)
+                rs.close();
+            if (ps != null)
+                ps.close();
+
             hitungResep();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Gagal memuat template: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            if (rs != null) { try { rs.close(); } catch (Exception e) {} }
-            if (ps != null) { try { ps.close(); } catch (Exception e) {} }
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                }
+            }
         }
     }
-    
-    private void hitungDanTampilkanDetailRacikanTemplate(String templateId, String templateNoRacik, String newNoRacik) { // Tambahkan newNoRacik
+
+    private void hitungDanTampilkanDetailRacikanTemplate(String templateId, String templateNoRacik, String newNoRacik) { // Tambahkan
+                                                                                                                         // newNoRacik
         if (tbObatResepRacikan.getSelectedRow() == -1) {
             return;
         }
 
         try {
             int barisRacikan = tbObatResepRacikan.getSelectedRow();
-            // String newNoRacik = tbObatResepRacikan.getValueAt(barisRacikan, 0).toString(); // Jangan ambil dari sini lagi, gunakan parameter
+            // String newNoRacik = tbObatResepRacikan.getValueAt(barisRacikan,
+            // 0).toString(); // Jangan ambil dari sini lagi, gunakan parameter
             double jmlDosis = Valid.SetAngka(tbObatResepRacikan.getValueAt(barisRacikan, 4).toString());
 
             if (jmlDosis <= 0) {
-                 // Beri nilai default 1 jika Jml.Racik belum diisi, agar detail tetap tampil
-                jmlDosis = 1; 
-                // Jika ingin memaksa user mengisi, gunakan baris di bawah ini dan hapus baris di atas
-                // JOptionPane.showMessageDialog(null, "Jumlah racikan (Jml.Racik) harus diisi terlebih dahulu!");
+                // Beri nilai default 1 jika Jml.Racik belum diisi, agar detail tetap tampil
+                jmlDosis = 1;
+                // Jika ingin memaksa user mengisi, gunakan baris di bawah ini dan hapus baris
+                // di atas
+                // JOptionPane.showMessageDialog(null, "Jumlah racikan (Jml.Racik) harus diisi
+                // terlebih dahulu!");
                 // return;
             }
 
-            // Jangan kosongkan tabel di sini, karena pembersihan sudah dilakukan di keyPressed
-            // Valid.tabelKosong(tabModeDetailResepRacikan); 
+            // Jangan kosongkan tabel di sini, karena pembersihan sudah dilakukan di
+            // keyPressed
+            // Valid.tabelKosong(tabModeDetailResepRacikan);
 
             ps = koneksi.prepareStatement(
-                "SELECT rd.kode_brng, db.nama_brng, db.kode_sat, db.letak_barang, j.nama AS jenis, " +
-                "db.ralan, db.kelas1, db.kelas2, db.kelas3, db.utama, db.vip, db.vvip, db.beliluar, db.karyawan, " +
-                "i.nama_industri, db.h_beli, SUM(gb.stok) AS stok, db.kapasitas, " +
-                "rd.p1, rd.p2, rd.kandungan, rd.jml " +
-                "FROM template_resep_dokter_racikan_detail rd " +
-                "LEFT JOIN databarang db ON rd.kode_brng = db.kode_brng " +
-                "LEFT JOIN jenis j ON db.kdjns = j.kdjns " +
-                "LEFT JOIN industrifarmasi i ON db.kode_industri = i.kode_industri " +
-                "LEFT JOIN gudangbarang gb ON rd.kode_brng = gb.kode_brng " +
-                "WHERE rd.kd_template = ? AND rd.no_racik = ? GROUP BY rd.kode_brng");
+                    "SELECT rd.kode_brng, db.nama_brng, db.kode_sat, db.letak_barang, j.nama AS jenis, " +
+                            "db.ralan, db.kelas1, db.kelas2, db.kelas3, db.utama, db.vip, db.vvip, db.beliluar, db.karyawan, "
+                            +
+                            "i.nama_industri, db.h_beli, SUM(gb.stok) AS stok, db.kapasitas, " +
+                            "rd.p1, rd.p2, rd.kandungan, rd.jml " +
+                            "FROM template_resep_dokter_racikan_detail rd " +
+                            "LEFT JOIN databarang db ON rd.kode_brng = db.kode_brng " +
+                            "LEFT JOIN jenis j ON db.kdjns = j.kdjns " +
+                            "LEFT JOIN industrifarmasi i ON db.kode_industri = i.kode_industri " +
+                            "LEFT JOIN gudangbarang gb ON rd.kode_brng = gb.kode_brng " +
+                            "WHERE rd.kd_template = ? AND rd.no_racik = ? GROUP BY rd.kode_brng");
 
             ps.setString(1, templateId);
             ps.setString(2, templateNoRacik);
             rs = ps.executeQuery();
 
-            while(rs.next()){
-                 double harga_jual = 0;
-                 String pilihan = Jeniskelas.getSelectedItem().toString();
-                 if (pilihan.equals("Karyawan")) harga_jual = rs.getDouble("karyawan");
-                 else if (pilihan.equals("Beli Luar")) harga_jual = rs.getDouble("beliluar");
-                 else if (pilihan.equals("Utama/BPJS")) harga_jual = rs.getDouble("utama");
-                 else if (pilihan.equals("Kelas 1")) harga_jual = rs.getDouble("kelas1");
-                 else if (pilihan.equals("Kelas 2")) harga_jual = rs.getDouble("kelas2");
-                 else if (pilihan.equals("Kelas 3")) harga_jual = rs.getDouble("kelas3");
-                 else if (pilihan.equals("VIP")) harga_jual = rs.getDouble("vip");
-                 else if (pilihan.equals("VVIP")) harga_jual = rs.getDouble("vvip");
-                 else harga_jual = rs.getDouble("ralan");
+            while (rs.next()) {
+                double harga_jual = 0;
+                String pilihan = Jeniskelas.getSelectedItem().toString();
+                if (pilihan.equals("Karyawan"))
+                    harga_jual = rs.getDouble("karyawan");
+                else if (pilihan.equals("Beli Luar"))
+                    harga_jual = rs.getDouble("beliluar");
+                else if (pilihan.equals("Utama/BPJS"))
+                    harga_jual = rs.getDouble("utama");
+                else if (pilihan.equals("Kelas 1"))
+                    harga_jual = rs.getDouble("kelas1");
+                else if (pilihan.equals("Kelas 2"))
+                    harga_jual = rs.getDouble("kelas2");
+                else if (pilihan.equals("Kelas 3"))
+                    harga_jual = rs.getDouble("kelas3");
+                else if (pilihan.equals("VIP"))
+                    harga_jual = rs.getDouble("vip");
+                else if (pilihan.equals("VVIP"))
+                    harga_jual = rs.getDouble("vvip");
+                else
+                    harga_jual = rs.getDouble("ralan");
 
-                 // Hitung jumlah bahan berdasarkan template Jml dan Jml.Racik
-                 double jmlBahanTemplate = rs.getDouble("jml");
-                 double jmlBahanFinal = jmlBahanTemplate * jmlDosis; 
+                // Hitung jumlah bahan berdasarkan template Jml dan Jml.Racik
+                double jmlBahanTemplate = rs.getDouble("jml");
+                double jmlBahanFinal = jmlBahanTemplate * jmlDosis;
 
-                 // Tambahkan baris ke tabel detail menggunakan newNoRacik dari parameter
-                 tabModeDetailResepRacikan.addRow(new Object[]{
-                    newNoRacik, // Gunakan newNoRacik dari parameter
-                    rs.getString("kode_brng"), rs.getString("nama_brng"), rs.getString("kode_sat"),
-                    harga_jual, rs.getDouble("h_beli"), rs.getString("jenis"),
-                    rs.getDouble("stok"), rs.getDouble("kapasitas"), rs.getDouble("p1"), "/",
-                    rs.getDouble("p2"), rs.getString("kandungan"), jmlBahanFinal, // Gunakan jumlah yang sudah dihitung
-                    rs.getString("nama_industri"), rs.getString("letak_barang")
-                 });
+                // Tambahkan baris ke tabel detail menggunakan newNoRacik dari parameter
+                tabModeDetailResepRacikan.addRow(new Object[] {
+                        newNoRacik, // Gunakan newNoRacik dari parameter
+                        rs.getString("kode_brng"), rs.getString("nama_brng"), rs.getString("kode_sat"),
+                        harga_jual, rs.getDouble("h_beli"), rs.getString("jenis"),
+                        rs.getDouble("stok"), rs.getDouble("kapasitas"), rs.getDouble("p1"), "/",
+                        rs.getDouble("p2"), rs.getString("kandungan"), jmlBahanFinal, // Gunakan jumlah yang sudah
+                                                                                      // dihitung
+                        rs.getString("nama_industri"), rs.getString("letak_barang")
+                });
             }
 
             hitungResep(); // Hitung ulang total setelah detail dimuat
@@ -4493,8 +5288,18 @@ private void ppBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             JOptionPane.showMessageDialog(null, "Gagal menghitung detail racikan dari template: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            if (rs != null) { try { rs.close(); } catch (Exception e) {} }
-            if (ps != null) { try { ps.close(); } catch (Exception e) {} }
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                }
+            }
         }
     }
 }

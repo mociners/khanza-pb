@@ -54,6 +54,24 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
     private String finger = "", finger2 = "";
     private StringBuilder htmlContent;
 
+    // === Field baru: Jenis Pembedahan, Implan, Klasifikasi, Konsultasi ===
+    private widget.ComboBox JenisPembedahan;
+    private widget.Label lblJenisPembedahan;
+    private javax.swing.JRadioButton rdImplanYa;
+    private javax.swing.JRadioButton rdImplanTidak;
+    private javax.swing.ButtonGroup bgImplan;
+    private widget.Label lblPemasanganImplan;
+    private widget.TextBox LokasiImplan;
+    private widget.Label lblLokasiImplan;
+    private widget.TextBox JenisImplan;
+    private widget.Label lblJenisImplan;
+    private widget.TextBox NoRegImplan;
+    private widget.Label lblNoRegImplan;
+    private widget.ComboBox KlasifikasiOperasi;
+    private widget.Label lblKlasifikasiOperasi;
+    private widget.TextBox KonsultasiIntraOperatif;
+    private widget.Label lblKonsultasiIntraOperatif;
+
     /**
      * Creates new form DlgRujuk
      *
@@ -63,6 +81,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
     public RMLaporanOperasi(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        initLaporanOperasi();
         this.setLocation(8, 1);
         setSize(628, 674);
 
@@ -1245,8 +1264,9 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         } else if (KdPenataAnestesi.getText().trim().equals("") || NmPetugasOK.getText().trim().equals("")) {
             Valid.textKosong(KodeDokterAnestesi, "Penata Anestesi");
         } else {
-            if (Sequel.menyimpantf("laporan_operasi_casemix", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?",
-                    "Data", 25, new String[] {
+            if (Sequel.menyimpantf("laporan_operasi_casemix",
+                    "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?",
+                    "Data", 32, new String[] {
                             TNoRw.getText(),
                             Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
                                     + Tanggal.getSelectedItem().toString().substring(11, 19),
@@ -1265,16 +1285,26 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                     + TanggalJamSelesaiAnestesi.getSelectedItem().toString().substring(11, 19),
                             Valid.SetTgl(TanggalJamPindah.getSelectedItem() + "") + " "
                                     + TanggalJamPindah.getSelectedItem().toString().substring(11, 19),
-                            LaporanOperasi.getText(), LaporanOperasi.getText(), JumlahPerdarahan.getText(),
+                            LaporanOperasi.getText(), Komplikasi.getText(), JumlahPerdarahan.getText(),
                             KetJaringan.getSelectedItem().toString(), Jaringan.getSelectedItem().toString(),
-                            AsalJaringan.getText()
+                            AsalJaringan.getText(),
+                            JenisPembedahan.getSelectedItem().toString(),
+                            rdImplanYa.isSelected() ? "Ya" : "Tidak",
+                            LokasiImplan.getText(),
+                            JenisImplan.getText(),
+                            NoRegImplan.getText(),
+                            KlasifikasiOperasi.getSelectedItem().toString(),
+                            KonsultasiIntraOperatif.getText()
                     }) == true) {
                 tabMode.addRow(new String[] {
                         TNoRw.getText(), TNoRM.getText(), TPasien.getText(), TglLahir.getText(),
+                        JK.getText(),
                         Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
                                 + Tanggal.getSelectedItem().toString().substring(11, 19),
-                        KodeDokterBedah.getText(),
-                        KodeDokterAnestesi.getText(), KdAsistenBedah.getText(), KdPenataAnestesi.getText(),
+                        KodeDokterBedah.getText(), NamaDokterBedah.getText(),
+                        KodeDokterAnestesi.getText(), NamaDokterAnestesi.getText(),
+                        KdAsistenBedah.getText(), NmPetugasRuangan.getText(),
+                        KdPenataAnestesi.getText(), NmPetugasOK.getText(),
                         JenisOperasi.getSelectedItem().toString(), JenisAnastesi.getSelectedItem().toString(),
                         DiagnosaPrabedah.getText(), DiagnosaPascabedah.getText(), Tindakan.getText(),
                         Valid.SetTgl(TanggalJamMulaiOperasi.getSelectedItem() + "") + " "
@@ -1288,14 +1318,20 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                 + TanggalJamSelesaiAnestesi.getSelectedItem().toString().substring(11, 19),
                         Valid.SetTgl(TanggalJamPindah.getSelectedItem() + "") + " "
                                 + TanggalJamPindah.getSelectedItem().toString().substring(11, 19),
-                        LaporanOperasi.getText(), LaporanOperasi.getText(), JumlahPerdarahan.getText(),
+                        LaporanOperasi.getText(), Komplikasi.getText(), JumlahPerdarahan.getText(),
                         KetJaringan.getSelectedItem().toString(), Jaringan.getSelectedItem().toString(),
-                        AsalJaringan.getText()
+                        AsalJaringan.getText(),
+                        JenisPembedahan.getSelectedItem().toString(),
+                        rdImplanYa.isSelected() ? "Ya" : "Tidak",
+                        LokasiImplan.getText(),
+                        JenisImplan.getText(),
+                        NoRegImplan.getText(),
+                        KlasifikasiOperasi.getSelectedItem().toString(),
+                        KonsultasiIntraOperatif.getText()
                 });
                 JOptionPane.showMessageDialog(null, "Laporan Berhasil DiSimpan..!!");
                 LCount.setText("" + tabMode.getRowCount());
                 emptTeks();
-                tampil();
             }
         }
     }// GEN-LAST:event_BtnSimpanActionPerformed
@@ -1610,25 +1646,33 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
             // "+(finger.equals("")?tbObat.getValueAt(tbObat.getSelectedRow(),13).toString():finger)+"\n"+Tanggal.getSelectedItem());
             finger2 = Sequel.cariIsi(
                     "select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",
-                    tbObat.getValueAt(tbObat.getSelectedRow(), 8).toString());
+                    tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString());
             param.put("finger2",
                     "Dikeluarkan di " + akses.getnamars() + ", Kabupaten/Kota " + akses.getkabupatenrs()
                             + "\nDitandatangani secara elektronik oleh "
-                            + tbObat.getValueAt(tbObat.getSelectedRow(), 9).toString() + "\nID "
-                            + (finger2.equals("") ? tbObat.getValueAt(tbObat.getSelectedRow(), 8).toString() : finger2)
+                            + tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString() + "\nID "
+                            + (finger2.equals("") ? tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString() : finger2)
                             + "\n" + Tanggal.getSelectedItem());
             Valid.MyReportqry("rptFormulirLaporanOperasi.jasper", "report", "::[ Formulir Laporan Operasi ]::",
-                    "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.tgl_lahir,pasien.jk,laporan_operasi_casemix.tanggal,"
-                            + "laporan_operasi_casemix.diet,laporan_operasi_casemix.jam_pindah,laporan_operasi_casemix.jenis_operasi,laporan_operasi_casemix.jenis_anastesi,laporan_operasi_casemix.jam_mulai_operasi,laporan_operasi_casemix.jam_selesai_operasi,laporan_operasi_casemix.tindakan,TIMEDIFF(laporan_operasi_casemix.jam_selesai_operasi, laporan_operasi_casemix.jam_mulai_operasi) AS selisih_waktu,laporan_operasi_casemix.jam_mulai_anastesi,laporan_operasi_casemix.jam_selesai_anastesi,TIMEDIFF(laporan_operasi_casemix.jam_selesai_anastesi,laporan_operasi_casemix.jam_mulai_anastesi) AS selisih_waktu_anastesi,laporan_operasi_casemix.laporan_operasi,laporan_operasi_casemix.kd_dokter_bedah,dokterbedah.nm_dokter as dokterbedah,"
-                            + "laporan_operasi_casemix.diagnosa_pra_bedah,laporan_operasi_casemix.diagnosa_pasca_bedah,laporan_operasi_casemix.komplikasi_operasi,laporan_operasi_casemix.tindakan,laporan_operasi_casemix.jaringan,laporan_operasi_casemix.ket_jaringan,laporan_operasi_casemix.jumlah_perdarahan,laporan_operasi_casemix.jumlah_transfusi,laporan_operasi_casemix.implant,laporan_operasi_casemix.ket_implant,laporan_operasi_casemix.perawatan_pascaop,laporan_operasi_casemix.kd_dokter_anestesi,dokteranestesi.nm_dokter as dokteranestesi,"
-                            + "laporan_operasi_casemix.nip_petugas_ruangan,petugasruangan.nama as petugasruangan,"
-                            + "laporan_operasi_casemix.nip_perawat_ok,petugasok.nama as petugasok "
+                    "select reg_periksa.no_rawat, pasien.no_rkm_medis, pasien.nm_pasien, pasien.tgl_lahir, pasien.jk, laporan_operasi_casemix.tanggal, "
+                            + "laporan_operasi_casemix.jampindah, laporan_operasi_casemix.jenisoperasi, laporan_operasi_casemix.jenisanestesi, laporan_operasi_casemix.jammulaioperasi, "
+                            + "laporan_operasi_casemix.jamselesaioperasi, laporan_operasi_casemix.tindakan, TIMEDIFF(laporan_operasi_casemix.jamselesaioperasi, laporan_operasi_casemix.jammulaioperasi) AS selisih_waktu, "
+                            + "laporan_operasi_casemix.jammulaianestesi, laporan_operasi_casemix.jamselesaianestesi, TIMEDIFF(laporan_operasi_casemix.jamselesaianestesi, laporan_operasi_casemix.jammulaianestesi) AS selisih_waktu_anastesi, "
+                            + "laporan_operasi_casemix.uraian, laporan_operasi_casemix.kddokterbedah, dokterbedah.nm_dokter as dokterbedah, "
+                            + "laporan_operasi_casemix.diagnosaprabedah, laporan_operasi_casemix.diagnosapascabedah, laporan_operasi_casemix.komplikasi, "
+                            + "laporan_operasi_casemix.perdarahan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.dikirimket, laporan_operasi_casemix.asaljaringan, "
+                            + "laporan_operasi_casemix.kddokteranestesi, dokteranestesi.nm_dokter as dokteranestesi, "
+                            + "laporan_operasi_casemix.asistenbedah, petugasruangan.nama as petugasruangan, "
+                            + "laporan_operasi_casemix.asistenanestesi, petugasok.nama as petugasok, "
+                            + "laporan_operasi_casemix.jenispembedahan, laporan_operasi_casemix.pemasanganimplan, laporan_operasi_casemix.lokasiimplan, "
+                            + "laporan_operasi_casemix.jenisimplan, laporan_operasi_casemix.noregimplan, laporan_operasi_casemix.klasifikasioperasi, "
+                            + "laporan_operasi_casemix.konsultasiintraoperatif, laporan_operasi_casemix.lama, laporan_operasi_casemix.pembiusan, laporan_operasi_casemix.posisi "
                             + "from laporan_operasi_casemix inner join reg_periksa on laporan_operasi_casemix.no_rawat=reg_periksa.no_rawat "
                             + "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
-                            + "inner join dokter as dokterbedah on dokterbedah.kd_dokter=laporan_operasi_casemix.kd_dokter_bedah "
-                            + "inner join dokter as dokteranestesi on dokteranestesi.kd_dokter=laporan_operasi_casemix.kd_dokter_anestesi "
-                            + "inner join petugas as petugasruangan on petugasruangan.nip=laporan_operasi_casemix.nip_petugas_ruangan "
-                            + "inner join petugas as petugasok on petugasok.nip=laporan_operasi_casemix.nip_perawat_ok "
+                            + "left join dokter as dokterbedah on dokterbedah.kd_dokter=laporan_operasi_casemix.kddokterbedah "
+                            + "left join dokter as dokteranestesi on dokteranestesi.kd_dokter=laporan_operasi_casemix.kddokteranestesi "
+                            + "left join petugas as petugasruangan on petugasruangan.nip=laporan_operasi_casemix.asistenbedah "
+                            + "left join petugas as petugasok on petugasok.nip=laporan_operasi_casemix.asistenanestesi "
                             + "where laporan_operasi_casemix.no_rawat='"
                             + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString()
                             + "' and laporan_operasi_casemix.tanggal='"
@@ -1926,15 +1970,17 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                 + "laporan_operasi_casemix.jamselesaioperasi, laporan_operasi_casemix.lama, laporan_operasi_casemix.pembiusan, laporan_operasi_casemix.posisi, "
                                 + "laporan_operasi_casemix.jammulaianestesi, laporan_operasi_casemix.jamselesaianestesi, laporan_operasi_casemix.jampindah, laporan_operasi_casemix.uraian, "
                                 + "laporan_operasi_casemix.komplikasi, laporan_operasi_casemix.perdarahan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.dikirimket, "
-                                + "laporan_operasi_casemix.asaljaringan, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, pasien.tgl_lahir, petugas.nama, dokter.nm_dokter "
-                                + "FROM laporan_operasi_casemix INNER JOIN reg_periksa ON laporan_operasi_casemix.no_rawat = reg_periksa.no_rawat INNER JOIN pasien "
-                                + "ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis INNER JOIN petugas ON laporan_operasi_casemix.asistenbedah = petugas.nip AND "
-                                + "laporan_operasi_casemix.asistenanestesi = petugas.nip INNER JOIN dokter ON laporan_operasi_casemix.kddokterbedah = dokter.kd_dokter "
-                                + "AND laporan_operasi_casemix.kddokteranestesi = dokter.kd_dokter "
+                                + "laporan_operasi_casemix.asaljaringan, "
+                                + "laporan_operasi_casemix.jenispembedahan, laporan_operasi_casemix.pemasanganimplan, laporan_operasi_casemix.lokasiimplan, "
+                                + "laporan_operasi_casemix.jenisimplan, laporan_operasi_casemix.noregimplan, laporan_operasi_casemix.klasifikasioperasi, "
+                                + "laporan_operasi_casemix.konsultasiintraoperatif, "
+                                + "reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, pasien.tgl_lahir "
+                                + "FROM laporan_operasi_casemix INNER JOIN reg_periksa ON laporan_operasi_casemix.no_rawat = reg_periksa.no_rawat "
+                                + "INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis "
                                 + "where laporan_operasi_casemix.tanggal between ? and ? order by laporan_operasi_casemix.tanggal ");
             } else {
                 ps = koneksi.prepareStatement(
-                        "SELECT reg_periksa.no_rawat,laporan_operasi_casemix.tanggal, laporan_operasi_casemix.kddokterbedah, laporan_operasi_casemix.kddokteranestesi, "
+                        "SELECT reg_periksa.no_rawat, laporan_operasi_casemix.tanggal, laporan_operasi_casemix.kddokterbedah, laporan_operasi_casemix.kddokteranestesi, "
                                 + "laporan_operasi_casemix.asistenbedah, laporan_operasi_casemix.asistenanestesi, laporan_operasi_casemix.jenisoperasi, "
                                 + "laporan_operasi_casemix.jenisanestesi, laporan_operasi_casemix.diagnosaprabedah, laporan_operasi_casemix.diagnosapascabedah, "
                                 + "laporan_operasi_casemix.tindakan, laporan_operasi_casemix.jammulaioperasi, laporan_operasi_casemix.jamselesaioperasi, "
@@ -1942,13 +1988,15 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                 + "laporan_operasi_casemix.jammulaianestesi, laporan_operasi_casemix.jamselesaianestesi, "
                                 + "laporan_operasi_casemix.jampindah, laporan_operasi_casemix.uraian, laporan_operasi_casemix.komplikasi, "
                                 + "laporan_operasi_casemix.perdarahan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.dikirimket, "
-                                + "laporan_operasi_casemix.asaljaringan, reg_periksa.no_rawat, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.tgl_lahir, "
-                                + "petugas.nama FROM laporan_operasi_casemix INNER JOIN reg_periksa ON laporan_operasi_casemix.no_rawat = "
-                                + "reg_periksa.no_rawat INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis INNER JOIN petugas ON "
-                                + "laporan_operasi_casemix.asistenbedah = petugas.nip AND laporan_operasi_casemix.asistenanestesi = petugas.nip "
-                                + "INNER JOIN dokter ON laporan_operasi_casemix.kddokterbedah = dokter.kd_dokter AND laporan_operasi_casemix.kddokteranestesi = dokter.kd_dokter "
+                                + "laporan_operasi_casemix.asaljaringan, "
+                                + "laporan_operasi_casemix.jenispembedahan, laporan_operasi_casemix.pemasanganimplan, laporan_operasi_casemix.lokasiimplan, "
+                                + "laporan_operasi_casemix.jenisimplan, laporan_operasi_casemix.noregimplan, laporan_operasi_casemix.klasifikasioperasi, "
+                                + "laporan_operasi_casemix.konsultasiintraoperatif, "
+                                + "reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, pasien.tgl_lahir "
+                                + "FROM laporan_operasi_casemix INNER JOIN reg_periksa ON laporan_operasi_casemix.no_rawat = reg_periksa.no_rawat "
+                                + "INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis "
                                 + "where laporan_operasi_casemix.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or "
-                                + "pasien.nm_pasien like ? or dokter.nm_dokter like ? or dokter.nm_dokter like ? or petugas.nama like ?) "
+                                + "pasien.nm_pasien like ?) "
                                 + "order by laporan_operasi_casemix.tanggal ");
             }
 
@@ -1962,9 +2010,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                     ps.setString(3, "%" + TCari.getText() + "%");
                     ps.setString(4, "%" + TCari.getText() + "%");
                     ps.setString(5, "%" + TCari.getText() + "%");
-                    ps.setString(6, "%" + TCari.getText() + "%");
-                    ps.setString(7, "%" + TCari.getText() + "%");
-                    ps.setString(8, "%" + TCari.getText() + "%");
                 }
 
                 rs = ps.executeQuery();
@@ -2021,6 +2066,150 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         LCount.setText("" + tabMode.getRowCount());
     }
 
+    private void initLaporanOperasi() {
+        // === TAHAP 1: Geser komponen Y >= 260 ke bawah 30px untuk Jenis Pembedahan ===
+        java.awt.Component[] components = FormInput.getComponents();
+        for (java.awt.Component comp : components) {
+            java.awt.Rectangle bounds = comp.getBounds();
+            if (bounds.y >= 260) {
+                comp.setBounds(bounds.x, bounds.y + 30, bounds.width, bounds.height);
+            }
+        }
+
+        // Label Jenis Pembedahan
+        lblJenisPembedahan = new widget.Label();
+        lblJenisPembedahan.setText("Jenis Pembedahan :");
+        lblJenisPembedahan.setName("lblJenisPembedahan");
+        FormInput.add(lblJenisPembedahan);
+        lblJenisPembedahan.setBounds(10, 260, 130, 23);
+
+        JenisPembedahan = new widget.ComboBox();
+        JenisPembedahan.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Bersih", "Bersih Tercemar", "Tercemar", "Kotor" }));
+        JenisPembedahan.setName("JenisPembedahan");
+        FormInput.add(JenisPembedahan);
+        JenisPembedahan.setBounds(150, 260, 170, 23);
+
+        // === TAHAP 2: Geser komponen Y >= 440 ke bawah 120px untuk 4 baris Implan ===
+        components = FormInput.getComponents();
+        for (java.awt.Component comp : components) {
+            java.awt.Rectangle bounds = comp.getBounds();
+            if (bounds.y >= 440) {
+                comp.setBounds(bounds.x, bounds.y + 120, bounds.width, bounds.height);
+            }
+        }
+
+        // --- Baris 1: Pemasangan Implan (Y=440) ---
+        lblPemasanganImplan = new widget.Label();
+        lblPemasanganImplan.setText("Pemasangan Implan :");
+        lblPemasanganImplan.setName("lblPemasanganImplan");
+        FormInput.add(lblPemasanganImplan);
+        lblPemasanganImplan.setBounds(10, 440, 130, 23);
+
+        bgImplan = new javax.swing.ButtonGroup();
+        rdImplanYa = new javax.swing.JRadioButton("Ya");
+        rdImplanTidak = new javax.swing.JRadioButton("Tidak");
+        rdImplanTidak.setSelected(true);
+        bgImplan.add(rdImplanYa);
+        bgImplan.add(rdImplanTidak);
+        FormInput.add(rdImplanYa);
+        FormInput.add(rdImplanTidak);
+        rdImplanYa.setBounds(150, 440, 60, 23);
+        rdImplanTidak.setBounds(220, 440, 80, 23);
+
+        // --- Baris 2: Lokasi Pemasangan Implan (Y=470) ---
+        lblLokasiImplan = new widget.Label();
+        lblLokasiImplan.setText("Lokasi Implan :");
+        lblLokasiImplan.setName("lblLokasiImplan");
+        FormInput.add(lblLokasiImplan);
+        lblLokasiImplan.setBounds(10, 470, 130, 23);
+
+        LokasiImplan = new widget.TextBox();
+        LokasiImplan.setName("LokasiImplan");
+        FormInput.add(LokasiImplan);
+        LokasiImplan.setBounds(150, 470, 630, 23);
+
+        // --- Baris 3: Jenis Implan (Y=500) ---
+        lblJenisImplan = new widget.Label();
+        lblJenisImplan.setText("Jenis Implan :");
+        lblJenisImplan.setName("lblJenisImplan");
+        FormInput.add(lblJenisImplan);
+        lblJenisImplan.setBounds(10, 500, 130, 23);
+
+        JenisImplan = new widget.TextBox();
+        JenisImplan.setName("JenisImplan");
+        FormInput.add(JenisImplan);
+        JenisImplan.setBounds(150, 500, 630, 23);
+
+        // --- Baris 4: No Registrasi Implan (Y=530) ---
+        lblNoRegImplan = new widget.Label();
+        lblNoRegImplan.setText("No Reg. Implan :");
+        lblNoRegImplan.setName("lblNoRegImplan");
+        FormInput.add(lblNoRegImplan);
+        lblNoRegImplan.setBounds(10, 530, 130, 23);
+
+        NoRegImplan = new widget.TextBox();
+        NoRegImplan.setName("NoRegImplan");
+        FormInput.add(NoRegImplan);
+        NoRegImplan.setBounds(150, 530, 300, 23);
+
+        // === TAHAP 3: Geser komponen Y >= 560 ke bawah 60px untuk Klasifikasi Operasi
+        // & Konsultasi ===
+        components = FormInput.getComponents();
+        for (java.awt.Component comp : components) {
+            java.awt.Rectangle bounds = comp.getBounds();
+            if (bounds.y >= 560) {
+                comp.setBounds(bounds.x, bounds.y + 60, bounds.width, bounds.height);
+            }
+        }
+
+        // --- Baris 5: Klasifikasi Operasi (Y=560) ---
+        lblKlasifikasiOperasi = new widget.Label();
+        lblKlasifikasiOperasi.setText("Klasifikasi Operasi :");
+        lblKlasifikasiOperasi.setName("lblKlasifikasiOperasi");
+        FormInput.add(lblKlasifikasiOperasi);
+        lblKlasifikasiOperasi.setBounds(10, 560, 130, 23);
+
+        KlasifikasiOperasi = new widget.ComboBox();
+        KlasifikasiOperasi.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Emergency/Cito", "Elektif", "ODS" }));
+        KlasifikasiOperasi.setName("KlasifikasiOperasi");
+        FormInput.add(KlasifikasiOperasi);
+        KlasifikasiOperasi.setBounds(150, 560, 170, 23);
+
+        // --- Baris 6: Konsultasi Intra Operatif (Y=590) ---
+        lblKonsultasiIntraOperatif = new widget.Label();
+        lblKonsultasiIntraOperatif.setText("Konsul Intra Op. :");
+        lblKonsultasiIntraOperatif.setName("lblKonsultasiIntraOperatif");
+        FormInput.add(lblKonsultasiIntraOperatif);
+        lblKonsultasiIntraOperatif.setBounds(10, 590, 130, 23);
+
+        KonsultasiIntraOperatif = new widget.TextBox();
+        KonsultasiIntraOperatif.setName("KonsultasiIntraOperatif");
+        FormInput.add(KonsultasiIntraOperatif);
+        KonsultasiIntraOperatif.setBounds(150, 590, 630, 23);
+
+        // Perbesar tinggi FormInput agar muat semua komponen (+30 + 120 + 60 = 210)
+        java.awt.Dimension prefSize = FormInput.getPreferredSize();
+        FormInput.setPreferredSize(new java.awt.Dimension(prefSize.width, prefSize.height + 210));
+
+        // Menyembunyikan kode dokter / penata / asisten dan melebarkan text nama
+        KodeDokterBedah.setVisible(false);
+        NamaDokterBedah.setBounds(90, 70, 275, 23);
+
+        KodeDokterAnestesi.setVisible(false);
+        NamaDokterAnestesi.setBounds(507, 70, 268, 23);
+
+        KdAsistenBedah.setVisible(false);
+        NmPetugasRuangan.setBounds(110, 110, 265, 23);
+
+        KdPenataAnestesi.setVisible(false);
+        NmPetugasOK.setBounds(510, 110, 265, 23);
+
+        FormInput.revalidate();
+        FormInput.repaint();
+    }
+
     public void emptTeks() {
         TNoRw.setText("");
         TNoRM.setText("");
@@ -2046,6 +2235,13 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         Komplikasi.setText("");
         JumlahPerdarahan.setText("");
         AsalJaringan.setText("");
+        JenisPembedahan.setSelectedIndex(0);
+        rdImplanTidak.setSelected(true);
+        LokasiImplan.setText("");
+        JenisImplan.setText("");
+        NoRegImplan.setText("");
+        KlasifikasiOperasi.setSelectedIndex(0);
+        KonsultasiIntraOperatif.setText("");
     }
 
     private void getData() {
@@ -2207,6 +2403,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         BtnHapus.setEnabled(akses.getchecklist_pre_operasi());
         BtnEdit.setEnabled(akses.getchecklist_pre_operasi());
         BtnPrint.setEnabled(akses.getchecklist_pre_operasi());
+        tampil();
     }
 
     private void ganti() {

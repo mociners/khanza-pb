@@ -15506,6 +15506,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     private widget.Button BtnSRB;
     private widget.Button BtnTombolRujuk;
     private widget.Button BtnAssKepRalan;
+    private widget.Button BtnSkriningRalan;
 
     private void tampilkasir() {
         Valid.tabelKosong(tabModekasir);
@@ -17106,6 +17107,13 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         BtnAssKepRalan.setToolTipText("Penilaian Awal Keperawatan Rawat Jalan");
         BtnAssKepRalan.setPreferredSize(new java.awt.Dimension(140, 23));
 
+        BtnSkriningRalan = new widget.Button();
+        BtnSkriningRalan.setGlassColor(new java.awt.Color(255, 153, 153));
+        BtnSkriningRalan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
+        BtnSkriningRalan.setText("SKRINING RALAN");
+        BtnSkriningRalan.setToolTipText("Skrining Rawat Jalan");
+        BtnSkriningRalan.setPreferredSize(new java.awt.Dimension(140, 23));
+
         BtnSRB.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -17127,6 +17135,13 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             }
         });
 
+        BtnSkriningRalan.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSkriningRalanActionPerformed(evt);
+            }
+        });
+
         int index = -1;
         for (int i = 0; i < panelGlass7.getComponentCount(); i++) {
             if (panelGlass7.getComponent(i) == BtnSurkon) {
@@ -17139,10 +17154,25 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             panelGlass7.add(BtnSRB, index);
             panelGlass7.add(BtnTombolRujuk, index + 1);
             panelGlass7.add(BtnAssKepRalan, index + 2);
+            panelGlass7.add(BtnSkriningRalan, index + 3);
         } else {
             panelGlass7.add(BtnSRB);
             panelGlass7.add(BtnTombolRujuk);
             panelGlass7.add(BtnAssKepRalan);
+            panelGlass7.add(BtnSkriningRalan);
+        }
+
+        int idxCetak = -1;
+        int idxSurk = -1;
+        for (int i = 0; i < panelGlass7.getComponentCount(); i++) {
+            if (panelGlass7.getComponent(i) == BtnCetakSEP)
+                idxCetak = i;
+            if (panelGlass7.getComponent(i) == BtnSurkon)
+                idxSurk = i;
+        }
+        if (idxCetak != -1 && idxSurk != -1) {
+            panelGlass7.add(BtnSurkon, idxCetak);
+            panelGlass7.add(BtnCetakSEP, idxSurk);
         }
 
         panelGlass7.revalidate();
@@ -17151,6 +17181,34 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
     private void BtnAssKepRalanActionPerformed(java.awt.event.ActionEvent evt) {
         MnPenilaianAwalKeperawatanRalanActionPerformed(evt);
+    }
+
+    private void BtnSkriningRalanActionPerformed(java.awt.event.ActionEvent evt) {
+        if (tabModekasir.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
+        } else if (TNoRw.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
+            tbKasirRalan.requestFocus();
+        } else {
+            if (tbKasirRalan.getSelectedRow() != -1) {
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                rekammedis.RMSKriningRawatJalan form = new rekammedis.RMSKriningRawatJalan(null, false);
+                form.isCek();
+
+                // Mendapatkan nilai dari model tabel kasir
+                String norm = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 2).toString();
+                String nama = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 3).toString();
+                String tgllahir = Sequel.cariIsi("select tgl_lahir from pasien where no_rkm_medis=?", norm);
+                String jk = Sequel.cariIsi("select jk from pasien where no_rkm_medis=?", norm);
+                String ibu = Sequel.cariIsi("select nm_ibu from pasien where no_rkm_medis=?", norm);
+
+                form.setNoRm(norm, nama, tgllahir, ibu, jk);
+                form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
     }
 
     private void BtnTombolRujukActionPerformed(java.awt.event.ActionEvent evt) {
