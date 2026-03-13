@@ -801,6 +801,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -6535,7 +6536,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         panelBiasa2.setLayout(null);
 
         TglSakit1.setForeground(new java.awt.Color(50, 70, 50));
-        TglSakit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-12-2025" }));
+        TglSakit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-03-2026" }));
         TglSakit1.setDisplayFormat("dd-MM-yyyy");
         TglSakit1.setName("TglSakit1"); // NOI18N
         TglSakit1.setOpaque(false);
@@ -6582,7 +6583,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel32.setBounds(176, 10, 20, 23);
 
         TglSakit2.setForeground(new java.awt.Color(50, 70, 50));
-        TglSakit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-12-2025" }));
+        TglSakit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-03-2026" }));
         TglSakit2.setDisplayFormat("dd-MM-yyyy");
         TglSakit2.setName("TglSakit2"); // NOI18N
         TglSakit2.setOpaque(false);
@@ -6712,7 +6713,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         panelGlass6.add(jLabel6);
 
         TCari.setName("TCari"); // NOI18N
-        TCari.setPreferredSize(new java.awt.Dimension(203, 23));
+        TCari.setPreferredSize(new java.awt.Dimension(180, 23));
         TCari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TCariKeyPressed(evt);
@@ -6762,7 +6763,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         LCount.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         LCount.setText("0");
         LCount.setName("LCount"); // NOI18N
-        LCount.setPreferredSize(new java.awt.Dimension(50, 30));
+        LCount.setPreferredSize(new java.awt.Dimension(30, 30));
         panelGlass6.add(LCount);
 
         BtnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/b_print.png"))); // NOI18N
@@ -6960,7 +6961,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel15.setPreferredSize(new java.awt.Dimension(70, 23));
         panelGlass8.add(jLabel15);
 
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-12-2025" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-03-2026" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -6973,7 +6974,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         jLabel17.setPreferredSize(new java.awt.Dimension(23, 23));
         panelGlass8.add(jLabel17);
 
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "30-12-2025" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-03-2026" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -6982,7 +6983,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         jLabel12.setText("Status Periksa :");
         jLabel12.setName("jLabel12"); // NOI18N
-        jLabel12.setPreferredSize(new java.awt.Dimension(120, 23));
+        jLabel12.setPreferredSize(new java.awt.Dimension(100, 23));
         panelGlass8.add(jLabel12);
 
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua", "Belum", "Sudah", "Batal",
@@ -6998,7 +6999,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         jLabel20.setText("Status Bayar :");
         jLabel20.setName("jLabel20"); // NOI18N
-        jLabel20.setPreferredSize(new java.awt.Dimension(120, 23));
+        jLabel20.setPreferredSize(new java.awt.Dimension(90, 23));
         panelGlass8.add(jLabel20);
 
         cmbStatusBayar
@@ -7014,7 +7015,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         jLabel21.setText("Jenis Bayar :");
         jLabel21.setName("jLabel21"); // NOI18N
-        jLabel21.setPreferredSize(new java.awt.Dimension(120, 23));
+        jLabel21.setPreferredSize(new java.awt.Dimension(90, 23));
         panelGlass8.add(jLabel21);
 
         cmbStatusBayar1.setModel(new javax.swing.DefaultComboBoxModel(
@@ -15727,8 +15728,9 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             TPasienCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 3).toString());
             digit.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 10).toString()); // Indeks 10: No.Reg
 
-            Nosep.setText(Sequel.cariIsi(
-                    "select bridging_sep.no_sep from bridging_sep where no_rawat='" + TNoRwCari.getText() + "'"));
+            // Nosep.setText(Sequel.cariIsi(
+            // "select bridging_sep.no_sep from bridging_sep where no_rawat='" +
+            // TNoRwCari.getText() + "'"));
             Jk.setText(Sequel.cariIsi("select jk from pasien where no_rkm_medis=?", TNoRMCari.getText()));
             Checkin.setText(Sequel.cariIsi(
                     "select referensi_mobilejkn_bpjs.status from referensi_mobilejkn_bpjs where no_rawat=?",
@@ -17021,13 +17023,13 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         digit.setName("digit"); // NOI18N
         panelGlass9.add(digit);
 
-        Nosep = new widget.Label();
-        Nosep.setForeground(new java.awt.Color(51, 51, 255));
-        Nosep.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        Nosep.setText("No Sep");
-        Nosep.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        Nosep.setName("Nosep"); // NOI18N
-        panelGlass8.add(Nosep);
+        // Nosep = new widget.Label();
+        // Nosep.setForeground(new java.awt.Color(51, 51, 255));
+        // Nosep.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        // Nosep.setText("No Sep");
+        // Nosep.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        // Nosep.setName("Nosep"); // NOI18N
+        // panelGlass8.add(Nosep);
 
         MnRMHemodialisa.add(MnPemantauanIntradialitik);
         MnRMRawatJalan.add(MnHasilPemeriksaanEcho);
@@ -17151,32 +17153,131 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         }
 
         if (index != -1) {
-            panelGlass7.add(BtnSRB, index);
             panelGlass7.add(BtnTombolRujuk, index + 1);
-            panelGlass7.add(BtnAssKepRalan, index + 2);
-            panelGlass7.add(BtnSkriningRalan, index + 3);
+            panelGlass7.add(BtnSRB, index + 2);
         } else {
-            panelGlass7.add(BtnSRB);
             panelGlass7.add(BtnTombolRujuk);
-            panelGlass7.add(BtnAssKepRalan);
-            panelGlass7.add(BtnSkriningRalan);
+            panelGlass7.add(BtnSRB);
         }
 
-        int idxCetak = -1;
-        int idxSurk = -1;
-        for (int i = 0; i < panelGlass7.getComponentCount(); i++) {
-            if (panelGlass7.getComponent(i) == BtnCetakSEP)
-                idxCetak = i;
-            if (panelGlass7.getComponent(i) == BtnSurkon)
-                idxSurk = i;
-        }
-        if (idxCetak != -1 && idxSurk != -1) {
-            panelGlass7.add(BtnSurkon, idxCetak);
-            panelGlass7.add(BtnCetakSEP, idxSurk);
-        }
+        // === Penyesuaian ukuran komponen untuk layar 14 inch (1366px) ===
+        java.awt.Font fontKecil = new java.awt.Font("Tahoma", 0, 10);
+        java.awt.Font fontKecilBold = new java.awt.Font("Tahoma", 1, 10);
+
+        // -- panelGlass7: resize fields & buttons --
+        jLabel14.setFont(fontKecil);
+        CrPtg.setFont(fontKecil);
+        CrPtg.setPreferredSize(new java.awt.Dimension(140, 23));
+        jLabel16.setFont(fontKecil);
+        CrPoli.setFont(fontKecil);
+        CrPoli.setPreferredSize(new java.awt.Dimension(110, 23));
+        Checkin.setPreferredSize(new java.awt.Dimension(40, 23));
+        Booking.setPreferredSize(new java.awt.Dimension(70, 23));
+
+        BtnCheckin.setFont(fontKecilBold);
+        BtnCheckin.setIcon(
+                new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/save-16x16.png"))
+                        .getImage().getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnCheckin.setPreferredSize(new java.awt.Dimension(80, 23));
+
+        BtnCetakSEP.setFont(fontKecilBold);
+        BtnCetakSEP.setIcon(new javax.swing.ImageIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/picture/PrinterSettings.png")).getImage()
+                        .getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnCetakSEP.setPreferredSize(new java.awt.Dimension(95, 23));
+
+        BtnSurkon.setFont(fontKecilBold);
+        BtnSurkon.setIcon(
+                new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/mail_receive.png"))
+                        .getImage().getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnSurkon.setPreferredSize(new java.awt.Dimension(90, 23));
+
+        BtnSRB.setFont(fontKecilBold);
+        BtnSRB.setIcon(
+                new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/farmasi.png"))
+                        .getImage().getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnSRB.setPreferredSize(new java.awt.Dimension(65, 23));
+
+        BtnTombolRujuk.setFont(fontKecilBold);
+        BtnTombolRujuk.setIcon(
+                new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/farmasi.png"))
+                        .getImage().getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnTombolRujuk.setPreferredSize(new java.awt.Dimension(90, 23));
+
+        BtnAssKepRalan.setFont(fontKecilBold);
+        BtnAssKepRalan.setIcon(new javax.swing.ImageIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/picture/1360485894_add-notes.png")).getImage()
+                        .getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnAssKepRalan.setPreferredSize(new java.awt.Dimension(120, 23));
+
+        BtnSkriningRalan.setFont(fontKecilBold);
+        BtnSkriningRalan.setPreferredSize(new java.awt.Dimension(120, 23));
+
+        // Pindahkan BtnCetakSEP, BtnAssKepRalan, BtnSkriningRalan dari panelGlass7 ke
+        // panelGlass8
+        panelGlass7.remove(BtnCetakSEP);
+        panelGlass8.add(BtnCetakSEP);
+        panelGlass8.add(BtnAssKepRalan);
+        panelGlass8.add(BtnSkriningRalan);
+
+        // -- panelGlass8: resize labels & combo boxes --
+        jLabel15.setFont(fontKecil);
+        jLabel15.setPreferredSize(new java.awt.Dimension(55, 23));
+        DTPCari1.setPreferredSize(new java.awt.Dimension(80, 23));
+        DTPCari2.setPreferredSize(new java.awt.Dimension(80, 23));
+        jLabel12.setFont(fontKecil);
+        jLabel12.setPreferredSize(new java.awt.Dimension(80, 23));
+        cmbStatus.setFont(fontKecil);
+        cmbStatus.setPreferredSize(new java.awt.Dimension(110, 23));
+        jLabel20.setFont(fontKecil);
+        jLabel20.setPreferredSize(new java.awt.Dimension(75, 23));
+        cmbStatusBayar.setFont(fontKecil);
+        cmbStatusBayar.setPreferredSize(new java.awt.Dimension(100, 23));
+        jLabel21.setFont(fontKecil);
+        jLabel21.setPreferredSize(new java.awt.Dimension(70, 23));
+        cmbStatusBayar1.setFont(fontKecil);
+        cmbStatusBayar1.setPreferredSize(new java.awt.Dimension(100, 23));
+
+        // -- panelGlass6: resize search field, buttons & labels --
+        jLabel6.setFont(fontKecil);
+        TCari.setFont(fontKecil);
+        TCari.setPreferredSize(new java.awt.Dimension(150, 23));
+        jLabel10.setFont(fontKecil);
+        jLabel10.setPreferredSize(new java.awt.Dimension(50, 23));
+        LCount.setFont(fontKecil);
+        LCount.setPreferredSize(new java.awt.Dimension(40, 23));
+
+        BtnPrint.setFont(fontKecilBold);
+        BtnPrint.setPreferredSize(new java.awt.Dimension(80, 23));
+
+        BtnKeluar.setFont(fontKecilBold);
+        BtnKeluar.setPreferredSize(new java.awt.Dimension(80, 23));
+
+        BtnPanggilPasien.setFont(fontKecilBold);
+        BtnPanggilPasien.setIcon(
+                new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/user.png"))
+                        .getImage().getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnPanggilPasien.setPreferredSize(new java.awt.Dimension(140, 23));
+
+        BtnPanggilPasien1.setFont(fontKecilBold);
+        BtnPanggilPasien1.setIcon(new javax.swing.ImageIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/picture/file-edit-32x32.png")).getImage()
+                        .getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnPanggilPasien1.setPreferredSize(new java.awt.Dimension(130, 23));
+
+        BtnReviewSEP.setFont(fontKecilBold);
+        BtnReviewSEP.setIcon(
+                new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/tasksgroup.png"))
+                        .getImage().getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH)));
+        BtnReviewSEP.setPreferredSize(new java.awt.Dimension(200, 23));
+
+        panelGlass6.revalidate();
+        panelGlass6.repaint();
 
         panelGlass7.revalidate();
         panelGlass7.repaint();
+        panelGlass8.revalidate();
+        panelGlass8.repaint();
     }
 
     private void BtnAssKepRalanActionPerformed(java.awt.event.ActionEvent evt) {

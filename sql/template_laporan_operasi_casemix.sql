@@ -1,0 +1,27 @@
+-- SQL untuk membuat tabel template_laporan_operasi_casemix
+CREATE TABLE IF NOT EXISTS template_laporan_operasi_casemix (
+  no_template VARCHAR(10) NOT NULL,
+  nama_template VARCHAR(200) NOT NULL,
+  jenisoperasi VARCHAR(30) DEFAULT 'Kecil',
+  jenisanestesi VARCHAR(30) DEFAULT 'Umum',
+  diagnosaprabedah VARCHAR(200) DEFAULT '',
+  diagnosapascabedah VARCHAR(200) DEFAULT '',
+  tindakan VARCHAR(200) DEFAULT '',
+  lamapembedahan VARCHAR(100) DEFAULT '',
+  pembiusan VARCHAR(100) DEFAULT '',
+  posisi VARCHAR(100) DEFAULT '',
+  uraian TEXT,
+  komplikasi VARCHAR(200) DEFAULT '',
+  perdarahan VARCHAR(50) DEFAULT '',
+  dikirim VARCHAR(10) DEFAULT 'Ya',
+  dikirimket VARCHAR(10) DEFAULT 'PA',
+  asaljaringan VARCHAR(200) DEFAULT '',
+  jenispembedahan VARCHAR(30) DEFAULT 'Bersih',
+  pemasanganimplan VARCHAR(10) DEFAULT 'Tidak',
+  lokasiimplan VARCHAR(200) DEFAULT '',
+  jenisimplan VARCHAR(200) DEFAULT '',
+  noregimplan VARCHAR(100) DEFAULT '',
+  klasifikasioperasi VARCHAR(30) DEFAULT 'Emergency/Cito',
+  konsultasiintraoperatif VARCHAR(200) DEFAULT '',
+  PRIMARY KEY (no_template)
+) ENGINE=InnoDB;

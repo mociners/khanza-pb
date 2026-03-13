@@ -28,8 +28,11 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMLaporanOperasi.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMGenerateKlaim.java</file>
+            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgRawatJalan.java</file>
+            <file>file:/home/mociners/Documents/rsthbfinal/src/permintaan/DlgCariPermintaanLab.java</file>
+            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMRiwayatPenunjang.java</file>
+            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMObservasiAnestesi.java</file>
+            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/frmUtama.java</file>
             <file>file:/home/mociners/Documents/rsthbfinal/src/permintaan/DlgBookingOperasi.java</file>
         </group>
     </open-files>

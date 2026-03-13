@@ -18,6 +18,9 @@ if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
     // perform any security check here...
 
     if ($size <= $maxsize) {
+        if (!is_dir($location)) {
+            mkdir($location, 0777, true);
+        }
         if (move_uploaded_file($tmp_name, $location . $name)) {
             // perform your operation down here
         }

@@ -231,6 +231,7 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         Document doc = kit.createDefaultDocument();
         LoadHTML.setDocument(doc);
 
+
     }
 
     /**
@@ -240,7 +241,7 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         LoadHTML = new widget.editorpane();
@@ -304,16 +305,6 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         BtnCari = new widget.Button();
         jLabel7 = new widget.Label();
         LCount = new widget.Label();
-        PanelAccor = new widget.PanelBiasa();
-        ChkAccor = new widget.CekBox();
-        FormPhoto = new widget.PanelBiasa();
-        FormPass3 = new widget.PanelBiasa();
-        btnAmbil = new widget.Button();
-        BtnRefreshPhoto1 = new widget.Button();
-        BtnPrint1 = new widget.Button();
-        TabData = new javax.swing.JTabbedPane();
-        Scroll5 = new widget.ScrollPane();
-        LoadHTML2 = new widget.editorpane();
 
         LoadHTML.setBorder(null);
         LoadHTML.setName("LoadHTML"); // NOI18N
@@ -338,11 +329,7 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         setUndecorated(true);
         setResizable(false);
 
-        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(
-                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)),
-                "::[ Penandaan Area Operasi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
-                javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11),
-                new java.awt.Color(50, 50, 50))); // NOI18N
+        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Penandaan Area Operasi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame1.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setLayout(new java.awt.BorderLayout(1, 1));
@@ -634,7 +621,7 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         label11.setBounds(380, 40, 52, 23);
 
         TglAsuhan.setForeground(new java.awt.Color(50, 70, 50));
-        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-12-2024 07:07:07" }));
+        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-01-2025 04:09:56" }));
         TglAsuhan.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TglAsuhan.setName("TglAsuhan"); // NOI18N
         TglAsuhan.setOpaque(false);
@@ -826,7 +813,7 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-12-2024" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-01-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -840,7 +827,7 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-12-2024" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-01-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -890,108 +877,6 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         panelGlass9.add(LCount);
 
         internalFrame3.add(panelGlass9, java.awt.BorderLayout.PAGE_END);
-
-        PanelAccor.setBackground(new java.awt.Color(255, 255, 255));
-        PanelAccor.setName("PanelAccor"); // NOI18N
-        PanelAccor.setPreferredSize(new java.awt.Dimension(430, 43));
-        PanelAccor.setLayout(new java.awt.BorderLayout(1, 1));
-
-        ChkAccor.setBackground(new java.awt.Color(255, 250, 250));
-        ChkAccor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/kiri.png"))); // NOI18N
-        ChkAccor.setSelected(true);
-        ChkAccor.setFocusable(false);
-        ChkAccor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ChkAccor.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        ChkAccor.setName("ChkAccor"); // NOI18N
-        ChkAccor.setPreferredSize(new java.awt.Dimension(15, 20));
-        ChkAccor.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/kiri.png"))); // NOI18N
-        ChkAccor.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/kanan.png"))); // NOI18N
-        ChkAccor.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/kanan.png"))); // NOI18N
-        ChkAccor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ChkAccorActionPerformed(evt);
-            }
-        });
-        PanelAccor.add(ChkAccor, java.awt.BorderLayout.WEST);
-
-        FormPhoto.setBackground(new java.awt.Color(255, 255, 255));
-        FormPhoto.setBorder(null);
-        FormPhoto.setName("FormPhoto"); // NOI18N
-        FormPhoto.setPreferredSize(new java.awt.Dimension(115, 73));
-        FormPhoto.setLayout(new java.awt.BorderLayout());
-
-        FormPass3.setBackground(new java.awt.Color(255, 255, 255));
-        FormPass3.setBorder(null);
-        FormPass3.setName("FormPass3"); // NOI18N
-        FormPass3.setPreferredSize(new java.awt.Dimension(115, 40));
-
-        btnAmbil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/plus_16.png"))); // NOI18N
-        btnAmbil.setMnemonic('U');
-        btnAmbil.setText("Ambil");
-        btnAmbil.setToolTipText("Alt+U");
-        btnAmbil.setName("btnAmbil"); // NOI18N
-        btnAmbil.setPreferredSize(new java.awt.Dimension(100, 30));
-        btnAmbil.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAmbilActionPerformed(evt);
-            }
-        });
-        FormPass3.add(btnAmbil);
-
-        BtnRefreshPhoto1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/refresh.png"))); // NOI18N
-        BtnRefreshPhoto1.setMnemonic('U');
-        BtnRefreshPhoto1.setText("Refresh");
-        BtnRefreshPhoto1.setToolTipText("Alt+U");
-        BtnRefreshPhoto1.setName("BtnRefreshPhoto1"); // NOI18N
-        BtnRefreshPhoto1.setPreferredSize(new java.awt.Dimension(100, 30));
-        BtnRefreshPhoto1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnRefreshPhoto1ActionPerformed(evt);
-            }
-        });
-        FormPass3.add(BtnRefreshPhoto1);
-
-        BtnPrint1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item (copy).png"))); // NOI18N
-        BtnPrint1.setMnemonic('T');
-        BtnPrint1.setText("Surat");
-        BtnPrint1.setToolTipText("Alt+T");
-        BtnPrint1.setName("BtnPrint1"); // NOI18N
-        BtnPrint1.setPreferredSize(new java.awt.Dimension(100, 30));
-        BtnPrint1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnPrint1ActionPerformed(evt);
-            }
-        });
-        FormPass3.add(BtnPrint1);
-
-        FormPhoto.add(FormPass3, java.awt.BorderLayout.PAGE_END);
-
-        TabData.setBackground(new java.awt.Color(254, 255, 254));
-        TabData.setForeground(new java.awt.Color(50, 50, 50));
-        TabData.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        TabData.setName("TabData"); // NOI18N
-        TabData.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                TabDataMouseClicked(evt);
-            }
-        });
-
-        Scroll5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        Scroll5.setName("Scroll5"); // NOI18N
-        Scroll5.setOpaque(true);
-        Scroll5.setPreferredSize(new java.awt.Dimension(200, 200));
-
-        LoadHTML2.setBorder(null);
-        LoadHTML2.setName("LoadHTML2"); // NOI18N
-        Scroll5.setViewportView(LoadHTML2);
-
-        TabData.addTab("Tanda Tangan Pembuat Pernyataan", Scroll5);
-
-        FormPhoto.add(TabData, java.awt.BorderLayout.CENTER);
-
-        PanelAccor.add(FormPhoto, java.awt.BorderLayout.CENTER);
-
-        internalFrame3.add(PanelAccor, java.awt.BorderLayout.EAST);
 
         TabRawat.addTab("Data Penilaian", internalFrame3);
 
@@ -1457,10 +1342,25 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
             try {
                 param.put("lokalis", "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
                         + koneksiDB.HYBRIDWEB() + "/imagefreehand/");
-                param.put("ttd",
-                        "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB()
-                                + "/imagefreehand/PenandaanOperasi/ttdpasien/ttd" + TNoRw.getText().replaceAll("/", "")
-                                + ".png");
+                String ttdUrl = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
+                        + koneksiDB.HYBRIDWEB()
+                        + "/imagefreehand/PenandaanOperasi/imagemarking/ttd" + TNoRw.getText().replaceAll("/", "")
+                        + ".png";
+                try {
+                    java.net.URL testUrl = new java.net.URL(ttdUrl);
+                    java.net.HttpURLConnection conn = (java.net.HttpURLConnection) testUrl.openConnection();
+                    conn.setRequestMethod("HEAD");
+                    conn.setConnectTimeout(3000);
+                    conn.setReadTimeout(3000);
+                    if (conn.getResponseCode() == 200) {
+                        param.put("ttd", ttdUrl);
+                    } else {
+                        param.put("ttd", "");
+                    }
+                    conn.disconnect();
+                } catch (Exception ex) {
+                    param.put("ttd", "");
+                }
             } catch (Exception e) {
 
             }
@@ -1568,16 +1468,6 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         // TODO add your handling code here:
     }// GEN-LAST:event_BtnPerawatKeyPressed
 
-    private void ChkAccorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ChkAccorActionPerformed
-        if (tbObat.getSelectedRow() != -1) {
-            isPhoto();
-            panggilPhoto();
-        } else {
-            ChkAccor.setSelected(false);
-            JOptionPane.showMessageDialog(null, "Silahkan pilih No.Pernyataan..!!!");
-        }
-    }// GEN-LAST:event_ChkAccorActionPerformed
-
     private void btnAmbilActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAmbilActionPerformed
         if (TNoRw.getText().trim().equals("")) {
             Valid.textKosong(TNoRw, "Nama Pasien");
@@ -1585,7 +1475,7 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             DlgTTDPasien ttd = new DlgTTDPasien(null, false);
             ttd.setNoRm(TNoRw.getText(), TNoRM.getText(), TPasien.getText(),
-                    "imagefreehand/PenandaanOperasi/ttdpasien/", "ttd" + TNoRw.getText().replaceAll("/", "") + ".png");
+                    "PenandaanOperasi/imagemarking/", "ttd" + TNoRw.getText().replaceAll("/", "") + ".png");
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             int width = (int) (screenSize.width * 0.30); // 20% dari lebar layar
             int height = (int) (screenSize.height * 0.30); // 20% dari tinggi layar
@@ -1598,58 +1488,10 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         }
     }// GEN-LAST:event_btnAmbilActionPerformed
 
-    private void BtnRefreshPhoto1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnRefreshPhoto1ActionPerformed
-        if (tbObat.getSelectedRow() > -1) {
-            panggilPhoto();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih No.Pernyataan terlebih dahulu..!!");
-        }
-    }// GEN-LAST:event_BtnRefreshPhoto1ActionPerformed
 
     private void BtnPrint1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnPrint1ActionPerformed
         if (tbObat.getSelectedRow() > -1) {
-            if (lokasifile.equals("")) {
-                JOptionPane.showMessageDialog(null,
-                        "Maaf, Silahkan ambil photo bukti persetujuan penolakan tindakan terlebih dahulu..!!!!");
-            } else {
-                Map<String, Object> param = new HashMap<>();
-                param.put("namars", akses.getnamars());
-                param.put("alamatrs", akses.getalamatrs());
-                param.put("kotars", akses.getkabupatenrs());
-                param.put("propinsirs", akses.getpropinsirs());
-                param.put("kontakrs", akses.getkontakrs());
-                param.put("emailrs", akses.getemailrs());
-                param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
-                param.put("photo_penerima", "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
-                        + koneksiDB.HYBRIDWEB() + "/persetujuantindakan/" + lokasifile);
-                // param.put("photo_saksi","http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/persetujuantindakan/"+lokasifile2);
-                finger = Sequel.cariIsi(
-                        "select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",
-                        tbObat.getValueAt(tbObat.getSelectedRow(), 29).toString());
-                // finger2=Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner
-                // join pegawai on pegawai.id=sidikjari.id where
-                // pegawai.nik=?",tbObat.getValueAt(tbObat.getSelectedRow(),31).toString());
-                param.put("finger", "Dikeluarkan di " + akses.getnamars() + ", Kabupaten/Kota " + akses.getkabupatenrs()
-                        + "\nDitandatangani secara elektronik oleh "
-                        + tbObat.getValueAt(tbObat.getSelectedRow(), 30).toString() + "\nID "
-                        + (finger.equals("") ? tbObat.getValueAt(tbObat.getSelectedRow(), 29).toString() : finger)
-                        + "\n" + Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString()));
-                // param.put("finger2","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota
-                // "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh
-                // "+tbObat.getValueAt(tbObat.getSelectedRow(),32).toString()+"\nID
-                // "+(finger2.equals("")?tbObat.getValueAt(tbObat.getSelectedRow(),31).toString():finger2)+"\n"+Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),6).toString()));
-                Valid.MyReportqry("rptSuratPersetujuanPenolakanTindakan.jasper", "report",
-                        "::[ Surat Persetujuan Penolakan Tindakan ]::",
-                        "select persetujuan_penolakan_tindakan.no_pernyataan,reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,pasien.tmp_lahir,concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab,', ',propinsi.nm_prop) as alamat,persetujuan_penolakan_tindakan.tanggal,persetujuan_penolakan_tindakan.diagnosa,persetujuan_penolakan_tindakan.diagnosa_konfirmasi,persetujuan_penolakan_tindakan.tindakan,"
-                                + "persetujuan_penolakan_tindakan.tindakan_konfirmasi,persetujuan_penolakan_tindakan.indikasi_tindakan,persetujuan_penolakan_tindakan.indikasi_tindakan_konfirmasi,persetujuan_penolakan_tindakan.tata_cara,persetujuan_penolakan_tindakan.tata_cara_konfirmasi,persetujuan_penolakan_tindakan.tujuan,persetujuan_penolakan_tindakan.tujuan_konfirmasi,persetujuan_penolakan_tindakan.risiko,persetujuan_penolakan_tindakan.risiko_konfirmasi,"
-                                + "persetujuan_penolakan_tindakan.komplikasi,persetujuan_penolakan_tindakan.komplikasi_konfirmasi,persetujuan_penolakan_tindakan.prognosis,persetujuan_penolakan_tindakan.prognosis_konfirmasi,persetujuan_penolakan_tindakan.alternatif_dan_risikonya,persetujuan_penolakan_tindakan.alternatif_konfirmasi,persetujuan_penolakan_tindakan.biaya,persetujuan_penolakan_tindakan.biaya_konfirmasi,persetujuan_penolakan_tindakan.lain_lain,"
-                                + "persetujuan_penolakan_tindakan.lain_lain_konfirmasi,persetujuan_penolakan_tindakan.kd_dokter,dokter.nm_dokter,persetujuan_penolakan_tindakan.nip,petugas.nama,persetujuan_penolakan_tindakan.penerima_informasi,persetujuan_penolakan_tindakan.alasan_diwakilkan_penerima_informasi,persetujuan_penolakan_tindakan.jk_penerima_informasi,persetujuan_penolakan_tindakan.tanggal_lahir_penerima_informasi,persetujuan_penolakan_tindakan.umur_penerima_informasi,"
-                                + "persetujuan_penolakan_tindakan.alamat_penerima_informasi,persetujuan_penolakan_tindakan.no_hp,persetujuan_penolakan_tindakan.hubungan_penerima_informasi,persetujuan_penolakan_tindakan.pernyataan,persetujuan_penolakan_tindakan.saksi_keluarga,reg_periksa.umurdaftar,reg_periksa.sttsumur from persetujuan_penolakan_tindakan inner join reg_periksa on persetujuan_penolakan_tindakan.no_rawat=reg_periksa.no_rawat inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
-                                + "inner join dokter on dokter.kd_dokter=persetujuan_penolakan_tindakan.kd_dokter inner join petugas on petugas.nip=persetujuan_penolakan_tindakan.nip inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab inner join propinsi on pasien.kd_prop=propinsi.kd_prop "
-                                + "where persetujuan_penolakan_tindakan.no_pernyataan='"
-                                + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "'",
-                        param);
-            }
+            MnCetakActionPerformed(null);
         } else {
             JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih data terlebih dahulu..!!!!");
         }
@@ -1721,15 +1563,10 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
     private widget.Button BtnKeluar;
     private widget.Button BtnPerawat;
     private widget.Button BtnPrint;
-    private widget.Button BtnPrint1;
-    private widget.Button BtnRefreshPhoto1;
     private widget.Button BtnSimpan;
-    private widget.CekBox ChkAccor;
     private widget.Tanggal DTPCari1;
     private widget.Tanggal DTPCari2;
     private widget.PanelBiasa FormInput;
-    private widget.PanelBiasa FormPass3;
-    private widget.PanelBiasa FormPhoto;
     private widget.TextBox Hubungan;
     private widget.TextBox Jk;
     private widget.TextBox KdDokter;
@@ -1737,26 +1574,21 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
     private widget.TextArea Keterangan;
     private widget.Label LCount;
     private widget.editorpane LoadHTML;
-    private widget.editorpane LoadHTML2;
     private javax.swing.JMenuItem MnCetak;
     private widget.TextBox NmDokter;
     private widget.TextBox NmPetugas;
     private widget.TextBox No;
     private widget.TextBox Operasi;
-    private widget.PanelBiasa PanelAccor;
     private usu.widget.glass.PanelGlass PanelWall;
     private widget.TextBox Ruangan;
     private widget.ScrollPane Scroll;
-    private widget.ScrollPane Scroll5;
     private widget.TextBox TCari;
     private widget.TextBox TNoRM;
     private widget.TextBox TNoRw;
     private widget.TextBox TPasien;
-    private javax.swing.JTabbedPane TabData;
     private javax.swing.JTabbedPane TabRawat;
     private widget.Tanggal TglAsuhan;
     private widget.TextBox TglLahir;
-    private widget.Button btnAmbil;
     private widget.InternalFrame internalFrame1;
     private widget.InternalFrame internalFrame2;
     private widget.InternalFrame internalFrame3;
@@ -2013,34 +1845,8 @@ public final class RMPenandaanAreaOperasi extends javax.swing.JDialog {
         }
     }
 
-    private void isPhoto() {
-        if (ChkAccor.isSelected() == true) {
-            ChkAccor.setVisible(false);
-            PanelAccor.setPreferredSize(new Dimension(480, HEIGHT));
-            FormPhoto.setVisible(true);
-            ChkAccor.setVisible(true);
-        } else if (ChkAccor.isSelected() == false) {
-            ChkAccor.setVisible(false);
-            PanelAccor.setPreferredSize(new Dimension(15, HEIGHT));
-            FormPhoto.setVisible(false);
-            ChkAccor.setVisible(true);
-        }
-    }
-
-    private void panggilPhoto() {
-        try {
-            LoadHTML.setText("<html><body><center><img src='http://"
-                    + koneksiDB.HOSTHYBRIDWEB() + ":"
-                    + koneksiDB.PORTWEB() + "/"
-                    + koneksiDB.HYBRIDWEB()
-                    + "/imagefreehand/PenandaanOperasi/ttdpasien/ttd"
-                    + TNoRw.getText().replaceAll("/", "")
-                    + ".png' alt='photo' width='500' height='500'/></center></body></html>");
-
-        } catch (Exception e) {
-
-        }
-    }
+    
+    
     /*
      * if (FormPhoto.isVisible() == true) {
      * lokasifile = "";

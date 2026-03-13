@@ -6,15 +6,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -25,17 +29,20 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  * Dialog Tanda Tangan Digital Dokter
- * Fitur: Freehand Drawing, Save to Server
+ * Fitur: Freehand Drawing dengan smooth stroke, optimasi pen tablet
  * Nama file: TTD_<noRawat>.jpg agar mudah dicari via noRawat
  */
 public class DlgTTDDokter extends JDialog {
-    private javax.swing.JPanel PanelCanvas;
+    private SignaturePanel signaturePanel;
     private widget.Button BtnSimpan, BtnClear, BtnKeluar;
-    private BufferedImage image;
-    private Graphics2D g2d;
-    private Point lastPoint;
     private String namaFileTersimpan = "";
     private String noRawat = "";
+
+    // Konfigurasi stroke
+    private static final float STROKE_WIDTH = 2.5f;
+    private static final int MIN_POINT_DISTANCE = 2; // Filter noise pen tablet (px)
+    private static final int CANVAS_WIDTH = 400;
+    private static final int CANVAS_HEIGHT = 350;
 
     public DlgTTDDokter(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -58,10 +65,8 @@ public class DlgTTDDokter extends JDialog {
         setTitle("Tanda Tangan Digital Dokter");
         setResizable(false);
 
-        PanelCanvas = new javax.swing.JPanel();
-        PanelCanvas.setBackground(Color.WHITE);
-        PanelCanvas.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
-        add(PanelCanvas, java.awt.BorderLayout.CENTER);
+        signaturePanel = new SignaturePanel();
+        add(signaturePanel, java.awt.BorderLayout.CENTER);
 
         javax.swing.JPanel PanelTombol = new javax.swing.JPanel();
         PanelTombol.setLayout(new java.awt.FlowLayout());
@@ -92,39 +97,177 @@ public class DlgTTDDokter extends JDialog {
     }
 
     private void initCanvasLogic() {
-        image = new BufferedImage(400, 350, BufferedImage.TYPE_INT_RGB);
-        g2d = image.createGraphics();
-
-        clearCanvas();
-
-        PanelCanvas.addMouseListener(new MouseAdapter() {
+        signaturePanel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
-                lastPoint = e.getPoint();
+                if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+                    signaturePanel.startNewStroke(e.getPoint());
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+                    signaturePanel.finishStroke();
+                }
             }
         });
 
-        PanelCanvas.addMouseMotionListener(new MouseMotionAdapter() {
+        signaturePanel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
             public void mouseDragged(MouseEvent e) {
-                if (lastPoint != null) {
-                    g2d.setColor(Color.BLACK);
-                    g2d.setStroke(new BasicStroke(4));
-                    g2d.drawLine(lastPoint.x, lastPoint.y, e.getX(), e.getY());
-
-                    Graphics g = PanelCanvas.getGraphics();
-                    g.setColor(Color.BLACK);
-                    ((Graphics2D) g).setStroke(new BasicStroke(4));
-                    g.drawLine(lastPoint.x, lastPoint.y, e.getX(), e.getY());
-
-                    lastPoint = e.getPoint();
+                if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+                    signaturePanel.addStrokePoint(e.getPoint());
                 }
             }
         });
     }
 
     private void clearCanvas() {
+        signaturePanel.clearAll();
+    }
+
+    /**
+     * Render semua strokes ke BufferedImage untuk disimpan sebagai file.
+     */
+    private BufferedImage renderToImage() {
+        BufferedImage img = new BufferedImage(CANVAS_WIDTH, CANVAS_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = img.createGraphics();
+        // Background putih
         g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, 400, 350);
-        PanelCanvas.repaint();
+        g2d.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        // Render strokes dengan kualitas tinggi
+        applyRenderingHints(g2d);
+        g2d.setColor(Color.BLACK);
+        g2d.setStroke(new BasicStroke(STROKE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        for (List<Point> stroke : signaturePanel.getAllStrokes()) {
+            drawSmoothStroke(g2d, stroke);
+        }
+        g2d.dispose();
+        return img;
+    }
+
+    /**
+     * Apply rendering hints untuk anti-aliasing dan kualitas tinggi.
+     */
+    private static void applyRenderingHints(Graphics2D g2d) {
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+    }
+
+    /**
+     * Gambar stroke halus menggunakan QuadCurve2D dengan midpoint interpolation.
+     * Teknik: untuk setiap 3 titik berurutan, gambar quadratic curve dari
+     * midpoint(p0,p1) melalui p1 ke midpoint(p1,p2).
+     */
+    private static void drawSmoothStroke(Graphics2D g2d, List<Point> points) {
+        if (points == null || points.size() < 2) {
+            // Satu titik saja - gambar dot
+            if (points != null && points.size() == 1) {
+                Point p = points.get(0);
+                g2d.fillOval(p.x - 1, p.y - 1, 3, 3);
+            }
+            return;
+        }
+
+        if (points.size() == 2) {
+            // Dua titik - gambar garis lurus
+            Point p0 = points.get(0);
+            Point p1 = points.get(1);
+            g2d.drawLine(p0.x, p0.y, p1.x, p1.y);
+            return;
+        }
+
+        // Mulai dari titik pertama ke midpoint pertama
+        Point p0 = points.get(0);
+        Point p1 = points.get(1);
+        g2d.drawLine(p0.x, p0.y, (p0.x + p1.x) / 2, (p0.y + p1.y) / 2);
+
+        // Quadratic curves melalui midpoints
+        QuadCurve2D.Float curve = new QuadCurve2D.Float();
+        for (int i = 1; i < points.size() - 1; i++) {
+            Point prev = points.get(i);
+            Point next = points.get(i + 1);
+            int midX1 = (points.get(i - 1).x + prev.x) / 2;
+            int midY1 = (points.get(i - 1).y + prev.y) / 2;
+            int midX2 = (prev.x + next.x) / 2;
+            int midY2 = (prev.y + next.y) / 2;
+            curve.setCurve(midX1, midY1, prev.x, prev.y, midX2, midY2);
+            g2d.draw(curve);
+        }
+
+        // Dari midpoint terakhir ke titik terakhir
+        Point pLast = points.get(points.size() - 1);
+        Point pPrev = points.get(points.size() - 2);
+        g2d.drawLine((pPrev.x + pLast.x) / 2, (pPrev.y + pLast.y) / 2, pLast.x, pLast.y);
+    }
+
+    // ============================================================
+    // Inner class: SignaturePanel - custom JPanel untuk kanvas TTD
+    // ============================================================
+    private class SignaturePanel extends JPanel {
+        private final List<List<Point>> allStrokes = new ArrayList<>();
+        private List<Point> currentStroke = null;
+
+        public SignaturePanel() {
+            setBackground(Color.WHITE);
+            setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+            applyRenderingHints(g2d);
+            g2d.setColor(Color.BLACK);
+            g2d.setStroke(new BasicStroke(STROKE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+            // Gambar semua stroke yang sudah selesai
+            for (List<Point> stroke : allStrokes) {
+                drawSmoothStroke(g2d, stroke);
+            }
+
+            // Gambar stroke yang sedang aktif
+            if (currentStroke != null && currentStroke.size() > 0) {
+                drawSmoothStroke(g2d, currentStroke);
+            }
+        }
+
+        public void startNewStroke(Point p) {
+            currentStroke = new ArrayList<>();
+            currentStroke.add(p);
+        }
+
+        public void addStrokePoint(Point p) {
+            if (currentStroke != null) {
+                // Filter noise pen tablet: abaikan titik yang terlalu dekat
+                Point last = currentStroke.get(currentStroke.size() - 1);
+                double dist = Math.sqrt(Math.pow(p.x - last.x, 2) + Math.pow(p.y - last.y, 2));
+                if (dist >= MIN_POINT_DISTANCE) {
+                    currentStroke.add(p);
+                    repaint();
+                }
+            }
+        }
+
+        public void finishStroke() {
+            if (currentStroke != null && currentStroke.size() > 0) {
+                allStrokes.add(currentStroke);
+                currentStroke = null;
+            }
+        }
+
+        public void clearAll() {
+            allStrokes.clear();
+            currentStroke = null;
+            repaint();
+        }
+
+        public List<List<Point>> getAllStrokes() {
+            return allStrokes;
+        }
     }
 
     /**
@@ -150,7 +293,8 @@ public class DlgTTDDokter extends JDialog {
                 localDir.mkdirs();
             }
             File file = new File("tmpImageFreehand/" + fileName);
-            ImageIO.write(image, "jpg", file);
+            BufferedImage renderedImage = renderToImage();
+            ImageIO.write(renderedImage, "jpg", file);
             System.out.println("TTD saved locally: " + file.getAbsolutePath());
 
             // 2. Upload ke server (ke root imagefreehand, tanpa subfolder)

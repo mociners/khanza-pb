@@ -378,7 +378,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Diagnosa Utama]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="95" y="86" width="109" height="11" uuid="98111397-6943-4a0d-b58a-0eea074c5151"/>
+				<reportElement x="95" y="86" width="310" height="11" uuid="98111397-6943-4a0d-b58a-0eea074c5151"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>

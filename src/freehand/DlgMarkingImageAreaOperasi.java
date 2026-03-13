@@ -60,33 +60,42 @@ import org.apache.http.impl.client.DefaultHttpClient;
  * @author perpustakaan
  */
 public class DlgMarkingImageAreaOperasi extends javax.swing.JDialog {
-    private Connection koneksi=koneksiDB.condb();
-    private sekuel Sequel=new sekuel();
-    private String username="",urlImage="";
-    private validasi Valid=new validasi();
+    private Connection koneksi = koneksiDB.condb();
+    private sekuel Sequel = new sekuel();
+    private String username = "", urlImage = "";
+    private validasi Valid = new validasi();
+    private java.util.ArrayList<java.util.ArrayList<Point>> allStrokes = new java.util.ArrayList<>();
+    private java.util.ArrayList<Point> currentStroke = new java.util.ArrayList<>();
     private PreparedStatement ps;
     private ResultSet rs;
     private int index = 0;
     private Point[] arr = new Point[100000];
     private BufferedImage img;
+    private BufferedImage backgroundImg;
     private SimpleDateFormat tanggalNow = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat jamNow = new SimpleDateFormat("HH:mm:ss");
-    /** Creates new form DlgPemberianObat
+
+    /**
+     * Creates new form DlgPemberianObat
+     * 
      * @param parent
-     * @param modal */
+     * @param modal
+     */
     public DlgMarkingImageAreaOperasi(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         final Toolkit toolkit = Toolkit.getDefaultToolkit();
         final Dimension screenSize = toolkit.getScreenSize();
-       //setSize(screenSize.width,screenSize.height);
+        // setSize(screenSize.width,screenSize.height);
         setSize(965, 695);
         setResizable(false);
-        this.setLocation(0,0);
-//        setSize(885,674); 
+        this.setLocation(0, 0);
+        // setSize(885,674);
     }
+
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         internalFrame1 = new widget.InternalFrame();
@@ -110,7 +119,11 @@ public class DlgMarkingImageAreaOperasi extends javax.swing.JDialog {
             }
         });
 
-        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Marking Area Operasi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Liberation Sans", 0, 13), new java.awt.Color(70, 70, 70))); // NOI18N
+        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)),
+                "::[ Marking Area Operasi ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Liberation Sans", 0, 13),
+                new java.awt.Color(70, 70, 70))); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setLayout(new java.awt.BorderLayout(1, 1));
 
@@ -243,94 +256,131 @@ public class DlgMarkingImageAreaOperasi extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-     
 
-    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
-        Robot r = null;
+    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnSimpanActionPerformed
         try {
-            r = new Robot();
-        } catch (AWTException ex) {
-            Logger.getLogger(DlgMarkingImageAreaOperasi.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Rectangle capture = 
-            new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-            BufferedImage Image = r.createScreenCapture(panelGlass9.bounds());
-        try {
-            ImageIO.write(Image, "png", new File("tmpImageFreehand/PenandaanOperasi"+TNoRawat.getText().replaceAll("/", "")+".png"));
+            // Paint background image directly to BufferedImage
+            int w = PanelWall.getWidth();
+            int h = PanelWall.getHeight();
+            BufferedImage Image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = Image.createGraphics();
+            if (backgroundImg != null) {
+                g2d.drawImage(backgroundImg, 0, 0, w, h, null);
+            } else {
+                g2d.setColor(PanelWall.getBackground());
+                g2d.fillRect(0, 0, w, h);
+            }
+
+            // Replay all freehand strokes onto the image
+            g2d.setColor(Color.red);
+            java.awt.BasicStroke stroke = new java.awt.BasicStroke(2.0f);
+            g2d.setStroke(stroke);
+            for (java.util.ArrayList<Point> s : allStrokes) {
+                for (int i = 0; i < s.size() - 1; i++) {
+                    g2d.drawLine(s.get(i).x, s.get(i).y, s.get(i + 1).x, s.get(i + 1).y);
+                }
+            }
+            // Also draw current stroke if not yet finalized
+            for (int i = 0; i < currentStroke.size() - 1; i++) {
+                g2d.drawLine(currentStroke.get(i).x, currentStroke.get(i).y, currentStroke.get(i + 1).x,
+                        currentStroke.get(i + 1).y);
+            }
+            g2d.dispose();
+
+            ImageIO.write(Image, "png",
+                    new File("tmpImageFreehand/PenandaanOperasi" + TNoRawat.getText().replaceAll("/", "") + ".png"));
+            uploadImage("PenandaanOperasi" + TNoRawat.getText().replaceAll("/", "") + ".png",
+                    "PenandaanOperasi/imagemarking");
+
+            if (Sequel.cariInteger(
+                    "select count(no_rawat) as jumlah from penandaan_area_operasi_image_marking where no_rawat='"
+                            + TNoRawat.getText() + "'") > 0) {
+                if (Sequel.mengedittf("penandaan_area_operasi_image_marking", "no_rawat=?",
+                        "tanggal=?,jam=?,url_image=?", 4, new String[] {
+                                tanggalNow.format(new Date()), jamNow.format(new Date()),
+                                "PenandaanOperasi/imagemarking/PenandaanOperasi"
+                                        + TNoRawat.getText().replaceAll("/", "") + ".png",
+                                TNoRawat.getText()
+                        }) == true) {
+
+                }
+            } else {
+                if (Sequel.menyimpantf("penandaan_area_operasi_image_marking", "?,?,?,?", "No.Rawat", 4, new String[] {
+                        TNoRawat.getText(), tanggalNow.format(new Date()), jamNow.format(new Date()),
+                        "PenandaanOperasi/imagemarking/PenandaanOperasi" + TNoRawat.getText().replaceAll("/", "")
+                                + ".png"
+                }) == true) {
+                }
+            }
+            dispose();
         } catch (IOException ex) {
             Logger.getLogger(DlgMarkingImageAreaOperasi.class.getName()).log(Level.SEVERE, null, ex);
         }
-        uploadImage("PenandaanOperasi"+TNoRawat.getText().replaceAll("/", "")+".png","PenandaanOperasi/imagemarking");
-        
-        if(Sequel.cariInteger("select count(no_rawat) as jumlah from penandaan_area_operasi_image_marking where no_rawat='"+TNoRawat.getText()+"'")>0){
-            if(Sequel.mengedittf("penandaan_area_operasi_image_marking","no_rawat=?","tanggal=?,jam=?,url_image=?",4,new String[]{
-                   tanggalNow.format(new Date()),jamNow.format(new Date()),"PenandaanOperasi/imagemarking/PenandaanOperasi"+TNoRawat.getText().replaceAll("/", "")+".png",TNoRawat.getText()
-                     })==true){
-                
-            }
-        }else{
-         if(Sequel.menyimpantf("penandaan_area_operasi_image_marking","?,?,?,?","No.Rawat",4,new String[]{
-                    TNoRawat.getText(),tanggalNow.format(new Date()),jamNow.format(new Date()),"PenandaanOperasi/imagemarking/PenandaanOperasi"+TNoRawat.getText().replaceAll("/", "")+".png"
-                })==true){
-            }
-        }
+    }// GEN-LAST:event_BtnSimpanActionPerformed
+
+    private void BtnSimpanKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnSimpanKeyPressed
+
+    }// GEN-LAST:event_BtnSimpanKeyPressed
+
+    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnKeluarActionPerformed
         dispose();
-}//GEN-LAST:event_BtnSimpanActionPerformed
+    }// GEN-LAST:event_BtnKeluarActionPerformed
 
-    private void BtnSimpanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnSimpanKeyPressed
-       
-}//GEN-LAST:event_BtnSimpanKeyPressed
-
-    private void BtnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKeluarActionPerformed
-        dispose();
-}//GEN-LAST:event_BtnKeluarActionPerformed
-
-    private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnKeluarKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+    private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnKeluarKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
             dispose();
         }
-}//GEN-LAST:event_BtnKeluarKeyPressed
+    }// GEN-LAST:event_BtnKeluarKeyPressed
 
-    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-       
-    }//GEN-LAST:event_formWindowActivated
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowActivated
 
-    private void PanelWallMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelWallMouseDragged
+    }// GEN-LAST:event_formWindowActivated
+
+    private void PanelWallMouseDragged(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_PanelWallMouseDragged
         arr[index] = new Point(evt.getXOnScreen(), evt.getYOnScreen());
         index++;
-        Graphics g = getGraphics() ;
+        Graphics g = getGraphics();
         g.setColor(Color.red);
         for (int i = 0; i < index - 1; i++)
-        g.drawLine(arr[i].x, arr[i].y, arr[i + 1].x, arr[i + 1].y);
-//        System.out.println(index);
-    }//GEN-LAST:event_PanelWallMouseDragged
+            g.drawLine(arr[i].x, arr[i].y, arr[i + 1].x, arr[i + 1].y);
+        // Store PanelWall-relative coordinates for saving to image
+        currentStroke.add(new Point(evt.getX(), evt.getY()));
+    }// GEN-LAST:event_PanelWallMouseDragged
 
-    private void PanelWallMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelWallMouseReleased
+    private void PanelWallMouseReleased(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_PanelWallMouseReleased
         arr = new Point[100000];
         index = 0;
-    }//GEN-LAST:event_PanelWallMouseReleased
+        // Finalize current stroke
+        if (!currentStroke.isEmpty()) {
+            allStrokes.add(currentStroke);
+            currentStroke = new java.util.ArrayList<>();
+        }
+    }// GEN-LAST:event_PanelWallMouseReleased
 
-    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
-
-//        System.out.println(index);
+    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnHapusActionPerformed
+        allStrokes.clear();
+        currentStroke.clear();
         repaint();
-    }//GEN-LAST:event_BtnHapusActionPerformed
+    }// GEN-LAST:event_BtnHapusActionPerformed
 
-    private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnHapusKeyPressed
+    private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnHapusKeyPressed
 
-    }//GEN-LAST:event_BtnHapusKeyPressed
+    }// GEN-LAST:event_BtnHapusKeyPressed
 
-    private void BtnHapus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapus1ActionPerformed
-        imageAssesment("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/imagefreehand/masterimage/area_operasi.png");
-    }//GEN-LAST:event_BtnHapus1ActionPerformed
+    private void BtnHapus1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnHapus1ActionPerformed
+        allStrokes.clear();
+        currentStroke.clear();
+        imageAssesment("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB()
+                + "/imagefreehand/masterimage/area_operasi.png");
+    }// GEN-LAST:event_BtnHapus1ActionPerformed
 
-    private void BtnHapus1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnHapus1KeyPressed
+    private void BtnHapus1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_BtnHapus1KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnHapus1KeyPressed
+    }// GEN-LAST:event_BtnHapus1KeyPressed
 
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             DlgMarkingImageAreaOperasi dialog = new DlgMarkingImageAreaOperasi(new javax.swing.JFrame(), true);
@@ -357,67 +407,63 @@ public class DlgMarkingImageAreaOperasi extends javax.swing.JDialog {
     private widget.panelisi panelGlass8;
     private widget.panelisi panelGlass9;
     // End of variables declaration//GEN-END:variables
-    
 
     private void isPsien() {
-//        Sequel.cariIsi("select nm_pasien from pasien where no_rkm_medis=? ",TPasien,TNoRM.getText());
+        // Sequel.cariIsi("select nm_pasien from pasien where no_rkm_medis=?
+        // ",TPasien,TNoRM.getText());
     }
 
     public void setNoRw(String norw) {
-       
-        TNoRawat.setText(norw); 
-        urlImage=Sequel.cariIsi("select url_image from penandaan_area_operasi_image_marking where no_rawat='"+norw+"' ");
-        if(urlImage.toString().equals(null)||urlImage.toString().equals("")){
-           imageAssesment("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/imagefreehand/masterimage/area_operasi.png");
-       }else{
-             imageAssesment("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/imagefreehand/"+urlImage.trim()+"");
-       }    
+
+        TNoRawat.setText(norw);
+        // Always load the blank template for fresh marking
+        imageAssesment("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
+                + koneksiDB.HYBRIDWEB() + "/imagefreehand/masterimage/area_operasi.png");
     }
-    
-    
-    public void isCek(){
+
+    public void isCek() {
         BtnSimpan.setEnabled(true);
 
-       
-        
     }
-void uploadImage(String FileName,String docpath){
-    try{
-        File file =new File("tmpImageFreehand/"+FileName);
-        byte[] data = new byte[(int) file.length()];
-        data = FileUtils.readFileToByteArray(file);
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpPost postRequest = new HttpPost("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/imagefreehand/upload.php?doc="+docpath);
-        ByteArrayBody fileData = new ByteArrayBody(data, FileName);
-        MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-        reqEntity.addPart("file", fileData); 
-        postRequest.setEntity(reqEntity);
-        httpClient.execute(postRequest); 
-//        HttpResponse response = (HttpResponse) httpClient.execute(postRequest); 
-        deleteFile();
-        
-        }catch (Exception e){
-            System.out.println("Upload error"+e);
+
+    void uploadImage(String FileName, String docpath) {
+        try {
+            File file = new File("tmpImageFreehand/" + FileName);
+            byte[] data = new byte[(int) file.length()];
+            data = FileUtils.readFileToByteArray(file);
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/"
+                    + koneksiDB.HYBRIDWEB() + "/imagefreehand/upload.php?doc=" + docpath);
+            ByteArrayBody fileData = new ByteArrayBody(data, FileName);
+            MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            reqEntity.addPart("file", fileData);
+            postRequest.setEntity(reqEntity);
+            httpClient.execute(postRequest);
+            // HttpResponse response = (HttpResponse) httpClient.execute(postRequest);
+            deleteFile();
+
+        } catch (Exception e) {
+            System.out.println("Upload error" + e);
         }
     }
-void deleteFile(){
-       File file = new File("tmpImageFreehand");      
-        String[] myFiles;    
+
+    void deleteFile() {
+        File file = new File("tmpImageFreehand");
+        String[] myFiles;
         if (file.isDirectory()) {
             myFiles = file.list();
             for (int i = 0; i < myFiles.length; i++) {
-                File myFile = new File(file, myFiles[i]); 
+                File myFile = new File(file, myFiles[i]);
                 myFile.delete();
             }
         }
-   }
+    }
 
-void imageAssesment(String url){  
-    try {
-            BufferedImage img = ImageIO.read(new URL(url.trim()));
-            PanelWall.setBackgroundImage(new javax.swing.ImageIcon(img));
-        }
-        catch(IOException ex) {
+    void imageAssesment(String url) {
+        try {
+            backgroundImg = ImageIO.read(new URL(url.trim()));
+            PanelWall.setBackgroundImage(new javax.swing.ImageIcon(backgroundImg));
+        } catch (IOException ex) {
 
         }
     }

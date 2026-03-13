@@ -2748,7 +2748,8 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
                 RMObservasiAnestesi form = new RMObservasiAnestesi(null, false);
                 form.emptTeks();
                 form.isCek();
-                form.setNoRm(TNoRw.getText(), DTPCari2.getDate(), KdDokter.getText(), NmDokter.getText());
+                form.setNoRm(TNoRw.getText(), DTPCari2.getDate(), KdDokter.getText(), NmDokter.getText(),
+                        KdDokter.getText(), NmDokter.getText());
                 form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 form.setLocationRelativeTo(internalFrame1);
                 form.setVisible(true);
@@ -3293,7 +3294,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
                             "on petugas.kd_jbtn=jabatan.kd_jbtn where petugas.nip=?",
                     kodeLogin);
             System.out.println("DEBUG aturVisibilitas: isPerawat check, nmJbtn = [" + nmJbtn + "]");
-            if (!nmJbtn.trim().isEmpty()) {
+            if (!nmJbtn.trim().isEmpty() && !nmJbtn.trim().equals("-")) {
                 isPerawat = true;
                 String jbtLower = nmJbtn.toLowerCase();
                 if (jbtLower.contains("penata anestesi") || jbtLower.contains("anestesi")) {
@@ -3311,8 +3312,34 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
                         ", isPerawatOK=" + isPerawatOK + ", isPerawatRR=" + isPerawatRR + ", isPenataAnestesi="
                         + isPenataAnestesi);
 
-        // Jika bukan salah satu dari 5 role (misal admin), biarkan default permission
+        // Jika bukan salah satu dari 5 role (misal admin), biarkan default ditampilkan
         if (!isDokterBedah && !isDokterAnestesi && !isPerawatOK && !isPerawatRR && !isPenataAnestesi) {
+            BtnPermintaanLab.setVisible(true);
+            BtnPenilaianPreInduksi.setVisible(true);
+            BtnPreOperasi.setVisible(true);
+            BtnPreAnastesi.setVisible(true);
+            BtnPreAnastesi1.setVisible(true);
+            BtnLembarObservasiAnestesi.setVisible(true);
+            BtnLembarObservasiAnestesi1.setVisible(true);
+            BtnInstrumen.setVisible(true);
+            BtnInstrumen1.setVisible(true);
+            BtnInstrumen2.setVisible(true);
+            BtnInstrumen3.setVisible(true);
+            BtnSkorAldrettePascaAnestesi.setVisible(true);
+            BtnSkorStewardPascaAnestesi.setVisible(true);
+            BtnSkorBromagePascaAnestesi.setVisible(true);
+            BtnChecklistPreOperasi.setVisible(true);
+            BtnSignInSebelumAnestesi.setVisible(true);
+            BtnTimeOutSebelumInsisi.setVisible(true);
+            BtnSignOutSebelumMenutupLuka.setVisible(true);
+            BtnChecklistPostOperasi.setVisible(true);
+            BtnTagihanOperasi.setVisible(true);
+            BtnLaporanOperasi.setVisible(false);
+            BtnCatatanKamarPemulihan.setVisible(true);
+            BtnInputObat.setVisible(true);
+            BtnObatBhp.setVisible(true);
+            BtnPenandaanOperasi.setVisible(true);
+            BtnTransferAntarRuang.setVisible(true);
             return;
         }
 
@@ -3328,6 +3355,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnSkorAldrettePascaAnestesi.setVisible(false);
             BtnSkorStewardPascaAnestesi.setVisible(false);
             BtnSkorBromagePascaAnestesi.setVisible(false);
+            BtnLaporanOperasi.setVisible(false);
         } else if (isDokterBedah) {
             BtnChecklistPreOperasi.setVisible(false);
             BtnSignInSebelumAnestesi.setVisible(false);
@@ -3351,6 +3379,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnSkorAldrettePascaAnestesi.setVisible(false);
             BtnSkorStewardPascaAnestesi.setVisible(false);
             BtnSkorBromagePascaAnestesi.setVisible(false);
+            BtnLaporanOperasi.setVisible(false);
         } else if (isDokterAnestesi) {
             BtnPenandaanOperasi.setVisible(false);
             BtnChecklistPreOperasi.setVisible(false);

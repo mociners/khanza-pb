@@ -2102,6 +2102,9 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                                 JOptionPane.showMessageDialog(null,
                                         "Maaf, Tidak boleh dihapus karena sudah ada tindakan yang sudah dibayar.\nSilahkan hubungi kasir...!!!!");
                             } else {
+                                Sequel.queryu("delete from periksa_lab where no_rawat='" + NoRawat
+                                        + "' and kd_jenis_prw in (select kd_jenis_prw from permintaan_pemeriksaan_lab where noorder='"
+                                        + NoPermintaan + "')");
                                 Sequel.meghapus("permintaan_lab", "noorder", NoPermintaan);
                                 TeksKosong();
                                 tampil();
@@ -2135,6 +2138,9 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                                 JOptionPane.showMessageDialog(null,
                                         "Maaf, Tidak boleh dihapus karena sudah ada tindakan yang sudah dibayar.\nSilahkan hubungi kasir...!!!!");
                             } else {
+                                Sequel.queryu("delete from periksa_lab where no_rawat='" + NoRawat
+                                        + "' and kd_jenis_prw in (select kd_jenis_prw from permintaan_pemeriksaan_lab where noorder='"
+                                        + NoPermintaan + "')");
                                 Sequel.meghapus("permintaan_lab", "noorder", NoPermintaan);
                                 TeksKosong();
                                 tampil3();
@@ -2168,6 +2174,9 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                                 JOptionPane.showMessageDialog(null,
                                         "Maaf, Tidak boleh dihapus karena sudah ada tindakan yang sudah dibayar.\nSilahkan hubungi kasir...!!!!");
                             } else {
+                                Sequel.queryu("delete from periksa_lab where no_rawat='" + NoRawat
+                                        + "' and kd_jenis_prw in (select kd_jenis_prw from permintaan_pemeriksaan_lab where noorder='"
+                                        + NoPermintaan + "')");
                                 Sequel.meghapus("permintaan_lab", "noorder", NoPermintaan);
                                 TeksKosong();
                                 tampilIGD();
@@ -3111,7 +3120,7 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     Map<String, Object> param = new HashMap<>();
                     param.put("nama",
-                                    Sequel.cariIsi("select pasien.nm_pasien from pasien where pasien.no_rkm_medis=? ", norm));
+                            Sequel.cariIsi("select pasien.nm_pasien from pasien where pasien.no_rkm_medis=? ", norm));
                     param.put("alamat", Sequel.cariIsi(
                             "select date_format(tgl_lahir,'%d/%m/%Y') from pasien where no_rkm_medis=?", NoRawat));
                     param.put("norm", NoRawat);
@@ -3122,18 +3131,24 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                     param.put("propinsirs", akses.getpropinsirs());
                     param.put("kontakrs", akses.getkontakrs());
                     param.put("emailrs", akses.getemailrs());
-                    Valid.MyReportqry("rptBarcodeRawat.jasper","report","::[ Barcode No.Rawat ]::",
-                        "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, pasien.no_ktp, " +
-                        "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, " +
-                        "concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, poliklinik.nm_poli, date_format(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, " +
-                        "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, " +
-                        "reg_periksa.stts_daftar, penjab.png_jawab, pasien.no_tlp, reg_periksa.stts, reg_periksa.status_poli, " +
-                        "reg_periksa.kd_poli, reg_periksa.kd_pj " +
-                        "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
-                        "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
-                        "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
-                        "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
-                        "where reg_periksa.no_rawat='" + NoRawat + "'", param);
+                    Valid.MyReportqry("rptBarcodeRawat.jasper", "report", "::[ Barcode No.Rawat ]::",
+                            "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, pasien.no_ktp, "
+                                    +
+                                    "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, "
+                                    +
+                                    "concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, poliklinik.nm_poli, date_format(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, "
+                                    +
+                                    "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, "
+                                    +
+                                    "reg_periksa.stts_daftar, penjab.png_jawab, pasien.no_tlp, reg_periksa.stts, reg_periksa.status_poli, "
+                                    +
+                                    "reg_periksa.kd_poli, reg_periksa.kd_pj " +
+                                    "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
+                                    "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                                    "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
+                                    "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
+                                    "where reg_periksa.no_rawat='" + NoRawat + "'",
+                            param);
                     this.setCursor(Cursor.getDefaultCursor());
                 }
             } else {
@@ -3148,7 +3163,7 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     Map<String, Object> param = new HashMap<>();
                     param.put("nama",
-                                    Sequel.cariIsi("select pasien.nm_pasien from pasien where pasien.no_rkm_medis=? ", norm));
+                            Sequel.cariIsi("select pasien.nm_pasien from pasien where pasien.no_rkm_medis=? ", norm));
                     param.put("alamat", Sequel.cariIsi(
                             "select date_format(tgl_lahir,'%d/%m/%Y') from pasien where no_rkm_medis=?", NoRawat));
                     param.put("norm", NoRawat);
@@ -3159,18 +3174,24 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                     param.put("propinsirs", akses.getpropinsirs());
                     param.put("kontakrs", akses.getkontakrs());
                     param.put("emailrs", akses.getemailrs());
-                    Valid.MyReportqry("rptBarcodeRawat.jasper","report","::[ Barcode No.Rawat ]::",
-                        "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, pasien.no_ktp, " +
-                        "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, " +
-                        "concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, poliklinik.nm_poli, date_format(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, " +
-                        "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, " +
-                        "reg_periksa.stts_daftar, penjab.png_jawab, pasien.no_tlp, reg_periksa.stts, reg_periksa.status_poli, " +
-                        "reg_periksa.kd_poli, reg_periksa.kd_pj " +
-                        "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
-                        "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
-                        "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
-                        "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
-                        "where reg_periksa.no_rawat='" + NoRawat + "'", param);
+                    Valid.MyReportqry("rptBarcodeRawat.jasper", "report", "::[ Barcode No.Rawat ]::",
+                            "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, pasien.no_ktp, "
+                                    +
+                                    "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, "
+                                    +
+                                    "concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, poliklinik.nm_poli, date_format(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, "
+                                    +
+                                    "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, "
+                                    +
+                                    "reg_periksa.stts_daftar, penjab.png_jawab, pasien.no_tlp, reg_periksa.stts, reg_periksa.status_poli, "
+                                    +
+                                    "reg_periksa.kd_poli, reg_periksa.kd_pj " +
+                                    "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
+                                    "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                                    "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
+                                    "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
+                                    "where reg_periksa.no_rawat='" + NoRawat + "'",
+                            param);
                     this.setCursor(Cursor.getDefaultCursor());
                 }
             } else {
@@ -3185,7 +3206,7 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     Map<String, Object> param = new HashMap<>();
                     param.put("nama",
-                                    Sequel.cariIsi("select pasien.nm_pasien from pasien where pasien.no_rkm_medis=? ", norm));
+                            Sequel.cariIsi("select pasien.nm_pasien from pasien where pasien.no_rkm_medis=? ", norm));
                     param.put("alamat", Sequel.cariIsi(
                             "select date_format(tgl_lahir,'%d/%m/%Y') from pasien where no_rkm_medis=?", NoRawat));
                     param.put("norm", NoRawat);
@@ -3196,18 +3217,24 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
                     param.put("propinsirs", akses.getpropinsirs());
                     param.put("kontakrs", akses.getkontakrs());
                     param.put("emailrs", akses.getemailrs());
-                    Valid.MyReportqry("rptBarcodeRawat.jasper","report","::[ Barcode No.Rawat ]::",
-                        "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, pasien.no_ktp, " +
-                        "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, " +
-                        "concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, poliklinik.nm_poli, date_format(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, " +
-                        "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, " +
-                        "reg_periksa.stts_daftar, penjab.png_jawab, pasien.no_tlp, reg_periksa.stts, reg_periksa.status_poli, " +
-                        "reg_periksa.kd_poli, reg_periksa.kd_pj " +
-                        "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
-                        "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
-                        "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
-                        "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
-                        "where reg_periksa.no_rawat='" + NoRawat + "'", param);
+                    Valid.MyReportqry("rptBarcodeRawat.jasper", "report", "::[ Barcode No.Rawat ]::",
+                            "select reg_periksa.no_reg, reg_periksa.no_rawat, reg_periksa.tgl_registrasi, reg_periksa.jam_reg, pasien.no_ktp, "
+                                    +
+                                    "reg_periksa.kd_dokter, dokter.nm_dokter, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.jk, "
+                                    +
+                                    "concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur) as umur, poliklinik.nm_poli, date_format(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, "
+                                    +
+                                    "reg_periksa.p_jawab, reg_periksa.almt_pj, reg_periksa.hubunganpj, reg_periksa.biaya_reg, "
+                                    +
+                                    "reg_periksa.stts_daftar, penjab.png_jawab, pasien.no_tlp, reg_periksa.stts, reg_periksa.status_poli, "
+                                    +
+                                    "reg_periksa.kd_poli, reg_periksa.kd_pj " +
+                                    "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
+                                    "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                                    "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli " +
+                                    "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj " +
+                                    "where reg_periksa.no_rawat='" + NoRawat + "'",
+                            param);
                     this.setCursor(Cursor.getDefaultCursor());
                 }
             } else {

@@ -10267,7 +10267,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             if (chkOperasiVK.isSelected() == true) {
                 try {
                     rs2 = koneksi.prepareStatement(
-                            "SELECT laporan_operasi.tanggal,laporan_operasi.kategori,laporan_operasi.diagnosa_preop,laporan_operasi.diagnosa_postop,laporan_operasi.jaringan_dieksekusi,laporan_operasi.selesaioperasi,laporan_operasi.permintaan_pa,laporan_operasi.laporan_operasi,( SELECT kd_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as kdoperator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as operator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator2 ) as operator2,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator3 ) as operator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator1 ) as asistenoperator1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator2 ) as asistenoperator2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator3 ) as asistenoperator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.instrumen ) as instrumen,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anak ) as dokteranak,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawaat_resusitas )as perawatresusitas,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anestesi ) as anastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi ) as asistenanastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi2 ) as asistenanastesi2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan ) as bidan1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan2 ) as bidan2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan3 ) as bidan3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawat_luar ) as perawatluar,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop ) as omloop,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop2 ) as omloop2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop3 ) as omloop3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop4 ) as omloop4,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop5 ) as omloop5,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_pjanak ) as pjanak,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_umum ) as dokumum from operasi inner join laporan_operasi on operasi.no_rawat=laporan_operasi.no_rawat and operasi.tgl_operasi=laporan_operasi.tanggal where operasi.no_rawat='"
+                            "SELECT laporan_operasi.tanggal,laporan_operasi.diagnosa_preop,laporan_operasi.diagnosa_postop,laporan_operasi.jaringan_dieksekusi,laporan_operasi.selesaioperasi,laporan_operasi.permintaan_pa,laporan_operasi.laporan_operasi,( SELECT kd_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as kdoperator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as operator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator2 ) as operator2,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator3 ) as operator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator1 ) as asistenoperator1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator2 ) as asistenoperator2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator3 ) as asistenoperator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.instrumen ) as instrumen,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anak ) as dokteranak,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawaat_resusitas )as perawatresusitas,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anestesi ) as anastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi ) as asistenanastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi2 ) as asistenanastesi2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan ) as bidan1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan2 ) as bidan2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan3 ) as bidan3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawat_luar ) as perawatluar,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop ) as omloop,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop2 ) as omloop2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop3 ) as omloop3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop4 ) as omloop4,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop5 ) as omloop5,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_pjanak ) as pjanak,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_umum ) as dokumum from operasi inner join laporan_operasi on operasi.no_rawat=laporan_operasi.no_rawat and operasi.tgl_operasi=laporan_operasi.tanggal where operasi.no_rawat='"
                                     + norawat + "'")
                             .executeQuery();
                     if (rs2.next()) {
@@ -10424,8 +10424,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append(rs2.getString("jenis_anasthesi"))
                                     .append("</td></tr><tr><td colspan='1'>Dikirm ke Pemeriksaan PA : ")
                                     .append(rs2.getString("permintaan_pa"))
-                                    .append("</td></tr><tr><td colspan='1'>Tipe / Kategori Operasi : ")
-                                    .append(rs2.getString("kategori"))
+                                    // .append("</td></tr><tr><td colspan='1'>Tipe / Kategori Operasi : ")
+                                    // .append(rs2.getString("kategori"))
                                     .append("</td></tr><tr><td colspan='1'>Selesai Operasi : ")
                                     .append(rs2.getString("selesaioperasi"))
                                     .append(" WIB</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='50%'>Dokter Bedah : ")
@@ -10463,12 +10463,20 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append(rs2.getString("laporan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</b></td></tr></table></td></tr>");
 
-                            // Generate QR code Operator secara lokal
-                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kdoperator1"), 90);
-                            htmlContent.append(
-                                    "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
-                                    .append(qrCodeDPJP).append("'/><br>")
-                                    .append(rs2.getString("operator1")).append("</td></tr></table></tr>");
+                            // Generate signature Operator secara lokal / TTD Freehand
+                            String ttdDokterUrl = getTTDDokterUrl(norawat);
+                            if (!ttdDokterUrl.isEmpty()) {
+                                htmlContent.append(
+                                        "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                        .append(ttdDokterUrl).append("'/><br>")
+                                        .append(rs2.getString("operator1")).append("</td></tr></table></tr>");
+                            } else {
+                                String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kdoperator1"), 90);
+                                htmlContent.append(
+                                        "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                        .append(qrCodeDPJP).append("'/><br>")
+                                        .append(rs2.getString("operator1")).append("</td></tr></table></tr>");
+                            }
                         }
 
                         htmlContent.append(
@@ -10497,26 +10505,26 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             if (chkLaporanOperasi.isSelected() == true) {
                 try {
                     rs2 = koneksi.prepareStatement(
-                            "select laporan_operasi_casemix.tanggal, laporan_operasi_casemix.waktu_dimulai, laporan_operasi_casemix.waktu_selesai, "
-                                    + "laporan_operasi_casemix.kategori, laporan_operasi_casemix.diagnosa_preop, laporan_operasi_casemix.diagnosa_postop, "
-                                    + "laporan_operasi_casemix.jaringan_dieksekusi, laporan_operasi_casemix.permintaan_pa, laporan_operasi_casemix.laporan_operasi, "
-                                    + "laporan_operasi_casemix.macam_operasi, laporan_operasi_casemix.indikasi_operasi, laporan_operasi_casemix.posisi_pasien, "
-                                    + "laporan_operasi_casemix.desinfeksi_kulit, laporan_operasi_casemix.incisi_kulit, laporan_operasi_casemix.kondisi_akhir, "
-                                    + "laporan_operasi_casemix.asal_jaringan, laporan_operasi_casemix.makroskopis, laporan_operasi_casemix.pendarahan, "
-                                    + "laporan_operasi_casemix.jenispembedahan, laporan_operasi_casemix.klasifikasioperasi, laporan_operasi_casemix.pemasanganimplan, "
+                            "select laporan_operasi_casemix.tanggal, laporan_operasi_casemix.jammulaioperasi, laporan_operasi_casemix.jamselesaioperasi, "
+                                    + "laporan_operasi_casemix.klasifikasioperasi, laporan_operasi_casemix.diagnosaprabedah, laporan_operasi_casemix.diagnosapascabedah, "
+                                    + "laporan_operasi_casemix.tindakan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.uraian, "
+                                    + "laporan_operasi_casemix.jenisoperasi, laporan_operasi_casemix.jenisanestesi, laporan_operasi_casemix.posisi, "
+                                    + "laporan_operasi_casemix.komplikasi, laporan_operasi_casemix.pembiusan, laporan_operasi_casemix.lama, "
+                                    + "laporan_operasi_casemix.asaljaringan, laporan_operasi_casemix.dikirimket, laporan_operasi_casemix.perdarahan, "
+                                    + "laporan_operasi_casemix.jenispembedahan, laporan_operasi_casemix.pemasanganimplan, "
                                     + "laporan_operasi_casemix.lokasiimplan, laporan_operasi_casemix.jenisimplan, laporan_operasi_casemix.noregimplan, "
-                                    + "laporan_operasi_casemix.konsultasiintraoperatif, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.kd_dokter_bedah as kddokterbedah, "
-                                    + "dokterbedah.nm_dokter as dokterbedah, laporan_operasi_casemix.kd_dokter_anestesi as kddokteranestesi, "
-                                    + "dokteranestesi.nm_dokter as dokteranestesi, laporan_operasi_casemix.nip_petugas_ruangan as asistenbedah, "
-                                    + "petugasruangan.nama as namasistenbedah, laporan_operasi_casemix.nip_perawat_ok as asistenanestesi, "
+                                    + "laporan_operasi_casemix.konsultasiintraoperatif, laporan_operasi_casemix.kddokterbedah as kddokterbedah, "
+                                    + "dokterbedah.nm_dokter as dokterbedah, laporan_operasi_casemix.kddokteranestesi as kddokteranestesi, "
+                                    + "dokteranestesi.nm_dokter as dokteranestesi, laporan_operasi_casemix.asistenbedah as asistenbedah, "
+                                    + "petugasruangan.nama as namasistenbedah, laporan_operasi_casemix.asistenanestesi as asistenanestesi, "
                                     + "petugasok.nama as namaasistenanestesi, reg_periksa.no_rkm_medis, pasien.nm_pasien, pasien.tgl_lahir, pasien.jk "
                                     + "from laporan_operasi_casemix "
                                     + "inner join reg_periksa on laporan_operasi_casemix.no_rawat = reg_periksa.no_rawat "
                                     + "inner join pasien on reg_periksa.no_rkm_medis = pasien.no_rkm_medis "
-                                    + "left join dokter as dokterbedah on dokterbedah.kd_dokter = laporan_operasi_casemix.kd_dokter_bedah "
-                                    + "left join dokter as dokteranestesi on dokteranestesi.kd_dokter = laporan_operasi_casemix.kd_dokter_anestesi "
-                                    + "left join petugas as petugasruangan on petugasruangan.nip = laporan_operasi_casemix.nip_petugas_ruangan "
-                                    + "left join petugas as petugasok on petugasok.nip = laporan_operasi_casemix.nip_perawat_ok "
+                                    + "left join dokter as dokterbedah on dokterbedah.kd_dokter = laporan_operasi_casemix.kddokterbedah "
+                                    + "left join dokter as dokteranestesi on dokteranestesi.kd_dokter = laporan_operasi_casemix.kddokteranestesi "
+                                    + "left join petugas as petugasruangan on petugasruangan.nip = laporan_operasi_casemix.asistenbedah "
+                                    + "left join petugas as petugasok on petugasok.nip = laporan_operasi_casemix.asistenanestesi "
                                     + "where laporan_operasi_casemix.no_rawat='" + norawat + "'")
                             .executeQuery();
                     if (rs2.next()) {
@@ -10547,25 +10555,25 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             htmlContent.append(
                                     "<tr></tr><tr><td valign='top' align='center' bgcolor='#A9A9A9'>SURGICAL REPORT</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td colspan='1'>Tanggal & Waktu Dimulai : ")
                                     .append(rs2.getString("tanggal"))
-                                    .append(" ").append(rs2.getString("waktu_dimulai"))
+                                    .append(" ").append(rs2.getString("jammulaioperasi"))
                                     .append("</td></tr><tr><td colspan='1'>Waktu Selesai : ")
-                                    .append(rs2.getString("waktu_selesai"))
+                                    .append(rs2.getString("jamselesaioperasi"))
                                     .append("</td></tr><tr><td colspan='1'>Macam Operasi : ")
-                                    .append(rs2.getString("macam_operasi"))
-                                    .append("</td></tr><tr><td colspan='1'>Kategori Operasi : ")
-                                    .append(rs2.getString("kategori"))
-                                    .append("</td></tr><tr><td colspan='1'>Indikasi Operasi : ")
-                                    .append(rs2.getString("indikasi_operasi"))
+                                    .append(rs2.getString("tindakan"))
+                                    .append("</td></tr><tr><td colspan='1'>Klasifikasi Operasi : ")
+                                    .append(rs2.getString("klasifikasioperasi"))
+                                    .append("</td></tr><tr><td colspan='1'>Jenis Operasi : ")
+                                    .append(rs2.getString("jenisoperasi"))
                                     .append("</td></tr><tr><td colspan='1'>Posisi Pasien : ")
-                                    .append(rs2.getString("posisi_pasien"))
-                                    .append("</td></tr><tr><td colspan='1'>Desinfeksi Kulit : ")
-                                    .append(rs2.getString("desinfeksi_kulit"))
-                                    .append("</td></tr><tr><td colspan='1'>Insisi Kulit : ")
-                                    .append(rs2.getString("incisi_kulit"))
-                                    .append("</td></tr><tr><td colspan='1'>Kondisi Akhir : ")
-                                    .append(rs2.getString("kondisi_akhir"))
+                                    .append(rs2.getString("posisi"))
+                                    .append("</td></tr><tr><td colspan='1'>Pembiusan : ")
+                                    .append(rs2.getString("pembiusan"))
+                                    .append("</td></tr><tr><td colspan='1'>Lama Pembedahan : ")
+                                    .append(rs2.getString("lama"))
+                                    .append("</td></tr><tr><td colspan='1'>Komplikasi : ")
+                                    .append(rs2.getString("komplikasi"))
                                     .append("</td></tr><tr><td colspan='1'>Asal Jaringan : ")
-                                    .append(rs2.getString("asal_jaringan"))
+                                    .append(rs2.getString("asaljaringan"))
                                     .append("</td></tr><tr><td colspan='1'>Konsultasi Intra Operatif : ")
                                     .append(rs2.getString("konsultasiintraoperatif") != null
                                             ? rs2.getString("konsultasiintraoperatif")
@@ -10590,10 +10598,10 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                             + rs2.getString("lokasiimplan") + " / "
                                                             + rs2.getString("noregimplan")
                                                     : "")
-                                    .append("</td></tr><tr><td colspan='1'>Makroskopis : ")
-                                    .append(rs2.getString("makroskopis"))
+                                    .append("</td></tr><tr><td colspan='1'>Dikirim Untuk : ")
+                                    .append(rs2.getString("dikirimket"))
                                     .append("</td></tr><tr><td colspan='1'>Pendarahan : ")
-                                    .append(rs2.getString("pendarahan"))
+                                    .append(rs2.getString("perdarahan"))
                                     .append("</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='50%'>Dokter Bedah : ")
                                     .append((rs2.getString("dokterbedah") != null) ? rs2.getString("dokterbedah") : "")
                                     .append("</td><td width='50%'>Asisten Bedah : ")
@@ -10610,27 +10618,36 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr></table></td></tr>");
                             htmlContent.append(
                                     "<tr></tr><tr><td valign='top' align='center' bgcolor='#A9A9A9'>DIAGNOSA PRE-OP / PRE OPERATION DIAGNOSIS</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td colspan='1'>")
-                                    .append(rs2.getString("diagnosa_preop")).append("</td></tr></table></td></tr>");
+                                    .append(rs2.getString("diagnosaprabedah")).append("</td></tr></table></td></tr>");
                             htmlContent.append(
                                     "<tr></tr><tr><td valign='top' align='center' bgcolor='#A9A9A9'>JARINGAN YANG DI EKSISI / INSISI</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td colspan='1'>")
-                                    .append(rs2.getString("jaringan_dieksekusi"))
+                                    .append(rs2.getString("tindakan"))
                                     .append("</td></tr></table></td></tr>");
                             htmlContent.append(
                                     "<tr></tr><tr><td valign='top' align='center' bgcolor='#A9A9A9'>DIAGNOSA POST-OP / POST OPERATION DIAGNOSIS</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td colspan='1'>")
-                                    .append(rs2.getString("diagnosa_postop")).append("</td></tr></table></td></tr>");
+                                    .append(rs2.getString("diagnosapascabedah")).append("</td></tr></table></td></tr>");
                             htmlContent.append(
                                     "<tr></tr><tr><td valign='top' align='center' bgcolor='#A9A9A9'>REPORT (PROCEDURES,SPECIFIC FINDINGS AND COMPLICATIONS)</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td colspan='1'><b>")
-                                    .append(rs2.getString("laporan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("uraian") != null ? rs2.getString("uraian") : "")
+                                            .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</b></td></tr></table></td></tr>");
 
-                            // Generate QR code Operator secara lokal
+                            // Generate signature Operator secara lokal / TTD Freehand
                             String kddokterbedah = rs2.getString("kddokterbedah");
                             if (kddokterbedah != null && !kddokterbedah.isEmpty() && !kddokterbedah.equals("-")) {
-                                String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kddokterbedah, 90);
-                                htmlContent.append(
-                                        "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
-                                        .append(qrCodeDPJP).append("'/><br>")
-                                        .append(rs2.getString("dokterbedah")).append("</td></tr></table></tr>");
+                                String ttdDokterUrl = getTTDDokterUrl(norawat);
+                                if (!ttdDokterUrl.isEmpty()) {
+                                    htmlContent.append(
+                                            "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                            .append(ttdDokterUrl).append("'/><br>")
+                                            .append(rs2.getString("dokterbedah")).append("</td></tr></table></tr>");
+                                } else {
+                                    String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kddokterbedah, 90);
+                                    htmlContent.append(
+                                            "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                            .append(qrCodeDPJP).append("'/><br>")
+                                            .append(rs2.getString("dokterbedah")).append("</td></tr></table></tr>");
+                                }
                             }
                         }
 
@@ -10741,15 +10758,22 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         "</fieldset>");
                     }
                 } catch (Exception e) {
-                    System.out.println("Notifikasi : " + e);
+                    if (e.getMessage() != null && !e.getMessage().contains("laporan_tindakan")) {
+                        System.out.println("Notifikasi : " + e);
+                    }
                 } finally {
                     if (rs2 != null) {
-                        rs2.close();
+                        try {
+                            rs2.close();
+                        } catch (Exception ex) {
+                        }
                     }
                 }
             }
         } catch (Exception e) {
-            System.out.println("Notif Laporan Debriment : " + e);
+            if (e.getMessage() != null && !e.getMessage().contains("laporan_tindakan")) {
+                System.out.println("Notif Laporan Debriment : " + e);
+            }
         }
     }
 

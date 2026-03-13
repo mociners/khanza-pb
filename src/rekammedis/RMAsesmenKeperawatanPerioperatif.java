@@ -3295,14 +3295,14 @@ public class RMAsesmenKeperawatanPerioperatif extends javax.swing.JDialog {
             param.put("laBlok", Tla.getText() + "   Blok " + Tblok.getText());
             param.put("diagnosaPreOp", TdxPreOperasi.getText());
             param.put("diagnosaPascaOp", TdxPascaOperasi.getText());
-            param.put("jamMulai", cmbJam.getSelectedItem().toString() + ":" + cmbMnt.getSelectedItem().toString() + " Wita");
+            param.put("jamMulai", cmbJam.getSelectedItem().toString() + ":" + cmbMnt.getSelectedItem().toString() + " WIB");
             param.put("dokterOperator", TnmDokterOperator.getText());
             param.put("asisten", TnmAsisten.getText());
             param.put("instrumen", Tinstrumen.getText());
             param.put("onloop", Tonloop.getText());
             param.put("dokterAnestesi", TnmDokterAnestesi.getText());
             param.put("perawatAnestesi", TnmPerawatAnestesi.getText());
-            param.put("jamSelesai", cmbJam1.getSelectedItem().toString() + ":" + cmbMnt1.getSelectedItem().toString() + " Wita");
+            param.put("jamSelesai", cmbJam1.getSelectedItem().toString() + ":" + cmbMnt1.getSelectedItem().toString() + " WIB");
             param.put("dataSubyektif", TdataSubyektif.getText());
             param.put("kesadaran", cmbKesadaran.getSelectedItem().toString());            
             param.put("tensi", Ttensi.getText() + " mmHg");

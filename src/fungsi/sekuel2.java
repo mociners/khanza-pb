@@ -75,8 +75,8 @@ public final class sekuel2 {
     private DecimalFormat df2 = new DecimalFormat("####");
     private static final Properties prop = new Properties();
     private ResultSet rs1;
-    String[] nominal = {"", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam",
-        "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"};
+    String[] nominal = { "", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam",
+            "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas" };
 
     public sekuel2() {
         super();
@@ -89,7 +89,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -107,7 +108,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -145,7 +147,8 @@ public final class sekuel2 {
             return true;
         } catch (Exception e) {
             System.out.println("Notifikasi : " + e);
-            JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+            JOptionPane.showMessageDialog(null,
+                    "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             return false;
         }
     }
@@ -174,7 +177,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -184,7 +188,7 @@ public final class sekuel2 {
             System.out.println("Notifikasi : " + e);
         }
     }
-    
+
     public void menyimpanPesanGagalnyaDiTerminal(String table, String value, String sama, int i, String[] a) {
         try {
             ps = connect.prepareStatement("insert into " + table + " values(" + value + ")");
@@ -195,7 +199,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                System.out.println("Gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                System.out.println(
+                        "Gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -241,7 +246,8 @@ public final class sekuel2 {
         } catch (Exception e) {
             System.out.println("Notifikasi : " + e);
             if (e.toString().contains("Duplicate")) {
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } else {
                 JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Ada kesalahan Query...!");
             }
@@ -263,7 +269,8 @@ public final class sekuel2 {
                 bool = false;
                 System.out.println("Notifikasi : " + e);
                 if (e.toString().contains("Duplicate")) {
-                    JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + pesan + " yang sama dimasukkan sebelumnya...!");
+                    JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + pesan
+                            + " yang sama dimasukkan sebelumnya...!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Ada kesalahan Query...!");
                 }
@@ -276,7 +283,8 @@ public final class sekuel2 {
             bool = false;
             System.out.println("Notifikasi : " + e);
             if (e.toString().contains("Duplicate")) {
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + pesan + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + pesan
+                        + " yang sama dimasukkan sebelumnya...!");
             } else {
                 JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Ada kesalahan Query...!");
             }
@@ -383,7 +391,8 @@ public final class sekuel2 {
         }
     }
 
-    public void menyimpan(String table, String value, int i, String[] a, String acuan_field, String update, int j, String[] b) {
+    public void menyimpan(String table, String value, int i, String[] a, String acuan_field, String update, int j,
+            String[] b) {
         try {
             ps = connect.prepareStatement("insert into " + table + " values(" + value + ")");
             for (angka = 1; angka <= i; angka++) {
@@ -411,7 +420,8 @@ public final class sekuel2 {
         }
     }
 
-    public void menyimpan2(String table, String value, int i, String[] a, String acuan_field, String update, int j, String[] b) {
+    public void menyimpan2(String table, String value, int i, String[] a, String acuan_field, String update, int j,
+            String[] b) {
         try {
             dicari = "";
             ps = connect.prepareStatement("insert into " + table + " values(" + value + ")");
@@ -420,7 +430,8 @@ public final class sekuel2 {
                 ps.setString(angka, a[angka - 1]);
             }
             ps.executeUpdate();
-            ps = connect.prepareStatement("insert into trackersql values( now(),'insert into " + table + " values(" + dicari + ")','','jadwal pegawai " + akses.getuser() + "','simpan')");
+            ps = connect.prepareStatement("insert into trackersql values( now(),'insert into " + table + " values("
+                    + dicari + ")','','jadwal pegawai " + akses.getuser() + "','simpan')");
             ps.executeUpdate();
 
             if (ps != null) {
@@ -435,7 +446,10 @@ public final class sekuel2 {
                     ps.setString(angka, b[angka - 1]);
                 }
                 ps.executeUpdate();
-                ps = connect.prepareStatement("insert into trackersql values( now(),'update " + table + " set " + update.replaceAll("'", "") + " where " + acuan_field.replaceAll("'", "") + " " + dicari + "','" + e.toString().replaceAll("'", "") + "','jadwal pegawai " + akses.getuser() + "','update')");
+                ps = connect.prepareStatement("insert into trackersql values( now(),'update " + table + " set "
+                        + update.replaceAll("'", "") + " where " + acuan_field.replaceAll("'", "") + " " + dicari
+                        + "','" + e.toString().replaceAll("'", "") + "','jadwal pegawai " + akses.getuser()
+                        + "','update')");
                 ps.executeUpdate();
 
                 if (ps != null) {
@@ -447,13 +461,16 @@ public final class sekuel2 {
                 for (angka = 1; angka <= j; angka++) {
                     dicari = dicari + ", " + a[angka - 1];
                 }
-                menyimpan("trackersql", "now(),'update " + table + " set " + update.replaceAll("'", "") + " where " + acuan_field.replaceAll("'", "") + " " + dicari + "','" + e.toString().replaceAll("'", "") + "','jadwal pegawai " + akses.getuser() + "','update'");
+                menyimpan("trackersql", "now(),'update " + table + " set " + update.replaceAll("'", "") + " where "
+                        + acuan_field.replaceAll("'", "") + " " + dicari + "','" + e.toString().replaceAll("'", "")
+                        + "','jadwal pegawai " + akses.getuser() + "','update'");
             }
 
         }
     }
 
-    public void menyimpan3(String table, String value, int i, String[] a, String acuan_field, String update, int j, String[] b) {
+    public void menyimpan3(String table, String value, int i, String[] a, String acuan_field, String update, int j,
+            String[] b) {
         try {
             ps = connect.prepareStatement("insert into " + table + " values(" + value + ")");
             for (angka = 1; angka <= i; angka++) {
@@ -528,7 +545,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -549,7 +567,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -560,7 +579,8 @@ public final class sekuel2 {
         }
     }
 
-    public void menyimpan2logo(String table, String value, String sama, JTextField AlmGb, JTextField AlmPhoto, JTextField AlmPhoto1, JTextField AlmPhoto2) {
+    public void menyimpan2logo(String table, String value, String sama, JTextField AlmGb, JTextField AlmPhoto,
+            JTextField AlmPhoto1, JTextField AlmPhoto2) {
         try {
             ps = connect.prepareStatement("insert into " + table + " values(" + value + ",?,?,?)");
             try {
@@ -571,7 +591,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -590,7 +611,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -608,7 +630,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, Gagal Mengedit. Mungkin kode sudah digunakan sebelumnya...!!!!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, Gagal Mengedit. Mungkin kode sudah digunakan sebelumnya...!!!!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -628,7 +651,8 @@ public final class sekuel2 {
                 JOptionPane.showMessageDialog(null, "Proses hapus berhasil...!!!!");
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -649,7 +673,8 @@ public final class sekuel2 {
             } catch (Exception e) {
                 bool = false;
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, Gagal Mengedit. Mungkin kode sudah digunakan sebelumnya...!!!!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, Gagal Mengedit. Mungkin kode sudah digunakan sebelumnya...!!!!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -759,7 +784,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, Pilih dulu data yang mau anda edit...\n Klik data pada table untuk memilih...!!!!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, Pilih dulu data yang mau anda edit...\n Klik data pada table untuk memilih...!!!!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -1457,7 +1483,7 @@ public final class sekuel2 {
                 } else {
                     angka2 = 0;
                 }
-                //rs.close();
+                // rs.close();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
             } finally {
@@ -1571,7 +1597,7 @@ public final class sekuel2 {
         for (int i = 0; i < angka; i++) {
             javax.swing.table.TableColumn tbc = tb.getColumnModel().getColumn(i);
             tbc.setPreferredWidth(lebar[i]);
-            //tb.setRowHeight(17);
+            // tb.setRowHeight(17);
         }
     }
 
@@ -1611,7 +1637,8 @@ public final class sekuel2 {
     }
 
     public void mengedit(String rujuk_masuk, String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
+                                                                       // Tools | Templates.
     }
 
     public class Painter extends Canvas {
@@ -1656,9 +1683,8 @@ public final class sekuel2 {
                 FileChannel outChannel;
                 try (FileChannel inChannel = inFile.getChannel()) {
                     outChannel = outFile.getChannel();
-                    for (ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
-                            inChannel.read(buffer) != -1;
-                            buffer.clear()) {
+                    for (ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024); inChannel.read(buffer) != -1; buffer
+                            .clear()) {
                         buffer.flip();
                         while (buffer.hasRemaining()) {
                             outChannel.write(buffer);
@@ -1742,12 +1768,12 @@ public final class sekuel2 {
     public String decXML(String input, String k) {
         dicari = "";
         try {
-            //prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            // prop.loadFromXML(new FileInputStream("setting/database.xml"));
             inputan = input;
             Panjang_Input = inputan.length();
             panjangKey = k.length();
             for (int i = 0; i < Panjang_Input; i++) {
-//                    enkrip = inputan.substring(i, 1);
+                // enkrip = inputan.substring(i, 1);
                 angka = inputan.charAt(i);
                 angka = (angka - panjangKey) + 10;
                 enkrip = (char) angka;
@@ -1763,12 +1789,12 @@ public final class sekuel2 {
     public static String decXML2(String input, String k) {
         dicari2 = "";
         try {
-            //prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            // prop.loadFromXML(new FileInputStream("setting/database.xml"));
             inputan2 = input;
             Panjang_Input2 = inputan2.length();
             panjangKey2 = k.length();
             for (int i = 0; i < Panjang_Input2; i++) {
-//                    enkrip = inputan.substring(i, 1);
+                // enkrip = inputan.substring(i, 1);
                 angka3 = inputan2.charAt(i);
                 angka3 = (angka3 - panjangKey2) + 10;
                 enkrip2 = (char) angka3;
@@ -1961,7 +1987,7 @@ public final class sekuel2 {
         }
         return dicari;
     }
-    
+
     public String FolderQRresepRanap() {
         dicari = "";
         try {
@@ -2012,7 +2038,7 @@ public final class sekuel2 {
 
         return dicari;
     }
-    
+
     public String cariFolderPrintResepRanap() {
         dicari = "";
         try {
@@ -2034,7 +2060,9 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan lokasi folder utk. meletakkan " + sama + " belum ditentukan..!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan lokasi folder utk. meletakkan " + sama
+                                + " belum ditentukan..!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -2050,14 +2078,24 @@ public final class sekuel2 {
         if (cekData == 0) {
             JOptionPane.showMessageDialog(null, "Closing Stok Bulanan Belum dilakukan, proses closing stok, klik OK");
             try {
-                ps = connect.prepareStatement("select kode_brng,DATE_FORMAT(SUBDATE(now(), INTERVAL 1 MONTH),'%Y-%m') 'periode',kd_bangsal,stok as 'stok_awal',DATE_FORMAT(now(),'%Y-%m-%d') 'tgl_input',0 as 'stok_akhir','0000-00-00' as 'tgl_akhir' from gudangbarang");
+                ps = connect.prepareStatement(
+                        "select kode_brng,DATE_FORMAT(SUBDATE(now(), INTERVAL 1 MONTH),'%Y-%m') 'periode',kd_bangsal,stok as 'stok_awal',DATE_FORMAT(now(),'%Y-%m-%d') 'tgl_input',0 as 'stok_akhir','0000-00-00' as 'tgl_akhir' from gudangbarang");
                 rs1 = ps.executeQuery();
                 while (rs1.next()) {
-                    menyimpan("stok_bulanan", "'" + rs1.getString("kode_brng") + "','" + rs1.getString("periode") + "','" + rs1.getString("kd_bangsal") + "',0,"
-                            + "'" + rs1.getString("tgl_input") + "','" + rs1.getString("stok_awal") + "','" + rs1.getString("tgl_input") + "'", "stok_akhir = '" + rs1.getString("stok_awal") + "',tgl_input_akhir = DATE_FORMAT(now(),'%Y-%m-%d')", "kode_brng = '" + rs1.getString("kode_brng") + "' and kd_bangsal = '" + rs1.getString("kd_bangsal") + "' and periode = '" + rs1.getString("periode") + "'");
+                    menyimpan("stok_bulanan",
+                            "'" + rs1.getString("kode_brng") + "','" + rs1.getString("periode") + "','"
+                                    + rs1.getString("kd_bangsal") + "',0,"
+                                    + "'" + rs1.getString("tgl_input") + "','" + rs1.getString("stok_awal") + "','"
+                                    + rs1.getString("tgl_input") + "'",
+                            "stok_akhir = '" + rs1.getString("stok_awal")
+                                    + "',tgl_input_akhir = DATE_FORMAT(now(),'%Y-%m-%d')",
+                            "kode_brng = '" + rs1.getString("kode_brng") + "' and kd_bangsal = '"
+                                    + rs1.getString("kd_bangsal") + "' and periode = '" + rs1.getString("periode")
+                                    + "'");
                 }
 
-                ps1 = connect.prepareStatement("insert into stok_bulanan (select kode_brng,DATE_FORMAT(now(),'%Y-%m'),kd_bangsal,stok,DATE_FORMAT(now(),'%Y-%m-%d'),0,'0000-00-00' from gudangbarang)");
+                ps1 = connect.prepareStatement(
+                        "insert into stok_bulanan (select kode_brng,DATE_FORMAT(now(),'%Y-%m'),kd_bangsal,stok,DATE_FORMAT(now(),'%Y-%m-%d'),0,'0000-00-00' from gudangbarang)");
                 try {
                     ps1.executeUpdate();
                     JOptionPane.showMessageDialog(null, "Berhasil menyimpan data closing bulanan");
@@ -2080,7 +2118,8 @@ public final class sekuel2 {
 
     public void updateClosingStok() {
         try {
-            ps = connect.prepareStatement("UPDATE stok_bulanan s,gudangbarang g SET s.stok_akhir = g.stok,tgl_input_akhir = DATE_FORMAT(now(),'%Y-%m-%d') WHERE g.kode_brng = s.kode_brng and g.kd_bangsal = s.kd_bangsal and s.periode = DATE_FORMAT(SUBDATE(now(), INTERVAL 1 MONTH),'%Y-%m')");
+            ps = connect.prepareStatement(
+                    "UPDATE stok_bulanan s,gudangbarang g SET s.stok_akhir = g.stok,tgl_input_akhir = DATE_FORMAT(now(),'%Y-%m-%d') WHERE g.kode_brng = s.kode_brng and g.kd_bangsal = s.kd_bangsal and s.periode = DATE_FORMAT(SUBDATE(now(), INTERVAL 1 MONTH),'%Y-%m')");
             try {
                 ps.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Berhasil mengupdate data closing bulanan");
@@ -2104,7 +2143,8 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, gagal menyimpan data. Kemungkinan ada " + sama + " yang sama dimasukkan sebelumnya...!");
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -2315,32 +2355,35 @@ public final class sekuel2 {
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     hari = rs.getString(1);
-                    if (hari.equals("Monday")) {
+                    if ("Monday".equals(hari)) {
                         hari = "Senin";
                     }
 
-                    if (hari.equals("Tuesday")) {
+                    if ("Tuesday".equals(hari)) {
                         hari = "Selasa";
                     }
 
-                    if (hari.equals("Wednesday")) {
+                    if ("Wednesday".equals(hari)) {
                         hari = "Rabu";
                     }
 
-                    if (hari.equals("Thursday")) {
+                    if ("Thursday".equals(hari)) {
                         hari = "Kamis";
                     }
 
-                    if (hari.equals("Friday")) {
+                    if ("Friday".equals(hari)) {
                         hari = "Jum'at";
                     }
 
-                    if (hari.equals("Saturday")) {
+                    if ("Saturday".equals(hari)) {
                         hari = "Sabtu";
                     }
 
-                    if (hari.equals("Sunday")) {
+                    if ("Sunday".equals(hari)) {
                         hari = "Minggu";
+                    }
+                    if (hari == null) {
+                        hari = "";
                     }
                 } else {
                     hari = "";
@@ -2448,13 +2491,15 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
             } finally {
                 if (ps != null) {
                     ps.close();
                 }
             }
-            SimpanTrack("delete from " + table + " where " + field + "='" + nilai_field + "' and " + field2 + "='" + nilai_field2 + "'");
+            SimpanTrack("delete from " + table + " where " + field + "='" + nilai_field + "' and " + field2 + "='"
+                    + nilai_field2 + "'");
         } catch (Exception e) {
             System.out.println("Notifikasi : " + e);
         }
@@ -2469,13 +2514,15 @@ public final class sekuel2 {
                 ps.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
-                JOptionPane.showMessageDialog(null, "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
             } finally {
                 if (ps != null) {
                     ps.close();
                 }
             }
-            SimpanTrack("delete from " + table + " where " + field + "='" + nilai_field + "' and " + field2 + "='" + nilai_field2 + "'");
+            SimpanTrack("delete from " + table + " where " + field + "='" + nilai_field + "' and " + field2 + "='"
+                    + nilai_field2 + "'");
         } catch (Exception e) {
             System.out.println("Notifikasi : " + e);
         }
@@ -2486,14 +2533,24 @@ public final class sekuel2 {
         if (cekData == 0) {
             JOptionPane.showMessageDialog(null, "Closing Stok Harian Belum dilakukan, proses closing stok, klik OK");
             try {
-                ps = connect.prepareStatement("select kode_brng,DATE_FORMAT(SUBDATE(now(), INTERVAL 1 DAY),'%Y-%m-%d') 'tanggal',kd_bangsal,stok as 'stok_awal',DATE_FORMAT(now(),'%Y-%m-%d') 'tgl_input',0 as 'stok_akhir','0000-00-00' as 'tgl_akhir' from gudangbarang");
+                ps = connect.prepareStatement(
+                        "select kode_brng,DATE_FORMAT(SUBDATE(now(), INTERVAL 1 DAY),'%Y-%m-%d') 'tanggal',kd_bangsal,stok as 'stok_awal',DATE_FORMAT(now(),'%Y-%m-%d') 'tgl_input',0 as 'stok_akhir','0000-00-00' as 'tgl_akhir' from gudangbarang");
                 rs1 = ps.executeQuery();
                 while (rs1.next()) {
-                    menyimpan("stok_harian", "'" + rs1.getString("kode_brng") + "','" + rs1.getString("tanggal") + "','" + rs1.getString("kd_bangsal") + "',0,"
-                            + "'" + rs1.getString("tgl_input") + "','" + rs1.getString("stok_awal") + "','" + rs1.getString("tgl_input") + "'", "stok_akhir = '" + rs1.getString("stok_awal") + "',tgl_input_akhir = DATE_FORMAT(now(),'%Y-%m-%d')", "kode_brng = '" + rs1.getString("kode_brng") + "' and kd_bangsal = '" + rs1.getString("kd_bangsal") + "' and tanggal = '" + rs1.getString("tanggal") + "'");
+                    menyimpan("stok_harian",
+                            "'" + rs1.getString("kode_brng") + "','" + rs1.getString("tanggal") + "','"
+                                    + rs1.getString("kd_bangsal") + "',0,"
+                                    + "'" + rs1.getString("tgl_input") + "','" + rs1.getString("stok_awal") + "','"
+                                    + rs1.getString("tgl_input") + "'",
+                            "stok_akhir = '" + rs1.getString("stok_awal")
+                                    + "',tgl_input_akhir = DATE_FORMAT(now(),'%Y-%m-%d')",
+                            "kode_brng = '" + rs1.getString("kode_brng") + "' and kd_bangsal = '"
+                                    + rs1.getString("kd_bangsal") + "' and tanggal = '" + rs1.getString("tanggal")
+                                    + "'");
                 }
 
-                ps1 = connect.prepareStatement("insert into stok_harian (select kode_brng,DATE_FORMAT(now(),'%Y-%m-%d'),kd_bangsal,stok,DATE_FORMAT(now(),'%Y-%m-%d'),0,'0000-00-00' from gudangbarang)");
+                ps1 = connect.prepareStatement(
+                        "insert into stok_harian (select kode_brng,DATE_FORMAT(now(),'%Y-%m-%d'),kd_bangsal,stok,DATE_FORMAT(now(),'%Y-%m-%d'),0,'0000-00-00' from gudangbarang)");
                 try {
                     ps1.executeUpdate();
                     JOptionPane.showMessageDialog(null, "Berhasil menyimpan data closing harian");
@@ -2505,7 +2562,7 @@ public final class sekuel2 {
                         ps.close();
                     }
                 }
-//                updateClosingStok();
+                // updateClosingStok();
             } catch (Exception e) {
                 System.out.println("Notifikasi : " + e);
             }
@@ -2527,28 +2584,29 @@ public final class sekuel2 {
             System.out.println("Notifikasi : " + e);
         }
     }
-    
-    public boolean meghapustf(String table,String field,String nilai_field) {
-        bool=true;
+
+    public boolean meghapustf(String table, String field, String nilai_field) {
+        bool = true;
         try {
-            ps=connect.prepareStatement("delete from "+table+" where "+field+"=?");
-            try{       
-                ps.setString(1,nilai_field);
+            ps = connect.prepareStatement("delete from " + table + " where " + field + "=?");
+            try {
+                ps.setString(1, nilai_field);
                 ps.executeUpdate();
-                bool=true;
-             }catch(Exception e){
-                bool=false;
-                System.out.println("Notifikasi : "+e);
-                JOptionPane.showMessageDialog(null,"Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
-             }finally{
-                if(ps != null){
+                bool = true;
+            } catch (Exception e) {
+                bool = false;
+                System.out.println("Notifikasi : " + e);
+                JOptionPane.showMessageDialog(null,
+                        "Maaf, data gagal dihapus. Kemungkinan data tersebut masih dipakai di table lain...!!!!");
+            } finally {
+                if (ps != null) {
                     ps.close();
                 }
             }
-            SimpanTrack("delete from "+table+" where "+field+"='"+nilai_field+"'");
+            SimpanTrack("delete from " + table + " where " + field + "='" + nilai_field + "'");
         } catch (Exception e) {
-            bool=false;
-            System.out.println("Notifikasi : "+e);
+            bool = false;
+            System.out.println("Notifikasi : " + e);
         }
         return bool;
     }

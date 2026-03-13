@@ -2091,97 +2091,105 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
     }// GEN-LAST:event_TglAsuhanKeyPressed
 
     private void MnCetakActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MnCetakActionPerformed
-        /*
-         * if(tbObat.getSelectedRow()>-1){
-         * Map<String, Object> param = new HashMap<>();
-         * param.put("namars",akses.getnamars());
-         * param.put("alamatrs",akses.getalamatrs());
-         * param.put("kotars",akses.getkabupatenrs());
-         * param.put("propinsirs",akses.getpropinsirs());
-         * param.put("kontakrs",akses.getkontakrs());
-         * param.put("emailrs",akses.getemailrs());
-         * param.put("logo",Sequel.cariGambar("select setting.logo from setting"));
-         * finger=Sequel.
-         * cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?"
-         * ,tbObat.getValueAt(tbObat.getSelectedRow(),5).toString());
-         * param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "
-         * +akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.
-         * getValueAt(tbObat.getSelectedRow(),6).toString()+"\nID "+(finger.equals("")?
-         * tbObat.getValueAt(tbObat.getSelectedRow(),5).toString():finger)+"\n"+Valid.
-         * SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()));
-         * 
-         * Valid.MyReportqry("rptCetakPenilaianPreAnestesi.jasper",
-         * "report","::[ Laporan Penilaian Pre Anestesi ]::",
-         * "SELECT\n" +
-         * " penilaian_pre_anestesi_sedasi.no_rawat,
-         * " penilaian_pre_anestesi_sedasi.kd_dokter,
-         * " penilaian_pre_anestesi_sedasi.tanggal,
-         * " penilaian_pre_anestesi_sedasi.diagnosa,
-         * " penilaian_pre_anestesi_sedasi.tindakan_bedah,
-         * " penilaian_pre_anestesi_sedasi.bb,
-         * " penilaian_pre_anestesi_sedasi.tanggal_operasi,
-         * " penilaian_pre_anestesi_sedasi.tb,
-         * " penilaian_pre_anestesi_sedasi.anemnesis,
-         * " penilaian_pre_anestesi_sedasi.astma,
-         * " penilaian_pre_anestesi_sedasi.dm,
-         * " penilaian_pre_anestesi_sedasi.alergi,
-         * " penilaian_pre_anestesi_sedasi.hipertensi,
-         * " penilaian_pre_anestesi_sedasi.riwayatoperasi,
-         * " penilaian_pre_anestesi_sedasi.jenisanestesi,
-         * " penilaian_pre_anestesi_sedasi.komplikasi,
-         * " penilaian_pre_anestesi_sedasi.pemeriksaanfisik,
-         * " penilaian_pre_anestesi_sedasi.keadaaanumum,
-         * " penilaian_pre_anestesi_sedasi.tensi,
-         * " penilaian_pre_anestesi_sedasi.nadi,
-         * " penilaian_pre_anestesi_sedasi.rr,
-         * " penilaian_pre_anestesi_sedasi.suhu,
-         * " penilaian_pre_anestesi_sedasi.conjungtiva,
-         * " penilaian_pre_anestesi_sedasi.sklera,
-         * " penilaian_pre_anestesi_sedasi.malmapati,
-         * " penilaian_pre_anestesi_sedasi.thorax,
-         * " penilaian_pre_anestesi_sedasi.abdomen,
-         * " penilaian_pre_anestesi_sedasi.ekstremitas,
-         * " penilaian_pre_anestesi_sedasi.laboratorium,
-         * " penilaian_pre_anestesi_sedasi.rothorax,
-         * " penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang,
-         * " penilaian_pre_anestesi_sedasi.asa,
-         * " penilaian_pre_anestesi_sedasi.premedikasi,
-         * " penilaian_pre_anestesi_sedasi.puasa,
-         * " penilaian_pre_anestesi_sedasi.rencanatindakan,
-         * " penilaian_pre_anestesi_sedasi.sedasi,
-         * " penilaian_pre_anestesi_sedasi.ga,
-         * " penilaian_pre_anestesi_sedasi.regional,
-         * " penilaian_pre_anestesi_sedasi.persediaandarah,
-         * " penilaian_pre_anestesi_sedasi.teknikkhusus,
-         * " penilaian_pre_anestesi_sedasi.teknikkhususket,
-         * " penilaian_pre_anestesi_sedasi.monitoring,
-         * " penilaian_pre_anestesi_sedasi.monitoringket,
-         * " penilaian_pre_anestesi_sedasi.perawatan,
-         * " reg_periksa.no_rawat,
-         * " pasien.nm_pasien,
-         * " pasien.no_rkm_medis,
-         * "	if(pasien.jk='L','Laki-Laki','Perempuan') as jk,\n" +
-         * " pasien.tgl_lahir,
-         * " dokter.kd_dokter,
-         * "	dokter.nm_dokter\n" +
-         * "FROM\n" +
-         * "	penilaian_pre_anestesi_sedasi\n" +
-         * "	INNER JOIN\n" +
-         * "	reg_periksa\n" +
-         * " ON
-         * "		penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat\n" +
-         * "	INNER JOIN\n" +
-         * "	pasien\n" +
-         * " ON
-         * "		reg_periksa.no_rkm_medis = pasien.no_rkm_medis\n" +
-         * "	INNER JOIN\n" +
-         * "	dokter\n" +
-         * "	on penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter where penilaian_pre_anestesi_sedasi.no_rawat='"
-         * +tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"' "+
-         * "and penilaian_pre_anestesi_sedasi.tanggal='"+tbObat.getValueAt(tbObat.
-         * getSelectedRow(),7).toString()+"'",param);
-         * }
-         */
+        if (tbObat.getSelectedRow() > -1) {
+            Map<String, Object> param = new HashMap<>();
+            param.put("namars", akses.getnamars());
+            param.put("alamatrs", akses.getalamatrs());
+            param.put("kotars", akses.getkabupatenrs());
+            param.put("propinsirs", akses.getpropinsirs());
+            param.put("kontakrs", akses.getkontakrs());
+            param.put("emailrs", akses.getemailrs());
+            param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
+            finger = Sequel.cariIsi(
+                    "select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",
+                    tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString());
+            param.put("finger",
+                    "Dikeluarkan di " + akses.getnamars() + ", Kabupaten/Kota " + akses.getkabupatenrs()
+                            + "\nDitandatangani secara elektronik oleh "
+                            + tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString() + "\nID "
+                            + (finger.equals("") ? tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString() : finger)
+                            + "\n" + Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString()));
+
+            Valid.MyReportqry("rptCetakPenilaianPreAnestesi.jasper", "report", "::[ Laporan Penilaian Pre Anestesi ]::",
+                    "SELECT\n" +
+                            "     penilaian_pre_anestesi_sedasi.no_rawat,\n" +
+                            "     penilaian_pre_anestesi_sedasi.kd_dokter,\n" +
+                            "     penilaian_pre_anestesi_sedasi.tanggal,\n" +
+                            "     penilaian_pre_anestesi_sedasi.diagnosa,\n" +
+                            "     penilaian_pre_anestesi_sedasi.tindakan_bedah,\n" +
+                            "     penilaian_pre_anestesi_sedasi.bb,\n" +
+                            "     penilaian_pre_anestesi_sedasi.tanggal_operasi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.tb,\n" +
+                            "     '' as io2,\n" +
+                            "     penilaian_pre_anestesi_sedasi.anemnesis as masalah,\n" +
+                            "     penilaian_pre_anestesi_sedasi.astma,\n" +
+                            "     penilaian_pre_anestesi_sedasi.dm,\n" +
+                            "     penilaian_pre_anestesi_sedasi.alergi as riwayat_penyakit_alergiobat,\n" +
+                            "     '' as riwayat_penyakit_alergilainnya,\n" +
+                            "     '' as riwayat_penyakit_terapi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.hipertensi,\n" +
+                            "     '' as riwayat_kebiasaan_merokok,\n" +
+                            "     '' as riwayat_kebiasaan_ket_merokok,\n" +
+                            "     '' as riwayat_kebiasaan_alkohol,\n" +
+                            "     '' as riwayat_kebiasaan_ket_alkohol,\n" +
+                            "     '' as riwayat_kebiasaan_obat,\n" +
+                            "     '' as riwayat_kebiasaan_ket_obat,\n" +
+                            "     '' as riwayat_medis_cardiovasculer,\n" +
+                            "     '' as riwayat_medis_respiratory,\n" +
+                            "     '' as riwayat_medis_endocrine,\n" +
+                            "     '' as riwayat_medis_lainnya,\n" +
+                            "     penilaian_pre_anestesi_sedasi.riwayatoperasi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.jenisanestesi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.komplikasi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.pemeriksaanfisik,\n" +
+                            "     penilaian_pre_anestesi_sedasi.keadaaanumum,\n" +
+                            "     penilaian_pre_anestesi_sedasi.tensi as td,\n" +
+                            "     penilaian_pre_anestesi_sedasi.nadi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.rr as pernapasan,\n" +
+                            "     penilaian_pre_anestesi_sedasi.suhu,\n" +
+                            "     penilaian_pre_anestesi_sedasi.conjungtiva as fisik_cardiovasculer,\n" +
+                            "     penilaian_pre_anestesi_sedasi.sklera as fisik_paru,\n" +
+                            "     penilaian_pre_anestesi_sedasi.malmapati as fisik_abdomen,\n" +
+                            "     penilaian_pre_anestesi_sedasi.thorax as fisik_extrimitas,\n" +
+                            "     penilaian_pre_anestesi_sedasi.abdomen as fisik_endokrin,\n" +
+                            "     penilaian_pre_anestesi_sedasi.ekstremitas as fisik_ginjal,\n" +
+                            "     penilaian_pre_anestesi_sedasi.laboratorium as fisik_obatobatan,\n" +
+                            "     penilaian_pre_anestesi_sedasi.rothorax as fisik_laborat,\n" +
+                            "     penilaian_pre_anestesi_sedasi.pemeriksaanpenunjang as fisik_penunjang,\n" +
+                            "     penilaian_pre_anestesi_sedasi.asa,\n" +
+                            "     penilaian_pre_anestesi_sedasi.premedikasi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.puasa,\n" +
+                            "     penilaian_pre_anestesi_sedasi.rencanatindakan as rencana_tindakan,\n" +
+                            "     penilaian_pre_anestesi_sedasi.sedasi,\n" +
+                            "     penilaian_pre_anestesi_sedasi.ga,\n" +
+                            "     penilaian_pre_anestesi_sedasi.regional,\n" +
+                            "     penilaian_pre_anestesi_sedasi.persediaandarah,\n" +
+                            "     penilaian_pre_anestesi_sedasi.teknikkhusus,\n" +
+                            "     penilaian_pre_anestesi_sedasi.teknikkhususket,\n" +
+                            "     penilaian_pre_anestesi_sedasi.monitoring,\n" +
+                            "     penilaian_pre_anestesi_sedasi.monitoringket,\n" +
+                            "     penilaian_pre_anestesi_sedasi.perawatan as rencana_perawatan,\n" +
+                            "     penilaian_pre_anestesi_sedasi.jenisanestesi as rencana_anestesi,\n" +
+                            "     '' as catatan_khusus,\n" +
+                            "     reg_periksa.no_rawat,\n" +
+                            "     pasien.nm_pasien,\n" +
+                            "     pasien.no_rkm_medis,\n" +
+                            "     if(pasien.jk='L','Laki-Laki','Perempuan') as jk,\n" +
+                            "     pasien.tgl_lahir,\n" +
+                            "     dokter.kd_dokter,\n" +
+                            "     dokter.nm_dokter\n" +
+                            "FROM\n" +
+                            "     penilaian_pre_anestesi_sedasi\n" +
+                            "     INNER JOIN reg_periksa ON penilaian_pre_anestesi_sedasi.no_rawat = reg_periksa.no_rawat\n"
+                            +
+                            "     INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis\n" +
+                            "     INNER JOIN dokter ON penilaian_pre_anestesi_sedasi.kd_dokter=dokter.kd_dokter\n" +
+                            "WHERE penilaian_pre_anestesi_sedasi.no_rawat='"
+                            + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "'\n" +
+                            "     and penilaian_pre_anestesi_sedasi.tanggal='"
+                            + tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString() + "'",
+                    param);
+        }
     }// GEN-LAST:event_MnCetakActionPerformed
 
     private void TglOperasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TglOperasiKeyPressed
@@ -2739,8 +2747,7 @@ public final class RMPenilaianPraAnastesidanSedasi extends javax.swing.JDialog {
             TeknikKhususKet.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 45).toString());
             Monitoring.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 46).toString());
             MonitoringKet.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 47).toString());
-            Ekstremitas.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 48).toString());
-            Perawatan.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 49).toString());
+            Perawatan.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 48).toString());
             Valid.SetTgl2(TglAsuhan, tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString());
             Valid.SetTgl2(TglOperasi, tbObat.getValueAt(tbObat.getSelectedRow(), 10).toString());
         }
