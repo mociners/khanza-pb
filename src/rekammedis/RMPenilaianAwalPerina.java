@@ -9167,6 +9167,11 @@ public final class RMPenilaianAwalPerina extends javax.swing.JDialog {
         }
     }
     
+    public void setDPJP(String kode, String nama) {
+        KdDPJP.setText(kode);
+        NmDPJP.setText(nama);
+    }
+    
     public void setNoRm(String norwt, Date tgl2,String carabayar,String norm) {
         TNoRw.setText(norwt);
         TNoRM.setText(norm);

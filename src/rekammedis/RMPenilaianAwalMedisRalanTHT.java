@@ -61,8 +61,8 @@ public final class RMPenilaianAwalMedisRalanTHT extends javax.swing.JDialog {
     /** Creates new form DlgRujuk
      * @param parent
      * @param modal */
-    public RMPenilaianAwalMedisRalanTHT(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public RMPenilaianAwalMedisRalanTHT(java.awt.Window parent, boolean modal) {
+        super(parent, modal ? java.awt.Dialog.ModalityType.APPLICATION_MODAL : java.awt.Dialog.ModalityType.MODELESS);
         initComponents();
         
         tabMode=new DefaultTableModel(null,new Object[]{

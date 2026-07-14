@@ -129,7 +129,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				</graphicElement>
 			</rectangle>
 		</band>
-		<band height="201">
+		<band height="215">
 			<textField>
 				<reportElement positionType="Float" x="70" y="41" width="118" height="11" uuid="2ac1e596-0f84-42bd-8dcd-a0df5f10875f"/>
 				<textElement verticalAlignment="Middle">
@@ -179,7 +179,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement positionType="Float" x="0" y="66" width="557" height="1" backcolor="#000000" uuid="97315f86-43ce-4c32-b194-82dccedf749c"/>
+				<reportElement positionType="Float" x="0" y="80" width="557" height="1" backcolor="#000000" uuid="97315f86-43ce-4c32-b194-82dccedf749c"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
@@ -247,7 +247,9 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement positionType="Float" x="346" y="26" width="1" height="40" backcolor="#000000" uuid="b12f3a5c-f1a2-404e-8e74-24073aaae356"/>
+				<reportElement positionType="Float" x="346" y="26" width="1" height="55" backcolor="#000000" uuid="b12f3a5c-f1a2-404e-8e74-24073aaae356">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
@@ -291,13 +293,13 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="7" width="1" height="192" backcolor="#000000" uuid="7276761b-bdef-4c07-ac89-81508aeaca02"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="7" width="1" height="206" backcolor="#000000" uuid="7276761b-bdef-4c07-ac89-81508aeaca02"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement stretchType="RelativeToBandHeight" x="556" y="7" width="1" height="192" backcolor="#000000" uuid="177d9ad5-f6a7-4e74-9e79-9c5cb28110ea"/>
+				<reportElement stretchType="RelativeToBandHeight" x="556" y="7" width="1" height="206" backcolor="#000000" uuid="177d9ad5-f6a7-4e74-9e79-9c5cb28110ea"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
@@ -317,7 +319,9 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<textFieldExpression><![CDATA[$F{asal_ruang}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement positionType="Float" x="192" y="26" width="1" height="40" backcolor="#000000" uuid="cefd51b7-69ad-48e9-a19d-d2a948e8193a"/>
+				<reportElement positionType="Float" x="192" y="26" width="1" height="55" backcolor="#000000" uuid="cefd51b7-69ad-48e9-a19d-d2a948e8193a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
@@ -346,7 +350,53 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<textFieldExpression><![CDATA[$F{ruang_selanjutnya}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="89" y="86" width="6" height="11" uuid="b9667fb1-1821-425b-9246-2845d32228d9"/>
+				<reportElement positionType="Float" x="351" y="52" width="69" height="11" uuid="9b3e1f57-1a4c-4e89-8d1a-4c2f6d2f5f11"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Nama Menyetujui]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="420" y="52" width="7" height="11" uuid="3c8a9f24-7b1d-4f3e-8c6e-1d5f2a9b4c67"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="427" y="52" width="128" height="11" uuid="5f8b9e1c-4d3a-2f6e-8c1a-7b5d9c2e4f1a"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_menyetujui}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="351" y="64" width="69" height="11" uuid="1e7c9f8a-2d3b-4c5f-9e1a-8b6c4d7f5e2d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Hub. Menyetujui]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="420" y="64" width="7" height="11" uuid="7d6e5f4c-3b2a-1c9f-8e7d-6c5b4a3f2e1d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="427" y="64" width="128" height="11" uuid="2f1d9e8c-7b6a-5c4d-3e2f-1a9b8c7d6e5f"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hubungan_menyetujui}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="89" y="100" width="6" height="11" uuid="b9667fb1-1821-425b-9246-2845d32228d9"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -354,7 +404,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="89" y="98" width="6" height="11" uuid="376aeb5e-65db-4f14-a3a5-516d63e6d971"/>
+				<reportElement positionType="Float" x="89" y="112" width="6" height="11" uuid="376aeb5e-65db-4f14-a3a5-516d63e6d971"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -362,7 +412,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="15" y="98" width="74" height="11" uuid="1665683e-6c14-42a6-a65c-d6a8069b03d6"/>
+				<reportElement positionType="Float" x="15" y="112" width="74" height="11" uuid="1665683e-6c14-42a6-a65c-d6a8069b03d6"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -370,7 +420,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Diagnosa Sekunder]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="15" y="86" width="74" height="11" uuid="f014fffb-3aac-4b6a-b3b6-bddbb28aba77"/>
+				<reportElement positionType="Float" x="15" y="100" width="74" height="11" uuid="f014fffb-3aac-4b6a-b3b6-bddbb28aba77"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -378,28 +428,28 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Diagnosa Utama]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="95" y="86" width="310" height="11" uuid="98111397-6943-4a0d-b58a-0eea074c5151"/>
+				<reportElement x="95" y="100" width="310" height="11" uuid="98111397-6943-4a0d-b58a-0eea074c5151"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{diagnosa_utama}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="95" y="98" width="109" height="11" uuid="028ddcbf-f6f2-41a3-ba39-92da45277683"/>
+				<reportElement x="95" y="112" width="109" height="11" uuid="028ddcbf-f6f2-41a3-ba39-92da45277683"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{diagnosa_sekunder}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="96" y="110" width="108" height="10" uuid="9a91486a-a52a-4ff0-ba7d-a9c534f124d2"/>
+				<reportElement x="96" y="124" width="108" height="10" uuid="9a91486a-a52a-4ff0-ba7d-a9c534f124d2"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indikasi_pindah_ruang}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="15" y="110" width="74" height="10" uuid="47c3d4f0-d03f-4319-9beb-fd6e9a22916d"/>
+				<reportElement positionType="Float" x="15" y="124" width="74" height="10" uuid="47c3d4f0-d03f-4319-9beb-fd6e9a22916d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -407,7 +457,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Indikasi Pindah]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="89" y="110" width="6" height="10" uuid="cb1ccb6f-f3a3-404f-9feb-b412536ba07d"/>
+				<reportElement positionType="Float" x="89" y="124" width="6" height="10" uuid="cb1ccb6f-f3a3-404f-9feb-b412536ba07d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -415,7 +465,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="4" y="72" width="544" height="11" uuid="62466a37-6945-4a0a-ac95-22839a05c9c2"/>
+				<reportElement positionType="Float" x="4" y="86" width="544" height="11" uuid="62466a37-6945-4a0a-ac95-22839a05c9c2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
@@ -423,14 +473,14 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[I. INDIKASI]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight">
-				<reportElement positionType="Float" x="24" y="149" width="229" height="23" uuid="693de465-117a-43ef-9937-6e4bdbb06310"/>
+				<reportElement positionType="Float" x="24" y="163" width="229" height="23" uuid="693de465-117a-43ef-9937-6e4bdbb06310"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{keterangan_indikasi_pindah_ruang}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="90" y="139" width="6" height="10" uuid="83a807c4-97f1-41d8-b9f9-a7816e3a4d19"/>
+				<reportElement positionType="Float" x="90" y="153" width="6" height="10" uuid="83a807c4-97f1-41d8-b9f9-a7816e3a4d19"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -438,7 +488,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="15" y="139" width="74" height="10" uuid="5b7c35e9-2ac4-4162-9bbd-260e95256c49"/>
+				<reportElement positionType="Float" x="15" y="153" width="74" height="10" uuid="5b7c35e9-2ac4-4162-9bbd-260e95256c49"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -446,7 +496,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Keterangan Metode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="90" y="126" width="6" height="10" uuid="69b6a989-d177-48ab-8ca0-be1d02c31d82"/>
+				<reportElement positionType="Float" x="90" y="140" width="6" height="10" uuid="69b6a989-d177-48ab-8ca0-be1d02c31d82"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -454,7 +504,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="15" y="126" width="74" height="10" uuid="49216b83-5178-4c18-8d4d-87086a5e9b35"/>
+				<reportElement positionType="Float" x="15" y="140" width="74" height="10" uuid="49216b83-5178-4c18-8d4d-87086a5e9b35"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -462,14 +512,14 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Metode]]></text>
 			</staticText>
 			<textField>
-				<reportElement positionType="Float" x="96" y="126" width="101" height="10" uuid="c78971bb-a9bb-44e8-a9ea-147ea878b3e5"/>
+				<reportElement positionType="Float" x="96" y="140" width="101" height="10" uuid="c78971bb-a9bb-44e8-a9ea-147ea878b3e5"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{metode_pemindahan_pasien}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="272" y="126" width="79" height="11" uuid="1958a598-d0cb-43d9-8535-12c582356607"/>
+				<reportElement positionType="Float" x="272" y="140" width="79" height="11" uuid="1958a598-d0cb-43d9-8535-12c582356607"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -477,7 +527,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Peralatan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="352" y="126" width="6" height="11" uuid="1fa0495f-97db-4eb7-bda2-4fad01f0a66b"/>
+				<reportElement positionType="Float" x="352" y="140" width="6" height="11" uuid="1fa0495f-97db-4eb7-bda2-4fad01f0a66b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -485,21 +535,21 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="365" y="126" width="168" height="11" uuid="4337672e-fae3-4fa3-9967-e7a09d5d62d8"/>
+				<reportElement x="365" y="140" width="168" height="11" uuid="4337672e-fae3-4fa3-9967-e7a09d5d62d8"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{peralatan_yang_menyertai}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement positionType="Float" x="280" y="149" width="264" height="23" uuid="a5b33b12-c62e-489d-a3da-0f35aff235e5"/>
+				<reportElement positionType="Float" x="280" y="163" width="264" height="23" uuid="a5b33b12-c62e-489d-a3da-0f35aff235e5"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{keterangan_peralatan_yang_menyertai}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="352" y="137" width="6" height="10" uuid="661e3176-48f3-4683-833c-697b1d1ca23d"/>
+				<reportElement positionType="Float" x="352" y="151" width="6" height="10" uuid="661e3176-48f3-4683-833c-697b1d1ca23d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -507,7 +557,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="273" y="137" width="79" height="10" uuid="6d0b0abd-46a5-4dc5-b561-6c771aeab362"/>
+				<reportElement positionType="Float" x="273" y="151" width="79" height="10" uuid="6d0b0abd-46a5-4dc5-b561-6c771aeab362"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -515,13 +565,13 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Keterangan Peralatan]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement positionType="Float" x="0" y="124" width="557" height="1" backcolor="#000000" uuid="2a32b477-c56d-4ecb-9789-9ac07d87276a"/>
+				<reportElement positionType="Float" x="0" y="138" width="557" height="1" backcolor="#000000" uuid="2a32b477-c56d-4ecb-9789-9ac07d87276a"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement positionType="Float" x="15" y="176" width="74" height="10" uuid="5b7c35e9-2ac4-4162-9bbd-260e95256c50"/>
+				<reportElement positionType="Float" x="15" y="190" width="74" height="10" uuid="5b7c35e9-2ac4-4162-9bbd-260e95256c50"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -529,7 +579,7 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[Prosedur Dilakukan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="90" y="176" width="6" height="10" uuid="83a807c4-97f1-41d8-b9f9-a7816e3a4d20"/>
+				<reportElement positionType="Float" x="90" y="190" width="6" height="10" uuid="83a807c4-97f1-41d8-b9f9-a7816e3a4d20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -537,26 +587,26 @@ INNER JOIN petugas p2 ON transfer_pasien_antar_ruang.nip_menerima = p2.nip]]>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight">
-				<reportElement positionType="Float" x="96" y="176" width="448" height="20" uuid="693de465-117a-43ef-9937-6e4bdbb06311"/>
+				<reportElement positionType="Float" x="96" y="190" width="448" height="20" uuid="693de465-117a-43ef-9937-6e4bdbb06311"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{prosedur_yang_sudah_dilakukan}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement positionType="Float" x="0" y="199" width="557" height="1" backcolor="#000000" uuid="8d599fb5-cbe0-479a-a2c7-f06c0744312b"/>
+				<reportElement positionType="Float" x="0" y="213" width="557" height="1" backcolor="#000000" uuid="8d599fb5-cbe0-479a-a2c7-f06c0744312b"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="267" y="124" width="1" height="50" backcolor="#000000" uuid="2f9f6bcf-3baa-4545-9947-ec7ef892995d"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="267" y="138" width="1" height="50" backcolor="#000000" uuid="2f9f6bcf-3baa-4545-9947-ec7ef892995d"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement positionType="Float" x="0" y="174" width="557" height="1" backcolor="#000000" uuid="f5f0ed1e-5d33-44ad-890b-fa0e05784ea0"/>
+				<reportElement positionType="Float" x="0" y="188" width="557" height="1" backcolor="#000000" uuid="f5f0ed1e-5d33-44ad-890b-fa0e05784ea0"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>

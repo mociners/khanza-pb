@@ -150,7 +150,27 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
             public void windowDeactivated(WindowEvent e) {}
         });
         
+
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        MnCetakFormB = new javax.swing.JMenuItem();
+        jPopupMenu1.setName("jPopupMenu1"); // NOI18N
+        MnCetakFormB.setBackground(new java.awt.Color(255, 255, 254));
+        MnCetakFormB.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnCetakFormB.setForeground(new java.awt.Color(50, 50, 50));
+        MnCetakFormB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/b_print.png"))); // NOI18N
+        MnCetakFormB.setText("Cetak Evaluasi / Catatan (Form B)");
+        MnCetakFormB.setName("MnCetakFormB"); // NOI18N
+        MnCetakFormB.setPreferredSize(new java.awt.Dimension(250, 26));
+        MnCetakFormB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnCetakFormBActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(MnCetakFormB);
+        tbObat.setComponentPopupMenu(jPopupMenu1);
+        
         ChkInput.setSelected(false);
+
         isForm();
     }
     
@@ -391,7 +411,7 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-03-2023" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-03-2023" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -405,7 +425,7 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-03-2023" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-03-2023" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -590,7 +610,7 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
         label11.setBounds(491, 70, 100, 23);
 
         TglImplementasi.setForeground(new java.awt.Color(50, 70, 50));
-        TglImplementasi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-03-2023 03:33:17" }));
+        TglImplementasi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-03-2023 11:34:18" }));
         TglImplementasi.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TglImplementasi.setName("TglImplementasi"); // NOI18N
         TglImplementasi.setOpaque(false);
@@ -602,7 +622,7 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
         FormInput.add(TglImplementasi);
         TglImplementasi.setBounds(595, 70, 140, 23);
 
-        jLabel40.setText("Masalah :");
+        jLabel40.setText("Informasi :");
         jLabel40.setName("jLabel40"); // NOI18N
         FormInput.add(jLabel40);
         jLabel40.setBounds(0, 100, 85, 23);
@@ -624,7 +644,7 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
         FormInput.add(scrollPane5);
         scrollPane5.setBounds(89, 100, 646, 43);
 
-        jLabel41.setText("Tindak Lanjut :");
+        jLabel41.setText("Analisis :");
         jLabel41.setName("jLabel41"); // NOI18N
         FormInput.add(jLabel41);
         jLabel41.setBounds(0, 150, 85, 23);
@@ -646,7 +666,7 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
         FormInput.add(scrollPane6);
         scrollPane6.setBounds(89, 150, 646, 43);
 
-        jLabel42.setText("Evaluasi :");
+        jLabel42.setText("Rencana :");
         jLabel42.setName("jLabel42"); // NOI18N
         FormInput.add(jLabel42);
         jLabel42.setBounds(0, 200, 85, 23);
@@ -887,7 +907,50 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
         }
 }//GEN-LAST:event_BtnPrintKeyPressed
 
+
+    private void MnCetakFormBActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        if(tbObat.getSelectedRow()!= -1){
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            Map<String, Object> param = new HashMap<>();
+            param.put("namars",akses.getnamars());
+            param.put("alamatrs",akses.getalamatrs());
+            param.put("kotars",akses.getkabupatenrs());
+            param.put("propinsirs",akses.getpropinsirs());
+            param.put("kontakrs",akses.getkontakrs());
+            param.put("emailrs",akses.getemailrs());   
+            param.put("logo",Sequel.cariGambar("select logo from setting")); 
+            param.put("masalah",tbObat.getValueAt(tbObat.getSelectedRow(),7).toString());
+            param.put("tinjut",tbObat.getValueAt(tbObat.getSelectedRow(),8).toString());
+            param.put("evaluasi",tbObat.getValueAt(tbObat.getSelectedRow(),9).toString());
+            param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.getValueAt(tbObat.getSelectedRow(),11).toString()+"\nID "+(tbObat.getValueAt(tbObat.getSelectedRow(),10).toString().equals("")?"---":tbObat.getValueAt(tbObat.getSelectedRow(),10).toString())+"\n"+tbObat.getValueAt(tbObat.getSelectedRow(),6).toString()); 
+            
+            Valid.MyReportqry("rptCetakCatatanImplementasiMPP.jasper","report","::[ Catatan Implementasi Manager Pelayanan Pasien ]::",
+                "select mpp_evaluasi_catatan.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,"+
+                "ifnull(bangsal.nm_bangsal,'Ranap Gabung') as ruang,ifnull(kamar_inap.kd_kamar,'RG') as kamar,date_format(kamar_inap.tgl_masuk,'%d-%m-%Y') as tgl_masuk,kamar_inap.jam_masuk,"+
+                "concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab,', ',propinsi.nm_prop) as alamat, "+
+                "mpp_evaluasi_catatan.tgl_implementasi,mpp_evaluasi_catatan.masalah,mpp_evaluasi_catatan.tinjut, "+
+                "mpp_evaluasi_catatan.evaluasi,mpp_evaluasi_catatan.nip,petugas.nama "+                  
+                "from mpp_evaluasi_catatan "+
+                "inner join reg_periksa on mpp_evaluasi_catatan.no_rawat=reg_periksa.no_rawat "+
+                "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                "inner join petugas on mpp_evaluasi_catatan.nip=petugas.nip "+
+                "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel "+
+                "inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec "+
+                "inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "+
+                "inner join propinsi on pasien.kd_prop=propinsi.kd_prop "+
+                "left join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat "+
+                "left join kamar on kamar_inap.kd_kamar=kamar.kd_kamar "+
+                "left join bangsal on kamar.kd_bangsal=bangsal.kd_bangsal "+
+                "where mpp_evaluasi_catatan.no_rawat='"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"' "+
+                "and mpp_evaluasi_catatan.tgl_implementasi='"+tbObat.getValueAt(tbObat.getSelectedRow(),6).toString()+"'",param);
+            this.setCursor(Cursor.getDefaultCursor());
+        }else{
+            JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data yang mau dicetak...!!!!");
+        }
+    }                                            
+
     private void TCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariKeyPressed
+
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
             BtnCariActionPerformed(null);
         }else if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
@@ -1050,6 +1113,8 @@ public final class RMSkriningMPPFormB extends javax.swing.JDialog {
     private widget.ScrollPane scrollPane6;
     private widget.ScrollPane scrollPane7;
     private widget.Table tbObat;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JMenuItem MnCetakFormB;
     // End of variables declaration//GEN-END:variables
 
     public void tampil() {

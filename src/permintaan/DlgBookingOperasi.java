@@ -1773,6 +1773,24 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
         });
         FormMenu.add(BtnCatatanKamarPemulihan);
 
+        BtnObservasiTTV = new widget.Button();
+        BtnObservasiTTV.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
+        BtnObservasiTTV.setText("Observasi TTV & B. Cairan");
+        BtnObservasiTTV.setFocusPainted(false);
+        BtnObservasiTTV.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        BtnObservasiTTV.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnObservasiTTV.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnObservasiTTV.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnObservasiTTV.setName("BtnObservasiTTV"); // NOI18N
+        BtnObservasiTTV.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnObservasiTTV.setRoundRect(false);
+        BtnObservasiTTV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnObservasiTTVActionPerformed(evt);
+            }
+        });
+        FormMenu.add(BtnObservasiTTV);
+
         ScrollMenu.setViewportView(FormMenu);
 
         PanelAccor.add(ScrollMenu, java.awt.BorderLayout.CENTER);
@@ -1973,6 +1991,22 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnKeluar.requestFocus();
         }
     }// GEN-LAST:event_TCariKeyPressed
+
+    private void BtnObservasiTTVActionPerformed(java.awt.event.ActionEvent evt) {
+        if(tbObat.getSelectedRow()!= -1){
+            this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
+            rekammedis.RMTTVBalanceCairan form = new rekammedis.RMTTVBalanceCairan(null, false);
+            form.isCek();
+            form.setNoRm(tbObat.getValueAt(tbObat.getSelectedRow(), 1).toString(), new java.util.Date());
+            form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+            form.setLocationRelativeTo(internalFrame1);
+            form.setVisible(true);
+            this.setCursor(java.awt.Cursor.getDefaultCursor());
+        }else{
+            javax.swing.JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data Booking Operasi terlebih dahulu...!!!!");
+            tbObat.requestFocus();
+        }
+    }
 
     private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnCariActionPerformed
         tampil();
@@ -2989,6 +3023,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
     private widget.Button BtnPenandaanOperasi;
     private widget.Button BtnPenilaianPreInduksi;
     private widget.Button BtnPermintaanLab;
+    private widget.Button BtnObservasiTTV;
     private widget.Button BtnPreAnastesi;
     private widget.Button BtnPreAnastesi1;
     private widget.Button BtnPreOperasi;
@@ -3340,6 +3375,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnObatBhp.setVisible(true);
             BtnPenandaanOperasi.setVisible(true);
             BtnTransferAntarRuang.setVisible(true);
+            BtnObservasiTTV.setVisible(true);
             return;
         }
 
@@ -3356,6 +3392,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnSkorStewardPascaAnestesi.setVisible(false);
             BtnSkorBromagePascaAnestesi.setVisible(false);
             BtnLaporanOperasi.setVisible(false);
+            BtnObservasiTTV.setVisible(false);
         } else if (isDokterBedah) {
             BtnChecklistPreOperasi.setVisible(false);
             BtnSignInSebelumAnestesi.setVisible(false);
@@ -3380,6 +3417,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnSkorStewardPascaAnestesi.setVisible(false);
             BtnSkorBromagePascaAnestesi.setVisible(false);
             BtnLaporanOperasi.setVisible(false);
+            BtnObservasiTTV.setVisible(false);
         } else if (isDokterAnestesi) {
             BtnPenandaanOperasi.setVisible(false);
             BtnChecklistPreOperasi.setVisible(false);
@@ -3396,6 +3434,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnInstrumen3.setVisible(false);
             BtnCatatanKamarPemulihan.setVisible(false);
             BtnPermintaanLab.setVisible(false);
+            BtnObservasiTTV.setVisible(false);
         } else if (isPerawatRR) {
             BtnPenandaanOperasi.setVisible(false);
             BtnSignInSebelumAnestesi.setVisible(false);
@@ -3414,6 +3453,7 @@ public class DlgBookingOperasi extends javax.swing.JDialog {
             BtnPreAnastesi1.setVisible(false);
             BtnLembarObservasiAnestesi.setVisible(false);
             BtnInstrumen1.setVisible(false);
+            BtnObservasiTTV.setVisible(true);
         } else if (isPenataAnestesi) {
             BtnPenandaanOperasi.setVisible(false);
             BtnTimeOutSebelumInsisi.setVisible(false);

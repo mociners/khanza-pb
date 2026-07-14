@@ -1,0 +1,315 @@
+diff --git a/src/rekammedis/RMGenerateKlaim.java b/src/rekammedis/RMGenerateKlaim.java
+index 97b4022c..1f962e59 100644
+--- a/src/rekammedis/RMGenerateKlaim.java
++++ b/src/rekammedis/RMGenerateKlaim.java
+@@ -5147,6 +5147,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+                 String nomr = Sequel.cariIsi("select no_rkm_medis from reg_periksa where no_rawat=?", norawat);
+                 String tglKunjungan = Sequel.cariIsi("select tgl_registrasi from reg_periksa where no_rawat=?",
+                         norawat);
++                String kdDokterBpjs = Sequel.cariIsi("select maping_dokter_dpjpvclaim.kd_dokter_bpjs from reg_periksa inner join maping_dokter_dpjpvclaim on reg_periksa.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter where reg_periksa.no_rawat=?", norawat);
+ 
+                 rs2 = koneksi.prepareStatement(
+                         "select bridging_sep.no_rawat,bridging_sep.no_sep,bridging_sep.no_kartu,bridging_sep.nomr,bridging_sep.nama_pasien, "
+@@ -5162,8 +5163,10 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+                                 "from bridging_sep inner join bridging_surat_kontrol_bpjs on bridging_surat_kontrol_bpjs.no_sep=bridging_sep.no_sep "
+                                 +
+                                 "where bridging_sep.nomr='" + nomr + "' " +
+-                                "and bridging_surat_kontrol_bpjs.tgl_rencana<='" + tglKunjungan + "' " +
+-                                "order by bridging_surat_kontrol_bpjs.tgl_rencana desc, bridging_surat_kontrol_bpjs.no_surat desc limit 1")
++                                "and bridging_sep.no_rawat!='" + norawat + "' " +
++                                "and bridging_surat_kontrol_bpjs.kd_dokter_bpjs='" + kdDokterBpjs + "' " +
++                                "and ABS(DATEDIFF(bridging_surat_kontrol_bpjs.tgl_rencana, '" + tglKunjungan + "')) <= 7 " +
++                                "order by ABS(DATEDIFF(bridging_surat_kontrol_bpjs.tgl_rencana, '" + tglKunjungan + "')) asc, bridging_surat_kontrol_bpjs.no_surat desc limit 1")
+                         .executeQuery();
+ 
+                 if (rs2.next()) {
+@@ -5830,18 +5833,20 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+                                             +
+                                             "reg_periksa.umurdaftar,reg_periksa.sttsumur,pasien.pekerjaan,concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab,', ',propinsi.nm_prop) as alamat,"
+                                             +
+-                                            "resume_pasien.kd_dokter,dokter.nm_dokter,resume_pasien.kondisi_pulang,resume_pasien.keluhan_utama,resume_pasien.jalannya_penyakit,"
++                                            "IFNULL(resume_pasien.kd_dokter, reg_periksa.kd_dokter) as kd_dokter,IFNULL(dokter.nm_dokter, dokter_reg.nm_dokter) as nm_dokter,IFNULL(resume_pasien.kondisi_pulang,'') as kondisi_pulang,IFNULL(resume_pasien.keluhan_utama,'') as keluhan_utama,IFNULL(resume_pasien.jalannya_penyakit,'') as jalannya_penyakit,"
+                                             +
+-                                            "resume_pasien.pemeriksaan_penunjang,resume_pasien.hasil_laborat," +
+-                                            "resume_pasien.obat_pulang,resume_pasien.pemeriksaan_lain,resume_pasien.free_text from resume_pasien inner join reg_periksa on resume_pasien.no_rawat=reg_periksa.no_rawat "
++                                            "IFNULL(resume_pasien.pemeriksaan_penunjang,'') as pemeriksaan_penunjang,IFNULL(resume_pasien.hasil_laborat,'') as hasil_laborat," +
++                                            "IFNULL(resume_pasien.obat_pulang,'') as obat_pulang,IFNULL(resume_pasien.pemeriksaan_lain,'') as pemeriksaan_lain,IFNULL(resume_pasien.free_text,'') as free_text from reg_periksa "
+                                             +
+-                                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis inner join dokter on resume_pasien.kd_dokter=dokter.kd_dokter "
++                                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis left join resume_pasien on resume_pasien.no_rawat=reg_periksa.no_rawat "
++                                            +
++                                            "left join dokter on resume_pasien.kd_dokter=dokter.kd_dokter inner join dokter as dokter_reg on reg_periksa.kd_dokter=dokter_reg.kd_dokter "
+                                             +
+                                             "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec "
+                                             +
+                                             "inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab inner join propinsi on pasien.kd_prop=propinsi.kd_prop "
+                                             +
+-                                            "where resume_pasien.no_rawat='" + rs.getString("no_rawat") + "'")
++                                            "where reg_periksa.no_rawat='" + rs.getString("no_rawat") + "'")
+                                     .executeQuery();
+                             if (rs2.next()) {
+                                 htmlContent.append(
+@@ -5921,14 +5926,15 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+                                         htmlContent.append(
+                                                 "<tr class='isi2'><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='3'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                                 .append(ttdDokterUrl).append("'/><br>")
+-                                                .append(rs.getString("nm_dokter")).append("</td></tr>");
++                                                .append(rs2.getString("nm_dokter")).append("</td></tr>");
+                                     } else {
+-                                        // No freehand signature - show only doctor name
++                                        // No signature - show only doctor name
+                                         htmlContent.append(
+                                                 "<tr class='isi2'><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='3'>Dokter Penanggung Jawab<br><br><br><br>")
+-                                                .append(rs.getString("nm_dokter")).append("</td></tr>");
++                                                .append(rs2.getString("nm_dokter")).append("</td></tr>");
+                                     }
+                                 }
++
+                                 htmlContent.append(
+                                         "</table>" +
+                                                 "</td>" +
+@@ -5948,26 +5954,26 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+                         // RESUME RANAP
+                         try {
+                             rs2 = koneksi.prepareStatement(
+-                                    "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,resume_pasien_ranap.kd_dokter,dokter.nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
++                                    "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,IFNULL(resume_pasien_ranap.kd_dokter,reg_periksa.kd_dokter) as kd_dokter,IFNULL(dokter.nm_dokter,pengirim.nm_dokter) as nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
+                                             +
+-                                            "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan,resume_pasien_ranap.keluhan_utama,resume_pasien_ranap.pemeriksaan_fisik,"
++                                            "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,IFNULL(resume_pasien_ranap.diagnosa_awal,'') as diagnosa_awal,IFNULL(resume_pasien_ranap.alasan,'') as alasan,IFNULL(resume_pasien_ranap.keluhan_utama,'') as keluhan_utama,IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'') as pemeriksaan_fisik,"
+                                             +
+-                                            "resume_pasien_ranap.jalannya_penyakit,resume_pasien_ranap.pemeriksaan_penunjang,resume_pasien_ranap.hasil_laborat,resume_pasien_ranap.tindakan_dan_operasi,resume_pasien_ranap.obat_di_rs,"
++                                            "IFNULL(resume_pasien_ranap.jalannya_penyakit,'') as jalannya_penyakit,IFNULL(resume_pasien_ranap.pemeriksaan_penunjang,'') as pemeriksaan_penunjang,IFNULL(resume_pasien_ranap.hasil_laborat,'') as hasil_laborat,IFNULL(resume_pasien_ranap.tindakan_dan_operasi,'') as tindakan_dan_operasi,IFNULL(resume_pasien_ranap.obat_di_rs,'') as obat_di_rs,"
+                                             +
+-                                            "resume_pasien_ranap.alergi,resume_pasien_ranap.diet,resume_pasien_ranap.lab_belum,resume_pasien_ranap.edukasi,resume_pasien_ranap.cara_keluar,resume_pasien_ranap.ket_keluar,resume_pasien_ranap.keadaan,"
++                                            "IFNULL(resume_pasien_ranap.alergi,'') as alergi,IFNULL(resume_pasien_ranap.diet,'') as diet,IFNULL(resume_pasien_ranap.lab_belum,'') as lab_belum,IFNULL(resume_pasien_ranap.edukasi,'') as edukasi,IFNULL(resume_pasien_ranap.cara_keluar,'') as cara_keluar,IFNULL(resume_pasien_ranap.ket_keluar,'') as ket_keluar,IFNULL(resume_pasien_ranap.keadaan,'') as keadaan,"
+                                             +
+-                                            "resume_pasien_ranap.ket_keadaan,resume_pasien_ranap.dilanjutkan,resume_pasien_ranap.ket_dilanjutkan,resume_pasien_ranap.kontrol,resume_pasien_ranap.obat_pulang,resume_pasien_ranap.pemeriksaan_lain,resume_pasien_ranap.free_text,reg_periksa.kd_pj,penjab.png_jawab,"
++                                            "IFNULL(resume_pasien_ranap.ket_keadaan,'') as ket_keadaan,IFNULL(resume_pasien_ranap.dilanjutkan,'') as dilanjutkan,IFNULL(resume_pasien_ranap.ket_dilanjutkan,'') as ket_dilanjutkan,IFNULL(resume_pasien_ranap.kontrol,'') as kontrol,IFNULL(resume_pasien_ranap.obat_pulang,'') as obat_pulang,IFNULL(resume_pasien_ranap.pemeriksaan_lain,'') as pemeriksaan_lain,IFNULL(resume_pasien_ranap.free_text,'') as free_text,reg_periksa.kd_pj,penjab.png_jawab,"
+                                             +
+                                             "reg_periksa.umurdaftar,reg_periksa.sttsumur,pasien.pekerjaan,pasien.jk,pasien.tgl_lahir,concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab) as alamat "
+                                             +
+-                                            "from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
++                                            "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                                             +
+-                                            "inner join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
++                                            "left join resume_pasien_ranap on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat left join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
+                                             +
+                                             "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
+                                             +
+                                             "inner join penjab on penjab.kd_pj=reg_periksa.kd_pj " +
+-                                            "where resume_pasien_ranap.no_rawat='" + rs.getString("no_rawat") + "'")
++                                            "where reg_periksa.no_rawat='" + rs.getString("no_rawat") + "'")
+                                     .executeQuery();
+                             if (rs2.next()) {
+                                 htmlContent.append(
+@@ -6431,32 +6437,32 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+                             // ranap bmj
+                             try {
+                                 rs2 = koneksi.prepareStatement(
+-                                        "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,resume_pasien_ranap.kd_dokter,dokter.nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
++                                        "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,IFNULL(resume_pasien_ranap.kd_dokter,reg_periksa.kd_dokter) as kd_dokter,IFNULL(dokter.nm_dokter,pengirim.nm_dokter) as nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
+                                                 +
+-                                                "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan,resume_pasien_ranap.keluhan_utama,resume_pasien_ranap.pemeriksaan_fisik,"
++                                                "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,IFNULL(resume_pasien_ranap.diagnosa_awal,'') as diagnosa_awal,IFNULL(resume_pasien_ranap.alasan,'') as alasan,IFNULL(resume_pasien_ranap.keluhan_utama,'') as keluhan_utama,IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'') as pemeriksaan_fisik,"
+                                                 +
+-                                                "resume_pasien_ranap.jalannya_penyakit,resume_pasien_ranap.pemeriksaan_penunjang,resume_pasien_ranap.hasil_laborat,resume_pasien_ranap.tindakan_dan_operasi,resume_pasien_ranap.obat_di_rs,"
++                                                "IFNULL(resume_pasien_ranap.jalannya_penyakit,'') as jalannya_penyakit,IFNULL(resume_pasien_ranap.pemeriksaan_penunjang,'') as pemeriksaan_penunjang,IFNULL(resume_pasien_ranap.hasil_laborat,'') as hasil_laborat,IFNULL(resume_pasien_ranap.tindakan_dan_operasi,'') as tindakan_dan_operasi,IFNULL(resume_pasien_ranap.obat_di_rs,'') as obat_di_rs,"
+                                                 +
+-                                                "resume_pasien_ranap.alergi,resume_pasien_ranap.diet,resume_pasien_ranap.lab_belum,resume_pasien_ranap.edukasi,resume_pasien_ranap.cara_keluar,resume_pasien_ranap.ket_keluar,resume_pasien_ranap.keadaan,"
++                                                "IFNULL(resume_pasien_ranap.alergi,'') as alergi,IFNULL(resume_pasien_ranap.diet,'') as diet,IFNULL(resume_pasien_ranap.lab_belum,'') as lab_belum,IFNULL(resume_pasien_ranap.edukasi,'') as edukasi,IFNULL(resume_pasien_ranap.cara_keluar,'') as cara_keluar,IFNULL(resume_pasien_ranap.ket_keluar,'') as ket_keluar,IFNULL(resume_pasien_ranap.keadaan,'') as keadaan,"
+                                                 +
+-                                                "resume_pasien_ranap.ket_keadaan,resume_pasien_ranap.dilanjutkan,resume_pasien_ranap.ket_dilanjutkan,resume_pasien_ranap.kontrol,resume_pasien_ranap.obat_pulang,reg_periksa.kd_pj,penjab.png_jawab,"
++                                                "IFNULL(resume_pasien_ranap.ket_keadaan,'') as ket_keadaan,IFNULL(resume_pasien_ranap.dilanjutkan,'') as dilanjutkan,IFNULL(resume_pasien_ranap.ket_dilanjutkan,'') as ket_dilanjutkan,IFNULL(resume_pasien_ranap.kontrol,'') as kontrol,IFNULL(resume_pasien_ranap.obat_pulang,'') as obat_pulang,reg_periksa.kd_pj,penjab.png_jawab,"
+                                                 +
+                                                 "reg_periksa.umurdaftar,reg_periksa.sttsumur,pasien.pekerjaan,pasien.jk,pasien.tgl_lahir,concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab) as alamat, "
+                                                 +
+-                                                "resume_pasien_ranap.diagnosa_utama,resume_pasien_ranap.kd_diagnosa_utama,resume_pasien_ranap.diagnosa_sekunder,resume_pasien_ranap.kd_diagnosa_sekunder,resume_pasien_ranap.diagnosa_sekunder2,"
++                                                "IFNULL(resume_pasien_ranap.diagnosa_utama,'') as diagnosa_utama,IFNULL(resume_pasien_ranap.kd_diagnosa_utama,'') as kd_diagnosa_utama,IFNULL(resume_pasien_ranap.diagnosa_sekunder,'') as diagnosa_sekunder,IFNULL(resume_pasien_ranap.kd_diagnosa_sekunder,'') as kd_diagnosa_sekunder,IFNULL(resume_pasien_ranap.diagnosa_sekunder2,'') as diagnosa_sekunder2,"
+                                                 +
+-                                                "resume_pasien_ranap.kd_diagnosa_sekunder2,resume_pasien_ranap.diagnosa_sekunder3,resume_pasien_ranap.kd_diagnosa_sekunder3,resume_pasien_ranap.diagnosa_sekunder4,"
++                                                "IFNULL(resume_pasien_ranap.kd_diagnosa_sekunder2,'') as kd_diagnosa_sekunder2,IFNULL(resume_pasien_ranap.diagnosa_sekunder3,'') as diagnosa_sekunder3,IFNULL(resume_pasien_ranap.kd_diagnosa_sekunder3,'') as kd_diagnosa_sekunder3,IFNULL(resume_pasien_ranap.diagnosa_sekunder4,'') as diagnosa_sekunder4,"
+                                                 +
+-                                                "resume_pasien_ranap.kd_diagnosa_sekunder4,resume_pasien_ranap.prosedur_utama,resume_pasien_ranap.kd_prosedur_utama,resume_pasien_ranap.prosedur_sekunder,resume_pasien_ranap.kd_prosedur_sekunder,"
++                                                "IFNULL(resume_pasien_ranap.kd_diagnosa_sekunder4,'') as kd_diagnosa_sekunder4,IFNULL(resume_pasien_ranap.prosedur_utama,'') as prosedur_utama,IFNULL(resume_pasien_ranap.kd_prosedur_utama,'') as kd_prosedur_utama,IFNULL(resume_pasien_ranap.prosedur_sekunder,'') as prosedur_sekunder,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder,'') as kd_prosedur_sekunder,"
+                                                 +
+-                                                "resume_pasien_ranap.prosedur_sekunder2,resume_pasien_ranap.kd_prosedur_sekunder2,resume_pasien_ranap.prosedur_sekunder3,resume_pasien_ranap.kd_prosedur_sekunder3,resume_pasien_ranap.pemeriksaan_lain from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
++                                                "IFNULL(resume_pasien_ranap.prosedur_sekunder2,'') as prosedur_sekunder2,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder2,'') as kd_prosedur_sekunder2,IFNULL(resume_pasien_ranap.prosedur_sekunder3,'') as prosedur_sekunder3,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder3,'') as kd_prosedur_sekunder3,IFNULL(resume_pasien_ranap.pemeriksaan_lain,'') as pemeriksaan_lain from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                                                 +
+-                                                "inner join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
++                                                "left join resume_pasien_ranap on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat left join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
+                                                 +
+                                                 "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
+                                                 +
+                                                 "inner join penjab on penjab.kd_pj=reg_periksa.kd_pj " +
+-                                                "where resume_pasien_ranap.no_rawat='" + rs.getString("no_rawat") + "'")
++                                                "where reg_periksa.no_rawat='" + rs.getString("no_rawat") + "'")
+                                         .executeQuery();
+                                 if (rs2.next()) {
+                                     htmlContent.append(
+@@ -24203,20 +24209,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+ 
+         // 2. Jika kosong, fallback ke tindakan
+         if (prosedur == null || prosedur.trim().isEmpty()) {
+-            int offset = Integer.parseInt(prioritas) - 1;
+-
+-            // Untuk Prosedur Utama (prioritas=1): skip PEMERIKSAAN DOKTER kecuali tidak ada
+-            // tindakan lain
+-            if (prioritas.equals("1")) {
+-                prosedur = getTindakanRawatJalanExcludePemDr(noRawat, 0);
+-                // Jika tidak ada tindakan lain, baru ambil PEMERIKSAAN DOKTER
+-                if (prosedur == null || prosedur.trim().isEmpty()) {
+-                    prosedur = getTindakanRawatJalan(noRawat, 0);
+-                }
+-            } else {
+-                // Untuk Prosedur Sekunder: ambil semua termasuk PEMERIKSAAN DOKTER
+-                prosedur = getTindakanRawatJalan(noRawat, offset);
+-            }
++            prosedur = getTindakanRawatJalan(noRawat, prioritas);
+         }
+ 
+         return prosedur;
+@@ -24224,86 +24217,84 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
+ 
+     /**
+      * Ambil nama tindakan dari rawat_jl_dr, rawat_jl_pr, rawat_jl_drpr
+-     * TIDAK termasuk PEMERIKSAAN DOKTER
++     * dengan aturan prosedur utama tidak boleh PEMERIKSAAN DOKTER dan menghilangkan duplikasi tindakan
+      * 
+-     * @param noRawat nomor rawat pasien
+-     * @param offset  urutan tindakan (0=pertama, 1=kedua, dst)
+-     * @return nama tindakan/perawatan (excluding PEMERIKSAAN DOKTER)
++     * @param noRawat   nomor rawat pasien
++     * @param prioritasStr prioritas prosedur (1=utama, 2-4=sekunder)
++     * @return nama tindakan/perawatan
+      */
+-    private String getTindakanRawatJalanExcludePemDr(String noRawat, int offset) {
+-        String tindakan = "";
++    private String getTindakanRawatJalan(String noRawat, String prioritasStr) {
++        int prioritas = Integer.parseInt(prioritasStr);
++        java.util.List<String> tindakans = new java.util.ArrayList<>();
+         try {
++            // Query gabungan untuk mendapatkan list tindakan unik, dengan "PEMERIKSAAN DOKTER"
+             ResultSet rsTindakan = koneksi.prepareStatement(
+                     "SELECT nm_perawatan FROM (" +
+-                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_dr.tgl_perawatan, rawat_jl_dr.jam_rawat " +
++                            "  SELECT jns_perawatan.nm_perawatan, MIN(rawat_jl_dr.tgl_perawatan) as tgl, MIN(rawat_jl_dr.jam_rawat) as jam " +
+                             "  FROM rawat_jl_dr " +
+                             "  INNER JOIN jns_perawatan ON rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+-                            "  WHERE rawat_jl_dr.no_rawat='" + noRawat
+-                            + "' AND jns_perawatan.nm_perawatan NOT LIKE '%PEMERIKSAAN DOKTER%' " +
++                            "  WHERE rawat_jl_dr.no_rawat='" + noRawat + "' GROUP BY jns_perawatan.nm_perawatan " +
+                             "  UNION ALL " +
+-                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_pr.tgl_perawatan, rawat_jl_pr.jam_rawat " +
++                            "  SELECT jns_perawatan.nm_perawatan, MIN(rawat_jl_pr.tgl_perawatan) as tgl, MIN(rawat_jl_pr.jam_rawat) as jam " +
+                             "  FROM rawat_jl_pr " +
+                             "  INNER JOIN jns_perawatan ON rawat_jl_pr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+-                            "  WHERE rawat_jl_pr.no_rawat='" + noRawat
+-                            + "' AND jns_perawatan.nm_perawatan NOT LIKE '%PEMERIKSAAN DOKTER%' " +
++                            "  WHERE rawat_jl_pr.no_rawat='" + noRawat + "' GROUP BY jns_perawatan.nm_perawatan " +
+                             "  UNION ALL " +
+-                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_drpr.tgl_perawatan, rawat_jl_drpr.jam_rawat "
+-                            +
++                            "  SELECT jns_perawatan.nm_perawatan, MIN(rawat_jl_drpr.tgl_perawatan) as tgl, MIN(rawat_jl_drpr.jam_rawat) as jam " +
+                             "  FROM rawat_jl_drpr " +
+                             "  INNER JOIN jns_perawatan ON rawat_jl_drpr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+-                            "  WHERE rawat_jl_drpr.no_rawat='" + noRawat
+-                            + "' AND jns_perawatan.nm_perawatan NOT LIKE '%PEMERIKSAAN DOKTER%' " +
+-                            ") AS combined ORDER BY tgl_perawatan, jam_rawat LIMIT 1 OFFSET " + offset)
+-                    .executeQuery();
+-            if (rsTindakan.next()) {
+-                tindakan = rsTindakan.getString("nm_perawatan");
+-            }
+-            rsTindakan.close();
+-        } catch (Exception e) {
+-            System.out.println("Error getTindakanRawatJalanExcludePemDr: " + e);
+-        }
+-        return tindakan;
+-    }
+-
+-    /**
+-     * Ambil nama tindakan dari rawat_jl_dr, rawat_jl_pr, rawat_jl_drpr
+-     * dengan offset tertentu untuk urutan prosedur
+-     * 
+-     * @param noRawat nomor rawat pasien
+-     * @param offset  urutan tindakan (0=pertama, 1=kedua, dst)
+-     * @return nama tindakan/perawatan
+-     */
+-    private String getTindakanRawatJalan(String noRawat, int offset) {
+-        String tindakan = "";
+-        try {
+-            // Query gabungan dari 3 tabel tindakan rawat jalan
+-            ResultSet rsTindakan = koneksi.prepareStatement(
+-                    "SELECT nm_perawatan FROM (" +
+-                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_dr.tgl_perawatan, rawat_jl_dr.jam_rawat " +
+-                            "  FROM rawat_jl_dr " +
+-                            "  INNER JOIN jns_perawatan ON rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+-                            "  WHERE rawat_jl_dr.no_rawat='" + noRawat + "' " +
++                            "  WHERE rawat_jl_drpr.no_rawat='" + noRawat + "' GROUP BY jns_perawatan.nm_perawatan " +
+                             "  UNION ALL " +
+-                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_pr.tgl_perawatan, rawat_jl_pr.jam_rawat " +
+-                            "  FROM rawat_jl_pr " +
+-                            "  INNER JOIN jns_perawatan ON rawat_jl_pr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+-                            "  WHERE rawat_jl_pr.no_rawat='" + noRawat + "' " +
++                            "  SELECT paket_operasi.nm_perawatan, MIN(operasi.tgl_operasi) as tgl, '00:00:00' as jam " +
++                            "  FROM operasi " +
++                            "  INNER JOIN paket_operasi ON operasi.kode_paket=paket_operasi.kode_paket " +
++                            "  WHERE operasi.no_rawat='" + noRawat + "' GROUP BY paket_operasi.nm_perawatan " +
+                             "  UNION ALL " +
+-                            "  SELECT jns_perawatan.nm_perawatan, rawat_jl_drpr.tgl_perawatan, rawat_jl_drpr.jam_rawat "
+-                            +
+-                            "  FROM rawat_jl_drpr " +
+-                            "  INNER JOIN jns_perawatan ON rawat_jl_drpr.kd_jenis_prw=jns_perawatan.kd_jenis_prw " +
+-                            "  WHERE rawat_jl_drpr.no_rawat='" + noRawat + "' " +
+-                            ") AS combined ORDER BY tgl_perawatan, jam_rawat LIMIT 1 OFFSET " + offset)
++                            "  SELECT tambahan_biaya.nama_biaya as nm_perawatan, MIN(reg_periksa.tgl_registrasi) as tgl, MIN(reg_periksa.jam_reg) as jam " +
++                            "  FROM tambahan_biaya " +
++                            "  INNER JOIN reg_periksa ON tambahan_biaya.no_rawat=reg_periksa.no_rawat " +
++                            "  WHERE tambahan_biaya.no_rawat='" + noRawat + "' GROUP BY tambahan_biaya.nama_biaya " +
++                            "  UNION ALL " +
++                            "  SELECT jns_perawatan_radiologi.nm_perawatan, MIN(periksa_radiologi.tgl_periksa) as tgl, MIN(periksa_radiologi.jam) as jam " +
++                            "  FROM periksa_radiologi " +
++                            "  INNER JOIN jns_perawatan_radiologi ON periksa_radiologi.kd_jenis_prw=jns_perawatan_radiologi.kd_jenis_prw " +
++                            "  WHERE periksa_radiologi.no_rawat='" + noRawat + "' GROUP BY jns_perawatan_radiologi.nm_perawatan " +
++                            "  UNION ALL " +
++                            "  SELECT billing.nm_perawatan, MIN(billing.tgl_byr) as tgl, '00:00:00' as jam " +
++                            "  FROM billing " +
++                            "  WHERE billing.no_rawat='" + noRawat + "' AND billing.status IN ('Ralan Dokter', 'Ralan Paramedis', 'Ralan Dokter Paramedis', 'Operasi', 'Tambahan', 'Radiologi') GROUP BY billing.nm_perawatan " +
++                            ") AS combined GROUP BY nm_perawatan " +
++                            "ORDER BY CASE WHEN nm_perawatan LIKE '%PEMERIKSAAN DOKTER%' THEN 1 ELSE 0 END, MIN(tgl), MIN(jam)")
+                     .executeQuery();
+-            if (rsTindakan.next()) {
+-                tindakan = rsTindakan.getString("nm_perawatan");
++            while (rsTindakan.next()) {
++                tindakans.add(rsTindakan.getString("nm_perawatan"));
+             }
+             rsTindakan.close();
+         } catch (Exception e) {
+             System.out.println("Error getTindakanRawatJalan: " + e);
+         }
+-        return tindakan;
++
++        if (tindakans.isEmpty()) return "";
++
++        if (prioritas == 1) {
++            String utama = tindakans.get(0);
++            if (utama.toUpperCase().contains("PEMERIKSAAN DOKTER")) {
++                return ""; // Kosongkan jika satu-satunya tindakan adalah pemeriksaan dokter
++            }
++            return utama;
++        } else {
++            int offset = prioritas - 1;
++            if (offset < tindakans.size()) {
++                String sekunder = tindakans.get(offset);
++                // Jika satu-satunya tindakan adalah Pemeriksaan Dokter (artinya utama dikosongkan),
++                // maka "Pemeriksaan Dokter" ini tidak perlu dimunculkan lagi di sekunder.
++                if (tindakans.get(0).toUpperCase().contains("PEMERIKSAAN DOKTER")) {
++                    return "";
++                }
++                return sekunder;
++            }
++        }
++        return "";
+     }
+ 
+     // ==================== LAZY LOADING GETTERS ====================

@@ -1,0 +1,929 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="groovy" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SuratPersetujuanUmum_F4_Split" pageWidth="612" pageHeight="936" columnWidth="592" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="7435c0f7-de74-4940-ae33-c2370e46f8e7">
+	<property name="ireport.zoom" value="1.5" />
+	<property name="ireport.x" value="0" />
+	<property name="ireport.y" value="0" />
+	<parameter name="namars" class="java.lang.String" />
+	<parameter name="alamatrs" class="java.lang.String" />
+	<parameter name="kotars" class="java.lang.String" />
+	<parameter name="propinsirs" class="java.lang.String" />
+	<parameter name="kontakrs" class="java.lang.String" />
+	<parameter name="emailrs" class="java.lang.String" />
+	<parameter name="logo" class="java.io.InputStream" />
+	<parameter name="photo" class="java.lang.String" />
+	<queryString>
+		select surat_persetujuan_umum.no_surat,reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,
+				reg_periksa.sttsumur,pasien.jk,pasien.tgl_lahir,surat_persetujuan_umum.tanggal,surat_persetujuan_umum.pengobatan_kepada,
+				pasien.tmp_lahir,pasien.no_tlp,concat(trim(pasien.alamat),', ',trim(kelurahan.nm_kel),', ',trim(kecamatan.nm_kec),', ',trim(kabupaten.nm_kab),', ',trim(propinsi.nm_prop)) as alamat,
+				pasien.agama, pasien.pnd, pasien.pekerjaan,
+				surat_persetujuan_umum.nilai_kepercayaan,surat_persetujuan_umum.nama_pj,surat_persetujuan_umum.umur_pj,surat_persetujuan_umum.no_ktppj,
+				surat_persetujuan_umum.jkpj,surat_persetujuan_umum.bertindak_atas,surat_persetujuan_umum.no_telp,surat_persetujuan_umum.nip,
+				surat_persetujuan_umum.alamat_pj, surat_persetujuan_umum.pekerjaan_pj,
+				petugas.nama,penjab.png_jawab,
+				surat_persetujuan_umum.privasi_akses,surat_persetujuan_umum.privasi_khusus,
+				surat_persetujuan_umum.alasan_tolak_bpjs,surat_persetujuan_umum.asuransi_swasta,
+				surat_persetujuan_umum.no_kartu_asuransi,surat_persetujuan_umum.no_jkn_jasa_raharja,
+				surat_persetujuan_umum.hak_kelas,surat_persetujuan_umum.pilihan_kamar,
+				surat_persetujuan_umum.alasan_naik_kelas from surat_persetujuan_umum 
+				inner join reg_periksa on surat_persetujuan_umum.no_rawat=reg_periksa.no_rawat 
+				inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis 
+				inner join petugas on surat_persetujuan_umum.nip=petugas.nip
+				inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel 
+				inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec 
+				inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab 
+				inner join propinsi on pasien.kd_prop=propinsi.kd_prop
+				inner join penjab on reg_periksa.kd_pj=penjab.kd_pj
+	</queryString>
+	<field name="no_surat" class="java.lang.String" />
+	<field name="no_rawat" class="java.lang.String" />
+	<field name="no_rkm_medis" class="java.lang.String" />
+	<field name="nm_pasien" class="java.lang.String" />
+	<field name="jk" class="java.lang.String" />
+	<field name="tgl_lahir" class="java.sql.Date" />
+	<field name="tmp_lahir" class="java.lang.String" />
+	<field name="no_tlp" class="java.lang.String" />
+	<field name="umurdaftar" class="java.lang.Integer" />
+	<field name="sttsumur" class="java.lang.String" />
+	<field name="tanggal" class="java.sql.Date" />
+	<field name="nama_pj" class="java.lang.String" />
+	<field name="umur_pj" class="java.lang.String" />
+	<field name="no_ktppj" class="java.lang.String" />
+	<field name="jkpj" class="java.lang.String" />
+	<field name="bertindak_atas" class="java.lang.String" />
+	<field name="no_telp" class="java.lang.String" />
+	<field name="nip" class="java.lang.String" />
+	<field name="nama" class="java.lang.String" />
+	<field name="alamat" class="java.lang.String" />
+	<field name="agama" class="java.lang.String" />
+	<field name="pnd" class="java.lang.String" />
+	<field name="pekerjaan" class="java.lang.String" />
+	<field name="alamat_pj" class="java.lang.String" />
+	<field name="pekerjaan_pj" class="java.lang.String" />
+	<field name="nilai_kepercayaan" class="java.lang.String" />
+	<field name="pengobatan_kepada" class="java.lang.String" />
+	<field name="png_jawab" class="java.lang.String" />
+	<field name="privasi_akses" class="java.lang.String" />
+	<field name="privasi_khusus" class="java.lang.String" />
+	<field name="informasi_biaya" class="java.lang.String" />
+	<field name="keluarga_1" class="java.lang.String" />
+	<field name="keluarga_2" class="java.lang.String" />
+	<field name="jenis_pembiayaan" class="java.lang.String" />
+	<field name="alasan_tolak_bpjs" class="java.lang.String" />
+	<field name="alasan_tolak_bpjs_kerja" class="java.lang.String" />
+	<field name="alasan_tolak_jasa_raharja" class="java.lang.String" />
+	<field name="asuransi_swasta" class="java.lang.String" />
+	<field name="no_kartu_asuransi" class="java.lang.String" />
+	<field name="no_jkn_jasa_raharja" class="java.lang.String" />
+	<field name="hak_kelas" class="java.lang.String" />
+	<field name="pilihan_kamar" class="java.lang.String" />
+	<field name="alasan_naik_kelas" class="java.lang.String" />
+	<background>
+		<band splitType="Stretch" />
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="0" y="0" width="48" height="45" uuid="1a2b3c4d-5e6f-7890-1234-567890abcdef" />
+				<imageExpression>$P{logo}</imageExpression>
+			</image>
+			<textField>
+				<reportElement x="48" y="0" width="544" height="20" uuid="2b3c4d5e-6f78-9012-3456-7890abcdef12" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="14" isBold="true" />
+					<paragraph lineSpacing="Single" />
+				</textElement>
+				<textFieldExpression>$P{namars}</textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="20" width="544" height="12" uuid="3c4d5e6f-7890-1234-5678-90abcdef1234" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8" />
+					<paragraph lineSpacing="Single" />
+				</textElement>
+				<textFieldExpression>$P{alamatrs}+", "+$P{kotars}+", "+$P{propinsirs}</textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="32" width="544" height="12" uuid="4d5e6f78-9012-3456-7890-abcdef123456" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8" />
+					<paragraph lineSpacing="Single" />
+				</textElement>
+				<textFieldExpression>$P{kontakrs}</textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="46" width="592" height="1" uuid="5e6f7890-1234-5678-90ab-cdef12345678" />
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double" />
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="48" width="592" height="12" uuid="6f789012-3456-7890-abcd-ef1234567890" />
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="9" isBold="true" isUnderline="true" />
+					<paragraph lineSpacing="Single" />
+				</textElement>
+				<text>PERSETUJUAN UMUM (GENERAL CONSENT)</text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="155">
+			<staticText>
+				<reportElement x="0" y="0" width="592" height="11" uuid="78901234-5678-90ab-cdef-1234567890ab" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>IDENTITAS PASIEN</text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="11" width="90" height="11" uuid="89012345-6789-0abc-def1-234567890abc" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Nama (Sesuai KTP)</text>
+			</staticText>
+			<textField>
+				<reportElement x="105" y="11" width="290" height="11" uuid="90123456-7890-abcd-ef12-34567890abcd" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{nm_pasien}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="11" width="50" height="11" uuid="01234567-89ab-cdef-0123-456789abcdef" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>JK / No.RM</text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="11" width="137" height="11" uuid="12345678-9abc-def0-1234-56789abcdef0" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + ($F{jk}.equals("L")?"Lk":"Pr") + " / " + $F{no_rkm_medis}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="22" width="90" height="11" uuid="234567ab-cdef-0123-4567-0089abcdef01" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Tempat &amp; Tgl Lahir</text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="105" y="22" width="290" height="11" uuid="34567890-bcde-f012-3456-789abcdef012" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{tmp_lahir}.trim() + ", " + new SimpleDateFormat("dd-MM-yyyy").format($F{tgl_lahir})</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="22" width="50" height="11" uuid="e0e1e2e3-e4e5-e6e7-e8e9-eaebecedeeef" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>No. Telp</text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="22" width="137" height="11" uuid="f0f1f2f3-f4f5-f6f7-f8f9-fafbfcfdfeff" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{no_tlp}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="33" width="90" height="11" uuid="45678901-cdef-0123-4567-89abcdef0123" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Alamat (Sesuai KTP)</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="105" y="33" width="487" height="11" uuid="56789012-def0-1234-5678-9abcdef01234" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{alamat}.trim()</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="44" width="90" height="11" uuid="67890123-ef01-2345-6789-abcdef012345" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Agama / Pendidikan</text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="105" y="44" width="290" height="11" uuid="78901234-f012-3456-7890-bcdef0123456" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{agama} + " / " + $F{pnd}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="55" width="90" height="11" uuid="89012345-0123-4567-8901-cdef01234567" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Pekerjaan</text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="105" y="55" width="290" height="11" uuid="90123456-1234-5678-9012-def012345678" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{pekerjaan}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="68" width="592" height="11" uuid="01234567-2345-6789-0123-ef0123456789" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>IDENTITAS PENANGGUNG JAWAB PASIEN</text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="79" width="90" height="11" uuid="12345678-3456-7890-1234-f01234567890" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Nama (Sesuai KTP)</text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="105" y="79" width="290" height="11" uuid="23456789-4567-8901-2345-012345678901" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{nama_pj}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="400" y="79" width="50" height="11" uuid="34567890-5678-9012-3456-123456789012" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>JK / Hub</text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="455" y="79" width="137" height="11" uuid="45678901-6789-0123-4567-234567890123" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + ($F{jkpj}.equals("L")?"Lk":"Pr") + " / " + $F{bertindak_atas}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="90" width="90" height="11" uuid="56789012-7890-1234-5678-345678901234" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Umur</text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="105" y="90" width="290" height="11" uuid="67890123-8901-2345-6789-456789012345" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{umur_pj} + " Tahun"</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="101" width="90" height="11" uuid="78901234-9012-3456-7890-567890123456" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Alamat (Sesuai KTP)</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="105" y="101" width="487" height="11" uuid="89012345-0123-4567-8901-678901234567" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{alamat_pj}.trim()</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="112" width="90" height="11" uuid="90123456-1234-5678-9012-789012345678" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Pekerjaan</text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="105" y="112" width="290" height="11" uuid="01234567-2345-6789-0123-890123456789" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{pekerjaan_pj}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="400" y="112" width="50" height="11" uuid="12345678-3456-7890-1234-901234567890" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>No. HP</text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="455" y="112" width="137" height="11" uuid="23456789-4567-8901-2345-012345678901" />
+				<textElement>
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>": " + $F{no_telp}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="135" width="592" height="12" uuid="34567890-5678-9012-3456-123456789012" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Selaku pasien / orang tua pasien / suami pasien / istri pasien / keluarga pasien (coret yang tidak perlu) dari pasien tersebut diatas, dengan ini MENYATAKAN Persetujuan:</text>
+			</staticText>
+		</band>
+		<band height="207">
+			<staticText>
+				<reportElement x="0" y="0" width="592" height="12" uuid="a1b2c3d4-e5f6-7890-1234-567890123456" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>1. PERSETUJUAN UNTUK PERAWATAN DAN PENGOBATAN</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="12" width="580" height="48" uuid="c1d2e3f4-a5b6-7890-1234-567890123456" />
+				<textElement textAlignment="Justified" markup="none">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"a. Saya mengetahui bahwa saya memiliki kondisi yang membutuhkan perawatan medis, saya mengijinkan dokter dan profesional kesehatan lainnya untuk melakukan prosedur diagnostik, elektrokardiogram dan untuk memberikan pengobatan medis seperti yang diperlukan dalam penilaian profesional mereka.\n\n"+
+"b. Saya mengijinkan prosedur diagnostik dan perawatan medis termasuk terapi tidak terbatas pada elektrokardiogram, x-ray, tes darah, terapi fisik dan pemberian obat-obatan.\n\n"+
+"c. Saya sadar bahwa praktik kedokteran dan bedah bukanlah ilmu pasti dan saya mengakui tidak ada jaminan atas hasil apapun terhadap prosedur atau pemeriksaan apapun yang dilakukan kepada saya."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="72" width="565" height="12" uuid="12345678-90ab-cdef-1234-567890abcdef" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya mengerti dan memahami bahwa :\n\n"+
+"-  Saya memiliki hak untuk mengajukan pertanyaan tentang pengobatan yang diusulkan (termasuk identitas setiap orang yang memberikan atau mengamati pengobatan) setiap saat.\n\n"+
+"-  Saya mengerti dan memahami bahwa saya memiliki hak untuk persetujuan atau menolak persetujuan untuk setiap prosedur/tindakan.\n\n"+
+"-  Saya mengerti bahwa banyak dokter pada staf medis rumah sakit yang bukan karyawan tetap staf tamu yang telah diberikan hak untuk menggunakan fasilitas untuk perawatan dan pengobatan pasien mereka."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="84" width="565" height="12" uuid="34567890-abcd-ef12-3456-7890abcdef12" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Melalui dokumen ini, saya menegaskan kembali bahwa saya mempercayakan kepada semua tenaga kesehatan rumah sakit untuk memberikan perawatan, diagnostik, dan terapi kepada saya sebagai pasien rawat inap atau rawat jalan atau instalasi gawat darurat (IGD), termasuk semua pemeriksaan penunjang, yang dibutuhkan untuk pengobatan dan tindakan yang aman."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="101" width="592" height="12" uuid="45678901-bcde-f123-4567-890abcdef123" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>2. PERSETUJUAN PELEPASAN INFORMASI</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="113" width="580" height="12" uuid="e649920b-230e-45f7-aa39-d527155a3a46" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"a. " + ("Saya memahami informasi yang ada dalam diri saya termasuk diagnosa, hasil laboratorium dan hasil tes diagnostik yang akan digunakan untuk perawatan medis "+$P{namars}+" akan menjamin kerahasiaannya.")</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="125" width="580" height="12" uuid="4ada8cfd-7685-4d86-8233-cd7772b29591" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"b. " + ("Saya memberi wewenang kepada "+$P{namars}+" untuk memberikan informasi tentang diagnosa, hasil pelayanan dan pengobatan bila diperlukan untuk memproses klaim asuransi/ Jamkesmas/Jamkesda/Perusahaan atau lembaga pemerintah.")</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="137" width="580" height="12" uuid="beb1d31c-8000-404d-9e73-e78881bcc808" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"c. " + ("Saya memberi wewenang kepada "+$P{namars}+" untuk memberikan informasi tentang diagnosa, hasil pelayanan dan pengobatan saya kepada anggota keluarga saya, kepada:\n\n"+
+"1. " + ($F{keluarga_1}.trim().equals("") ? "............................................................." : $F{keluarga_1}.trim()) + "\n"+
+"2. " + ($F{keluarga_2}.trim().equals("") ? "............................................................." : $F{keluarga_2}.trim()))</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="149" width="580" height="12" uuid="79623836-5200-40f1-b4b5-5134fbefd679" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"d. Saya mengetahui dan menyetujui bahwa berdasarkan Peraturan Menteri Kesehatan No. 24 Tahun 2022 tentang Rekam Medis, fasilitas pelayanan kesehatan wajib membuka akses dan mengirim data rekam medis kepada Kementrian Kesehatan melalui Platform SATUSEHAT."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="161" width="580" height="12" uuid="026d6aa4-356e-4d98-96b5-6b18c5bed459" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"e. Menyetujui untuk menerima dan membuka data pasien dari Fasilitas Pelayanan Kesehatan lainnya melalui SATUSEHAT untuk kepentingan pelayanan kesehatan dan/atau rujukan."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="178" width="592" height="12" uuid="56789012-6789-0123-4567-123456789012" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>3. PRIVASI</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="190" width="580" height="12" uuid="67890123-7890-1234-5678-234567890123" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya " + ($F{privasi_akses}.trim() == null ? "mengijinkan/tidak mengijinkan" : $F{privasi_akses}.trim()) + " kepada "+$P{namars}+" memberi akses bagi keluarga dan handai taulan serta orang-orang yang akan menengok/menemui saya.\n\n"+
+"Saya " + ($F{privasi_khusus}.trim() == null ? "menginginkan/tidak menginginkan" : $F{privasi_khusus}.trim()) + " privasi khusus."</textFieldExpression>
+			</textField>
+		</band>
+		<band height="250">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="592" height="12" uuid="78901234-8901-2345-6789-345678901234" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>4. BARANG-BARANG MILIK PASIEN</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="12" width="580" height="12" uuid="89012345-9012-3456-7890-456789012345" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya telah memahami tata tertib "+$P{namars}+" bahwa saya dilarang membawa barang berharga, alat elektronik, karena jika terjadi kehilangan rumah sakit tidak bertanggung jawab kecuali jika saya menitipkan barang berharga saya ke rumah sakit dengan mengisi formulir penitipan dan pengambilan harta benda."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="29" width="592" height="12" uuid="90123456-0123-4567-8901-567890123456" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>5. HAK DAN KEWAJIBAN PASIEN</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="41" width="580" height="12" uuid="01234567-1234-5678-9012-678901234567" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Dengan menandatangani dokumen ini saya mengakui bahwa pada proses pendaftaran untuk mendapatkan perawatan di "+$P{namars}+" telah mendapatkan informasi tentang hak-hak dan kewajiban saya sebagai pasien sebagaimana tercantum pada Undang-Undang No. 44 Tahun 2009 tentang Hak Pasien dan Kewajiban Pasien (Terlampir)."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="58" width="592" height="12" uuid="12345678-2345-6789-0123-789012345678" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>6. RAHASIA MEDIS</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="70" width="580" height="12" uuid="23456789-3456-7890-1234-890123456789" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya setuju "+$P{namars}+" wajib menjamin kerahasiaan informasi medis saya baik untuk kepentingan perawatan dan pengobatan, pendidikan maupun penelitian kecuali saya mengungkapkan sendiri orang yang lain yang saya beri kuasa untuk itu."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="87" width="592" height="12" uuid="34567890-4567-8901-2345-901234567890" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>7. PENGAJUAN KELUHAN</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="99" width="580" height="12" uuid="45678901-5678-9012-3456-012345678901" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya menyatakan bahwa saya telah menerima informasi tentang adanya tatacara mengajukan dan mengatasi keluhan terkait pelayanan medik yang diberikan terhadap diri saya. Saya setuju untuk mengikuti tata cara mengajukan keluhan sesuai prosedur yang ada."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="116" width="592" height="12" uuid="56789012-6789-0123-4567-123456789012" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>8. PELAYANAN KEROHANIAN</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="128" width="580" height="12" uuid="67890123-7890-1234-5678-234567890123" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya memahami informasi bahwa selama perawatan di ruang rawat inap akan diberikan satu kali pelayanan kerohanian sesuai dengan agama "+$F{agama}+" yang saya anut kecuali bila saya non muslim, saya akan mengajukan permintaan pelayanan kerohanian kepada "+$P{namars}+"."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="145" width="592" height="12" uuid="78901234-8901-2345-6789-345678901234" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>9. IDENTIFIKASI NILAI-NILAI DAN KEPERCAYAAN</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="157" width="580" height="12" uuid="89012345-9012-3456-7890-456789012345" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya / Pasien memohon kepada "+$P{namars}+" agar tidak memberikan terapi atau melakukan tindakan yang bertentangan dengan nilai-nilai akan kepercayaan saya / pasien."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="174" width="592" height="12" uuid="90123456-0123-4567-8901-567890123456" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>10. INFORMASI RAWAT JALAN / RAWAT INAP</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="186" width="580" height="12" uuid="5826f095-2cb1-4161-916c-4fc4d38c0aaa" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"a. Saya/pasien tidak diperkenankan untuk membawa barang berharga keruang rawat jalan/inap dan saya memahami bahwa "+$P{namars}+" tidak bertanggungjawab apabila terjadi kehilangan barang milik pasien/pengunjung."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="198" width="580" height="12" uuid="be1e1873-f41b-4e69-bfe8-dd4ef4eb2edd" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"b. Bila tidak ada anggota keluarga, rumah sakit menyediakan tempat penitipan barang milik pasien ditempat resmi yang telah disediakan oleh "+$P{namars}+"."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="210" width="580" height="12" uuid="e880680b-78c4-421c-881f-bf25df54ba50" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"c. Saya telah menerima informasi tentang peraturan yang diberlakukan oleh "+$P{namars}+" dan saya beserta keluarga bersedia mematuhinya, termasuk akan mematuhi jam berkunjung pasien sesuai dengan aturan "+$P{namars}+"."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="222" width="580" height="12" uuid="33b788b3-0068-4e93-8988-cbf8d8e40e13" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"d. Anggota keluarga yang menunggu saya, bersedia untuk selalu memakai tanda pengenal khusus yang diberikan "+$P{namars}+", demi keamanan seluruh pasien setiap keluarga dan siapapun yang mengunjungi saya diluar jam berkunjung, bersedia untuk diminta/diperiksa identitasnya dan memakai identitas yang diberikan oleh "+$P{namars}+"."</textFieldExpression>
+			</textField>
+		</band>
+								<band height="669">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="592" height="12" uuid="77a1e1c0-7b64-42f2-bae2-3e6f9feed0da" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>11. INFORMASI BIAYA</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="13" width="580" height="12" uuid="0226345f-700e-45d1-bf8b-20c03f8c01e1" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya memahami dan menyetujui tentang informasi biaya pengobatan ataupun tindakan yang telah dijelaskan oleh petugas sesuai dengan peraturan "+$P{namars}+" :"</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="27" y="26" width="565" height="12" uuid="af6275cc-4747-40d2-8f36-4da53ad344ee" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>Pasien Rawat Jalan</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="37" y="39" width="555" height="12" uuid="ae061116-0ce8-468e-b01b-84be553eb640" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{informasi_biaya}!=null &amp;&amp; $F{informasi_biaya}.toUpperCase().contains("RAWAT JALAN") ? "[ v ]" : "[   ]") + " Saat mendaftar di Instalasi Rawat Jalan, wajib melengkapi persyaratan jaminan pembayaran "+$P{namars}</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="27" y="52" width="565" height="12" uuid="fe682335-e445-454a-92c7-b0b5d504065a" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>Pasien Rawat Inap</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="37" y="65" width="555" height="12" uuid="1cb74446-782e-425b-8230-83a719b93c90" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"\u2610 Bersedia melengkapi persyaratan jaminan pembayaran dalam waktu 1 x 24 jam terhitung sejak hari, tanggal dan jam masuk di "+$P{namars}+".\nApabila dalam tempo waktu yang telah ditetapkan, tidak dapat menyatakan jaminan BPJS maka bersedia menjadi pasien umum"</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="27" y="78" width="565" height="12" uuid="e9d065f3-1df5-4698-b927-f409921935a3" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>Pasien Instalasi Gawat Darurat</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="37" y="91" width="555" height="12" uuid="e25629cf-088e-4c21-9f10-d1eea78beac1" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{informasi_biaya}!=null &amp;&amp; $F{informasi_biaya}.toUpperCase().contains("GAWAT DARURAT") ? "[ v ]" : "[   ]") + " Bagi pasien BPJS yang masuk melalui IGD, apabila hasil skrining awal tidak memenuhi kriteria Gawat Darurat, bersedia untuk membayar biaya perawatan dan terdaftar sebagai pasien umum."</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="104" width="592" height="12" uuid="18b51978-ae69-478c-889a-1d29d3567064" />
+				<textElement>
+					<font fontName="Tahoma" size="8" isBold="true" />
+				</textElement>
+				<text>12. KEWAJIBAN PEMBAYARAN</text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="117" width="580" height="12" uuid="814ab0bb-8b54-433b-8fb2-a9c5797d030f" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya menyatakan setuju, baik sebagai wali atau sebagai pasien, bahwa sesuai pertimbangan pelayanan yang diberikan kepada pasien, maka saya wajib untuk membayar total biaya pelayanan. Biaya pelayanan berdasarkan acuan biaya dan ketentuan "+$P{namars}+". Apabila asuransi kesehatan swasta atau program pemerintah menanggung pembiayaan saya, saya memberi wewenang kepada rumah sakit untuk memberi tagihan dari semua pelayanan dan tindakan medis yang diberikan, Tanggungan asuransi saya mungkin menyatakan bahwa sebagian pembayaran tetap menjadi tanggung jawab pribadi saya atau tidak ditanggung oleh asuransi, maka rumah sakit berwenang memberi tagihan untuk biaya yang tidak ditanggung oleh asuransi dan saya bertanggung jawab untuk membayarnya."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="130" width="580" height="12" uuid="b98e4183-dbe1-4fdd-9c12-76f2987d3638" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"a. Apabila saya tidak memberikan persetujuan, atau dikemudian hari mencabut persetujuan saya untuk melepas rahasia kedokteran saya kepada perusahaan asuransi yang saya tentukan, maka saya pribadi bertanggung jawab untuk membayar semua pelayanan dan tindakan medis dari "+$P{namars}+"."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="143" width="580" height="12" uuid="0a9f23e6-8f1c-4d5a-8491-9da7e2149c71" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"b. Apabila rumah sakit membutuhkan proses hukum untuk menagih biaya pelayan rumah sakit dari saya, saya memahami bahwa saya bertanggung jawab untuk membayar semua biaya yang disebabkan dari proses hukum tersebut."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="156" width="580" height="12" uuid="9310ffdd-4310-4309-8c68-f2da28e1b106" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Dengan ini menyatakan BERSEDIA membayar seluruh biaya pelayanan atau selisih di luar pertanggung jawaban jaminan kesehatan sesuai dengan ketentuan "+$P{namars}+" yang terjadi atas diri pasien dengan cara pembayaran sebagai berikut :"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="169" width="580" height="12" uuid="3cf636e3-cdf9-4645-b580-02bd9f56ad1b" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("UMUM") ? "[ v ]" : "[   ]") + " UMUM"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="182" width="565" height="12" uuid="ef3314f0-c518-473c-a8b9-456d48f820d3" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("UMUM") ? "[ v ]" : "[   ]") + " Saya telah mendapatkan penjelasan manfaat/ jaminan kesehatan dan MENOLAK untuk menggunakan jaminan kesehatan."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="42" y="195" width="550" height="12" uuid="b88f516a-317c-4f5d-ac12-afa51248dd7a" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"BPJS Kesehatan, alasan " + ($F{alasan_tolak_bpjs}==null ? "" : $F{alasan_tolak_bpjs})</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="42" y="208" width="550" height="12" uuid="3b1ff4e3-c256-4178-a667-d1ccf99bb01a" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"BPJS Ketenagakerjaan, alasan " + ($F{alasan_tolak_bpjs_kerja}==null ? "" : $F{alasan_tolak_bpjs_kerja})</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="42" y="221" width="550" height="12" uuid="507359fb-81dd-48e0-9091-7ff04693315f" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Jasa Raharja, alasan " + ($F{alasan_tolak_jasa_raharja}==null ? "" : $F{alasan_tolak_jasa_raharja})</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="234" width="580" height="12" uuid="18340084-a653-45b4-b42f-debea4b10eaa" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("ASURANSI") ? "[ v ]" : "[   ]") + " ASURANSI SWASTA"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="247" width="565" height="12" uuid="6982da28-dfe6-472b-8bc4-0434b44fed45" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Nama Perusahaan Asuransi " + ($F{asuransi_swasta}==null ? "" : $F{asuransi_swasta})</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="260" width="565" height="12" uuid="2a13d806-e3e2-49e9-9706-40352b850e1c" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"No. Kartu Peserta " + ($F{no_kartu_asuransi}==null ? "" : $F{no_kartu_asuransi})</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="273" width="580" height="12" uuid="3714fbce-ab3c-431d-b0ef-612409a079d0" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("JASA RAHARJA") ? "[ v ]" : "[   ]") + " JASA RAHARJA"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="286" width="580" height="12" uuid="01d10cf5-9b82-45cd-9f0c-dd7a73e576e3" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("KETENAGAKERJAAN") ? "[ v ]" : "[   ]") + " BPJS Ketenagakerjaan"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="299" width="565" height="12" uuid="32c796c5-39b9-44d9-8b66-a1bbf16ad113" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"No. Kartu Peserta " + ($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("KETENAGAKERJAAN") &amp;&amp; $F{no_jkn_jasa_raharja}!=null &amp;&amp; !$F{no_jkn_jasa_raharja}.equals("-") ? $F{no_jkn_jasa_raharja} : "")</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="312" width="580" height="12" uuid="6acc27a4-44d2-44d1-a0e8-86ca335ac7eb" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("BPJS KESEHATAN") ? "[ v ]" : "[   ]") + " BPJS Kesehatan"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="325" width="565" height="12" uuid="eef11bea-56fc-487a-831e-52a22a7bf573" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"No. Kartu Peserta " + ($F{jenis_pembiayaan}!=null &amp;&amp; $F{jenis_pembiayaan}.toUpperCase().contains("BPJS KESEHATAN") &amp;&amp; $F{no_jkn_jasa_raharja}!=null &amp;&amp; !$F{no_jkn_jasa_raharja}.equals("-") ? $F{no_jkn_jasa_raharja} : "")</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="338" width="565" height="12" uuid="cc41e1c3-b988-4897-833e-64e5984316c7" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Hak Kelas Perawatan " + ($F{hak_kelas}==null ? "" : $F{hak_kelas})</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="351" width="580" height="12" uuid="bc1f3233-71ba-4138-8c39-325c3af5cad7" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"1. Saya telah mendapatkan informasi dan penjelasan dari pihak Rumah Sakit mengenai Ruang Rawat Inap sesuai Hak Kelas Tersedia."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="364" width="580" height="12" uuid="b1927bf3-e9c1-4667-bbc5-5b65da067d56" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"2. Kami sudah mengetahui kamar sesuai Hak Kelas Rawat Pasien masih tersedia."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="377" width="580" height="12" uuid="58f9e653-137b-4b88-9884-f794e7e7161e" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"3. Bersedia mengikuti ketentuan sesuai dengan PERMENKES 28 tahun 2014, PERMENKES No.3 tahun 2023 :"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="390" width="565" height="12" uuid="27f121fe-c2bc-46d1-81d2-a64386817a21" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"a) Naik kelas perawatan bisa lebih dari 2 tingkat"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="403" width="565" height="12" uuid="330f0869-8da4-424f-bf9f-beb9aac666e1" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"b) Untuk peserta JKN kelas 3 tidak diperkenankan untuk naik kelas rawat inap baik PBI maupun PBPU dan bila pasien menginginkan naik kelas maka penjaminan JKN nya gugur (Penjamin Umum)"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="416" width="565" height="12" uuid="cde28049-47b3-46a7-9bde-80b2606e984f" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"c) Untuk peserta JKN kelas 2 kenaikan kelas pelayanan rawat inap dapat dilakukan 2 tingkat lebih tinggi dari kelas yang menjadi hak peserta dan tidak melebihi total tarif Rumah Sakit."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="429" width="580" height="12" uuid="fefb443e-d04a-4126-b48d-739e8ecefcd4" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"4. Setelah mengetahui kamar sesuai hak kelas rawat masih tersedia kami MEMUTUSKAN untuk dirawat (lingkari dan paraf di samping pilihan)"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="442" width="565" height="12" uuid="9ea44a24-c670-4319-8b52-a418c19b6e68" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{pilihan_kamar}!=null &amp;&amp; $F{pilihan_kamar}.contains("Sesuai") ? "a) (\u221A) Sesuai Hak Kelas Rawat" : "a) Sesuai Hak Kelas Rawat")</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="455" width="565" height="12" uuid="233c23c3-f962-4595-b552-13611b3d4dd3" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>($F{pilihan_kamar}!=null &amp;&amp; $F{pilihan_kamar}.contains("Naik") ? "b) (\u221A) Naik Kelas Hak Rawat" : "b) Naik Kelas Hak Rawat") + " Alasan : " + ($F{alasan_naik_kelas}==null ? "" : $F{alasan_naik_kelas})</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="468" width="580" height="12" uuid="6e092d4f-2347-4a3e-bead-7938104d2fe6" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"5. Jika kami memilih poin a maka kami tidak dibebankan biaya apapun."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="12" y="481" width="580" height="12" uuid="59e19113-cec6-4bea-b36f-4dc3a6b007dc" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"6. Jika kami memilih poin b kami telah dijelaskan akan ada resiko Selisih Biaya sebesar:"</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="494" width="565" height="12" uuid="59af27fb-19e6-484f-916c-577520cd5b3b" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"a) Untuk kenaikan kelas pelayanan rawat inap dari kelas 2 ke kelas 1 perhitungannya selisih Tarif INA CBG's pada kelas rawat inap kelas 1 dikurangi Tarif INA CBG's pada kelas rawat inap kelas 2, tidak melebihi total tarif Rumah Sakit."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="507" width="565" height="12" uuid="4fa3be2b-1724-42bb-a03b-f1f8516bc176" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"b) Untuk kenaikan kelas pelayanan rawat inap kelas 2 naik kelas ke pelayanan rawat inap 2 tingkat di atasnya(VIP), perhitungannya selisih tarif INA-CBG's antara kelas 1 dikurangi kelas 2 di tambah maksimal 75% dari tarif INA-CBG's kelas 1 dan tidak melebihi total tarif Rumah Sakit."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="520" width="565" height="12" uuid="bdc169b1-d3f9-4155-aeb4-fa11e400aefe" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"c) Untuk kenaikan kelas pelayanan rawat inap dari kelas 1 ke kelas perawatan satu tingkat diatas kelas 1 (VIP/VVIP/DLL), maka selisih biaya sebesar 75% dari tarif INA CBG kelas 1 dan tidak melebihi total tarif Rumah Sakit."</textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="533" width="592" height="12" uuid="c21d087f-b2f3-4944-8f26-ec0f7f4e90ec" />
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<textFieldExpression>"Saya yang menyatakan bahwa akan mengikuti semua ketentuan dan tata cara pelayanan yang berlaku di "+$P{namars}+". Apabila saya tidak memenuhi kewajiban, saya bersedia di tuntut secara hukum di pengadilan.\n\nDemikian surat pernyataan ini saya buat dengan penuh tanggung jawab dan dalam keadaan sadar tanpa ada paksaan dari pihak manapun untuk digunakan sebagaimana mestinya."</textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="400" y="559" width="180" height="12" uuid="23a8e1f5-a55a-4676-bcb3-3474a0024a89" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9" />
+				</textElement>
+				<textFieldExpression>$P{kotars}+", "+new SimpleDateFormat("dd-MM-yyyy").format($F{tanggal})</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="574" width="170" height="11" uuid="829f8e92-b6ab-4518-a14f-ee57bcab5c8a" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9" />
+				</textElement>
+				<text>Saksi I (pihak Rumah Sakit)</text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="574" width="170" height="11" uuid="9aa89835-d460-4101-b1e6-d72052ab4983" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9" />
+				</textElement>
+				<text>Saksi II (pihak keluarga)</text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="400" y="574" width="180" height="11" uuid="03afd5b9-9cb9-4814-9e15-2e1b798261a2" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9" />
+				</textElement>
+				<text>Yang membuat pernyataan,</text>
+			</staticText>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement positionType="Float" x="400" y="585" width="180" height="34" uuid="9a058474-0f2c-4977-bc6d-62f4beafaf14" />
+				<imageExpression>$P{photo}</imageExpression>
+			</image>
+			<textField>
+				<reportElement positionType="Float" x="10" y="619" width="170" height="12" uuid="2e97f2c8-13da-48e2-91a7-71746555f98a" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9" />
+				</textElement>
+				<textFieldExpression>"( "+$F{nama}+" )"</textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="210" y="619" width="170" height="12" uuid="8b9667e2-6c01-453c-8a5c-12c3a0dad332" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9" />
+				</textElement>
+				<textFieldExpression>"( .......................................... )"</textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="400" y="619" width="180" height="12" uuid="27d6b940-db48-418b-afd2-015cd17ea9ea" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="9" />
+				</textElement>
+				<textFieldExpression>"( "+$F{nama_pj}+" )"</textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="631" width="170" height="14" uuid="e3e6fe97-28d4-49f7-852e-94fe31939768" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Tanda tangan &amp; nama jelas</text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="631" width="170" height="14" uuid="913cc2a0-da6e-43b3-b583-888682f686ff" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Tanda tangan &amp; nama jelas</text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="400" y="631" width="180" height="14" uuid="1a40d32b-1452-44fb-b98a-ce0ca3ee8396" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Tanda tangan &amp; nama jelas</text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="645" width="570" height="14" uuid="9726ba0b-5154-4391-91dd-4d8501d701d1" />
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8" />
+				</textElement>
+				<text>Edukasi Lanjutan : Pihak Keluarga.......................................Pihak Rumah Sakit.................................</text>
+			</staticText>
+		</band>
+
+	</detail>
+</jasperReport>

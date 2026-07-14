@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptObservasiTTVBalance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="15">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="namars" class="java.lang.String"/>
+    <parameter name="alamatrs" class="java.lang.String"/>
+    <parameter name="kotars" class="java.lang.String"/>
+    <parameter name="propinsirs" class="java.lang.String"/>
+    <parameter name="kontakrs" class="java.lang.String"/>
+    <parameter name="emailrs" class="java.lang.String"/>
+    <parameter name="logo" class="java.io.InputStream"/>
+    <parameter name="diagnosa" class="java.lang.String"/>
+    <parameter name="ruang" class="java.lang.String"/>
+    <parameter name="norm" class="java.lang.String"/>
+    <parameter name="nama" class="java.lang.String"/>
+    <parameter name="tgl_lahir" class="java.lang.String"/>
+    <parameter name="jk" class="java.lang.String"/>
+    <field name="page_number" class="java.lang.Integer"/>
+    <field name="kelompok" class="java.lang.String"/>
+    <field name="row_label" class="java.lang.String"/>
+    <field name="col1" class="java.lang.String"/>
+    <field name="col2" class="java.lang.String"/>
+    <field name="col3" class="java.lang.String"/>
+    <field name="col4" class="java.lang.String"/>
+    <field name="col5" class="java.lang.String"/>
+    <field name="col6" class="java.lang.String"/>
+    <field name="col7" class="java.lang.String"/>
+    <field name="col8" class="java.lang.String"/>
+    <field name="col9" class="java.lang.String"/>
+    <field name="col10" class="java.lang.String"/>
+    <field name="col11" class="java.lang.String"/>
+    <field name="col12" class="java.lang.String"/>
+    <field name="chart_image" class="java.awt.Image"/>
+
+    <group name="PageGroup" isStartNewPage="true">
+        <groupExpression><![CDATA[$F{page_number}]]></groupExpression>
+        <groupHeader>
+            <band height="90">
+                <!-- Logo -->
+                <image scaleImage="FillFrame" onErrorType="Blank">
+                    <reportElement x="0" y="0" width="42" height="38"/>
+                    <imageExpression><![CDATA[$P{logo}]]></imageExpression>
+                </image>
+                <!-- Nama RS -->
+                <textField>
+                    <reportElement x="0" y="0" width="460" height="16"/>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="11" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{namars}]]></textFieldExpression>
+                </textField>
+                <!-- Alamat RS -->
+                <textField>
+                    <reportElement x="0" y="16" width="460" height="12"/>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{alamatrs}+", "+$P{kotars}+", "+$P{propinsirs}]]></textFieldExpression>
+                </textField>
+                <!-- Email RS -->
+                <textField>
+                    <reportElement x="0" y="28" width="460" height="12"/>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["E-mail : "+$P{emailrs}]]></textFieldExpression>
+                </textField>
+
+                <!-- Box Identitas Pasien -->
+                <rectangle>
+                    <reportElement x="468" y="0" width="334" height="42"/>
+                    <graphicElement><pen lineWidth="0.5"/></graphicElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="473" y="2" width="42" height="12"/>
+                    <textElement><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[No. RM]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="515" y="2" width="5" height="12"/>
+                    <textElement><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="522" y="2" width="270" height="12"/>
+                    <textElement><font fontName="Tahoma" size="8"/></textElement>
+                    <textFieldExpression><![CDATA[$P{norm}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="473" y="14" width="42" height="12"/>
+                    <textElement><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[Nama]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="515" y="14" width="5" height="12"/>
+                    <textElement><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="522" y="14" width="270" height="12"/>
+                    <textElement><font fontName="Tahoma" size="8"/></textElement>
+                    <textFieldExpression><![CDATA[$P{nama}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="473" y="26" width="42" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[Tgl. Lahir]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="515" y="26" width="5" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="522" y="26" width="130" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <textFieldExpression><![CDATA[$P{tgl_lahir}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="660" y="26" width="55" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7"/></textElement>
+                    <text><![CDATA[Jenis Kelamin :]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="715" y="26" width="80" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <textFieldExpression><![CDATA[$P{jk}]]></textFieldExpression>
+                </textField>
+
+                <!-- Title Bar -->
+                <rectangle>
+                    <reportElement x="0" y="44" width="802" height="14" backcolor="#000000"/>
+                    <graphicElement><pen lineWidth="0.5"/></graphicElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="0" y="44" width="802" height="14" forecolor="#FFFFFF"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font fontName="Tahoma" size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[OBSERVASI TANDA-TANDA VITAL & BALANCE CAIRAN]]></text>
+                </staticText>
+
+                <!-- Diagnosa / Bagian / Ruang -->
+                <rectangle>
+                    <reportElement x="0" y="58" width="300" height="14"/>
+                    <graphicElement><pen lineWidth="0.5"/></graphicElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="3" y="58" width="50" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[Diagnosa :]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="53" y="58" width="245" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <textFieldExpression><![CDATA[$P{diagnosa}]]></textFieldExpression>
+                </textField>
+                <rectangle>
+                    <reportElement x="300" y="58" width="200" height="14"/>
+                    <graphicElement><pen lineWidth="0.5"/></graphicElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="303" y="58" width="40" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[Bagian :]]></text>
+                </staticText>
+                <rectangle>
+                    <reportElement x="500" y="58" width="302" height="14"/>
+                    <graphicElement><pen lineWidth="0.5"/></graphicElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="503" y="58" width="60" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <text><![CDATA[Ruang / Kelas :]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="563" y="58" width="233" height="14"/>
+                    <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="8"/></textElement>
+                    <textFieldExpression><![CDATA[$P{ruang}]]></textFieldExpression>
+                </textField>
+
+                <!-- Grid Legend -->
+                <rectangle>
+                    <reportElement x="0" y="74" width="130" height="14" backcolor="#F0F0F0"/>
+                    <graphicElement><pen lineWidth="0.5"/></graphicElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="3" y="74" width="124" height="14"/>
+                    <textElement verticalAlignment="Middle">
+                        <font fontName="Tahoma" size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[N      R      S]]></text>
+                </staticText>
+                <!-- Legend: symbols -->
+                <rectangle>
+                    <reportElement x="130" y="74" width="672" height="14" backcolor="#F0F0F0"/>
+                    <graphicElement><pen lineWidth="0.5"/></graphicElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="135" y="74" width="662" height="14"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font fontName="Tahoma" size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Keterangan:   <font color="red">Nadi</font>     Respirasi     <font color="blue">Suhu</font>]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+    </group>
+
+    <detail>
+        <band height="14" splitType="Stretch">
+            <printWhenExpression><![CDATA[!$F{row_label}.equals("CHART")]]></printWhenExpression>
+            <!-- Row Label -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="130" height="14"/>
+                <box leftPadding="3"><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="Tahoma" size="7" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{row_label}]]></textFieldExpression>
+            </textField>
+            <!-- Col 1 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="130" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col1}]]></textFieldExpression>
+            </textField>
+            <!-- Col 2 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="186" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col2}]]></textFieldExpression>
+            </textField>
+            <!-- Col 3 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="242" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col3}]]></textFieldExpression>
+            </textField>
+            <!-- Col 4 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="298" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col4}]]></textFieldExpression>
+            </textField>
+            <!-- Col 5 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="354" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col5}]]></textFieldExpression>
+            </textField>
+            <!-- Col 6 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="410" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col6}]]></textFieldExpression>
+            </textField>
+            <!-- Col 7 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="466" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col7}]]></textFieldExpression>
+            </textField>
+            <!-- Col 8 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="522" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col8}]]></textFieldExpression>
+            </textField>
+            <!-- Col 9 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="578" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col9}]]></textFieldExpression>
+            </textField>
+            <!-- Col 10 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="634" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col10}]]></textFieldExpression>
+            </textField>
+            <!-- Col 11 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="690" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col11}]]></textFieldExpression>
+            </textField>
+            <!-- Col 12 -->
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToBandHeight" x="746" y="0" width="56" height="14"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle" >
+                    <font fontName="Tahoma" size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{col12}]]></textFieldExpression>
+            </textField>
+        </band>
+        
+        <band height="120" splitType="Prevent">
+            <printWhenExpression><![CDATA[$F{row_label}.equals("CHART")]]></printWhenExpression>
+            
+            <!-- Left Axis Column (Width 130) -->
+            <rectangle>
+                <reportElement x="0" y="0" width="130" height="120" backcolor="#F0F0F0"/>
+                <graphicElement><pen lineWidth="0.5"/></graphicElement>
+            </rectangle>
+            
+            <!-- Scale text positioned to align with horizontal grid lines -->
+            <staticText>
+                <reportElement x="5" y="0" width="120" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7" isBold="true"/></textElement>
+                <text><![CDATA[160           60           41]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="5" y="15" width="120" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7" isBold="true"/></textElement>
+                <text><![CDATA[140           50           40]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="5" y="33" width="120" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7" isBold="true"/></textElement>
+                <text><![CDATA[120           40           39]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="5" y="53" width="120" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7" isBold="true"/></textElement>
+                <text><![CDATA[100           30           38]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="5" y="73" width="120" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7" isBold="true"/></textElement>
+                <text><![CDATA[80             20           37]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="5" y="93" width="120" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7" isBold="true"/></textElement>
+                <text><![CDATA[60             10           36]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="5" y="106" width="120" height="14"/>
+                <textElement verticalAlignment="Middle"><font fontName="Tahoma" size="7" isBold="true"/></textElement>
+                <text><![CDATA[40              0           35]]></text>
+            </staticText>
+            
+            <!-- Right Chart Area -->
+            <rectangle>
+                <reportElement x="130" y="0" width="672" height="120"/>
+                <graphicElement><pen lineWidth="0.5"/></graphicElement>
+            </rectangle>
+            
+            <!-- Vertical Lines for columns (130 to 802) -->
+            <line><reportElement x="186" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="242" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="298" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="354" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="410" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="466" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="522" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="578" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="634" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="690" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            <line><reportElement x="746" y="0" width="1" height="120"/><graphicElement><pen lineWidth="0.5"/></graphicElement></line>
+            
+            <!-- Image Overlay (Transparent JFreeChart) -->
+            <image scaleImage="FillFrame" isUsingCache="true" onErrorType="Blank">
+                <reportElement x="130" y="0" width="672" height="120"/>
+                <imageExpression><![CDATA[$F{chart_image}]]></imageExpression>
+            </image>
+        </band>
+    </detail>
+</jasperReport>

@@ -2466,4 +2466,9 @@ public final class RMPerencanaanPemulangan extends javax.swing.JDialog {
             }
         }
     }
+
+    public void setTTVFromPonek() {
+        // No fields in this class for TTV
+    }
+
 }

@@ -240,13 +240,14 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     public DlgBilingRalan billing = new DlgBilingRalan(null, false);
     private int i = 0, pilihan = 0, sudah = 0, jmlparsial = 0;
     public DlgKamarInap kamarinap = new DlgKamarInap(null, false);
-    private DlgRawatJalan dlgrwjl2 = new DlgRawatJalan(null, false);
+    private DlgRawatJalan dlgrwjl2;
     private boolean semua;
     private boolean sukses = false;
     private Jurnal jur = new Jurnal();
     private double ttljmdokter = 0, ttljmperawat = 0, ttlkso = 0, ttljasasarana = 0, ttlbhp = 0, ttlmenejemen = 0,
             ttlpendapatan = 0;
-    private DlgRawatJalanDokter dlgrwjldokter = new DlgRawatJalanDokter(null, false);
+    private DlgRawatJalanDokter dlgrwjldokter;
+    private widget.Label LblCeklisDiagnosa;
 
     /**
      * Creates new form DlgReg
@@ -257,6 +258,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
     public DlgKasirRalan(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        dlgrwjl2 = new DlgRawatJalan(null, false);
+        dlgrwjldokter = new DlgRawatJalanDokter(this, false);
         initKasirRalan();
         initTambahanMenu();
 
@@ -268,7 +271,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                 "Jenis Bayar", "No. SEP", "No. Sukon", "Status", "No.Reg", "Permintaan Rad/Lab", "Penanggung Jawab",
                 "Alamat Pasien",
                 "Hubungan P.J.", "Biaya Reg", "Stts Poli", "No.Rawat", "Tanggal", "Jam",
-                "Status Bayar", "Kd PJ", "Kd Poli", "No.Telp Pasien", "Tindakan" }) {
+                "Status Bayar", "Kd PJ", "Kd Poli", "No.Telp Pasien", "Tindakan", "Diagnosa" }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
                 return false;
@@ -281,7 +284,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         // [PERUBAHAN 2] Sesuaikan lebar kolom dengan urutan baru
         // [PERUBAHAN] Menambahkan kolom Permintaan Rad/Lab
-        for (i = 0; i < 25; i++) {
+        for (i = 0; i < 26; i++) {
             TableColumn column = tbKasirRalan.getColumnModel().getColumn(i);
             if (i == 0) {
                 column.setPreferredWidth(70);
@@ -334,6 +337,9 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             } else if (i == 23) {
                 column.setPreferredWidth(95);
             } else if (i == 24) {
+                column.setMinWidth(0);
+                column.setMaxWidth(0);
+            } else if (i == 25) {
                 column.setMinWidth(0);
                 column.setMaxWidth(0);
             }
@@ -416,6 +422,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         }
         tbKasirRalan2.setDefaultRenderer(Object.class, new WarnaTable());
 
+        TNoRw.setDocument(new batasInput((byte) 17).getKata(TNoRw));
         TCari.setDocument(new batasInput((byte) 100).getKata(TCari));
         CrPoli.setDocument(new batasInput((byte) 100).getKata(CrPoli));
         TotalObat.setDocument(new batasInput((byte) 20).getOnlyAngka(TotalObat));
@@ -8404,7 +8411,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                         dlgrwjldokter.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 22).toString());
                         dlgrwjldokter.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 21).toString());
                         dlgrwjldokter.setNoRm(TNoRw.getText(), DTPCari1.getDate(), DTPCari2.getDate());
-                        dlgrwjldokter.setVisible(true);
+                        dlgrwjldokter.setVisible(true); 
                     } else {
                         dlgrwjl2.isCek();
                         dlgrwjl2.emptTeks();
@@ -12291,7 +12298,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         } else {
             if (tbKasirRalan.getSelectedRow() != -1) {
                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                RMPenilaianAwalMedisIGD form = new RMPenilaianAwalMedisIGD(null, false);
+                RMPenilaianAwalMedisIGD form = new RMPenilaianAwalMedisIGD(this, false);
                 form.isCek();
                 form.emptTeks();
                 form.setNoRm(TNoRw.getText(), DTPCari2.getDate());
@@ -15540,7 +15547,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                             "(select count(no_rawat) from rawat_jl_dr where rawat_jl_dr.no_rawat=reg_periksa.no_rawat) > "
                             + "(select count(kd_jenis_prw) from set_otomatis_tindakan_ralan where set_otomatis_tindakan_ralan.kd_dokter=reg_periksa.kd_dokter and set_otomatis_tindakan_ralan.kd_pj=reg_periksa.kd_pj), "
                             + "1, 0) " +
-                            "> 0, 'Sudah', 'Belum') as stts_tindakan " +
+                            "> 0, 'Sudah', 'Belum') as stts_tindakan, " +
+                            "if((select count(diagnosa_pasien.no_rawat) from diagnosa_pasien where diagnosa_pasien.no_rawat=reg_periksa.no_rawat)>0,'Sudah','Belum') as stts_diagnosa " +
                             "from reg_periksa " +
                             "inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter " +
                             "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
@@ -15612,7 +15620,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
                             rskasir.getString("kd_pj"),
                             rskasir.getString("kd_poli"),
                             rskasir.getString("no_tlp"),
-                            rskasir.getString("stts_tindakan")
+                            rskasir.getString("stts_tindakan"),
+                            rskasir.getString("stts_diagnosa")
                     });
                 }
             } catch (Exception e) {
@@ -15738,6 +15747,14 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             Booking.setText(Sequel.cariIsi(
                     "select referensi_mobilejkn_bpjs.nobooking from referensi_mobilejkn_bpjs where no_rawat=?",
                     TNoRwCari.getText()));
+
+            if (tbKasirRalan.getColumnCount() >= 26 && tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 25) != null && tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 25).toString().equals("Sudah")) {
+                LblCeklisDiagnosa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png")));
+                LblCeklisDiagnosa.setToolTipText("Pasien sudah didiagnosa");
+            } else {
+                LblCeklisDiagnosa.setIcon(null);
+                LblCeklisDiagnosa.setToolTipText(null);
+            }
         }
     }
 
@@ -16578,6 +16595,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             TNoReg.setText("-");
             TNoRMCari.setText(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 2).toString());
             TPasienCari.setText(tbKasirRalan2.getValueAt(tbKasirRalan2.getSelectedRow(), 3).toString());
+            LblCeklisDiagnosa.setIcon(null);
+            LblCeklisDiagnosa.setToolTipText(null);
         }
     }
 
@@ -17847,6 +17866,25 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         // Menambahkan item menu baru ke menu yang sudah ada
         MnTindakanRalan.insert(MnPeriksaLabMDT, 3); // Menambahkan di posisi ke-3 (indeks 2)
+
+        LblCeklisDiagnosa = new widget.Label();
+        LblCeklisDiagnosa.setPreferredSize(new java.awt.Dimension(30, 23));
+        LblCeklisDiagnosa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LblCeklisDiagnosa.setName("LblCeklisDiagnosa");
+        int indexSRB = -1;
+        for (int j = 0; j < panelGlass7.getComponentCount(); j++) {
+            if (panelGlass7.getComponent(j) == BtnSRB) {
+                indexSRB = j;
+                break;
+            }
+        }
+        if (indexSRB != -1) {
+            panelGlass7.add(LblCeklisDiagnosa, indexSRB + 1);
+        } else {
+            panelGlass7.add(LblCeklisDiagnosa);
+        }
+        panelGlass7.revalidate();
+        panelGlass7.repaint();
     }
 
     private void MnPeriksaLabCairanTubuhActionPerformed(java.awt.event.ActionEvent evt) {

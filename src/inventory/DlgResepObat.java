@@ -2725,6 +2725,8 @@ public final class DlgResepObat extends javax.swing.JDialog {
             param.put("pasien", TPasien.getText());
             param.put("norm", TNoRm.getText());
             param.put("peresep", NmDokter.getText());
+            param.put("sipdokter", Sequel.cariIsi("select no_ijn_praktek from dokter where kd_dokter=?", KdDokter.getText()));
+            param.put("no_tlp", Sequel.cariIsi("select no_tlp from pasien where no_rkm_medis=?", TNoRm.getText()));
             param.put("noresep", NoResep.getText());
             finger = Sequel.cariIsi(
                     "select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",
@@ -3497,9 +3499,8 @@ public final class DlgResepObat extends javax.swing.JDialog {
     private void autoresep() {
         if (ChkRM.isSelected() == true) {
             Valid.autoNomer3(
-                    "select ifnull(MAX(CONVERT(RIGHT(resep_obat.no_resep,4),signed)),0) from resep_obat where resep_obat.tgl_peresepan='"
-                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' or resep_obat.tgl_perawatan='"
-                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' ",
+                    "select ifnull(MAX(CONVERT(SUBSTRING(resep_obat.no_resep,9),signed)),0) from resep_obat where resep_obat.no_resep like '"
+                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "").replaceAll("-","") + "%'",
                     DTPBeri.getSelectedItem().toString().substring(6, 10)
                             + DTPBeri.getSelectedItem().toString().substring(3, 5)
                             + DTPBeri.getSelectedItem().toString().substring(0, 2),

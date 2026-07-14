@@ -2200,8 +2200,9 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         KonsultasiIntraOperatif.setBounds(150, 590, 630, 23);
 
         // Perbesar tinggi FormInput agar muat semua komponen (+30 + 120 + 60 = 210)
+        // Dan pastikan lebarnya cukup (misal 870) agar komponen tidak overlap/terpotong di layar kecil
         java.awt.Dimension prefSize = FormInput.getPreferredSize();
-        FormInput.setPreferredSize(new java.awt.Dimension(prefSize.width, prefSize.height + 210));
+        FormInput.setPreferredSize(new java.awt.Dimension(Math.max(prefSize.width, 870), prefSize.height + 210));
 
         // Menyembunyikan kode dokter / penata / asisten dan melebarkan text nama
         KodeDokterBedah.setVisible(false);

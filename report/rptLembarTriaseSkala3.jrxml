@@ -15,7 +15,9 @@
 	<parameter name="namapasien" class="java.lang.String"/>
 	<parameter name="norawat" class="java.lang.String"/>
 	<parameter name="norm" class="java.lang.String"/>
-	<parameter name="caradatang" class="java.lang.String"/>
+		<parameter name="caradatang" class="java.lang.String"/>
+	<parameter name="alasankedatangan" class="java.lang.String"/>
+	<parameter name="keterangankedatangan" class="java.lang.String"/>
 	<parameter name="macamkasus" class="java.lang.String"/>
 	<parameter name="keluhanutama" class="java.lang.String"/>
 	<parameter name="kebutuhankhusus" class="java.lang.String"/>
@@ -48,16 +50,16 @@
 	<field name="temp1" class="java.lang.String"/>
 	<field name="temp2" class="java.lang.String"/>
 	<title>
-		<band height="365" splitType="Stretch">
+		<band height="401" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="137" width="175" height="15" forecolor="#000000" backcolor="#F0F0CC" uuid="0be9cecd-64f2-4bc0-95e6-5a57df4ce7e8"/>
+				<reportElement mode="Opaque" x="0" y="173" width="175" height="15" forecolor="#000000" backcolor="#F0F0CC" uuid="0be9cecd-64f2-4bc0-95e6-5a57df4ce7e8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[KETERANGAN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="176" y="137" width="379" height="15" forecolor="#000000" backcolor="#F0F0CC" uuid="e2b295a6-9fe4-4f57-b4cf-4bc04f7a3f31"/>
+				<reportElement mode="Opaque" x="176" y="173" width="379" height="15" forecolor="#000000" backcolor="#F0F0CC" uuid="e2b295a6-9fe4-4f57-b4cf-4bc04f7a3f31"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="9" isBold="false"/>
 				</textElement>
@@ -277,7 +279,7 @@
 				<text><![CDATA[Cara Datang]]></text>
 			</staticText>
 			<line>
-				<reportElement x="175" y="101" width="1" height="264" uuid="2943c41a-5b56-46fc-85b9-59e31805f4e1"/>
+				<reportElement x="175" y="101" width="1" height="300" uuid="2943c41a-5b56-46fc-85b9-59e31805f4e1"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
@@ -290,77 +292,77 @@
 				<textFieldExpression><![CDATA[$P{caradatang}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="118" width="555" height="1" uuid="310c9771-8e5c-4169-8ed2-22c449a985f5"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="154" width="555" height="1" uuid="310c9771-8e5c-4169-8ed2-22c449a985f5"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Transparent" x="8" y="120" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="157dda80-534b-4af6-9b4a-cbd39c09968e"/>
+				<reportElement mode="Transparent" x="8" y="156" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="157dda80-534b-4af6-9b4a-cbd39c09968e"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Macam Kasus]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="180" y="120" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="57b47496-d79d-4c7c-8619-16f0e75ab982"/>
+				<reportElement mode="Transparent" x="180" y="156" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="57b47496-d79d-4c7c-8619-16f0e75ab982"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{macamkasus}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="136" width="555" height="1" uuid="903b6b49-ab14-4cc2-a725-2d936f7de65a"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="172" width="555" height="1" uuid="903b6b49-ab14-4cc2-a725-2d936f7de65a"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="152" width="555" height="1" uuid="a2ee6951-2af5-4581-ba83-6d7f61f3905d"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="188" width="555" height="1" uuid="a2ee6951-2af5-4581-ba83-6d7f61f3905d"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement mode="Transparent" x="180" y="154" width="370" height="58" forecolor="#000000" backcolor="#F0F0DC" uuid="c5699b44-b605-446b-a1ca-2f56188d9f26"/>
+				<reportElement mode="Transparent" x="180" y="190" width="370" height="58" forecolor="#000000" backcolor="#F0F0DC" uuid="c5699b44-b605-446b-a1ca-2f56188d9f26"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{keluhanutama}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="214" width="555" height="1" uuid="b0e901b7-650e-4068-a3e7-0dac0ce95727"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="250" width="555" height="1" uuid="b0e901b7-650e-4068-a3e7-0dac0ce95727"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="0" y="1" width="1" height="364" uuid="c136f65e-f149-4c78-88b1-73c987593068"/>
+				<reportElement x="0" y="1" width="1" height="400" uuid="c136f65e-f149-4c78-88b1-73c987593068"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="555" y="1" width="1" height="364" uuid="a529f0f9-304c-4d86-a671-26fd487c5275"/>
+				<reportElement x="555" y="1" width="1" height="400" uuid="a529f0f9-304c-4d86-a671-26fd487c5275"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Transparent" x="8" y="217" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="7fa61a7b-0d9d-47af-a0fc-c4d5a754dc24"/>
+				<reportElement mode="Transparent" x="8" y="253" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="7fa61a7b-0d9d-47af-a0fc-c4d5a754dc24"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[TANDA VITAL]]></text>
 			</staticText>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="1" y="241" width="555" height="1" uuid="59c2326f-db8f-4723-b778-14190698867e"/>
+				<reportElement positionType="FixRelativeToBottom" x="1" y="277" width="555" height="1" uuid="59c2326f-db8f-4723-b778-14190698867e"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="180" y="216" width="370" height="24" uuid="3d21396a-0401-443b-ab1e-55c3284cd123"/>
+				<reportElement x="180" y="252" width="370" height="24" uuid="3d21396a-0401-443b-ab1e-55c3284cd123"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -369,112 +371,152 @@
 "BB: " + $P{bb} + " Kg, CRT: " + $P{crt} + " detik, GDS: " + $P{gds} + " mg/dL"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="8" y="245" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="b453952a-995f-4a0b-bc1c-52c67cfc40cc"/>
+				<reportElement mode="Transparent" x="8" y="281" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="b453952a-995f-4a0b-bc1c-52c67cfc40cc"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[KEBUTUHAN KHUSUS]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="180" y="245" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="d6e6ab4f-cd91-49e0-8276-888bb1507f3c"/>
+				<reportElement mode="Transparent" x="180" y="281" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="d6e6ab4f-cd91-49e0-8276-888bb1507f3c"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{kebutuhankhusus}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="262" width="555" height="1" uuid="d0cd6518-e374-4cc4-9f4a-718258356cc2"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="298" width="555" height="1" uuid="d0cd6518-e374-4cc4-9f4a-718258356cc2"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Transparent" x="8" y="265" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="29668478-ec2f-488f-a0bf-57c5a89f923b"/>
+				<reportElement mode="Transparent" x="8" y="301" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="29668478-ec2f-488f-a0bf-57c5a89f923b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[RIWAYAT ALERGI]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="180" y="265" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="eb2d12f1-c42b-426c-859a-1cc38491c120"/>
+				<reportElement mode="Transparent" x="180" y="301" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="eb2d12f1-c42b-426c-859a-1cc38491c120"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{riwayat_alergi}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="282" width="555" height="1" uuid="62463e26-f4bf-42de-8e47-e26093551d02"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="318" width="555" height="1" uuid="62463e26-f4bf-42de-8e47-e26093551d02"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Transparent" x="8" y="285" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="6dd09918-a3f1-432d-9493-27c1ec007328"/>
+				<reportElement mode="Transparent" x="8" y="321" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="6dd09918-a3f1-432d-9493-27c1ec007328"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[RIWAYAT PENYAKIT DAHULU]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="180" y="285" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="885f6259-7b3c-411a-821f-a39cbe0d3f82"/>
+				<reportElement mode="Transparent" x="180" y="321" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="885f6259-7b3c-411a-821f-a39cbe0d3f82"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{riwayat_penyakit}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="302" width="555" height="1" uuid="853e5b3c-14cd-4e9f-9293-8f0a719d8544"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="338" width="555" height="1" uuid="853e5b3c-14cd-4e9f-9293-8f0a719d8544"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Transparent" x="8" y="305" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="2a524e4f-f2ae-4c01-aa2f-f6859d0429f4"/>
+				<reportElement mode="Transparent" x="8" y="341" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="2a524e4f-f2ae-4c01-aa2f-f6859d0429f4"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[PASIEN KELOMPOK KHUSUS]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="180" y="305" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="2e46959b-6d65-4f7f-8c34-8c887413d100"/>
+				<reportElement mode="Transparent" x="180" y="341" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="2e46959b-6d65-4f7f-8c34-8c887413d100"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pasien_khusus}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="322" width="555" height="1" uuid="7cf937b8-3965-4b07-9c95-3ca3733ca825"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="358" width="555" height="1" uuid="7cf937b8-3965-4b07-9c95-3ca3733ca825"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Transparent" x="8" y="325" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="615a995e-13c2-4091-a67b-287df5d45d8b"/>
+				<reportElement mode="Transparent" x="8" y="361" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="615a995e-13c2-4091-a67b-287df5d45d8b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[KEBUTUHAN RESTRAIN]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="180" y="325" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="7946955a-4b95-46c5-84fd-94b29598b9de"/>
+				<reportElement mode="Transparent" x="180" y="361" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="7946955a-4b95-46c5-84fd-94b29598b9de"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{kebutuhan_restrain}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="342" width="555" height="1" uuid="0e82c6de-37f2-45e0-943f-b620b7218698"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="378" width="555" height="1" uuid="0e82c6de-37f2-45e0-943f-b620b7218698"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Transparent" x="9" y="157" width="162" height="22" forecolor="#000000" backcolor="#F0F0DC" uuid="2937c03c-d6b0-400d-8397-3303f332f270"/>
+				<reportElement mode="Transparent" x="9" y="193" width="162" height="22" forecolor="#000000" backcolor="#F0F0DC" uuid="2937c03c-d6b0-400d-8397-3303f332f270"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ANAMNESA SINGKAT]]></text>
 			</staticText>
+					<staticText>
+				<reportElement mode="Transparent" x="8" y="120" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="104bcbf0-158c-4aab-9bf9-e4491b3f1e98"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Alasan Kedatangan]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="180" y="120" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="3ca5e999-62b6-4911-a849-1cbb68cd9671"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{alasankedatangan}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="136" width="555" height="1" uuid="36fa2393-f5f4-4cb0-a6ca-a0e4613434fc"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="8" y="138" width="162" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="04423ca7-e81e-40c5-8bb0-4d3f319c30a4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Keterangan Kedatangan]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="180" y="138" width="370" height="15" forecolor="#000000" backcolor="#F0F0DC" uuid="29cb467a-3a6b-495e-970b-32d4b88879cd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{keterangankedatangan}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="154" width="555" height="1" uuid="5ed566f4-f591-4cb2-9e27-280ad6586325"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
 		</band>
 	</title>
 	<columnHeader>

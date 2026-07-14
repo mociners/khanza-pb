@@ -3461,6 +3461,10 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
         } catch (Exception e) {
             System.out.println("Notif : " + e);
         }
+        if (KodeDokter.getText().trim().equals("")) {
+            Sequel.cariIsi("select kd_dokter from reg_periksa where no_rawat=?", KodeDokter, TNoRw.getText());
+            Sequel.cariIsi("select nm_dokter from dokter where kd_dokter=?", NamaDokter, KodeDokter.getText());
+        }
     }
 
     public void setNoRm(String norwt, Date tgl2) {
@@ -3737,6 +3741,7 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
     }
 
     private void ambildataawalmedisranap() {
+        boolean adaData = false;
         try {
             ps = koneksi.prepareStatement(
                     "select penilaian_medis_ranap.tanggal,"
@@ -3749,9 +3754,8 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
             try {
                 ps.setString(1, TNoRw.getText());
                 rs = ps.executeQuery();
-                if (!rs.isBeforeFirst()) { // Jika tidak ada baris hasil
-                    JOptionPane.showMessageDialog(null, "Tidak Ada Data Asesmen Medis IGD dr. Spesialis", "Peringatan", JOptionPane.WARNING_MESSAGE);
-                } else {
+                if (rs.isBeforeFirst()) { 
+                    adaData = true;
                     while (rs.next()) {
                         KeluhanUtama.setText(rs.getString("keluhan_utama"));
                     }
@@ -3768,6 +3772,41 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
             }
         } catch (Exception e) {
             System.out.println("Notif : " + e);
+        }
+
+        if (!adaData) {
+            try {
+                ps = koneksi.prepareStatement(
+                        "select penilaian_medis_ranap_kandungan1.tanggal,"
+                        + "penilaian_medis_ranap_kandungan1.kd_dokter,penilaian_medis_ranap_kandungan1.anamnesis,penilaian_medis_ranap_kandungan1.hubungan,penilaian_medis_ranap_kandungan1.keluhan_utama,"
+                        + "penilaian_medis_ranap_kandungan1.td,penilaian_medis_ranap_kandungan1.nadi,penilaian_medis_ranap_kandungan1.rr,penilaian_medis_ranap_kandungan1.suhu,"
+                        + "penilaian_medis_ranap_kandungan1.tfu,penilaian_medis_ranap_kandungan1.tbj,penilaian_medis_ranap_kandungan1.ketuban,penilaian_medis_ranap_kandungan1.jenis_kelamin_bayi,penilaian_medis_ranap_kandungan1.djj,penilaian_medis_ranap_kandungan1.plasenta,"
+                        + "penilaian_medis_ranap_kandungan1.ket_fisik,penilaian_medis_ranap_kandungan1.kardio,penilaian_medis_ranap_kandungan1.lab,penilaian_medis_ranap_kandungan1.ultra,penilaian_medis_ranap_kandungan1.diagnosis,penilaian_medis_ranap_kandungan1.tata,penilaian_medis_ranap_kandungan1.edukasi "
+                        + "from penilaian_medis_ranap_kandungan1 where "
+                        + "penilaian_medis_ranap_kandungan1.no_rawat=?");
+                try {
+                    ps.setString(1, TNoRw.getText());
+                    rs = ps.executeQuery();
+                    if (!rs.isBeforeFirst()) { 
+                        JOptionPane.showMessageDialog(null, "Tidak Ada Data Asesmen Medis Ranap / Kandungan 1", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        while (rs.next()) {
+                            KeluhanUtama.setText(rs.getString("keluhan_utama"));
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
         }
     }
 

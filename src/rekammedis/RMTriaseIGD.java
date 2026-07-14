@@ -4430,7 +4430,7 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                                         +
                                         "reg_periksa.no_rawat, pasien.no_rkm_medis, pasien.nm_pasien, pasien.jk, DATE_FORMAT(pasien.tgl_lahir,'%d-%m-%Y') AS tgllahir, "
                                         +
-                                        "pegawai.nama AS petgas, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%d-%m-%Y') AS tgl_kunjung, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%H:%i:%s') AS jam_kunjung, data_triase_igd.cara_masuk, master_triase_macam_kasus.macam_kasus "
+                                        "pegawai.nama AS petgas, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%d-%m-%Y') AS tgl_kunjung, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%H:%i:%s') AS jam_kunjung, data_triase_igd.cara_masuk, data_triase_igd.alasan_kedatangan, data_triase_igd.keterangan_kedatangan, master_triase_macam_kasus.macam_kasus "
                                         +
                                         "FROM reg_periksa " +
                                         "INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis " +
@@ -4453,6 +4453,8 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                             param.put("tanggalkunjungan", rs.getString("tgl_kunjung"));
                             param.put("jamkunjungan", rs.getString("jam_kunjung"));
                             param.put("caradatang", rs.getString("cara_masuk"));
+                            param.put("alasankedatangan", rs.getString("alasan_kedatangan"));
+                            param.put("keterangankedatangan", rs.getString("keterangan_kedatangan"));
                             param.put("macamkasus", rs.getString("macam_kasus"));
                             param.put("keluhanutama", rs.getString("keluhan_utama"));
                             param.put("kebutuhankhusus", rs.getString("kebutuhan_khusus"));
@@ -4654,7 +4656,7 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                                         +
                                         "data_triase_igd.no_rawat, pasien.no_rkm_medis, pasien.nm_pasien, pasien.jk, DATE_FORMAT(pasien.tgl_lahir,'%d-%m-%Y') AS tgllahir, "
                                         +
-                                        "pegawai.nama AS petgas, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%d-%m-%Y') AS tgl_kunjung, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%H:%i:%s') AS jam_kunjung, data_triase_igd.cara_masuk, master_triase_macam_kasus.macam_kasus "
+                                        "pegawai.nama AS petgas, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%d-%m-%Y') AS tgl_kunjung, DATE_FORMAT(data_triase_igd.tgl_kunjungan, '%H:%i:%s') AS jam_kunjung, data_triase_igd.cara_masuk, data_triase_igd.alasan_kedatangan, data_triase_igd.keterangan_kedatangan, master_triase_macam_kasus.macam_kasus "
                                         +
                                         "FROM data_triase_igd " +
                                         "INNER JOIN reg_periksa ON data_triase_igd.no_rawat = reg_periksa.no_rawat " +
@@ -4676,6 +4678,8 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
                             param.put("tanggalkunjungan", rs.getString("tgl_kunjung"));
                             param.put("jamkunjungan", rs.getString("jam_kunjung"));
                             param.put("caradatang", rs.getString("cara_masuk"));
+                            param.put("alasankedatangan", rs.getString("alasan_kedatangan"));
+                            param.put("keterangankedatangan", rs.getString("keterangan_kedatangan"));
                             param.put("macamkasus", rs.getString("macam_kasus"));
                             param.put("keluhanutama", rs.getString("anamnesa_singkat"));
                             param.put("kebutuhankhusus", "-");
@@ -5270,6 +5274,94 @@ public final class RMTriaseIGD extends javax.swing.JDialog {
         TNoRM.setText(norm);
         TPasien.setText(namapasien);
         TCari.setText(norwt);
+        isPonek();
+        isAwalKeperawatanIGD();
+    }
+
+    private void isPonek() {
+        try {
+            ps = koneksi.prepareStatement("select * from penilaian_awal_keperawatan_ponek where no_rawat=?");
+            try {
+                ps.setString(1, TNoRw.getText());
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    if (PrimerKeluhanUtama.getText().trim().equals("")) {
+                        PrimerKeluhanUtama.setText(rs.getString("keluhan_utama"));
+                    }
+                    if (RiwayatPenyakit.getText().trim().equals("")) {
+                        RiwayatPenyakit.setText(rs.getString("rpd"));
+                    }
+                    if (PrimerBB.getText().trim().equals("")) {
+                        PrimerBB.setText(rs.getString("bb_sekarang"));
+                        SekunderBB.setText(rs.getString("bb_sekarang"));
+                    }
+                    if (PrimerTensi.getText().trim().equals("")) {
+                        PrimerTensi.setText(rs.getString("obj_td_sistol") + "/" + rs.getString("obj_td_diastol"));
+                        SekunderTensi.setText(rs.getString("obj_td_sistol") + "/" + rs.getString("obj_td_diastol"));
+                    }
+                    if (PrimerNadi.getText().trim().equals("")) {
+                        PrimerNadi.setText(rs.getString("obj_hr"));
+                        SekunderNadi.setText(rs.getString("obj_hr"));
+                    }
+                    if (PrimerRespirasi.getText().trim().equals("")) {
+                        PrimerRespirasi.setText(rs.getString("obj_rr"));
+                        SekunderRespirasi.setText(rs.getString("obj_rr"));
+                    }
+                    if (PrimerSuhu.getText().trim().equals("")) {
+                        PrimerSuhu.setText(rs.getString("obj_suhu"));
+                        SekunderSuhu.setText(rs.getString("obj_suhu"));
+                    }
+                    if (PrimerSaturasi.getText().trim().equals("")) {
+                        PrimerSaturasi.setText(rs.getString("obj_spo2"));
+                        SekunderSaturasi.setText(rs.getString("obj_spo2"));
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
+        }
+    }
+
+    private void isAwalKeperawatanIGD() {
+        try {
+            ps = koneksi.prepareStatement("select keluhan_utama, rpd, spo2, gcs from penilaian_awal_keperawatan_igd where no_rawat=?");
+            try {
+                ps.setString(1, TNoRw.getText());
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    if (PrimerKeluhanUtama.getText().trim().equals("")) {
+                        PrimerKeluhanUtama.setText(rs.getString("keluhan_utama"));
+                    }
+                    if (RiwayatPenyakit.getText().trim().equals("")) {
+                        RiwayatPenyakit.setText(rs.getString("rpd"));
+                    }
+                    if (PrimerSaturasi.getText().trim().equals("")) {
+                        PrimerSaturasi.setText(rs.getString("spo2"));
+                        SekunderSaturasi.setText(rs.getString("spo2"));
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
+        }
     }
 
     public void tampilPemeriksaan() {

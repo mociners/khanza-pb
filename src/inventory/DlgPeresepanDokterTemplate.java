@@ -916,6 +916,7 @@ public final class DlgPeresepanDokterTemplate extends javax.swing.JDialog {
     private void BtnCariTemplateActionPerformed(java.awt.event.ActionEvent evt) {                                                
         caritemplate.setSize(this.getWidth()-20,this.getHeight()-20);
         caritemplate.setLocationRelativeTo(this);
+        caritemplate.setDokter("");
         caritemplate.tampil();
         caritemplate.setVisible(true);
     }

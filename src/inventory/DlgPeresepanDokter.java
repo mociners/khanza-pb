@@ -1894,6 +1894,7 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
     private void BtnCariTemplateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnCariTemplateActionPerformed
         caritemplate.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
         caritemplate.setLocationRelativeTo(internalFrame1);
+        caritemplate.setDokter(KdDokter.getText());
         caritemplate.tampil();
         caritemplate.setVisible(true);
     }// GEN-LAST:event_BtnCariTemplateActionPerformed
@@ -2283,9 +2284,8 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
     public void emptTeksobat() {
         if (ChkRM.isSelected() == true) {
             Valid.autoNomer3(
-                    "select ifnull(MAX(CONVERT(RIGHT(resep_obat.no_resep,4),signed)),0) from resep_obat where resep_obat.tgl_peresepan='"
-                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' or resep_obat.tgl_perawatan='"
-                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "") + "' ",
+                    "select ifnull(MAX(CONVERT(SUBSTRING(resep_obat.no_resep,9),signed)),0) from resep_obat where resep_obat.no_resep like '"
+                            + Valid.SetTgl(DTPBeri.getSelectedItem() + "").replaceAll("-","") + "%'",
                     DTPBeri.getSelectedItem().toString().substring(6, 10)
                             + DTPBeri.getSelectedItem().toString().substring(3, 5)
                             + DTPBeri.getSelectedItem().toString().substring(0, 2),

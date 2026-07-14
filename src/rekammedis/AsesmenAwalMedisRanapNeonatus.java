@@ -4632,6 +4632,10 @@ public final class AsesmenAwalMedisRanapNeonatus extends javax.swing.JDialog {
         } catch (Exception e) {
             System.out.println("Notif : "+e);
         }
+        if (KdPetugas.getText().trim().equals("")) {
+            Sequel.cariIsi("select kd_dokter from reg_periksa where no_rawat=?", KdPetugas, TNoRw.getText());
+            Sequel.cariIsi("select nm_dokter from dokter where kd_dokter=?", NmPetugas, KdPetugas.getText());
+        }
     }
     
     private void isPsien() {

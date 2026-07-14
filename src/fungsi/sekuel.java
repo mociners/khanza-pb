@@ -2039,6 +2039,14 @@ public final class sekuel {
         return dicari;
     }
 
+    public String CariBangsal(String kd) {
+        return cariIsi("select nm_bangsal from bangsal where kd_bangsal='" + kd + "'");
+    }
+
+    public String CariDokter(String kd) {
+        return cariIsi("select nm_dokter from dokter where kd_dokter='" + kd + "'");
+    }
+
     public Date cariIsi2(String sql) {
         try {
             ps = connect.prepareStatement(sql);

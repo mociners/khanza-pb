@@ -356,7 +356,7 @@ public final class DlgReg extends javax.swing.JDialog {
                 "P", "No. Reg", "No. Rawat", "Tanggal", "Jam", "Kode Dokter", "Dokter Dituju", "Nomor RM",
                 "Pasien", "J.K.", "Umur", "Poliklinik", "Jenis Bayar", "Status Rawat", "No. SEP",
                 "No. Sukon/Rujuk", "No. Telp", "Alamat Pasien", "Hubungan P.J.",
-                "Biaya Registrasi", "Status Poli", "Status Bayar"
+                "Biaya Registrasi", "Status Poli", "Status Bayar", "User SEP"
         }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -387,7 +387,7 @@ public final class DlgReg extends javax.swing.JDialog {
         tbPetugas.setPreferredScrollableViewportSize(new Dimension(800, 800));
         tbPetugas.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 22; i++) {
+        for (i = 0; i < 23; i++) {
             TableColumn column = tbPetugas.getColumnModel().getColumn(i);
             if (i == 0) { // P
                 column.setPreferredWidth(20);
@@ -433,6 +433,8 @@ public final class DlgReg extends javax.swing.JDialog {
                 column.setPreferredWidth(70);
             } else if (i == 21) { // Status Bayar
                 column.setPreferredWidth(70);
+            } else if (i == 22) { // User SEP
+                column.setPreferredWidth(100);
             }
         }
         tbPetugas.setDefaultRenderer(Object.class, new WarnaTable());
@@ -13128,7 +13130,7 @@ public final class DlgReg extends javax.swing.JDialog {
         } else {
             if (tbPetugas.getSelectedRow() != -1) {
                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                RMPenilaianAwalMedisIGD form = new RMPenilaianAwalMedisIGD(null, false);
+                RMPenilaianAwalMedisIGD form = new RMPenilaianAwalMedisIGD(this, false);
                 form.isCek();
                 form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 form.setLocationRelativeTo(internalFrame1);
@@ -16145,7 +16147,7 @@ public final class DlgReg extends javax.swing.JDialog {
                         + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur,poliklinik.nm_poli,"
                         + "reg_periksa.p_jawab,pasien.alamat,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab,pasien.no_tlp,reg_periksa.stts,reg_periksa.status_poli, "
                         + "reg_periksa.kd_poli,reg_periksa.kd_pj,reg_periksa.status_bayar,(CASE WHEN bridging_sep.jnspelayanan = '2' THEN bridging_sep.no_sep ELSE '' END) as no_sep,"
-                        + "COALESCE(bridging_surat_kontrol_bpjs.no_surat, bridging_rujukan_bpjs.no_rujukan) as no_surat_rujukan "
+                        + "COALESCE(bridging_surat_kontrol_bpjs.no_surat, bridging_rujukan_bpjs.no_rujukan) as no_surat_rujukan, ifnull(bridging_sep.user,'-') as user_sep "
                         + "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                         + "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "
                         + "left join bridging_sep on bridging_sep.no_rawat=reg_periksa.no_rawat "
@@ -16159,7 +16161,7 @@ public final class DlgReg extends javax.swing.JDialog {
                         + "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur,poliklinik.nm_poli,"
                         + "reg_periksa.p_jawab,pasien.alamat,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts_daftar,penjab.png_jawab,pasien.no_tlp,reg_periksa.stts,reg_periksa.status_poli, "
                         + "reg_periksa.kd_poli,reg_periksa.kd_pj,reg_periksa.status_bayar,(CASE WHEN bridging_sep.jnspelayanan = '2' THEN bridging_sep.no_sep ELSE '' END) as no_sep,"
-                        + "COALESCE(bridging_surat_kontrol_bpjs.no_surat, bridging_rujukan_bpjs.no_rujukan) as no_surat_rujukan "
+                        + "COALESCE(bridging_surat_kontrol_bpjs.no_surat, bridging_rujukan_bpjs.no_rujukan) as no_surat_rujukan, ifnull(bridging_sep.user,'-') as user_sep "
                         + "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                         + "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "
                         + "left join bridging_sep on bridging_sep.no_rawat=reg_periksa.no_rawat "
@@ -16220,7 +16222,8 @@ public final class DlgReg extends javax.swing.JDialog {
                             rs.getString("hubunganpj"),
                             Valid.SetAngka(rs.getDouble("biaya_reg")),
                             rs.getString("status_poli"),
-                            rs.getString("status_bayar")
+                            rs.getString("status_bayar"),
+                            rs.getString("user_sep")
                     });
                 }
             } catch (Exception e) {

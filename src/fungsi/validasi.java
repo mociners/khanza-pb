@@ -389,6 +389,16 @@ public final class validasi {
             System.out.println("Notifikasi : "+e);
         }
     }
+
+    public void autoNomer7(String strAwal, String tanggal, Integer pnj, javax.swing.JTextField teks) {
+        s = Integer.toString(Integer.parseInt(strAwal) + 1);
+        j = s.length();
+        s1 = "";
+        for (i = 1; i <= pnj - j; i++) {
+            s1 = s1 + "0";
+        }
+        teks.setText(tanggal + s1 + s);
+    }
     
     public String autoNomer(String tabel,String strAwal,Integer pnj){
         try {

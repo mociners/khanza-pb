@@ -170,6 +170,15 @@ import surat.SuratRujukanBalik;
  */
 public final class DlgRawatJalanDokter extends javax.swing.JDialog {
 
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+        if (b) {
+            this.toFront();
+            this.requestFocus();
+        }
+    }
+
     private final DefaultTableModel tabMode, tabModeDr, tabModePr, tabModeDrPr,
             tabModePemeriksaan, tabModeObstetri, tabModeGinekologi,
             TabModeTindakan, TabModeTindakan2, TabModeTindakan3, TabModeCatatan, tabModePemeriksaanSbar,
@@ -217,8 +226,8 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public DlgRawatJalanDokter(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public DlgRawatJalanDokter(java.awt.Window parent, boolean modal) {
+        super(parent, modal ? java.awt.Dialog.ModalityType.APPLICATION_MODAL : java.awt.Dialog.ModalityType.MODELESS);
         initComponents();
         initRawatJalan();
 
@@ -10643,7 +10652,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanDewasa form = new RMPenilaianAwalMedisRalanDewasa(null, false);
+            RMPenilaianAwalMedisRalanDewasa form = new RMPenilaianAwalMedisRalanDewasa(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10675,7 +10684,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanKandungan form = new RMPenilaianAwalMedisRalanKandungan(null, false);
+            RMPenilaianAwalMedisRalanKandungan form = new RMPenilaianAwalMedisRalanKandungan(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10712,7 +10721,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisIGD form = new RMPenilaianAwalMedisIGD(null, false);
+            RMPenilaianAwalMedisIGD form = new RMPenilaianAwalMedisIGD(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10729,7 +10738,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanAnak form = new RMPenilaianAwalMedisRalanAnak(null, false);
+            RMPenilaianAwalMedisRalanAnak form = new RMPenilaianAwalMedisRalanAnak(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10839,7 +10848,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanTHT form = new RMPenilaianAwalMedisRalanTHT(null, false);
+            RMPenilaianAwalMedisRalanTHT form = new RMPenilaianAwalMedisRalanTHT(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10876,7 +10885,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanPsikiatrik form = new RMPenilaianAwalMedisRalanPsikiatrik(null, false);
+            RMPenilaianAwalMedisRalanPsikiatrik form = new RMPenilaianAwalMedisRalanPsikiatrik(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10903,7 +10912,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanPenyakitDalam form = new RMPenilaianAwalMedisRalanPenyakitDalam(null, false);
+            RMPenilaianAwalMedisRalanPenyakitDalam form = new RMPenilaianAwalMedisRalanPenyakitDalam(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10920,7 +10929,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanMata form = new RMPenilaianAwalMedisRalanMata(null, false);
+            RMPenilaianAwalMedisRalanMata form = new RMPenilaianAwalMedisRalanMata(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10937,7 +10946,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanNeurologi form = new RMPenilaianAwalMedisRalanNeurologi(null, false);
+            RMPenilaianAwalMedisRalanNeurologi form = new RMPenilaianAwalMedisRalanNeurologi(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10954,7 +10963,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanOrthopedi form = new RMPenilaianAwalMedisRalanOrthopedi(null, false);
+            RMPenilaianAwalMedisRalanOrthopedi form = new RMPenilaianAwalMedisRalanOrthopedi(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -10971,7 +10980,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanBedah form = new RMPenilaianAwalMedisRalanBedah(null, false);
+            RMPenilaianAwalMedisRalanBedah form = new RMPenilaianAwalMedisRalanBedah(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -11093,7 +11102,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanGeriatri form = new RMPenilaianAwalMedisRalanGeriatri(null, false);
+            RMPenilaianAwalMedisRalanGeriatri form = new RMPenilaianAwalMedisRalanGeriatri(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -11604,7 +11613,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanBedahMulut form = new RMPenilaianAwalMedisRalanBedahMulut(null, false);
+            RMPenilaianAwalMedisRalanBedahMulut form = new RMPenilaianAwalMedisRalanBedahMulut(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -11797,7 +11806,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanKulitDanKelamin form = new RMPenilaianAwalMedisRalanKulitDanKelamin(null, false);
+            RMPenilaianAwalMedisRalanKulitDanKelamin form = new RMPenilaianAwalMedisRalanKulitDanKelamin(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -11867,7 +11876,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanRehabMedik form = new RMPenilaianAwalMedisRalanRehabMedik(null, false);
+            RMPenilaianAwalMedisRalanRehabMedik form = new RMPenilaianAwalMedisRalanRehabMedik(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -11983,7 +11992,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalMedisRalanParu form = new RMPenilaianAwalMedisRalanParu(null, false);
+            RMPenilaianAwalMedisRalanParu form = new RMPenilaianAwalMedisRalanParu(this, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
@@ -13737,6 +13746,7 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         ChkInput3.setSelected(true);
         isForm4();
         TabRawatMouseClicked(null);
+        isRalan();
         tampilSoapPerawat();
         tampilSoapPerawat();
     }
@@ -14564,8 +14574,56 @@ public final class DlgRawatJalanDokter extends javax.swing.JDialog {
         TDokter.setText(namadokter);
         TDokter2.setText(namadokter);
         TDokter3.setText(namadokter);
+        isRalan();
         tampilSoapPerawat();
         tampilSoapPerawat();
+    }
+
+    private void isRalan() {
+        try {
+            java.sql.PreparedStatement psralan = koneksi.prepareStatement("select * from penilaian_awal_keperawatan_ralan where no_rawat=?");
+            try {
+                psralan.setString(1, TNoRw.getText());
+                java.sql.ResultSet rsralan = psralan.executeQuery();
+                if (rsralan.next()) {
+                    if (TTensi.getText().trim().equals("")) {
+                        TTensi.setText(rsralan.getString("td"));
+                    }
+                    if (TNadi.getText().trim().equals("")) {
+                        TNadi.setText(rsralan.getString("nadi"));
+                    }
+                    if (TRespirasi.getText().trim().equals("")) {
+                        TRespirasi.setText(rsralan.getString("rr"));
+                    }
+                    if (TSuhu.getText().trim().equals("")) {
+                        TSuhu.setText(rsralan.getString("suhu"));
+                    }
+                    if (TGCS.getText().trim().equals("")) {
+                        TGCS.setText(rsralan.getString("gcs"));
+                    }
+                    if (TBerat.getText().trim().equals("")) {
+                        TBerat.setText(rsralan.getString("bb"));
+                    }
+                    if (TTinggi.getText().trim().equals("")) {
+                        TTinggi.setText(rsralan.getString("tb"));
+                    }
+                    if (TKeluhan.getText().trim().equals("")) {
+                        TKeluhan.setText(rsralan.getString("keluhan_utama"));
+                    }
+                    if (TAlergi.getText().trim().equals("")) {
+                        TAlergi.setText(rsralan.getString("alergi"));
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            } finally {
+                if (psralan != null) {
+                    psralan.close();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi : " + e);
+        }
     }
 
     public void SetPoli(String KodePoli) {

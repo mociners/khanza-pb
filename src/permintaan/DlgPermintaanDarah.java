@@ -1862,7 +1862,7 @@ private void btnPasienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(permintaan_darah_pmi.kd_booking,4),signed)),0) from permintaan_darah_pmi where permintaan_darah_pmi.tanggal='" + Valid.SetTgl(tglPermintaan.getSelectedItem() + "") + "' ",
                 tglPermintaan.getSelectedItem().toString().substring(6, 10) + tglPermintaan.getSelectedItem().toString().substring(3, 5) + tglPermintaan.getSelectedItem().toString().substring(0, 2), 4, TNoBoking);
         /*
-        Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(resep_obat.no_resep,4),signed)),0) from resep_obat where resep_obat.tgl_peresepan='"+Valid.SetTgl(DTPBeri.getSelectedItem()+"")+"' or resep_obat.tgl_perawatan='"+Valid.SetTgl(DTPBeri.getSelectedItem()+"")+"' ",
+        Valid.autoNomer3("select ifnull(MAX(CONVERT(SUBSTRING(resep_obat.no_resep,9),signed)),0) from resep_obat where resep_obat.no_resep like '"+Valid.SetTgl(DTPBeri.getSelectedItem()+"").replaceAll("-","")+"%'",
                 DTPBeri.getSelectedItem().toString().substring(6,10)+DTPBeri.getSelectedItem().toString().substring(3,5)+DTPBeri.getSelectedItem().toString().substring(0,2),4,NoResep);        
          */
 

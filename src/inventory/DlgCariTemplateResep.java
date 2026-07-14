@@ -17,6 +17,7 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
     private final Connection koneksi = koneksiDB.condb();
     private PreparedStatement ps;
     private ResultSet rs;
+    private String kodedokter = "";
 
     public DlgCariTemplateResep(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -192,14 +193,21 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
     public void tampil() {
         Valid.tabelKosong(tabMode);
         try {
-            ps = koneksi.prepareStatement(
-                "SELECT t.kd_template, t.nm_template, d.nm_dokter " +
+            String sql = "SELECT t.kd_template, t.nm_template, d.nm_dokter " +
                 "FROM template_resep_dokter t " +
                 "INNER JOIN dokter d ON t.kd_dokter = d.kd_dokter " +
-                "WHERE t.nm_template LIKE ? OR d.nm_dokter LIKE ? ORDER BY t.nm_template");
+                "WHERE t.kd_dokter LIKE ? AND (t.nm_template LIKE ? OR d.nm_dokter LIKE ?) ORDER BY t.nm_template";
+            if (kodedokter.equals("D034")) {
+                sql = "SELECT t.kd_template, t.nm_template, d.nm_dokter " +
+                "FROM template_resep_dokter t " +
+                "INNER JOIN dokter d ON t.kd_dokter = d.kd_dokter " +
+                "WHERE (t.kd_dokter LIKE ? OR t.kd_dokter='D065') AND (t.nm_template LIKE ? OR d.nm_dokter LIKE ?) ORDER BY t.nm_template";
+            }
+            ps = koneksi.prepareStatement(sql);
             try {
-                ps.setString(1, "%" + TCari.getText().trim() + "%");
+                ps.setString(1, "%" + kodedokter + "%");
                 ps.setString(2, "%" + TCari.getText().trim() + "%");
+                ps.setString(3, "%" + TCari.getText().trim() + "%");
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     tabMode.addRow(new Object[]{
@@ -221,5 +229,9 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
 
     public JTable getTable() {
         return tbTemplate;
+    }
+    
+    public void setDokter(String kd_dokter) {
+        this.kodedokter = kd_dokter;
     }
 }

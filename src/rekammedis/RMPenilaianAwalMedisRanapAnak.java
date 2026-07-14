@@ -2753,6 +2753,10 @@ public final class RMPenilaianAwalMedisRanapAnak extends javax.swing.JDialog {
         } catch (Exception e) {
             System.out.println("Notif : " + e);
         }
+        if (KdDokter.getText().trim().equals("")) {
+            Sequel.cariIsi("select kd_dokter from reg_periksa where no_rawat=?", KdDokter, TNoRw.getText());
+            Sequel.cariIsi("select nm_dokter from dokter where kd_dokter=?", NmDokter, KdDokter.getText());
+        }
     }
 
     public void setNoRm(String norwt, Date tgl2) {

@@ -287,7 +287,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="26-03-2023"/>
+                        <StringItem index="0" value="21-05-2026"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -315,7 +315,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="26-03-2023"/>
+                        <StringItem index="0" value="21-05-2026"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -649,7 +649,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="26-03-2023 11:34:18"/>
+                        <StringItem index="0" value="21-05-2026 13:24:22"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy HH:mm:ss"/>
@@ -667,7 +667,7 @@
                 </Component>
                 <Component class="widget.Label" name="jLabel40">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Masalah :"/>
+                    <Property name="text" type="java.lang.String" value="Informasi :"/>
                     <Property name="name" type="java.lang.String" value="jLabel40" noResource="true"/>
                   </Properties>
                   <Constraints>
@@ -712,7 +712,7 @@
                 </Container>
                 <Component class="widget.Label" name="jLabel41">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Tindak Lanjut :"/>
+                    <Property name="text" type="java.lang.String" value="Analisis :"/>
                     <Property name="name" type="java.lang.String" value="jLabel41" noResource="true"/>
                   </Properties>
                   <Constraints>
@@ -757,7 +757,7 @@
                 </Container>
                 <Component class="widget.Label" name="jLabel42">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Evaluasi :"/>
+                    <Property name="text" type="java.lang.String" value="Rencana :"/>
                     <Property name="name" type="java.lang.String" value="jLabel42" noResource="true"/>
                   </Properties>
                   <Constraints>

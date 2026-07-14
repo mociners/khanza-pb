@@ -57,8 +57,8 @@ public final class RMPenilaianAwalMedisRalanAnak extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public RMPenilaianAwalMedisRalanAnak(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public RMPenilaianAwalMedisRalanAnak(java.awt.Window parent, boolean modal) {
+        super(parent, modal ? java.awt.Dialog.ModalityType.APPLICATION_MODAL : java.awt.Dialog.ModalityType.MODELESS);
         initComponents();
 
         tabMode = new DefaultTableModel(null, new Object[]{

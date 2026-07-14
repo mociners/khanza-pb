@@ -12757,7 +12757,7 @@ public class frmUtama extends javax.swing.JFrame {
     }// GEN-LAST:event_btnPermintaanMedisActionPerformed
 
     private void btnRingkasanPermintaanMedisActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRingkasanPermintaanMedisActionPerformed
-        isTutup();
+        isTutup(); 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         DlgRekapPermintaan rhipsrs = new DlgRekapPermintaan(this, false);
         rhipsrs.setSize(PanelUtama.getWidth(), PanelUtama.getHeight());

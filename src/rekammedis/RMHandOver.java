@@ -1412,15 +1412,15 @@ public final class RMHandOver extends javax.swing.JDialog {
         try {
             ps = koneksi.prepareStatement("select handover.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,"
                     + "handover.tgl_perawatan,handover.jam_rawat,handover.situation,handover.background, "
-                    + "handover.assesment,handover.recommendation,handover.tindakan,handover.shift,handover.nip,handover.shift2,handover.nip2,IF(vps.no_rawat IS NOT NULL, 'Tervalidasi', 'Belum Divalidasi')"
+                    + "handover.assesment,handover.recommendation,handover.tindakan,handover.shift,handover.nip,handover.shift2,handover.nip2,IF(vps.no_rawat IS NOT NULL, 'Tervalidasi', 'Belum Divalidasi') "
                     + "from pasien inner join reg_periksa on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                     + "inner join handover on handover.no_rawat=reg_periksa.no_rawat "
                     + "inner join petugas on handover.nip=petugas.nip "
-                    + "LEFT JOIN validasi_handover vps ON CONCAT(handover.no_rawat, handover.tgl_perawatan, handover.jam_rawat) = CONCAT (vps.no_rawat, vps.tgl_perawatan, vps.jam_rawat) where "
+                    + "LEFT JOIN validasi_handover vps ON CONCAT(handover.no_rawat, handover.tgl_perawatan, handover.jam_rawat) = CONCAT(vps.no_rawat, vps.tgl_perawatan, vps.jam_rawat) where "
                     + "handover.tgl_perawatan between ? and ? and reg_periksa.no_rawat like ? "
                     + (TCari.getText().trim().equals("") ? "" : "and (handover.no_rawat like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or "
                     + "handover.situation like ? or handover.background like ? or handover.assesment like ? or "
-                    + "handover.recommendation like ?)")
+                    + "handover.recommendation like ?) ")
                     + "order by handover.no_rawat,handover.tgl_perawatan,handover.jam_rawat desc");
             try {
                 ps.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + ""));
@@ -1547,10 +1547,10 @@ public final class RMHandOver extends javax.swing.JDialog {
     }
 
     public void isCek() {
-        BtnSimpan.setEnabled(akses.getcatatan_observasi_ranap_kebidanan());
-        BtnHapus.setEnabled(akses.getcatatan_observasi_ranap_kebidanan());
-        BtnEdit.setEnabled(akses.getcatatan_observasi_ranap_kebidanan());
-        BtnPrint.setEnabled(akses.getcatatan_observasi_ranap_kebidanan()); 
+        BtnSimpan.setEnabled(true);
+        BtnHapus.setEnabled(true);
+        BtnEdit.setEnabled(true);
+        BtnPrint.setEnabled(true); 
         if(akses.getjml2()>=1){
             NIP.setEditable(false);
             BtnSeekPegawai1.setEnabled(false);

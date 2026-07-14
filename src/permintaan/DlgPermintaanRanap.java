@@ -76,6 +76,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         initSPRI();
+        initBPJS();
 
         tabMode = new DefaultTableModel(null, new Object[] {
                 "No.Rawat", "No.RM", "Nama Pasien", "J.K.", "Umur", "No.Telp", "Cara Bayar",
@@ -1920,6 +1921,48 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             tbObat.requestFocus();
         } else {
             BtnSuratPermintaanActionPerformed(evt);
+        }
+    }
+
+    private widget.Button BtnSEP;
+
+    private void initBPJS() {
+        BtnSEP = new widget.Button();
+        BtnSEP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png")));
+        BtnSEP.setText("Pembuatan SEP");
+        BtnSEP.setFocusPainted(false);
+        BtnSEP.setFont(new java.awt.Font("Tahoma", 0, 11));
+        BtnSEP.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnSEP.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnSEP.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnSEP.setName("BtnSEP");
+        BtnSEP.setPreferredSize(new java.awt.Dimension(160, 23));
+        BtnSEP.setRoundRect(false);
+        BtnSEP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSEPActionPerformed(evt);
+            }
+        });
+        FormMenu.add(BtnSEP);
+    }
+    
+    private void BtnSEPActionPerformed(java.awt.event.ActionEvent evt) {
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, table masih kosong...!!!!");
+            TCari.requestFocus();
+        }else if(NoRw.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu dengan menklik data pada table...!!!");
+            tbObat.requestFocus();
+        }else{
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            akses.setform("DlgPermintaanRanap");
+            bridging.BPJSDataSEP dlgki=new bridging.BPJSDataSEP(null,false);
+            dlgki.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
+            dlgki.setLocationRelativeTo(internalFrame1);
+            dlgki.isCek();
+            dlgki.setNoRm(NoRw.getText(),DTPTgl.getDate(),"1. Ranap","IGDK","Unit IGD/UGD");
+            dlgki.setVisible(true);
+            this.setCursor(Cursor.getDefaultCursor());
         }
     }
 }

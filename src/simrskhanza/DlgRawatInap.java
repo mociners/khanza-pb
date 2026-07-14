@@ -201,6 +201,22 @@ public final class DlgRawatInap extends javax.swing.JDialog {
     public DlgRawatInap(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        TRecommendation.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                if(TSituation1.getText().trim().equals("")) TSituation1.setText(TRecommendation.getText());
+            }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                if(TSituation1.getText().trim().equals("")) TSituation1.setText(TRecommendation.getText());
+            }
+        });
+        
+
         initRawatInap();
 
         this.setLocation(8, 1);
@@ -7482,7 +7498,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
                                     /*    TNoRw.getText(),Valid.SetTgl(DTPTgl.getSelectedItem()+""),cmbJam.getSelectedItem()+":"+cmbMnt.getSelectedItem()+":"+cmbDtk.getSelectedItem(),                      
                                     TSituation.getText(),TBackground.getText(),TAssesment.getText(),TRecommendation.getText(),KdPeg2.getText(),TPegawai2.getText(),Jabatan1.getText(),"",KdDok1.getText(),TDokter1.getText()
                                 }); */
-                                    //        tampilPemeriksaanSbar();
+                                    tampilPemeriksaanSbar();
                                     BtnBatalActionPerformed(evt);
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Hanya bisa disimpan oleh dokter/petugas yang bersangkutan..!!");
@@ -8366,6 +8382,12 @@ public final class DlgRawatInap extends javax.swing.JDialog {
                 break;
             case 7:
                 tampilPemeriksaanTbak();
+                if (!TNoRw.getText().trim().equals("") && TSituation1.getText().trim().equals("")) {
+                    String sbarReco = Sequel.cariIsi("select recommendation from pemeriksaan_ranap_sbar where no_rawat=? order by tgl_perawatan desc, jam_rawat desc limit 1", TNoRw.getText());
+                    if (!sbarReco.equals("")) {
+                        TSituation1.setText(sbarReco);
+                    }
+                }
                 break;
             case 8:
                 tampilPemeriksaanAdime();
@@ -8403,6 +8425,21 @@ public final class DlgRawatInap extends javax.swing.JDialog {
                 break;
             case 5:
                 tampilPemeriksaanGinekologi();
+                break;
+            case 6:
+                tampilPemeriksaanSbar();
+                break;
+            case 7:
+                tampilPemeriksaanTbak();
+                if (!TNoRw.getText().trim().equals("") && TSituation1.getText().trim().equals("")) {
+                    String sbarReco = Sequel.cariIsi("select recommendation from pemeriksaan_ranap_sbar where no_rawat=? order by tgl_perawatan desc, jam_rawat desc limit 1", TNoRw.getText());
+                    if (!sbarReco.equals("")) {
+                        TSituation1.setText(sbarReco);
+                    }
+                }
+                break;
+            case 8:
+                tampilPemeriksaanAdime();
                 break;
             default:
                 break;
@@ -12498,6 +12535,10 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     private widget.Label jLabel18;
     private widget.Label jLabel19;
     private widget.Label jLabel20;
+    private widget.Label jLabelPetugas;
+    private widget.TextBox TCariPetugas;
+    private widget.Button btnPetugasCari;
+    private kepegawaian.DlgCariPetugas petugasCari = new kepegawaian.DlgCariPetugas(null, false);
     private widget.Label jLabel21;
     private widget.Label jLabel22;
     private widget.Label jLabel23;
@@ -12749,7 +12790,8 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                         + "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                         + "and rawat_inap_pr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw "
                         + "and rawat_inap_pr.nip=petugas.nip where  "
-                        + "rawat_inap_pr.tgl_perawatan between ? and ? and reg_periksa.no_rkm_medis like ? and "
+                        + "rawat_inap_pr.tgl_perawatan between ? and ? and reg_periksa.no_rkm_medis like ? "
+                        + (TCariPetugas.getText().trim().equals("") ? "and " : "and petugas.nama like '%" + TCariPetugas.getText().trim() + "%' and ")
                         + "(rawat_inap_pr.no_rawat like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or "
                         + "jns_perawatan_inap.nm_perawatan like ? or rawat_inap_pr.nip like ? or petugas.nama like ?) "
                         + "order by rawat_inap_pr.no_rawat,rawat_inap_pr.tgl_perawatan,rawat_inap_pr.jam_rawat desc");
@@ -12837,7 +12879,8 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                         + "dokter inner join rawat_inap_drpr inner join petugas on rawat_inap_drpr.no_rawat=reg_periksa.no_rawat "
                         + "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis and rawat_inap_drpr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw "
                         + "and rawat_inap_drpr.kd_dokter=dokter.kd_dokter and rawat_inap_drpr.nip=petugas.nip "
-                        + "where rawat_inap_drpr.tgl_perawatan between ? and ? and reg_periksa.no_rkm_medis like ? and "
+                        + "where rawat_inap_drpr.tgl_perawatan between ? and ? and reg_periksa.no_rkm_medis like ? "
+                        + (TCariPetugas.getText().trim().equals("") ? "and " : "and petugas.nama like '%" + TCariPetugas.getText().trim() + "%' and ")
                         + "(rawat_inap_drpr.no_rawat like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or "
                         + "jns_perawatan_inap.nm_perawatan like ? or rawat_inap_drpr.kd_dokter like ? or dokter.nm_dokter like ? or "
                         + "rawat_inap_drpr.nip like ? or petugas.nama like ?) "
@@ -12964,10 +13007,19 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         TDokter.setText(perawatan.dokter.tampil3(KdDok.getText()));
         KdDok2.setText(KdDok.getText());
         TDokter2.setText(TDokter.getText());
+        KdDok1.setText(KdDok.getText());
+        TDokter1.setText(TDokter.getText());
+        KdDok3.setText(KdDok.getText());
+        TDokter3.setText(TDokter.getText());
 
         isRawat();
         isPsien();
-        DTPCari1.setDate(awal);
+        try {
+            java.util.Date tgl_masuk = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(Sequel.cariIsi("select tgl_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", norwt));
+            DTPCari1.setDate(tgl_masuk);
+        } catch (Exception e) {
+            DTPCari1.setDate(awal);
+        }
         DTPCari2.setDate(akhir);
         TCari.setText(norwt);
         ChkInput.setSelected(true);
@@ -13342,6 +13394,10 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             KdPeg.setText(akses.getkode());
             TPegawai.setText(pegawai.tampil3(KdPeg.getText()));
             Jabatan.setText(pegawai.tampilJbatan(KdPeg.getText()));
+            
+            KdPeg4.setText(akses.getkode());
+            TPegawai4.setText(pegawai.tampil3(KdPeg4.getText()));
+            Jabatan2.setText(pegawai.tampilJbatan(KdPeg4.getText()));
         }
     }
 
@@ -13414,6 +13470,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     + "inner join pemeriksaan_ranap on pemeriksaan_ranap.no_rawat=reg_periksa.no_rawat "
                     + "inner join pegawai on pemeriksaan_ranap.nip=pegawai.nik where "
                     + "pemeriksaan_ranap.tgl_perawatan between ? and ? and reg_periksa.no_rkm_medis like ? "
+                    + (TCariPetugas.getText().trim().equals("") ? "" : "and pegawai.nama like '%" + TCariPetugas.getText().trim() + "%' ")
                     + (TCari.getText().trim().equals("") ? "" : "and (pemeriksaan_ranap.no_rawat like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or "
                     + "pemeriksaan_ranap.alergi like ? or pemeriksaan_ranap.keluhan like ? or pemeriksaan_ranap.penilaian like ? or "
                     + "pemeriksaan_ranap.rtl like ? or pemeriksaan_ranap.pemeriksaan like ? or pegawai.nama like ?)")
@@ -13895,6 +13952,62 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         FormMenu.add(BtnPenilaianTambahanBunuhDiri);
         FormMenu.add(BtnPenilaianTambahanPerilakuKekerasan);
         FormMenu.add(BtnPenilaianTambahanMelarikanDiri);
+        
+        jLabelPetugas = new widget.Label();
+        jLabelPetugas.setText("Petugas :");
+        jLabelPetugas.setName("jLabelPetugas");
+        jLabelPetugas.setPreferredSize(new java.awt.Dimension(55, 23));
+
+        TCariPetugas = new widget.TextBox();
+        TCariPetugas.setName("TCariPetugas");
+        TCariPetugas.setPreferredSize(new java.awt.Dimension(90, 23));
+        TCariPetugas.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
+                    BtnCariActionPerformed(null);
+                }else if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_PAGE_DOWN){
+                    BtnCariActionPerformed(null);
+                }else if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_PAGE_UP){
+                    BtnKeluar.requestFocus();
+                }
+            }
+        });
+
+        btnPetugasCari = new widget.Button();
+        btnPetugasCari.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png")));
+        btnPetugasCari.setMnemonic('7');
+        btnPetugasCari.setToolTipText("Alt+7");
+        btnPetugasCari.setName("btnPetugasCari");
+        btnPetugasCari.setPreferredSize(new java.awt.Dimension(28, 23));
+        btnPetugasCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                petugasCari.isCek();
+                petugasCari.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                petugasCari.setLocationRelativeTo(internalFrame1);
+                petugasCari.setAlwaysOnTop(false);
+                petugasCari.setVisible(true);
+            }
+        });
+
+        petugasCari.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                if(petugasCari.getTable().getSelectedRow()!= -1){                   
+                    TCariPetugas.setText(petugasCari.getTable().getValueAt(petugasCari.getTable().getSelectedRow(),1).toString());
+                }   
+                TCariPetugas.requestFocus();
+            }
+        });
+
+        panelGlass10.add(jLabelPetugas, 7);
+        panelGlass10.add(TCariPetugas, 8);
+        panelGlass10.add(btnPetugasCari, 9);
+        
+        TCariPasien.setPreferredSize(new java.awt.Dimension(80, 23));
+        TCari.setPreferredSize(new java.awt.Dimension(150, 23));
+        NoSEP.setPreferredSize(new java.awt.Dimension(150, 23));
+        panelGlass10.revalidate();
+        panelGlass10.repaint();
     }
 
     private void getDataPemeriksaanSbar() {
@@ -13948,6 +14061,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     + "inner join pegawai on pemeriksaan_ranap_sbar.nip=pegawai.nik inner join dokter on pemeriksaan_ranap_sbar.kd_dokter=dokter.kd_dokter "
                     + "LEFT JOIN validasi_pemeriksaan_sbar vps ON CONCAT(pemeriksaan_ranap_sbar.no_rawat, pemeriksaan_ranap_sbar.tgl_perawatan, pemeriksaan_ranap_sbar.jam_rawat) = CONCAT (vps.no_rawat, vps.tgl_perawatan, vps.jam_rawat) where "
                     + "pemeriksaan_ranap_sbar.tgl_perawatan between ? and ? and reg_periksa.no_rkm_medis like ? "
+                    + (TCariPetugas.getText().trim().equals("") ? "" : "and pegawai.nama like '%" + TCariPetugas.getText().trim() + "%' ")
                     + (TCari.getText().trim().equals("") ? "" : "and (pemeriksaan_ranap_sbar.no_rawat like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or "
                     + "pemeriksaan_ranap_sbar.situation like ? or pemeriksaan_ranap_sbar.background like ? or pemeriksaan_ranap_sbar.assesment like ? or "
                     + "pemeriksaan_ranap_sbar.recommendation like ?)")
@@ -14002,6 +14116,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     + "inner join pegawai on pemeriksaan_ranap_tbak.nip=pegawai.nik inner join dokter on pemeriksaan_ranap_tbak.kddokter=dokter.kd_dokter "
                     + "LEFT JOIN validasi_pemeriksaan_sbar vpt ON CONCAT(pemeriksaan_ranap_tbak.no_rawat, pemeriksaan_ranap_tbak.tgl_perawatan, pemeriksaan_ranap_tbak.jam_rawat) = CONCAT (vpt.no_rawat, vpt.tgl_perawatan, vpt.jam_rawat) where "
                     + "pemeriksaan_ranap_tbak.tgl_perawatan between ? and ? and reg_periksa.no_rkm_medis like ? "
+                    + (TCariPetugas.getText().trim().equals("") ? "" : "and pegawai.nama like '%" + TCariPetugas.getText().trim() + "%' ")
                     + (TCari.getText().trim().equals("") ? "" : "and (pemeriksaan_ranap_tbak.no_rawat like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or "
                     + "pemeriksaan_ranap_tbak.situation like ? or pemeriksaan_ranap_tbak.background like ? or pemeriksaan_ranap_tbak.assesment like ? or "
                     + "pemeriksaan_ranap_tbak.recommendation like ?)")
@@ -14114,6 +14229,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     + "inner join catatan_adime_gizi on catatan_adime_gizi.no_rawat=reg_periksa.no_rawat "
                     + "inner join pegawai on catatan_adime_gizi.nip=pegawai.nik where "
                     + "catatan_adime_gizi.tanggal between ? and ? and reg_periksa.no_rkm_medis like ? "
+                    + (TCariPetugas.getText().trim().equals("") ? "" : "and pegawai.nama like '%" + TCariPetugas.getText().trim() + "%' ")
                     + (TCari.getText().trim().equals("") ? "" : "and (catatan_adime_gizi.no_rawat like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or "
                     + "catatan_adime_gizi.alergi like ? or catatan_adime_gizi.asesmen like ? or catatan_adime_gizi.diagnosis like ? or "
                     + "catatan_adime_gizi.intervensi like ? or catatan_adime_gizi.monitoring like ? or pegawai.nama like ?)")

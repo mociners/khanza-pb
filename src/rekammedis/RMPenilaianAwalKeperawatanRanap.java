@@ -9400,4 +9400,53 @@ public final class RMPenilaianAwalKeperawatanRanap extends javax.swing.JDialog {
             TingkatSydney.setText("Tingkat Resiko : Risiko Rendah (1-3), Tindakan : Intervensi pencegahan risiko standar");
         }
     }
+
+    
+
+
+    public void setTTVFromPonek() {
+        if (Sequel.cariInteger("select count(no_rawat) from penilaian_awal_keperawatan_ranap where no_rawat=?", TNoRw.getText()) > 0) {
+            return;
+        }
+        java.sql.PreparedStatement psTTV = null;
+        java.sql.ResultSet rsTTV = null;
+        try {
+            psTTV = koneksi.prepareStatement(
+                "select obj_td_sistol, obj_td_diastol, obj_hr, obj_rr, obj_suhu, tb_kbd, bb_sekarang " +
+                "from penilaian_awal_keperawatan_ponek where no_rawat=?");
+            try {
+                psTTV.setString(1, TNoRw.getText());
+                rsTTV = psTTV.executeQuery();
+                if (rsTTV.next()) {
+                    String sistol = rsTTV.getString("obj_td_sistol");
+                    String diastol = rsTTV.getString("obj_td_diastol");
+                    String td = "";
+                    if (sistol != null && !sistol.isEmpty() && !sistol.equals("-")) td = sistol;
+                    if (diastol != null && !diastol.isEmpty() && !diastol.equals("-")) td += "/" + diastol;
+                    if (!td.isEmpty()) TD.setText(td);
+
+                    String nadi = rsTTV.getString("obj_hr");
+                    if (nadi != null && !nadi.isEmpty() && !nadi.equals("-")) Nadi.setText(nadi);
+
+                    String rr = rsTTV.getString("obj_rr");
+                    if (rr != null && !rr.isEmpty() && !rr.equals("-")) RR.setText(rr);
+
+                    String suhu = rsTTV.getString("obj_suhu");
+                    if (suhu != null && !suhu.isEmpty() && !suhu.equals("-")) Suhu.setText(suhu);
+                    
+                    String tb = rsTTV.getString("tb_kbd");
+                    if (tb != null && !tb.isEmpty() && !tb.equals("-")) TB.setText(tb);
+                    
+                    String bb = rsTTV.getString("bb_sekarang");
+                    if (bb != null && !bb.isEmpty() && !bb.equals("-")) BB.setText(bb);
+                }
+            } finally {
+                if (rsTTV != null) rsTTV.close();
+                if (psTTV != null) psTTV.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Notif TTV Ponek: " + e);
+        }
+    }
+
 }

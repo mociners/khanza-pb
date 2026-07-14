@@ -86,6 +86,7 @@ public class DlgBerkasRawat extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         initComponents2();
+        initEdit();
         this.setLocation(8,1);
         setSize(885,350);
         
@@ -148,6 +149,35 @@ public class DlgBerkasRawat extends javax.swing.JDialog {
         
         internalFrame1.setLayout(new BorderLayout());
         internalFrame1.add(panel);        
+    }
+    
+    private void initEdit() {
+        widget.panelisi panelGlassTab1 = new widget.panelisi();
+        panelGlassTab1.setName("panelGlassTab1");
+        panelGlassTab1.setPreferredSize(new java.awt.Dimension(44, 44));
+        panelGlassTab1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 9));
+        
+        widget.Button BtnKeluarTab1 = new widget.Button();
+        BtnKeluarTab1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cross.png"))); 
+        BtnKeluarTab1.setMnemonic('T');
+        BtnKeluarTab1.setText("Keluar");
+        BtnKeluarTab1.setToolTipText("Alt+T");
+        BtnKeluarTab1.setName("BtnKeluarTab1"); 
+        BtnKeluarTab1.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnKeluarTab1.addActionListener((java.awt.event.ActionEvent evt) -> {
+            dispose();
+        });
+        BtnKeluarTab1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+                    dispose();
+                }
+            }
+        });
+        
+        panelGlassTab1.add(BtnKeluarTab1);
+        internalFrame1.add(panelGlassTab1, java.awt.BorderLayout.PAGE_END);
     }
     
      private void createScene() {        

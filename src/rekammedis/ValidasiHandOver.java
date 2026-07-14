@@ -1243,7 +1243,7 @@ public final class ValidasiHandOver extends javax.swing.JDialog {
     }
     
     public void isCek(){
-        BtnSimpan.setEnabled(akses.getdata_resume_pasien());
+        BtnSimpan.setEnabled(true);
 //        BtnHapus.setEnabled(akses.getdata_resume_pasien());
 //        BtnEdit.setEnabled(akses.getdata_resume_pasien());
 //        BtnPrint.setEnabled(akses.getdata_resume_pasien()); 
@@ -1251,13 +1251,8 @@ public final class ValidasiHandOver extends javax.swing.JDialog {
         ppBerkasDigital.setEnabled(akses.getberkas_digital_perawatan());    
         if(akses.getjml2()>=1){
             NIP2.setEditable(false);
-            BtnDokter.setEnabled(false);
             NIP2.setText(akses.getkode());
-            Sequel.cariIsi("select nm_dokter from dokter where kd_dokter=?", NamaPetugas2,NIP2.getText());
-            if(NamaPetugas2.getText().equals("")){
-                NIP2.setText("");
-                JOptionPane.showMessageDialog(null,"User login bukan dokter...!!");
-            }
+            Sequel.cariIsi("select nama from petugas where nip=?", NamaPetugas2,NIP2.getText());
         }            
     }
 

@@ -67,10 +67,9 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public RMPenilaianAwalMedisIGD(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public RMPenilaianAwalMedisIGD(java.awt.Window parent, boolean modal) {
+        super(parent, modal ? java.awt.Dialog.ModalityType.APPLICATION_MODAL : java.awt.Dialog.ModalityType.MODELESS);
         initComponents();
-        initRTL();
         addRtlListeners();
 
         tabMode = new DefaultTableModel(null, new Object[] {
@@ -1748,7 +1747,7 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
             // --- KODE SIMPAN BARU MENGGUNAKAN JDBC STANDAR ---
             try {
                 koneksi = koneksiDB.condb();
-                ps = koneksi.prepareStatement("INSERT INTO penilaian_medis_igd VALUES (" +
+                ps = koneksi.prepareStatement("insert into penilaian_medis_igd (no_rawat, tanggal, kd_dokter, anamnesis, hubungan, keluhan_utama, rps, rpd, rpk, rpo, alergi, keadaan, gcs, kesadaran, td, nadi, rr, suhu, spo, bb, tb, kepala, mata, gigi, leher, thoraks, abdomen, genital, ekstremitas, ket_fisik, ket_lokalis, ekg, rad, lab, diagnosis, tata, catatan, rencana_tindak_lanjut, skrining_keadaan, skrining_hemodinamic, skrining_kebutuhan, kondisi_keadaan, kondisi_td, kondisi_nadi, kondisi_rr, kondisi_suhu, kondisi_pemeriksaan_fisik, kondisi_tanggal) values (" +
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 // Set semua 38 parameter satu per satu
                 ps.setString(1, TNoRw.getText());
@@ -1807,8 +1806,12 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
                 ps.setString(45, KondisiRR.getText());
                 ps.setString(46, KondisiSuhu.getText());
                 ps.setString(47, KondisiPemeriksaanFisik.getText());
-                ps.setString(48, Valid.SetTgl(KondisiTanggal.getSelectedItem() + "") + " "
-                        + KondisiTanggal.getSelectedItem().toString().substring(11, 19));
+                // Bangun nilai kondisi_tanggal secara aman
+                String kondisiTglStr = KondisiTanggal.getSelectedItem() + "";
+                String kondisiTglValue = kondisiTglStr.length() >= 19
+                        ? Valid.SetTgl(kondisiTglStr) + " " + kondisiTglStr.substring(11, 19)
+                        : "";
+                ps.setString(48, kondisiTglValue);
 
                 ps.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
@@ -2763,7 +2766,7 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
                             rs.getString("tgl_lahir"), rs.getString("jk"), rs.getString("kd_dokter"),
                             rs.getString("nm_dokter"), rs.getString("tanggal"),
                             rs.getString("anamnesis"), rs.getString("hubungan"), rs.getString("keluhan_utama"),
-                            rs.getString("rps"), rs.getString("rpd"), rs.getString("rpk"), rs.getString("rpo"),
+                            rs.getString("rps"), rs.getString("rpk"), rs.getString("rpd"), rs.getString("rpo"),
                             rs.getString("alergi"),
                             rs.getString("keadaan"), rs.getString("gcs"), rs.getString("kesadaran"), rs.getString("td"),
                             rs.getString("nadi"), rs.getString("rr"), rs.getString("suhu"), rs.getString("spo"),
@@ -2961,22 +2964,26 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
             Catatan.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 41).toString());
 
             // Mengisi form Rencana Tindak Lanjut dari kolom indeks 42
-            polaDataRTL(tbObat.getValueAt(tbObat.getSelectedRow(), 42).toString());
+            Object objRTL = tbObat.getValueAt(tbObat.getSelectedRow(), 42);
+            polaDataRTL(objRTL == null ? "" : objRTL.toString());
 
             // Mengisi form Skrining Rawat Inap dari kolom indeks 43, 44, 45
-            String keadaanSkrining = tbObat.getValueAt(tbObat.getSelectedRow(), 43).toString();
+            Object objSkriningKeadaan = tbObat.getValueAt(tbObat.getSelectedRow(), 43);
+            String keadaanSkrining = objSkriningKeadaan == null ? "" : objSkriningKeadaan.toString();
             if (keadaanSkrining.equals("Sadar"))
                 SkriningKeadaanSadar.setSelected(true);
             else if (keadaanSkrining.equals("Tidak Sadar"))
                 SkriningKeadaanTidakSadar.setSelected(true);
 
-            String hemodinamic = tbObat.getValueAt(tbObat.getSelectedRow(), 44).toString();
+            Object objHemodinamic = tbObat.getValueAt(tbObat.getSelectedRow(), 44);
+            String hemodinamic = objHemodinamic == null ? "" : objHemodinamic.toString();
             if (hemodinamic.equals("Stabil"))
                 SkriningHemodinamicStabil.setSelected(true);
             else if (hemodinamic.equals("Tidak Stabil"))
                 SkriningHemodinamicTidakStabil.setSelected(true);
 
-            String kebutuhan = tbObat.getValueAt(tbObat.getSelectedRow(), 45).toString();
+            Object objKebutuhan = tbObat.getValueAt(tbObat.getSelectedRow(), 45);
+            String kebutuhan = objKebutuhan == null ? "" : objKebutuhan.toString();
             if (kebutuhan.equals("Kuratif"))
                 SkriningKebutuhanKuratif.setSelected(true);
             else if (kebutuhan.equals("Paliatif"))
@@ -2985,7 +2992,8 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
                 SkriningKebutuhanRehabili.setSelected(true);
 
             // Mengisi form Kondisi Terakhir dari kolom indeks 46 sampai 52
-            String keadaanKondisi = tbObat.getValueAt(tbObat.getSelectedRow(), 46).toString();
+            Object objKondisiKeadaan = tbObat.getValueAt(tbObat.getSelectedRow(), 46);
+            String keadaanKondisi = objKondisiKeadaan == null ? "" : objKondisiKeadaan.toString();
             if (keadaanKondisi.equals("Baik"))
                 KondisiKeadaanBaik.setSelected(true);
             else if (keadaanKondisi.equals("Sedang"))
@@ -2993,12 +3001,23 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
             else if (keadaanKondisi.equals("Lemah"))
                 KondisiKeadaanLemah.setSelected(true);
 
-            KondisiTD.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 47).toString());
-            KondisiNadi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 48).toString());
-            KondisiRR.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 49).toString());
-            KondisiSuhu.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 50).toString());
-            KondisiPemeriksaanFisik.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 51).toString());
-            Valid.SetTgl2(KondisiTanggal, tbObat.getValueAt(tbObat.getSelectedRow(), 52).toString());
+            Object objKondisiTD = tbObat.getValueAt(tbObat.getSelectedRow(), 47);
+            KondisiTD.setText(objKondisiTD == null ? "" : objKondisiTD.toString());
+
+            Object objKondisiNadi = tbObat.getValueAt(tbObat.getSelectedRow(), 48);
+            KondisiNadi.setText(objKondisiNadi == null ? "" : objKondisiNadi.toString());
+
+            Object objKondisiRR = tbObat.getValueAt(tbObat.getSelectedRow(), 49);
+            KondisiRR.setText(objKondisiRR == null ? "" : objKondisiRR.toString());
+
+            Object objKondisiSuhu = tbObat.getValueAt(tbObat.getSelectedRow(), 50);
+            KondisiSuhu.setText(objKondisiSuhu == null ? "" : objKondisiSuhu.toString());
+
+            Object objKondisiFisik = tbObat.getValueAt(tbObat.getSelectedRow(), 51);
+            KondisiPemeriksaanFisik.setText(objKondisiFisik == null ? "" : objKondisiFisik.toString());
+
+            Object objKondisiTanggal = tbObat.getValueAt(tbObat.getSelectedRow(), 52);
+            Valid.SetTgl2(KondisiTanggal, objKondisiTanggal == null ? "" : objKondisiTanggal.toString());
 
             Valid.SetTgl2(TglAsuhan, tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString());
 
@@ -3134,8 +3153,11 @@ public final class RMPenilaianAwalMedisIGD extends javax.swing.JDialog {
                 KondisiRR.getText(),
                 KondisiSuhu.getText(),
                 KondisiPemeriksaanFisik.getText(),
-                Valid.SetTgl(KondisiTanggal.getSelectedItem() + "") + " "
-                        + KondisiTanggal.getSelectedItem().toString().substring(11, 19),
+                // Bangun nilai kondisi_tanggal secara aman
+                (KondisiTanggal.getSelectedItem() + "").length() >= 19
+                        ? Valid.SetTgl(KondisiTanggal.getSelectedItem() + "") + " "
+                                + KondisiTanggal.getSelectedItem().toString().substring(11, 19)
+                        : "",
 
                 // 1 nilai untuk klausa WHERE
                 tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString()

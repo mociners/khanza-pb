@@ -632,7 +632,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Keluhan Utama : "+$F{keluhan_utama}]]></textFieldExpression>
+                <textFieldExpression><![CDATA["ANAMNESIS : " + $F{keluhan_utama}]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="0" y="146" width="557" height="1" uuid="39e69c44-644d-4ea7-a12d-e40942934760"/>
@@ -648,7 +648,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Riwayat Penyakit Sekarang : "+$F{rps}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="0" y="192" width="557" height="1" uuid="3c6e783c-4ff3-44a4-ab56-b6f7a07044f3"/>
@@ -664,7 +664,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Riwayat Penyakit Dahulu : "+$F{rpd}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="282" y="194" width="273" height="25" uuid="9e74446b-91af-4d88-834b-eaac417e15fa">
@@ -674,7 +674,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Riwayat Penyakit dalam Keluarga : "+$F{rpk}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="278" y="193" width="1" height="55" uuid="5e11ba50-09d3-4d59-a1d3-01b4c8440200">
@@ -698,7 +698,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Riwayat Pengobatan : "+$F{rpo}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="282" y="222" width="273" height="25" uuid="f712c7c2-3758-4aea-9f6b-1a3609a059e8">
@@ -708,7 +708,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Riwayat Alergi : "+$F{alergi}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="0" y="248" width="557" height="1" uuid="d2944590-aa60-4ca3-a9f5-92632d6fbb06"/>
@@ -741,7 +741,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Keadaan Umum : "+$F{keadaan}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="230" y="263" width="200" height="11" uuid="910edbf7-f21f-4c48-b333-df3eb4ca16cd">
@@ -751,7 +751,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Kesadaraan : "+$F{kesadaran}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="431" y="263" width="124" height="11" uuid="84057352-d9db-4dc3-be31-e36417e14415">
@@ -762,7 +762,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["GCS(E,V,M) : "+$F{gcs}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="0" y="275" width="557" height="1" uuid="538afa9c-aa5f-4333-bcfb-f2ca73437035"/>
@@ -805,7 +805,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{kepala}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="63" y="319" width="67" height="11" uuid="a98a0489-687e-49cd-8d00-ff3d90a0c9a0">
@@ -816,7 +816,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{gigi}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="3" y="319" width="50" height="11" uuid="d266fb87-c39e-40c1-a655-5624ce6dea12">
@@ -847,7 +847,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{tht}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="3" y="347" width="50" height="11" uuid="70304d42-0f46-4c37-a5d5-2176547ed757">
@@ -868,7 +868,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{thoraks}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="138" y="305" width="56" height="11" uuid="f38b5710-a872-4fbc-92bd-022a9b8665af">
@@ -889,7 +889,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{abdomen}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="138" y="319" width="56" height="11" uuid="68d0f794-29ea-4b57-975e-c3a880b9ea83">
@@ -910,7 +910,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{genital}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="138" y="333" width="56" height="11" uuid="8c8fea0f-cef4-4317-8ee0-1ccd81462f5c">
@@ -931,7 +931,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{ekstremitas}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="203" y="347" width="71" height="11" uuid="5bcd8067-240c-4228-94ad-4d3a1f38c4ea">
@@ -942,7 +942,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{kulit}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="138" y="347" width="56" height="11" uuid="da2b3e38-1310-474e-a646-dd2d348b1296">
@@ -1001,7 +1001,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="true"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <text><![CDATA[III. STATUS OBSTETRI / GINEKOLOGI]]></text>
+                <text><![CDATA[STATUS GINEKOLOGI :]]></text>
             </staticText>
             <line>
                 <reportElement x="0" y="374" width="557" height="1" uuid="6be66e18-689e-41fc-8d31-e6605effd776"/>
@@ -1081,7 +1081,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["TFU : "+$F{tfu}+" Cm     TBJ : "+$F{tbj}+" gram     His : "+$F{his}+" x/10 Menit     Kontraksi : "+$F{kontraksi}+"     DJJ : "+$F{djj}+" Dpm"]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Status Obstetri :   Letak : " + $F{tfu} + "   Ketuban : " + $F{his} + "   DJJ : " + $F{djj} + " x/mnt   Jenis Kelamin : " + $F{kontraksi} + "   TBBJ : " + $F{tbj} + " gram   Plasenta : " + ""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="282" y="293" width="272" height="79" uuid="fc6096b6-554d-47aa-98d8-b356b7789599">
@@ -1109,7 +1109,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="true"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <text><![CDATA[IV. PEMERIKSAAN PENUNJANG]]></text>
+                <text><![CDATA[III. PEMERIKSAAN PENUNJANG :]]></text>
             </staticText>
             <textField>
                 <reportElement x="3" y="531" width="176" height="27" uuid="a09efe30-4a58-4707-b351-c731fb088083">
@@ -1119,7 +1119,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Ultrasonografi : "+$F{ultra}]]></textFieldExpression>
+                <textFieldExpression><![CDATA["c. Lainnya : " + $F{ultra}]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="0" y="559" width="557" height="1" uuid="c280c1a1-92b1-4ff2-81d6-469ae2dd853a"/>
@@ -1173,7 +1173,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="true"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <text><![CDATA[VI. TATALAKSANA]]></text>
+                <text><![CDATA[V. TERAPI :]]></text>
             </staticText>
             <textField>
                 <reportElement x="3" y="720" width="550" height="22" uuid="7e93ceda-d4a5-4229-8831-7f8ee1c512a9">
@@ -1194,7 +1194,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="true"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <text><![CDATA[VII. EDUKASI]]></text>
+                <text><![CDATA[VI. TINDAKAN :]]></text>
             </staticText>
             <line>
                 <reportElement x="0" y="706" width="557" height="1" uuid="0c19ef55-e436-43c2-9631-b3ec4a561d82"/>
@@ -1216,7 +1216,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Kardiotokografi : "+$F{kardio}]]></textFieldExpression>
+                <textFieldExpression><![CDATA["b. Radiologi / USG / KTG : " + $F{kardio}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="376" y="531" width="176" height="27" uuid="be7b5822-23b5-40ab-8a8c-1ca79a1901d5">
@@ -1226,7 +1226,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Laboratorium : "+$F{lab}]]></textFieldExpression>
+                <textFieldExpression><![CDATA["a. Laboratorium : " + $F{lab}]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="0" y="530" width="557" height="1" uuid="7d7ae654-3415-4dde-8358-5b89fac7257e"/>
@@ -1279,7 +1279,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{mata}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="63" y="361" width="67" height="11" uuid="d96944b7-c3a9-49a8-a9bc-e5dc1ef0d90b">
@@ -1290,7 +1290,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{jantung}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="138" y="291" width="56" height="11" uuid="bf1cc08b-c4c4-499b-a5eb-01d88652e000">
@@ -1311,7 +1311,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{paru}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="0" y="402" width="557" height="1" uuid="54328579-5900-4223-86e6-2345ed0d47b5"/>
@@ -1341,7 +1341,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Inspekulo : "+$F{inspekulo}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="3" y="404" width="273" height="53" uuid="8ac363e7-663d-4794-95b6-1525473b9a25">
@@ -1351,7 +1351,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Inspeksi : "+$F{inspeksi}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="282" y="404" width="273" height="53" uuid="e7d9d447-8b62-4c8d-8fd7-e83214c5eb3c">
@@ -1361,7 +1361,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["VT : "+$F{vt}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="282" y="461" width="273" height="53" uuid="41a7d65e-4ccf-4256-9621-6abe801ab5af">
@@ -1371,7 +1371,7 @@ inner join dokter on penilaian_medis_ranap_kandungan.kd_dokter=dokter.kd_dokter]
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA["RT "+$F{rt}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
         </band>
     </title>

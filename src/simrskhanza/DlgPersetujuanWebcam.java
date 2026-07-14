@@ -267,40 +267,31 @@ public class DlgPersetujuanWebcam extends JDialog {
     }
 
     // === METODE UPLOAD KE SERVER (VERSI 3) ===
-    private boolean uploadKeServer(File file, String noSurat) {
+        private boolean uploadKeServer(File file, String noSurat) {
         String urlUpload = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + 
                            koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + 
-                           "/upload_persetujuan.php";
+                           "/imagefreehand/upload.php?doc=pernyataanumum";
         
-        HttpClient client = new HttpClient();
-        PostMethod post = new PostMethod(urlUpload);
+        org.apache.commons.httpclient.HttpClient client = new org.apache.commons.httpclient.HttpClient();
+        org.apache.commons.httpclient.methods.PostMethod post = new org.apache.commons.httpclient.methods.PostMethod(urlUpload);
         
         try {
-            // Buat bagian-bagian dari form multipart
-            Part[] parts = {
-                new StringPart("noSurat", noSurat),
-                new FilePart("file", file) // "file" harus cocok dengan $_FILES["file"] di PHP
+            org.apache.commons.httpclient.methods.multipart.Part[] parts = {
+                new org.apache.commons.httpclient.methods.multipart.StringPart("noSurat", noSurat),
+                new org.apache.commons.httpclient.methods.multipart.FilePart("file", file)
             };
     
-            // Atur entity request menggunakan parts
-            post.setRequestEntity(new MultipartRequestEntity(parts, post.getParams()));
+            post.setRequestEntity(new org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity(parts, post.getParams()));
     
-            // Jalankan metode
             int statusCode = client.executeMethod(post);
             
-            // Baca respons (untuk debugging)
-            String responseString = post.getResponseBodyAsString();
-            System.out.println("Respons Upload Server (v3): " + responseString);
-
-            // Cek jika sukses (status code 200)
-            return statusCode == HttpStatus.SC_OK; // SC_OK adalah 200
+            return statusCode == org.apache.commons.httpclient.HttpStatus.SC_OK; 
 
         } catch (Exception e) {
-            System.out.println("Gagal upload ke server (v3): " + e.getMessage());
+            System.out.println("Gagal upload ke server: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {
-            // v3 HARUS me-release koneksi secara manual
             post.releaseConnection(); 
         }
     }
@@ -311,27 +302,23 @@ public class DlgPersetujuanWebcam extends JDialog {
             return;
         }
 
-        // Tentukan path lokal (sesuai permintaan Anda)
         String localFolderPath = "pernyataanumum" + File.separator + "pages" + File.separator + "upload";
         String fileName = this.noSurat + ".jpeg";
         
         File folder = new File(localFolderPath);
         if (!folder.exists()) {
-            folder.mkdirs(); // Buat folder jika belum ada
+            folder.mkdirs();
         }
         
         File file = new File(folder.getAbsolutePath() + File.separator + fileName);
 
-        // Hapus file lokal lama
         if (file.exists()) {
             file.delete();
         }
 
         try {
-            // --- LANGKAH 1: SIMPAN LOKAL ---
             ImageIO.write(capturedImage, "jpeg", file);
             
-            // --- LANGKAH 2: UPLOAD KE SERVER (Sekarang menggunakan metode v3) ---
             boolean uploadSukses = uploadKeServer(file, this.noSurat);
             
             if (!uploadSukses) {
@@ -341,11 +328,10 @@ public class DlgPersetujuanWebcam extends JDialog {
                     "Peringatan Upload", JOptionPane.WARNING_MESSAGE);
             }
 
-            // --- LANGKAH 3: SIMPAN KE DATABASE ---
             Sequel.queryu("delete from surat_persetujuan_umum_pembuat_pernyataan where no_surat='" + this.noSurat + "'");
 
             if (Sequel.menyimpantf("surat_persetujuan_umum_pembuat_pernyataan", "?,?", "Photo", 2, new String[]{
-                this.noSurat, fileName // Simpan nama filenya saja
+                this.noSurat, fileName
             }) == true) {
                 isSaved = true;
                 JOptionPane.showMessageDialog(this, "Foto persetujuan berhasil disimpan (Lokal & Server)!");

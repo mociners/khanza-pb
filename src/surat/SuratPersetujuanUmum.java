@@ -52,6 +52,18 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     public SuratPersetujuanUmum(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                if (ChkInput.isSelected()) {
+                    PanelInput.setPreferredSize(new Dimension(WIDTH, Math.max(150, (int)(SuratPersetujuanUmum.this.getHeight() * 0.55))));
+                    PanelInput.revalidate();
+                }
+            }
+        });
+        
+        
+        initGC();
+        isForm();
         this.setLocation(8, 1);
         setSize(628, 674);
 
@@ -59,7 +71,10 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             "No.Persetujuan", "No.Rawat", "No.R.M.", "Nama Pasien", "Umur", "J.K.", "Tgl.Lahir", 
             "Tanggal", "Pengobatan Kepada", "Nilai Kepercayaan", "Nama Penanggung Jawab", 
             "Umur P.J.", "Nomor KTP P.J.", "J.K. P.J.", "Nomor Telp/HP", "Bertindak Untuk", 
-            "Alamat P.J.", "Pekerjaan P.J.", "NIP", "Nama Petugas" // <-- Tambahkan 2 kolom baru sebelum NIP
+            "Alamat P.J.", "Pekerjaan P.J.", "NIP", "Nama Petugas", 
+            "Privasi Akses", "Privasi Khusus", "Informasi Biaya", "Keluarga 1", "Keluarga 2", "Jenis Pembiayaan", 
+            "Alasan Tolak BPJS", "Alasan Tolak BPJS Kerja", "Alasan Tolak Jasa Raharja", 
+            "Asuransi", "No.Asuransi", "No.BPJS", "Hak Kelas", "Pilih Kelas", "Alasan Naik Kelas", "Edukasi PJ", "Edukasi RS", "Saksi 2"
         }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -72,49 +87,37 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         tbObat.setPreferredScrollableViewportSize(new Dimension(500, 500));
         tbObat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 20; i++) {
+        for (i = 0; i < 38; i++) {
             TableColumn column = tbObat.getColumnModel().getColumn(i);
-            if (i == 0) {
-                column.setPreferredWidth(105);
-            } else if (i == 1) {
-                column.setPreferredWidth(105);
-            } else if (i == 2) {
-                column.setPreferredWidth(70);
-            } else if (i == 3) {
-                column.setPreferredWidth(150);
-            } else if (i == 4) {
-                column.setPreferredWidth(45);
-            } else if (i == 5) {
-                column.setPreferredWidth(25);
-            } else if (i == 6) {
-                column.setPreferredWidth(65);
-            } else if (i == 7) {
-                column.setPreferredWidth(65);
-            } else if (i == 8) {
-                column.setPreferredWidth(105);
-            } else if (i == 9) {
-                column.setPreferredWidth(150);
-            } else if (i == 10) {
-                column.setPreferredWidth(150);
-            } else if (i == 11) {
-                column.setPreferredWidth(55);
-            } else if (i == 12) {
-                column.setPreferredWidth(100);
-            } else if (i == 13) {
-                column.setPreferredWidth(45);
-            } else if (i == 14) {
-                column.setPreferredWidth(100);
-            } else if (i == 15) {
-                column.setPreferredWidth(88);
-            } else if (i == 16) { // Kolom Alamat PJ
-                column.setPreferredWidth(150);
-            } else if (i == 17) { // Kolom Pekerjaan PJ
-                column.setPreferredWidth(100);
-            } else if (i == 18) { // Kolom NIP
-                column.setPreferredWidth(90);
-            } else if (i == 19) { // Kolom Nama Petugas
-                column.setPreferredWidth(150);
-            }
+            if (i == 0) column.setPreferredWidth(105);
+            else if (i == 1) column.setPreferredWidth(105);
+            else if (i == 2) column.setPreferredWidth(70);
+            else if (i == 3) column.setPreferredWidth(150);
+            else if (i == 4) column.setPreferredWidth(45);
+            else if (i == 5) column.setPreferredWidth(25);
+            else if (i == 6) column.setPreferredWidth(65);
+            else if (i == 7) column.setPreferredWidth(65);
+            else if (i == 8) column.setPreferredWidth(105);
+            else if (i == 9) column.setPreferredWidth(150);
+            else if (i == 10) column.setPreferredWidth(150);
+            else if (i == 11) column.setPreferredWidth(55);
+            else if (i == 12) column.setPreferredWidth(100);
+            else if (i == 13) column.setPreferredWidth(45);
+            else if (i == 14) column.setPreferredWidth(100);
+            else if (i == 15) column.setPreferredWidth(88);
+            else if (i == 16) column.setPreferredWidth(150);
+            else if (i == 17) column.setPreferredWidth(100);
+            else if (i == 18) column.setPreferredWidth(90);
+            else if (i == 19) column.setPreferredWidth(150);
+            else if (i == 20) column.setPreferredWidth(100);
+            else if (i == 21) column.setPreferredWidth(100);
+            else if (i == 22) column.setPreferredWidth(150);
+            else if (i == 29) column.setPreferredWidth(100);
+            else if (i == 29) column.setPreferredWidth(100);
+            else if (i == 29) column.setPreferredWidth(100);
+            else if (i == 29) column.setPreferredWidth(80);
+            else if (i == 29) column.setPreferredWidth(120);
+            else if (i == 29) column.setPreferredWidth(150);
         }
         tbObat.setDefaultRenderer(Object.class, new WarnaTable());
 
@@ -248,6 +251,7 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         jLabel7 = new widget.Label();
         LCount = new widget.Label();
         PanelInput = new javax.swing.JPanel();
+        scrollInput = new widget.ScrollPane();
         FormInput = new widget.PanelBiasa();
         jLabel4 = new widget.Label();
         TNoRw = new widget.TextBox();
@@ -286,6 +290,50 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         FormPhoto = new widget.PanelBiasa();
         FormPass3 = new widget.PanelBiasa();
         btnAmbil = new widget.Button();
+        
+        jLabelSaksi2 = new widget.Label();
+        Saksi2 = new widget.TextBox();
+        btnAmbilSaksi2 = new widget.Button();
+        
+        jLabelSaksi2.setText("Saksi 2 :");
+        jLabelSaksi2.setName("jLabelSaksi2");
+        FormInput.add(jLabelSaksi2);
+        jLabelSaksi2.setBounds(0, 630, 130, 23);
+        
+        Saksi2.setHighlighter(null);
+        Saksi2.setName("Saksi2");
+        Saksi2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Valid.pindah(evt, EdukasiRS, BtnSimpan);
+            }
+        });
+        FormInput.add(Saksi2);
+
+        Saksi2.setBounds(134, 630, 300, 23);
+        
+        btnAmbilSaksi2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/plus_16.png"))); 
+        btnAmbilSaksi2.setMnemonic('S');
+        btnAmbilSaksi2.setText("TTD Saksi 2");
+        btnAmbilSaksi2.setToolTipText("Klik untuk TTD Saksi 2");
+        btnAmbilSaksi2.setName("btnAmbilSaksi2"); 
+        btnAmbilSaksi2.setPreferredSize(new java.awt.Dimension(120, 30));
+        btnAmbilSaksi2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (tbObat.getSelectedRow() > -1) {
+                    freehand.DlgTTDSaksi2 dlg = new freehand.DlgTTDSaksi2(null, true);
+                    dlg.setNoSurat(tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    dlg.setVisible(true);
+                    if (!dlg.getNamaFile().equals("")) {
+                        panggilPhoto();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih No.Pernyataan terlebih dahulu..!!");
+                }
+            }
+        });
+        
+
+        btnAmbilGambar = new widget.Button();
         BtnRefreshPhoto1 = new widget.Button();
         BtnPrint1 = new widget.Button();
         Scroll5 = new widget.ScrollPane();
@@ -543,11 +591,11 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
 
         PanelInput.setName("PanelInput"); // NOI18N
         PanelInput.setOpaque(false);
-        PanelInput.setPreferredSize(new java.awt.Dimension(192, 175));
+        
         PanelInput.setLayout(new java.awt.BorderLayout(1, 1));
 
         FormInput.setName("FormInput"); // NOI18N
-        FormInput.setPreferredSize(new java.awt.Dimension(100, 165));
+        FormInput.setPreferredSize(new java.awt.Dimension(100, 710));
         FormInput.setLayout(null);
 
         jLabel4.setText("No.Rawat :");
@@ -621,7 +669,7 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         FormInput.add(jLabel10);
         jLabel10.setBounds(0, 90, 85, 23);
 
-        BertindakAtas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Suami", "Istri", "Anak", "Ayah", "Saudara", "Keponakan" }));
+        BertindakAtas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Suami", "Istri", "Anak", "Ayah", "Ibu", "Saudara", "Keponakan", "Pasien", "Lainnya" }));
         BertindakAtas.setName("BertindakAtas"); // NOI18N
         BertindakAtas.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -629,7 +677,29 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             }
         });
         FormInput.add(BertindakAtas);
-        BertindakAtas.setBounds(870, 120, 110, 23);
+        BertindakAtas.setBounds(865, 120, 75, 23);
+        KetBertindak = new widget.TextBox();
+        KetBertindak.setName("KetBertindak");
+        KetBertindak.setEnabled(false);
+        KetBertindak.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Valid.pindah(evt, BertindakAtas, Alamat);
+            }
+        });
+        FormInput.add(KetBertindak);
+        KetBertindak.setBounds(945, 120, 100, 23);
+
+        BertindakAtas.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                if(BertindakAtas.getSelectedItem().toString().equals("Lainnya")) {
+                    KetBertindak.setEnabled(true);
+                    KetBertindak.requestFocus();
+                } else {
+                    KetBertindak.setEnabled(false);
+                    KetBertindak.setText("");
+                }
+            }
+        });
 
         jLabel17.setText("Tgl.Lahir :");
         jLabel17.setName("jLabel17"); // NOI18N
@@ -754,7 +824,7 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         jLabel20.setName("jLabel20"); // NOI18N
         FormInput.add(jLabel20);
         jLabel20.setBounds(30, 120, 96, 23);
-
+        Alamat.setHighlighter(null);
         Alamat.setName("Alamat"); // NOI18N
         Alamat.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -762,13 +832,14 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             }
         });
         FormInput.add(Alamat);
-        Alamat.setBounds(340, 120, 150, 23);
+        Alamat.setBounds(340, 120, 135, 23);
 
-        jLabel22.setText("Alamat : ");
+        jLabel22.setText("Alamat :");
         jLabel22.setName("jLabel22"); // NOI18N
         FormInput.add(jLabel22);
         jLabel22.setBounds(270, 120, 70, 23);
 
+        Pekerjaan.setHighlighter(null);
         Pekerjaan.setName("Pekerjaan"); // NOI18N
         Pekerjaan.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -776,14 +847,51 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             }
         });
         FormInput.add(Pekerjaan);
-        Pekerjaan.setBounds(560, 120, 150, 23);
+        Pekerjaan.setBounds(600, 120, 105, 23);
 
-        jLabel23.setText("Pekerjaan : ");
+        jLabel23.setText("Pekerjaan :");
         jLabel23.setName("jLabel23"); // NOI18N
-        FormInput.add(jLabel23);
-        jLabel23.setBounds(490, 120, 70, 23);
+        
+        EdukasiPJ = new widget.TextBox();
+        EdukasiRS = new widget.TextBox();
+        jLabelEdukasiPJ = new widget.Label();
+        jLabelEdukasiRS = new widget.Label();
+        
+        jLabelEdukasiPJ.setText("Edukasi Keluarga :");
+        jLabelEdukasiPJ.setName("jLabelEdukasiPJ");
+        FormInput.add(jLabelEdukasiPJ);
+        jLabelEdukasiPJ.setBounds(0, 600, 105, 23);
 
-        PanelInput.add(FormInput, java.awt.BorderLayout.CENTER);
+        EdukasiPJ.setName("EdukasiPJ");
+        EdukasiPJ.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                EdukasiPJKeyPressed(evt);
+            }
+        });
+        FormInput.add(EdukasiPJ);
+        EdukasiPJ.setBounds(110, 600, 370, 23);
+
+        jLabelEdukasiRS.setText("Edukasi RS :");
+        jLabelEdukasiRS.setName("jLabelEdukasiRS");
+        FormInput.add(jLabelEdukasiRS);
+        jLabelEdukasiRS.setBounds(490, 600, 80, 23);
+
+        EdukasiRS.setName("EdukasiRS");
+        EdukasiRS.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                EdukasiRSKeyPressed(evt);
+            }
+        });
+        FormInput.add(EdukasiRS);
+        EdukasiRS.setBounds(580, 600, 370, 23);
+
+        FormInput.add(jLabel23);
+        jLabel23.setBounds(535, 120, 65, 23);
+
+                scrollInput.setName("scrollInput");
+        scrollInput.setOpaque(true);
+        scrollInput.setViewportView(FormInput);
+        PanelInput.add(scrollInput, java.awt.BorderLayout.CENTER);
 
         ChkInput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/143.png"))); // NOI18N
         ChkInput.setMnemonic('I');
@@ -834,26 +942,40 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         FormPhoto.setBackground(new java.awt.Color(255, 255, 255));
         FormPhoto.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), " Bukti Pengambilan Persetujuan : ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
         FormPhoto.setName("FormPhoto"); // NOI18N
-        FormPhoto.setPreferredSize(new java.awt.Dimension(115, 73));
+        FormPhoto.setPreferredSize(new java.awt.Dimension(115, 113));
         FormPhoto.setLayout(new java.awt.BorderLayout());
 
         FormPass3.setBackground(new java.awt.Color(255, 255, 255));
         FormPass3.setBorder(null);
         FormPass3.setName("FormPass3"); // NOI18N
-        FormPass3.setPreferredSize(new java.awt.Dimension(115, 40));
+        FormPass3.setPreferredSize(new java.awt.Dimension(115, 120));
 
         btnAmbil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/plus_16.png"))); // NOI18N
         btnAmbil.setMnemonic('U');
-        btnAmbil.setText("Ambil");
-        btnAmbil.setToolTipText("Alt+U");
+        btnAmbil.setText("TTD Digital");
+        btnAmbil.setToolTipText("Klik untuk TTD Digital");
         btnAmbil.setName("btnAmbil"); // NOI18N
-        btnAmbil.setPreferredSize(new java.awt.Dimension(100, 30));
+        btnAmbil.setPreferredSize(new java.awt.Dimension(120, 30));
         btnAmbil.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAmbilActionPerformed(evt);
             }
         });
-        FormPass3.add(btnAmbil);
+                FormPass3.add(btnAmbilSaksi2);
+FormPass3.add(btnAmbil);
+
+        btnAmbilGambar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/plus_16.png"))); // NOI18N
+        btnAmbilGambar.setMnemonic('G');
+        btnAmbilGambar.setText("Ambil Gambar");
+        btnAmbilGambar.setToolTipText("Klik untuk Ambil Gambar Webcam");
+        btnAmbilGambar.setName("btnAmbilGambar"); // NOI18N
+        btnAmbilGambar.setPreferredSize(new java.awt.Dimension(130, 30));
+        btnAmbilGambar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAmbilGambarActionPerformed(evt);
+            }
+        });
+        FormPass3.add(btnAmbilGambar);
 
         BtnRefreshPhoto1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/refresh.png"))); // NOI18N
         BtnRefreshPhoto1.setMnemonic('U');
@@ -924,20 +1046,28 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         } else if (NoSurat.getText().trim().equals("")) {
             Valid.textKosong(NoSurat, "No.Pernyataan");
         } else {
-            if (Sequel.menyimpantf("surat_persetujuan_umum", "?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 14, new String[]{
+            if (Sequel.menyimpantf("surat_persetujuan_umum (no_surat, no_rawat, tanggal, pengobatan_kepada, nilai_kepercayaan, nama_pj, umur_pj, no_ktppj, jkpj, bertindak_atas, no_telp, nip, alamat_pj, pekerjaan_pj, privasi_akses, privasi_khusus, informasi_biaya, keluarga_1, keluarga_2, jenis_pembiayaan, alasan_tolak_bpjs, alasan_tolak_bpjs_kerja, alasan_tolak_jasa_raharja, asuransi_swasta, no_kartu_asuransi, no_jkn_jasa_raharja, hak_kelas, pilihan_kamar, alasan_naik_kelas, edukasi_pj, edukasi_rs, saksi_2)", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 32, new String[]{
                 NoSurat.getText(), TNoRw.getText(), Valid.SetTgl(Tanggal.getSelectedItem() + ""), "-", "", NamaPJ.getText(), UmurPJ.getText(), NoKTP.getText(),
-                JKPJ.getSelectedItem().toString().substring(0, 1), BertindakAtas.getSelectedItem().toString(), NoTelp.getText(), NIP.getText(),
-                Alamat.getText(), Pekerjaan.getText() // Data Baru
+                JKPJ.getSelectedItem().toString().substring(0, 1), (BertindakAtas.getSelectedItem().toString().equals("Lainnya") ? KetBertindak.getText() : BertindakAtas.getSelectedItem().toString()), NoTelp.getText(), NIP.getText(),
+                Alamat.getText(), Pekerjaan.getText(), 
+                Privasi1.getSelectedItem().toString(), Privasi2.getSelectedItem().toString(), InfoBiaya.getSelectedItem().toString(), Keluarga1.getText(), Keluarga2.getText(), rbUmum.isSelected() ? "Umum" : (rbAsuransi.isSelected() ? "Asuransi Swasta" : (rbJasaRaharja.isSelected() ? "Jasa Raharja" : (rbBPJSKerja.isSelected() ? "BPJS Ketenagakerjaan" : "BPJS Kesehatan"))), AlasanUmum.getText(), AlasanUmumKerja.getText(), AlasanUmumJasa.getText(), 
+                NamaAsuransi.getText(), NoKartuAsuransi.getText(), (rbJasaRaharja.isSelected() ? NoJKNJasa.getText() : (rbBPJSKerja.isSelected() ? NoJKNKerja.getText() : NoKartuBPJS.getText())), 
+                HakKelas.getText(), PilihanKelas.getSelectedItem().toString(), AlasanNaik.getText(), EdukasiPJ.getText(), EdukasiRS.getText(), Saksi2.getText()
             }) == true) {
                 tabMode.addRow(new String[]{
                     NoSurat.getText(), TNoRw.getText(), TNoRM.getText(), TPasien.getText(), Umur.getText(), JK.getText(), LahirPasien.getText(),
                     Valid.SetTgl(Tanggal.getSelectedItem() + ""), "-", "", NamaPJ.getText(), UmurPJ.getText(), NoKTP.getText(), JKPJ.getSelectedItem().toString().substring(0, 1),
-                    NoTelp.getText(), BertindakAtas.getSelectedItem().toString(), 
+                    NoTelp.getText(), (BertindakAtas.getSelectedItem().toString().equals("Lainnya") ? KetBertindak.getText() : BertindakAtas.getSelectedItem().toString()), 
                     Alamat.getText(), Pekerjaan.getText(),
-                    NIP.getText(), NamaPetugas.getText()
+                    NIP.getText(), NamaPetugas.getText(),
+                    Privasi1.getSelectedItem().toString(), Privasi2.getSelectedItem().toString(), InfoBiaya.getSelectedItem().toString(), Keluarga1.getText(), Keluarga2.getText(), rbUmum.isSelected() ? "Umum" : (rbAsuransi.isSelected() ? "Asuransi Swasta" : (rbJasaRaharja.isSelected() ? "Jasa Raharja" : (rbBPJSKerja.isSelected() ? "BPJS Ketenagakerjaan" : "BPJS Kesehatan"))), AlasanUmum.getText(), AlasanUmumKerja.getText(), AlasanUmumJasa.getText(), 
+                    NamaAsuransi.getText(), NoKartuAsuransi.getText(), (rbJasaRaharja.isSelected() ? NoJKNJasa.getText() : (rbBPJSKerja.isSelected() ? NoJKNKerja.getText() : NoKartuBPJS.getText())), 
+                    HakKelas.getText(), PilihanKelas.getSelectedItem().toString(), AlasanNaik.getText(), EdukasiPJ.getText(), EdukasiRS.getText(), Saksi2.getText()
                 });
                 LCount.setText("" + tabMode.getRowCount());
-                emptTeks();
+                Keluarga1.setText("");
+        Keluarga2.setText("");
+        emptTeks();
             }
         }
 }//GEN-LAST:event_BtnSimpanActionPerformed
@@ -1211,6 +1341,22 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
 
     private void btnAmbilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmbilActionPerformed
         if (tbObat.getSelectedRow() > -1) {
+            String noSurat = tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString();
+
+            freehand.DlgTTDPersetujuanUmum dlg = new freehand.DlgTTDPersetujuanUmum(null, true);
+            dlg.setNoSurat(noSurat);
+            dlg.setVisible(true);
+
+            if (!dlg.getNamaFile().equals("")) {
+                panggilPhoto();
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih No.Pernyataan terlebih dahulu..!!");
+        }
+    }//GEN-LAST:event_btnAmbilActionPerformed
+
+    private void btnAmbilGambarActionPerformed(java.awt.event.ActionEvent evt) {
+        if (tbObat.getSelectedRow() > -1) {
             if (com.github.sarxos.webcam.Webcam.getDefault() == null) {
                 JOptionPane.showMessageDialog(rootPane, "Webcam tidak ditemukan! Pastikan webcam terhubung.", "Error Webcam", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -1219,7 +1365,7 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             String noSurat = tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString();
             String noRawat = tbObat.getValueAt(tbObat.getSelectedRow(), 1).toString();
 
-            DlgPersetujuanWebcam dlg = new DlgPersetujuanWebcam(
+            simrskhanza.DlgPersetujuanWebcam dlg = new simrskhanza.DlgPersetujuanWebcam(
                 null, 
                 true, 
                 Sequel, 
@@ -1235,11 +1381,10 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             if (dlg.isSaved()) {
                 panggilPhoto();
             }
-            
         } else {
             JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih No.Pernyataan terlebih dahulu..!!");
         }
-    }//GEN-LAST:event_btnAmbilActionPerformed
+    }
 
     private void BtnRefreshPhoto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRefreshPhoto1ActionPerformed
         if (tbObat.getSelectedRow() > -1) {
@@ -1268,16 +1413,78 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             finger = Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?", tbObat.getValueAt(tbObat.getSelectedRow(), 18).toString());
             param.put("finger", finger);
             
-            param.put("photo", ""); 
+            String lokasifile = Sequel.cariIsi("select photo from surat_persetujuan_umum where no_surat=?", tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+            if (lokasifile == null || lokasifile.equals("") || lokasifile.equals("null") || lokasifile.equals("-")) {
+                param.put("photo", ""); 
+            } else {
+                java.io.File foto = new java.io.File("pernyataanumum/pages/upload/" + lokasifile);
+                if (foto.exists()) {
+                    param.put("photo", foto.getAbsolutePath());
+                } else {
+                    param.put("photo", "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/pernyataanumum/" + lokasifile);
+                }
+            }
+
+            
+            String lokasisaksi2 = Sequel.cariIsi("select photo_saksi_2 from surat_persetujuan_umum where no_surat=?", tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+            if (lokasisaksi2 == null || lokasisaksi2.equals("") || lokasisaksi2.equals("null") || lokasisaksi2.equals("-")) {
+                param.put("photo_saksi_2", ""); 
+            } else {
+                java.io.File fotoSaksi = new java.io.File("pernyataanumum/pages/upload/" + lokasisaksi2);
+                if (fotoSaksi.exists()) {
+                    param.put("photo_saksi_2", fotoSaksi.getAbsolutePath());
+                } else {
+                    param.put("photo_saksi_2", "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/pernyataanumum/" + lokasisaksi2);
+                }
+            }
+
+            
+            String ttdPetugas = "";
+            String nipLogin = akses.getkode();
+            if (nipLogin != null) {
+                nipLogin = nipLogin.toLowerCase();
+            } else {
+                nipLogin = "";
+            }
+            String namaLogin = Sequel.cariIsi("select nama from petugas where nip=?", akses.getkode());
+            if (namaLogin != null) {
+                namaLogin = namaLogin.toLowerCase();
+            } else {
+                namaLogin = "";
+            }
+            
+            String picName = "";
+            if (nipLogin.contains("wini") || namaLogin.contains("wini")) {
+                picName = "/picture/ttdWini.png";
+            } else if (nipLogin.contains("sandi") || namaLogin.contains("sandi")) {
+                picName = "/picture/ttdSandi.png";
+            } else if (nipLogin.contains("ridwan") || namaLogin.contains("ridwan")) {
+                picName = "/picture/ttdRidwan.png";
+            } else if (nipLogin.contains("inda") || namaLogin.contains("inda")) {
+                picName = "/picture/ttdInda.png";
+            } else if (nipLogin.contains("lusi") || namaLogin.contains("lusi")) {
+                picName = "/picture/ttdLusi.png";
+            }
+            
+            if (!picName.equals("")) {
+                java.net.URL urlTTD = SuratPersetujuanUmum.class.getResource(picName);
+                if (urlTTD != null) {
+                    ttdPetugas = urlTTD.toString();
+                }
+            }
+            param.put("ttd_petugas", ttdPetugas);
 
             Valid.MyReportqry("rptSuratPersetujuanUmum.jasper", "report", "::[ Surat Persetujuan Umum ]::",
                     "select surat_persetujuan_umum.no_surat,reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,"
                     + "reg_periksa.sttsumur,pasien.jk,pasien.tgl_lahir,surat_persetujuan_umum.tanggal,surat_persetujuan_umum.pengobatan_kepada,"
-                    + "pasien.tmp_lahir, pasien.agama, pasien.pnd, pasien.pekerjaan, " // <-- Tambahan Data Pasien
-                    + "concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab,', ',propinsi.nm_prop) as alamat,"
+                    + "pasien.tmp_lahir, pasien.no_tlp, pasien.agama, pasien.pnd, pasien.pekerjaan, " // <-- Tambahan Data Pasien
+                    + "concat(trim(pasien.alamat),', ',trim(kelurahan.nm_kel),', ',trim(kecamatan.nm_kec),', ',trim(kabupaten.nm_kab),', ',trim(propinsi.nm_prop)) as alamat,"
                     + "surat_persetujuan_umum.nilai_kepercayaan,surat_persetujuan_umum.nama_pj,surat_persetujuan_umum.umur_pj,surat_persetujuan_umum.no_ktppj,"
                     + "surat_persetujuan_umum.jkpj,surat_persetujuan_umum.bertindak_atas,surat_persetujuan_umum.no_telp,"
                     + "surat_persetujuan_umum.alamat_pj, surat_persetujuan_umum.pekerjaan_pj, " // <-- Tambahan Data PJ
+                    + "surat_persetujuan_umum.privasi_akses, surat_persetujuan_umum.privasi_khusus, surat_persetujuan_umum.informasi_biaya, surat_persetujuan_umum.keluarga_1, surat_persetujuan_umum.keluarga_2, surat_persetujuan_umum.jenis_pembiayaan, surat_persetujuan_umum.alasan_tolak_bpjs, surat_persetujuan_umum.alasan_tolak_bpjs_kerja, surat_persetujuan_umum.alasan_tolak_jasa_raharja, "
+                    + "surat_persetujuan_umum.asuransi_swasta, surat_persetujuan_umum.no_kartu_asuransi, surat_persetujuan_umum.no_jkn_jasa_raharja, "
+                    + "surat_persetujuan_umum.hak_kelas, surat_persetujuan_umum.pilihan_kamar, surat_persetujuan_umum.alasan_naik_kelas, surat_persetujuan_umum.edukasi_pj, surat_persetujuan_umum.edukasi_rs, surat_persetujuan_umum.saksi_2, "
                     + "surat_persetujuan_umum.nip,petugas.nama,penjab.png_jawab "
                     + "from surat_persetujuan_umum inner join reg_periksa on surat_persetujuan_umum.no_rawat=reg_periksa.no_rawat "
                     + "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
@@ -1299,7 +1506,15 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_AlamatKeyPressed
 
-    private void PekerjaanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PekerjaanKeyPressed
+    
+    private void EdukasiPJKeyPressed(java.awt.event.KeyEvent evt) {                                      
+        Valid.pindah(evt, Pekerjaan, EdukasiRS);
+    }                                     
+
+    private void EdukasiRSKeyPressed(java.awt.event.KeyEvent evt) {                                      
+        Valid.pindah(evt, EdukasiPJ, BtnSimpan);
+    } 
+private void PekerjaanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PekerjaanKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_PekerjaanKeyPressed
 
@@ -1320,8 +1535,20 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgPembiayaan;
+    private widget.RadioButton rbUmum;
+    private widget.RadioButton rbAsuransi;
+    private widget.RadioButton rbJasaRaharja;
+    private widget.RadioButton rbBPJSKerja;
+    private widget.RadioButton rbBPJSKes;
+    private widget.Label jLabelNoJKNJasa;
+    private widget.TextBox NoJKNJasa;
+    private widget.Label jLabelNoJKNKerja;
+    private widget.TextBox NoJKNKerja;
+
     private widget.TextBox Alamat;
     private widget.ComboBox BertindakAtas;
+    private widget.TextBox KetBertindak;
     private widget.Button BtnAll;
     private widget.Button BtnBatal;
     private widget.Button BtnCari;
@@ -1352,7 +1579,16 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     private widget.TextBox NoTelp;
     private widget.PanelBiasa PanelAccor;
     private javax.swing.JPanel PanelInput;
+    private widget.ScrollPane scrollInput;
     private widget.TextBox Pekerjaan;
+    private widget.TextBox EdukasiPJ;
+    private widget.TextBox EdukasiRS;
+    private widget.TextBox Saksi2;
+    private widget.Label jLabelSaksi2;
+    private widget.Button btnAmbilSaksi2;
+    private widget.Label jLabelEdukasiPJ;
+    private widget.Label jLabelEdukasiRS;
+
     private widget.ScrollPane Scroll;
     private widget.ScrollPane Scroll5;
     private widget.TextBox TCari;
@@ -1363,6 +1599,7 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     private widget.TextBox Umur;
     private widget.TextBox UmurPJ;
     private widget.Button btnAmbil;
+    private widget.Button btnAmbilGambar;
     private widget.Button btnPetugas;
     private widget.InternalFrame internalFrame1;
     private widget.Label jLabel10;
@@ -1397,9 +1634,13 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                         "select surat_persetujuan_umum.no_surat,reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,"
                         + "reg_periksa.sttsumur,pasien.jk,pasien.tgl_lahir,surat_persetujuan_umum.tanggal,surat_persetujuan_umum.pengobatan_kepada,"
                         + "surat_persetujuan_umum.nilai_kepercayaan,surat_persetujuan_umum.nama_pj,surat_persetujuan_umum.umur_pj,surat_persetujuan_umum.no_ktppj,"
-                        + "surat_persetujuan_umum.jkpj,surat_persetujuan_umum.bertindak_atas,surat_persetujuan_umum.alamat_pj,surat_persetujuan_umum.pekerjaan_pj," // Tambah disini
+                        + "surat_persetujuan_umum.jkpj,surat_persetujuan_umum.bertindak_atas,surat_persetujuan_umum.alamat_pj,surat_persetujuan_umum.pekerjaan_pj,"
                         + "surat_persetujuan_umum.no_telp,surat_persetujuan_umum.nip,"
-                        + "petugas.nama from surat_persetujuan_umum inner join reg_periksa on surat_persetujuan_umum.no_rawat=reg_periksa.no_rawat "
+                        + "petugas.nama, "
+                        + "surat_persetujuan_umum.privasi_akses,surat_persetujuan_umum.privasi_khusus,surat_persetujuan_umum.informasi_biaya,surat_persetujuan_umum.keluarga_1,surat_persetujuan_umum.keluarga_2,surat_persetujuan_umum.jenis_pembiayaan,surat_persetujuan_umum.alasan_tolak_bpjs,surat_persetujuan_umum.alasan_tolak_bpjs_kerja,surat_persetujuan_umum.alasan_tolak_jasa_raharja,surat_persetujuan_umum.asuransi_swasta,"
+                        + "surat_persetujuan_umum.no_kartu_asuransi,surat_persetujuan_umum.no_jkn_jasa_raharja,surat_persetujuan_umum.hak_kelas,surat_persetujuan_umum.pilihan_kamar,"
+                        + "surat_persetujuan_umum.alasan_naik_kelas, surat_persetujuan_umum.edukasi_pj, surat_persetujuan_umum.edukasi_rs, surat_persetujuan_umum.saksi_2 "
+                        + "from surat_persetujuan_umum inner join reg_periksa on surat_persetujuan_umum.no_rawat=reg_periksa.no_rawat "
                         + "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                         + "inner join petugas on surat_persetujuan_umum.nip=petugas.nip where "
                         + "surat_persetujuan_umum.tanggal between ? and ? order by surat_persetujuan_umum.tanggal");
@@ -1408,9 +1649,13 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                         "select surat_persetujuan_umum.no_surat,reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,"
                         + "reg_periksa.sttsumur,pasien.jk,pasien.tgl_lahir,surat_persetujuan_umum.tanggal,surat_persetujuan_umum.pengobatan_kepada,"
                         + "surat_persetujuan_umum.nilai_kepercayaan,surat_persetujuan_umum.nama_pj,surat_persetujuan_umum.umur_pj,surat_persetujuan_umum.no_ktppj,"
-                        + "surat_persetujuan_umum.jkpj,surat_persetujuan_umum.bertindak_atas,surat_persetujuan_umum.alamat_pj,surat_persetujuan_umum.pekerjaan_pj," // Tambah disini
+                        + "surat_persetujuan_umum.jkpj,surat_persetujuan_umum.bertindak_atas,surat_persetujuan_umum.alamat_pj,surat_persetujuan_umum.pekerjaan_pj,"
                         + "surat_persetujuan_umum.no_telp,surat_persetujuan_umum.nip,"
-                        + "petugas.nama from surat_persetujuan_umum inner join reg_periksa on surat_persetujuan_umum.no_rawat=reg_periksa.no_rawat "
+                        + "petugas.nama, "
+                        + "surat_persetujuan_umum.privasi_akses,surat_persetujuan_umum.privasi_khusus,surat_persetujuan_umum.informasi_biaya,surat_persetujuan_umum.keluarga_1,surat_persetujuan_umum.keluarga_2,surat_persetujuan_umum.jenis_pembiayaan,surat_persetujuan_umum.alasan_tolak_bpjs,surat_persetujuan_umum.alasan_tolak_bpjs_kerja,surat_persetujuan_umum.alasan_tolak_jasa_raharja,surat_persetujuan_umum.asuransi_swasta,"
+                        + "surat_persetujuan_umum.no_kartu_asuransi,surat_persetujuan_umum.no_jkn_jasa_raharja,surat_persetujuan_umum.hak_kelas,surat_persetujuan_umum.pilihan_kamar,"
+                        + "surat_persetujuan_umum.alasan_naik_kelas, surat_persetujuan_umum.edukasi_pj, surat_persetujuan_umum.edukasi_rs, surat_persetujuan_umum.saksi_2 "
+                        + "from surat_persetujuan_umum inner join reg_periksa on surat_persetujuan_umum.no_rawat=reg_periksa.no_rawat "
                         + "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                         + "inner join petugas on surat_persetujuan_umum.nip=petugas.nip where "
                         + "surat_persetujuan_umum.tanggal between ? and ? and "
@@ -1442,9 +1687,10 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                         rs.getString("no_surat"), rs.getString("no_rawat"), rs.getString("no_rkm_medis"), rs.getString("nm_pasien"),
                         rs.getString("umurdaftar") + " " + rs.getString("sttsumur"), rs.getString("jk"), rs.getString("tgl_lahir"),
                         rs.getString("tanggal"), rs.getString("pengobatan_kepada"), rs.getString("nilai_kepercayaan"), rs.getString("nama_pj"),
-                        rs.getString("umur_pj"), rs.getString("no_ktppj"), rs.getString("jkpj"), rs.getString("no_telp"), rs.getString("bertindak_atas"),
-                        rs.getString("alamat_pj"), rs.getString("pekerjaan_pj"),
-                        rs.getString("nip"), rs.getString("nama")
+                        rs.getString("umur_pj"), rs.getString("no_ktppj"), rs.getString("jkpj").replaceAll("L", "Laki-laki").replaceAll("P", "Perempuan"), rs.getString("no_telp"), rs.getString("bertindak_atas"),
+                        rs.getString("alamat_pj"), rs.getString("pekerjaan_pj"), rs.getString("nip"), rs.getString("nama"),
+                        rs.getString("privasi_akses"), rs.getString("privasi_khusus"), rs.getString("informasi_biaya"), rs.getString("keluarga_1"), rs.getString("keluarga_2"), rs.getString("jenis_pembiayaan"), rs.getString("alasan_tolak_bpjs"), rs.getString("alasan_tolak_bpjs_kerja"), rs.getString("alasan_tolak_jasa_raharja"), rs.getString("asuransi_swasta"),
+                        rs.getString("no_kartu_asuransi"), rs.getString("no_jkn_jasa_raharja"), rs.getString("hak_kelas"), rs.getString("pilihan_kamar"), rs.getString("alasan_naik_kelas"), rs.getString("edukasi_pj"), rs.getString("edukasi_rs"), rs.getString("saksi_2")
                     });
                 }
             } catch (Exception e) {
@@ -1467,11 +1713,30 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         NamaPJ.setText("");
         UmurPJ.setText("");
         BertindakAtas.setSelectedIndex(0);
+        KetBertindak.setText("");
+        KetBertindak.setEnabled(false);
         JKPJ.setSelectedIndex(0);
         NoTelp.setText("");
         NoKTP.setText("");
         Alamat.setText("");
         Pekerjaan.setText("");
+        
+        Privasi1.setSelectedIndex(0);
+        Privasi2.setSelectedIndex(0);
+        rbUmum.setSelected(true);
+        AlasanUmum.setText("");
+        NamaAsuransi.setText("");
+        NoKartuAsuransi.setText("");
+        NoKartuBPJS.setText("");
+        NoJKNJasa.setText("");
+        NoJKNKerja.setText("");
+        HakKelas.setText("");
+        PilihanKelas.setSelectedIndex(0);
+        AlasanNaik.setText("");
+        EdukasiPJ.setText("");
+        EdukasiRS.setText("");
+        Saksi2.setText("");
+        
         Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(surat_persetujuan_umum.no_surat,3),signed)),0) from surat_persetujuan_umum where surat_persetujuan_umum.tanggal='" + Valid.SetTgl(Tanggal.getSelectedItem() + "") + "' ",
                 "PSU" + Tanggal.getSelectedItem().toString().substring(6, 10) + Tanggal.getSelectedItem().toString().substring(3, 5) + Tanggal.getSelectedItem().toString().substring(0, 2), 3, NoSurat);
         NamaPJ.requestFocus();
@@ -1491,13 +1756,63 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             NoKTP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 12).toString());
             JKPJ.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 13).toString().replaceAll("L", "Laki-laki").replaceAll("P", "Perempuan"));
             NoTelp.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 14).toString());
-            BertindakAtas.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 15).toString());
+            String bertindak = tbObat.getValueAt(tbObat.getSelectedRow(), 15).toString();
+            boolean found = false;
+            for(int i=0; i<BertindakAtas.getItemCount(); i++){
+                if(BertindakAtas.getItemAt(i).toString().equals(bertindak)){
+                    found = true;
+                    break;
+                }
+            }
+            if(found){
+                BertindakAtas.setSelectedItem(bertindak);
+                KetBertindak.setText("");
+                KetBertindak.setEnabled(false);
+            } else {
+                BertindakAtas.setSelectedItem("Lainnya");
+                KetBertindak.setText(bertindak);
+                KetBertindak.setEnabled(true);
+            }
             
             Alamat.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 16).toString());
             Pekerjaan.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 17).toString());
             
             NIP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 18).toString());
             NamaPetugas.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 19).toString());
+            
+            Privasi1.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 20).toString());
+            Privasi2.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 21).toString());
+            InfoBiaya.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 22).toString());
+            Keluarga1.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 23).toString());
+            Keluarga2.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 24).toString());
+            String jp = tbObat.getValueAt(tbObat.getSelectedRow(), 25).toString();
+            if(jp.equals("Umum")) rbUmum.setSelected(true);
+            else if(jp.equals("Asuransi Swasta")) rbAsuransi.setSelected(true);
+            else if(jp.equals("Jasa Raharja")) rbJasaRaharja.setSelected(true);
+            else if(jp.equals("BPJS Ketenagakerjaan")) rbBPJSKerja.setSelected(true);
+            else rbBPJSKes.setSelected(true);
+
+            
+            AlasanUmum.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 26).toString());
+            AlasanUmumKerja.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 27).toString());
+            AlasanUmumJasa.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 28).toString());
+            NamaAsuransi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 29).toString());
+            NoKartuAsuransi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 30).toString());
+            String noJknData = tbObat.getValueAt(tbObat.getSelectedRow(), 31).toString();
+            if (jp.equals("Jasa Raharja")) {
+                NoJKNJasa.setText(noJknData);
+            } else if (jp.equals("BPJS Ketenagakerjaan")) {
+                NoJKNKerja.setText(noJknData);
+            } else if (jp.equals("BPJS Kesehatan")) {
+                NoKartuBPJS.setText(noJknData);
+            }
+            HakKelas.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 32).toString());
+            PilihanKelas.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 33).toString());
+            AlasanNaik.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 34).toString());
+                EdukasiPJ.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 35).toString());
+                EdukasiRS.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 36).toString());
+                Saksi2.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 37).toString());
+
             
             Valid.SetTgl(Tanggal, tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString());
         }
@@ -1506,8 +1821,8 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     private void isRawat() {
         try {
             ps = koneksi.prepareStatement(
-                    "select reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,reg_periksa.tgl_registrasi,"
-                    + "reg_periksa.umurdaftar,reg_periksa.sttsumur from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                    "select reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,reg_periksa.tgl_registrasi,pasien.no_tlp,"
+                    + "reg_periksa.umurdaftar,reg_periksa.sttsumur,pasien.no_peserta from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                     + "where reg_periksa.no_rawat=?");
             try {
                 ps.setString(1, TNoRw.getText());
@@ -1518,7 +1833,15 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
                     TPasien.setText(rs.getString("nm_pasien"));
                     JK.setText(rs.getString("jk"));
                     LahirPasien.setText(rs.getString("tgl_lahir"));
-                    UmurPJ.setText(rs.getString("umurdaftar") + " " + rs.getString("sttsumur"));
+                    NoTelpPasien.setText(rs.getString("no_tlp"));
+                    // Umur PJ tidak di-autopopulate
+                    NoKartuBPJS.setText("-");
+                    NoJKNJasa.setText("-");
+                    NoJKNKerja.setText("-");
+                    HakKelas.setText(Sequel.cariIsi("select bridging_sep.klsrawat from bridging_sep where bridging_sep.no_rawat=?", TNoRw.getText()));
+                    if (HakKelas.getText().trim().equals("")) {
+                        HakKelas.setText("-");
+                    }
                 }
             } catch (Exception e) {
                 System.out.println("Notif : " + e);
@@ -1547,14 +1870,16 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     private void isForm() {
         if (ChkInput.isSelected() == true) {
             ChkInput.setVisible(false);
-            PanelInput.setPreferredSize(new Dimension(WIDTH, 175));
-            FormInput.setVisible(true);
+            PanelInput.setPreferredSize(new Dimension(WIDTH, Math.max(150, (int)(this.getHeight() * 0.55))));
+            scrollInput.setVisible(true);
             ChkInput.setVisible(true);
+            PanelInput.revalidate();
         } else if (ChkInput.isSelected() == false) {
             ChkInput.setVisible(false);
             PanelInput.setPreferredSize(new Dimension(WIDTH, 20));
-            FormInput.setVisible(false);
+            scrollInput.setVisible(false);
             ChkInput.setVisible(true);
+            PanelInput.revalidate();
         }
     }
 
@@ -1576,11 +1901,15 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
     }
 
     private void ganti() {
-        if (Sequel.mengedittf("surat_persetujuan_umum", "no_surat=?", "no_surat=?,no_rawat=?,tanggal=?,nama_pj=?,umur_pj=?,no_ktppj=?,jkpj=?,bertindak_atas=?,no_telp=?,nip=?,alamat_pj=?,pekerjaan_pj=?", 13, new String[]{
-            NoSurat.getText(), TNoRw.getText(), Valid.SetTgl(Tanggal.getSelectedItem() + ""), NamaPJ.getText(), UmurPJ.getText(), NoKTP.getText(),
-            JKPJ.getSelectedItem().toString().substring(0, 1), BertindakAtas.getSelectedItem().toString(), NoTelp.getText(), NIP.getText(),
-            Alamat.getText(), Pekerjaan.getText(),
-            tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString()
+        Sequel.mengedit("pasien", "no_rkm_medis='" + TNoRM.getText() + "'", "no_tlp='" + NoTelpPasien.getText() + "'");
+            if (Sequel.mengedittf("surat_persetujuan_umum", "no_surat=?", "no_rawat=?,tanggal=?,nama_pj=?,umur_pj=?,no_ktppj=?,jkpj=?,bertindak_atas=?,no_telp=?,nip=?,alamat_pj=?,pekerjaan_pj=?,privasi_akses=?,privasi_khusus=?,informasi_biaya=?,keluarga_1=?,keluarga_2=?,jenis_pembiayaan=?,alasan_tolak_bpjs=?,alasan_tolak_bpjs_kerja=?,alasan_tolak_jasa_raharja=?,asuransi_swasta=?,no_kartu_asuransi=?,no_jkn_jasa_raharja=?,hak_kelas=?,pilihan_kamar=?,alasan_naik_kelas=?, edukasi_pj=?, edukasi_rs=?, saksi_2=?", 30, new String[]{
+            TNoRw.getText(), Valid.SetTgl(Tanggal.getSelectedItem() + ""), NamaPJ.getText(), UmurPJ.getText(), NoKTP.getText(),
+            JKPJ.getSelectedItem().toString().substring(0, 1), (BertindakAtas.getSelectedItem().toString().equals("Lainnya") ? KetBertindak.getText() : BertindakAtas.getSelectedItem().toString()), NoTelp.getText(), NIP.getText(),
+            Alamat.getText(), Pekerjaan.getText(), 
+            Privasi1.getSelectedItem().toString(), Privasi2.getSelectedItem().toString(), InfoBiaya.getSelectedItem().toString(), Keluarga1.getText(), Keluarga2.getText(), rbUmum.isSelected() ? "Umum" : (rbAsuransi.isSelected() ? "Asuransi Swasta" : (rbJasaRaharja.isSelected() ? "Jasa Raharja" : (rbBPJSKerja.isSelected() ? "BPJS Ketenagakerjaan" : "BPJS Kesehatan"))), AlasanUmum.getText(), AlasanUmumKerja.getText(), AlasanUmumJasa.getText(), 
+            NamaAsuransi.getText(), NoKartuAsuransi.getText(), (rbJasaRaharja.isSelected() ? NoJKNJasa.getText() : (rbBPJSKerja.isSelected() ? NoJKNKerja.getText() : NoKartuBPJS.getText())), 
+            HakKelas.getText(), PilihanKelas.getSelectedItem().toString(), AlasanNaik.getText(), EdukasiPJ.getText(), EdukasiRS.getText(), Saksi2.getText(),
+            NoSurat.getText()
         }) == true) {
             tbObat.setValueAt(NoSurat.getText(), tbObat.getSelectedRow(), 0);
             tbObat.setValueAt(TNoRw.getText(), tbObat.getSelectedRow(), 1);
@@ -1595,12 +1924,30 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
             tbObat.setValueAt(NoKTP.getText(), tbObat.getSelectedRow(), 12);
             tbObat.setValueAt(JKPJ.getSelectedItem().toString().substring(0, 1), tbObat.getSelectedRow(), 13);
             tbObat.setValueAt(NoTelp.getText(), tbObat.getSelectedRow(), 14);
-            tbObat.setValueAt(BertindakAtas.getSelectedItem().toString(), tbObat.getSelectedRow(), 15);
+            tbObat.setValueAt((BertindakAtas.getSelectedItem().toString().equals("Lainnya") ? KetBertindak.getText() : BertindakAtas.getSelectedItem().toString()), tbObat.getSelectedRow(), 15);
             tbObat.setValueAt(Alamat.getText(), tbObat.getSelectedRow(), 16); 
             tbObat.setValueAt(Pekerjaan.getText(), tbObat.getSelectedRow(), 17);
             
             tbObat.setValueAt(NIP.getText(), tbObat.getSelectedRow(), 18);
             tbObat.setValueAt(NamaPetugas.getText(), tbObat.getSelectedRow(), 19);
+            tbObat.setValueAt(Privasi1.getSelectedItem().toString(), tbObat.getSelectedRow(), 20);
+            tbObat.setValueAt(Privasi2.getSelectedItem().toString(), tbObat.getSelectedRow(), 21);
+            tbObat.setValueAt(InfoBiaya.getSelectedItem().toString(), tbObat.getSelectedRow(), 22);
+            tbObat.setValueAt(Keluarga1.getText(), tbObat.getSelectedRow(), 23);
+            tbObat.setValueAt(Keluarga2.getText(), tbObat.getSelectedRow(), 24);
+            tbObat.setValueAt(rbUmum.isSelected() ? "Umum" : (rbAsuransi.isSelected() ? "Asuransi Swasta" : (rbJasaRaharja.isSelected() ? "Jasa Raharja" : (rbBPJSKerja.isSelected() ? "BPJS Ketenagakerjaan" : "BPJS Kesehatan"))), tbObat.getSelectedRow(), 25);
+            tbObat.setValueAt(AlasanUmum.getText(), tbObat.getSelectedRow(), 26);
+            tbObat.setValueAt(AlasanUmumKerja.getText(), tbObat.getSelectedRow(), 27);
+            tbObat.setValueAt(AlasanUmumJasa.getText(), tbObat.getSelectedRow(), 28);
+            tbObat.setValueAt(NamaAsuransi.getText(), tbObat.getSelectedRow(), 29);
+            tbObat.setValueAt(NoKartuAsuransi.getText(), tbObat.getSelectedRow(), 30);
+            tbObat.setValueAt((rbJasaRaharja.isSelected() ? NoJKNJasa.getText() : (rbBPJSKerja.isSelected() ? NoJKNKerja.getText() : NoKartuBPJS.getText())), tbObat.getSelectedRow(), 31);
+            tbObat.setValueAt(HakKelas.getText(), tbObat.getSelectedRow(), 32);
+            tbObat.setValueAt(PilihanKelas.getSelectedItem().toString(), tbObat.getSelectedRow(), 33);
+            tbObat.setValueAt(AlasanNaik.getText(), tbObat.getSelectedRow(), 34);
+            tbObat.setValueAt(EdukasiPJ.getText(), tbObat.getSelectedRow(), 35);
+            tbObat.setValueAt(EdukasiRS.getText(), tbObat.getSelectedRow(), 36);
+            tbObat.setValueAt(Saksi2.getText(), tbObat.getSelectedRow(), 37);
             emptTeks();
         }
     }
@@ -1633,47 +1980,388 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
 
     private void panggilPhoto() {
         if (FormPhoto.isVisible() == true) {
-            lokasifile = "";
+            String fotoWebcam = "";
+            String fotoTtd = "";
+            
+            // Get Webcam Photo
             try {
-                ps = koneksi.prepareStatement("select surat_persetujuan_umum_pembuat_pernyataan.photo from surat_persetujuan_umum_pembuat_pernyataan where surat_persetujuan_umum_pembuat_pernyataan.no_surat=?");
+                ps = koneksi.prepareStatement("select photo from surat_persetujuan_umum_pembuat_pernyataan where no_surat=?");
                 try {
                     ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
                     rs = ps.executeQuery();
                     if (rs.next()) {
-                        lokasifile = rs.getString("photo");
-                        if (lokasifile == null || lokasifile.equals("") || lokasifile.equals("-")) {
-                            lokasifile = "";
-                            LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
-                        } else {
-                            
-                            File fileLokal = new File("pernyataanumum" + File.separator + "pages" + File.separator + "upload" + File.separator + lokasifile);
-
-                            if (fileLokal.exists()) {
-                                LoadHTML2.setText("<html><body><center><img src='" + fileLokal.toURI().toString() + "' alt='photo' width='500' height='500'/></center></body></html>");
-                            } else {
-                                String serverUrl = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/pernyataanumum/pages/upload/" + lokasifile;
-                                LoadHTML2.setText("<html><body><center><img src='" + serverUrl + "' alt='photo' width='500' height='500'/></center></body></html>");
-                            }
-                        }
-                    } else {
-                        lokasifile = "";
-                        LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
+                        fotoWebcam = rs.getString("photo");
                     }
-                } catch (Exception e) {
-                    lokasifile = "";
-                    System.out.println("Notif panggilPhoto: " + e);
-                    LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#FF0000'>Error: " + e.getMessage() + "</font></center></body></html>");
                 } finally {
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (ps != null) {
-                        ps.close();
-                    }
+                    if (rs != null) rs.close();
+                    if (ps != null) ps.close();
                 }
             } catch (Exception e) {
-                System.out.println("Notif panggilPhoto: " + e);
+                System.out.println("Notif panggilPhoto Webcam: " + e);
             }
+            
+            // Get TTD Digital
+            try {
+                ps = koneksi.prepareStatement("select photo from surat_persetujuan_umum where no_surat=?");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        fotoTtd = rs.getString("photo");
+                    }
+                } finally {
+                    if (rs != null) rs.close();
+                    if (ps != null) ps.close();
+                }
+            } catch (Exception e) {
+                System.out.println("Notif panggilPhoto TTD: " + e);
+            }
+
+            StringBuilder html = new StringBuilder();
+            html.append("<html><body><center>");
+            
+            boolean adaWebcam = (fotoWebcam != null && !fotoWebcam.equals("") && !fotoWebcam.equals("-") && !fotoWebcam.equals("null"));
+            boolean adaTtd = (fotoTtd != null && !fotoTtd.equals("") && !fotoTtd.equals("-") && !fotoTtd.equals("null"));
+
+            String fotoTtdSaksi = "";
+            try {
+                ps = koneksi.prepareStatement("select photo_saksi_2 from surat_persetujuan_umum where no_surat=?");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        fotoTtdSaksi = rs.getString("photo_saksi_2");
+                    }
+                } finally {
+                    if (rs != null) rs.close();
+                    if (ps != null) ps.close();
+                }
+            } catch (Exception e) { }
+            
+            boolean adaTtdSaksi = (fotoTtdSaksi != null && !fotoTtdSaksi.equals("") && !fotoTtdSaksi.equals("-") && !fotoTtdSaksi.equals("null"));
+
+            
+            if (!adaWebcam && !adaTtd) {
+                html.append("<br><br><font face='tahoma' size='2' color='#434343'>Kosong</font>");
+            } else {
+                if (adaWebcam) {
+                    html.append("<p><b>Foto Dokumentasi:</b></p>");
+                    File fileLokal = new File("pernyataanumum" + File.separator + "pages" + File.separator + "upload" + File.separator + fotoWebcam);
+                    if (fileLokal.exists()) {
+                        html.append("<img src='").append(fileLokal.toURI().toString()).append("' width='500' height='500'/>");
+                    } else {
+                        String serverUrl = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/pernyataanumum/" + fotoWebcam;
+                        html.append("<img src='").append(serverUrl).append("' width='500' height='500'/>");
+                    }
+                }
+                if (adaTtd) {
+                    html.append("<br><br><p><b>Tanda Tangan Digital:</b></p>");
+                    File fileLokal = new File("pernyataanumum" + File.separator + "pages" + File.separator + "upload" + File.separator + fotoTtd);
+                    if (fileLokal.exists()) {
+                        html.append("<img src='").append(fileLokal.toURI().toString()).append("' width='300' height='300'/>");
+                    } else {
+                        String serverUrl = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/pernyataanumum/" + fotoTtd;
+                        html.append("<img src='").append(serverUrl).append("' width='300' height='300'/>");
+                    }
+                }
+            }
+            
+                if (adaTtdSaksi) {
+                    html.append("<br><br><p><b>Tanda Tangan Saksi 2:</b></p>");
+                    File fileLokalSaksi = new File("pernyataanumum" + File.separator + "pages" + File.separator + "upload" + File.separator + fotoTtdSaksi);
+                    if (fileLokalSaksi.exists()) {
+                        html.append("<img src='").append(fileLokalSaksi.toURI().toString()).append("' width='300' height='300'/>");
+                    } else {
+                        String serverUrlSaksi = "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/pernyataanumum/" + fotoTtdSaksi;
+                        html.append("<img src='").append(serverUrlSaksi).append("' width='300' height='300'/>");
+                    }
+                }
+
+            html.append("</center></body></html>");
+            LoadHTML2.setText(html.toString());
         }
+    }
+    
+    private widget.Label jLabelPrivasi1;
+    private widget.ComboBox Privasi1;
+    private widget.Label jLabelPrivasi2;
+    private widget.ComboBox Privasi2;
+    private widget.Label jLabelInfoBiaya;
+    private widget.ComboBox InfoBiaya;
+    private widget.Label jLabelKeluarga1;
+    private widget.TextBox Keluarga1;
+    private widget.Label jLabelKeluarga2;
+    private widget.TextBox Keluarga2;
+    private widget.Label jLabelNoTelpPasien;
+    private widget.TextBox NoTelpPasien;
+    private widget.CekBox ChkAlamatPJ;
+    private widget.Label jLabelAlasanUmum;
+    private widget.Label jLabelAlasanUmumKerja;
+    private widget.TextBox AlasanUmumKerja;
+    private widget.Label jLabelAlasanUmumJasa;
+    private widget.TextBox AlasanUmumJasa;
+    private widget.TextBox AlasanUmum;
+    private widget.Label jLabelAsuransi;
+    private widget.TextBox NamaAsuransi;
+    private widget.Label jLabelNoKartuAsuransi;
+    private widget.TextBox NoKartuAsuransi;
+    private widget.Label jLabelBPJS;
+    private widget.TextBox NoKartuBPJS;
+    private widget.Label jLabelHakKelas;
+    private widget.TextBox HakKelas;
+    private widget.Label jLabelPilihanKelas;
+    private widget.ComboBox PilihanKelas;
+    private widget.Label jLabelAlasanNaik;
+    private widget.TextBox AlasanNaik;
+
+    private void initGC() {
+        jLabelPrivasi1 = new widget.Label();
+        jLabelPrivasi1.setText("Privasi Akses :");
+        jLabelPrivasi1.setBounds(0, 180, 85, 23);
+        Privasi1 = new widget.ComboBox();
+        Privasi1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Mengijinkan", "Tidak Mengijinkan" }));
+        Privasi1.setBounds(89, 180, 140, 23);
+
+        jLabelPrivasi2 = new widget.Label();
+        jLabelPrivasi2.setText("Privasi Khusus :");
+        jLabelPrivasi2.setBounds(240, 180, 90, 23);
+        Privasi2 = new widget.ComboBox();
+        Privasi2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Menginginkan", "Menginginkan" }));
+        Privasi2.setBounds(335, 180, 140, 23);
+        
+        jLabelInfoBiaya = new widget.Label();
+        jLabelInfoBiaya.setText("Info Biaya :");
+        jLabelInfoBiaya.setBounds(490, 180, 90, 23);
+        InfoBiaya = new widget.ComboBox();
+        InfoBiaya.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Rawat Jalan", "Rawat Inap", "Instalasi Gawat Darurat" }));
+        InfoBiaya.setBounds(583, 180, 180, 23);
+        
+        jLabelKeluarga1 = new widget.Label();
+        jLabelKeluarga1.setText("Keluarga 1 :");
+        jLabelKeluarga1.setBounds(765, 180, 70, 23);
+        Keluarga1 = new widget.TextBox();
+        Keluarga1.setBounds(840, 180, 140, 23);
+        
+        jLabelKeluarga2 = new widget.Label();
+        jLabelKeluarga2.setText("Keluarga 2 :");
+        jLabelKeluarga2.setBounds(765, 210, 70, 23);
+        Keluarga2 = new widget.TextBox();
+        Keluarga2.setBounds(840, 210, 140, 23);
+        
+        jLabelNoTelpPasien = new widget.Label();
+        jLabelNoTelpPasien.setText("Telp.Ps :");
+        jLabelNoTelpPasien.setBounds(735, 40, 60, 23);
+
+        NoTelpPasien = new widget.TextBox();
+        NoTelpPasien.setBounds(795, 40, 130, 23);
+        
+        ChkAlamatPJ = new widget.CekBox();
+        ChkAlamatPJ.setText("Sama");
+        ChkAlamatPJ.setBounds(475, 120, 60, 23);
+        ChkAlamatPJ.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                if(ChkAlamatPJ.isSelected()){
+                    Alamat.setText(Sequel.cariIsi("select alamat from pasien where no_rkm_medis=?", TNoRM.getText()));
+                }else{
+                    Alamat.setText("");
+                }
+            }
+        });
+
+
+        jLabelAlasanUmum = new widget.Label();
+        jLabelAlasanUmum.setText("Alasan Tolak BPJS Kes:");
+        jLabelAlasanUmum.setBounds(30, 240, 140, 23);
+        
+        jLabelAlasanUmumKerja = new widget.Label();
+        jLabelAlasanUmumKerja.setText("Alasan Tolak BPJS Kerja:");
+        jLabelAlasanUmumKerja.setBounds(30, 270, 140, 23);
+        AlasanUmumKerja = new widget.TextBox();
+        AlasanUmumKerja.setBounds(175, 270, 300, 23);
+        
+        jLabelAlasanUmumJasa = new widget.Label();
+        jLabelAlasanUmumJasa.setText("Alasan Tolak Jasa Raharja:");
+        jLabelAlasanUmumJasa.setBounds(30, 300, 140, 23);
+        AlasanUmumJasa = new widget.TextBox();
+        AlasanUmumJasa.setBounds(175, 300, 300, 23);
+        
+        FormInput.add(jLabelAlasanUmumKerja);
+        FormInput.add(AlasanUmumKerja);
+        FormInput.add(jLabelAlasanUmumJasa);
+        FormInput.add(AlasanUmumJasa);
+        AlasanUmum = new widget.TextBox();
+        AlasanUmum.setBounds(175, 240, 300, 23);
+
+        jLabelAsuransi = new widget.Label();
+        jLabelAsuransi.setText("Asuransi Swasta :");
+        jLabelAsuransi.setBounds(30, 360, 100, 23);
+        NamaAsuransi = new widget.TextBox();
+        NamaAsuransi.setBounds(135, 360, 220, 23);
+
+        jLabelNoKartuAsuransi = new widget.Label();
+        jLabelNoKartuAsuransi.setText("No. Kartu :");
+        jLabelNoKartuAsuransi.setBounds(370, 360, 60, 23);
+        NoKartuAsuransi = new widget.TextBox();
+        NoKartuAsuransi.setBounds(435, 360, 160, 23);
+
+        jLabelBPJS = new widget.Label();
+        jLabelBPJS.setText("No. JKN / BPJS Kes :");
+        jLabelBPJS.setBounds(30, 540, 130, 23);
+        NoKartuBPJS = new widget.TextBox();
+        NoKartuBPJS.setBounds(165, 540, 180, 23);
+
+        jLabelHakKelas = new widget.Label();
+        jLabelHakKelas.setText("Hak Kelas :");
+        jLabelHakKelas.setBounds(360, 540, 70, 23);
+        HakKelas = new widget.TextBox();
+        HakKelas.setBounds(435, 540, 120, 23);
+
+        jLabelPilihanKelas = new widget.Label();
+        jLabelPilihanKelas.setText("Pilihan Kamar :");
+        jLabelPilihanKelas.setBounds(30, 570, 90, 23);
+        PilihanKelas = new widget.ComboBox();
+        PilihanKelas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sesuai Hak Kelas Rawat", "Naik Kelas Hak Rawat" }));
+        PilihanKelas.setBounds(125, 570, 180, 23);
+
+        jLabelAlasanNaik = new widget.Label();
+        jLabelAlasanNaik.setText("Alasan Naik Kelas :");
+        jLabelAlasanNaik.setBounds(320, 570, 110, 23);
+        AlasanNaik = new widget.TextBox();
+        AlasanNaik.setBounds(435, 570, 250, 23);
+
+        bgPembiayaan = new javax.swing.ButtonGroup();
+        rbUmum = new widget.RadioButton();
+        rbAsuransi = new widget.RadioButton();
+        rbJasaRaharja = new widget.RadioButton();
+        rbBPJSKerja = new widget.RadioButton();
+        rbBPJSKes = new widget.RadioButton();
+
+        rbUmum.setText("Umum");
+        rbAsuransi.setText("Asuransi Swasta");
+        rbJasaRaharja.setText("Jasa Raharja");
+        rbBPJSKerja.setText("BPJS Ketenagakerj.");
+        rbBPJSKes.setText("BPJS Kesehatan");
+        
+        rbUmum.setFocusable(false);
+        rbAsuransi.setFocusable(false);
+        rbJasaRaharja.setFocusable(false);
+        rbBPJSKerja.setFocusable(false);
+        rbBPJSKes.setFocusable(false);
+
+        bgPembiayaan.add(rbUmum);
+        bgPembiayaan.add(rbAsuransi);
+        bgPembiayaan.add(rbJasaRaharja);
+        bgPembiayaan.add(rbBPJSKerja);
+        bgPembiayaan.add(rbBPJSKes);
+
+        FormInput.add(rbUmum);
+        FormInput.add(rbAsuransi);
+        FormInput.add(rbJasaRaharja);
+        FormInput.add(rbBPJSKerja);
+        FormInput.add(rbBPJSKes);
+
+        rbUmum.setBounds(0, 210, 150, 23);
+        rbAsuransi.setBounds(0, 330, 150, 23);
+        rbJasaRaharja.setBounds(0, 390, 150, 23);
+        rbBPJSKerja.setBounds(0, 450, 200, 23);
+        rbBPJSKes.setBounds(0, 510, 150, 23);
+        
+        jLabelNoJKNJasa = new widget.Label();
+        jLabelNoJKNJasa.setText("No. JKN / Jasa Raharja :");
+        jLabelNoJKNJasa.setBounds(30, 420, 140, 23);
+        NoJKNJasa = new widget.TextBox();
+        NoJKNJasa.setBounds(175, 420, 180, 23);
+        NoJKNJasa.setName("NoJKNJasa"); // NOI18N
+        
+        jLabelNoJKNKerja = new widget.Label();
+        jLabelNoJKNKerja.setText("No. JKN / BPJS Kerja :");
+        jLabelNoJKNKerja.setBounds(30, 480, 140, 23);
+        NoJKNKerja = new widget.TextBox();
+        NoJKNKerja.setBounds(175, 480, 180, 23);
+        NoJKNKerja.setName("NoJKNKerja"); // NOI18N
+
+        FormInput.add(jLabelNoJKNJasa);
+        FormInput.add(NoJKNJasa);
+        FormInput.add(jLabelNoJKNKerja);
+        FormInput.add(NoJKNKerja);
+        
+        java.awt.event.ItemListener rbListener = new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                if(evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+                    AlasanUmum.setEditable(rbUmum.isSelected());
+                    AlasanUmumKerja.setEditable(rbUmum.isSelected());
+                    AlasanUmumJasa.setEditable(rbUmum.isSelected());
+                    NamaAsuransi.setEditable(rbAsuransi.isSelected());
+                    NoKartuAsuransi.setEditable(rbAsuransi.isSelected());
+                    NoJKNJasa.setEditable(rbJasaRaharja.isSelected());
+                    NoJKNKerja.setEditable(rbBPJSKerja.isSelected());
+                    NoKartuBPJS.setEditable(rbBPJSKes.isSelected());
+                    HakKelas.setEditable(rbBPJSKes.isSelected());
+                    
+                    if(!rbUmum.isSelected()) {
+                        AlasanUmum.setText("-");
+                        AlasanUmumKerja.setText("-");
+                        AlasanUmumJasa.setText("-");
+                    }
+                    if(!rbAsuransi.isSelected()) {
+                        NamaAsuransi.setText("-");
+                        NoKartuAsuransi.setText("-");
+                    }
+                    if(!rbJasaRaharja.isSelected()) NoJKNJasa.setText("-");
+                    if(!rbBPJSKerja.isSelected()) NoJKNKerja.setText("-");
+                    if(!rbBPJSKes.isSelected()) {
+                        NoKartuBPJS.setText("-");
+                        HakKelas.setText("-");
+                    } else if (NoKartuBPJS.getText().equals("-") || NoKartuBPJS.getText().equals("")) {
+                        NoKartuBPJS.setText(Sequel.cariIsi("select pasien.no_peserta from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis where reg_periksa.no_rawat=?", TNoRw.getText()));
+                        HakKelas.setText(Sequel.cariIsi("select bridging_sep.klsrawat from bridging_sep where bridging_sep.no_rawat=?", TNoRw.getText()));
+                        if (HakKelas.getText().trim().equals("")) {
+                            HakKelas.setText("-");
+                        }
+                        if (NoKartuBPJS.getText().trim().equals("")) {
+                            NoKartuBPJS.setText("-");
+                        }
+                    }
+                }
+            }
+        };
+        rbUmum.addItemListener(rbListener);
+        rbAsuransi.addItemListener(rbListener);
+        rbJasaRaharja.addItemListener(rbListener);
+        rbBPJSKerja.addItemListener(rbListener);
+        rbBPJSKes.addItemListener(rbListener);
+        
+        rbUmum.setSelected(true);
+
+        FormInput.add(jLabelPrivasi1);
+        FormInput.add(Privasi1);
+        FormInput.add(jLabelPrivasi2);
+        FormInput.add(Privasi2);
+        FormInput.add(jLabelInfoBiaya);
+        FormInput.add(InfoBiaya);
+        FormInput.add(jLabelKeluarga1);
+        FormInput.add(Keluarga1);
+        FormInput.add(jLabelKeluarga2);
+        FormInput.add(Keluarga2);
+        FormInput.add(jLabelNoTelpPasien);
+        FormInput.add(NoTelpPasien);
+        FormInput.add(ChkAlamatPJ);
+        FormInput.add(jLabelAlasanUmum);
+        FormInput.add(AlasanUmum);
+        FormInput.add(jLabelAsuransi);
+        FormInput.add(NamaAsuransi);
+        FormInput.add(jLabelNoKartuAsuransi);
+        FormInput.add(NoKartuAsuransi);
+        FormInput.add(jLabelBPJS);
+        FormInput.add(NoKartuBPJS);
+        FormInput.add(jLabelHakKelas);
+        FormInput.add(HakKelas);
+        FormInput.add(jLabelPilihanKelas);
+        FormInput.add(PilihanKelas);
+        FormInput.add(jLabelAlasanNaik);
+        FormInput.add(AlasanNaik);
+
+        FormInput.setPreferredSize(new java.awt.Dimension(100, 710));
+        
     }
 }

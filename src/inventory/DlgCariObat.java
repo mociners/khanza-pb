@@ -3141,6 +3141,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                     nm_dokter_fix = this.namadokter;
                 }
                 param.put("peresep", nm_dokter_fix);
+                param.put("sipdokter", Sequel.cariIsi("select no_ijn_praktek from dokter where kd_dokter=?", kd_dokter_fix));
+                param.put("no_tlp", Sequel.cariIsi("select no_tlp from pasien where no_rkm_medis=?", TNoRM.getText()));
 
                 String alamatPasien = Sequel.cariIsi("select alamat from pasien where no_rkm_medis=?", TNoRM.getText());
                 param.put("alamat", alamatPasien);
