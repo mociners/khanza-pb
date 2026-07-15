@@ -504,7 +504,9 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (i = 0; i < cariobat.getTable().getRowCount(); i++) {
-                    ObatSelamaDiRS.append(cariobat.getTable().getValueAt(i, 3).toString() + ", ");
+                    if (Boolean.parseBoolean(cariobat.getTable().getValueAt(i, 0).toString()) == true) {
+                        ObatSelamaDiRS.append(cariobat.getTable().getValueAt(i, 3).toString() + ", ");
+                    }
                 }
                 ObatSelamaDiRS.requestFocus();
             }
