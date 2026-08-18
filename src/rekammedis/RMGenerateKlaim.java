@@ -99,6 +99,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
     public RMGenerateKlaim(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        if ("DlgKamarInap".equals(akses.getform())) {
+            chkTriase.setSelected(false);
+        }
         initGenKlaim();
         this.setLocation(8, 1);
         setSize(885, 674);
@@ -1672,11 +1675,19 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         if (NoRawat.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(null, "Silahkan pilih data pasien terlebih dahulu");
         } else {
+            boolean isRanap = false;
             String fileTTD = Sequel.cariIsi(
                     "SELECT file_ttd FROM ttd_dokter_ralan WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1",
                     NoRawat.getText());
+            
+            if (fileTTD == null || fileTTD.equals("")) {
+                fileTTD = Sequel.cariIsi(
+                        "SELECT file_ttd FROM ttd_dokter_ranap WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1",
+                        NoRawat.getText());
+                isRanap = true;
+            }
 
-            if (fileTTD.equals("")) {
+            if (fileTTD == null || fileTTD.equals("")) {
                 JOptionPane.showMessageDialog(null, "Tidak ada tanda tangan untuk data ini");
             } else {
                 int confirm = JOptionPane.showConfirmDialog(null,
@@ -1684,7 +1695,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    if (Sequel.queryu2tf("DELETE FROM ttd_dokter_ralan WHERE no_rawat=?", 1,
+                    String deleteQuery = isRanap ? "DELETE FROM ttd_dokter_ranap WHERE no_rawat=?" : "DELETE FROM ttd_dokter_ralan WHERE no_rawat=?";
+                    if (Sequel.queryu2tf(deleteQuery, 1,
                             new String[] { NoRawat.getText() })) {
                         JOptionPane.showMessageDialog(null, "Tanda tangan berhasil dihapus");
                         // Reset button ke state awal
@@ -2267,6 +2279,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
 
     private void initGenKlaim() {
         chkLaporanOperasi = new widget.CekBox();
+        chkLaporanOperasi.setSelected(true);
         chkLaporanOperasi.setText("Laporan Operasi");
         chkLaporanOperasi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         chkLaporanOperasi.setName("chkLaporanOperasi");
@@ -2306,9 +2319,10 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             +
                             "from pasien inner join bahasa_pasien on bahasa_pasien.id=pasien.bahasa_pasien " +
                             "inner join cacat_fisik on cacat_fisik.id=pasien.cacat_fisik " +
-                            "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel " +
-                            "inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec " +
-                            "inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab " +
+                            "left join kelurahan on pasien.kd_kel=kelurahan.kd_kel " +
+                            "left join kecamatan on pasien.kd_kec=kecamatan.kd_kec " +
+                            "left join kabupaten on pasien.kd_kab=kabupaten.kd_kab " +
+                            "left join propinsi on pasien.kd_prop=propinsi.kd_prop " +
                             "where pasien.no_rkm_medis=?");
             try {
                 ps.setString(1, NoRM.getText().trim());
@@ -2803,7 +2817,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         String qrCodePJLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
                                                 90);
                                         htmlContent.append(
-                                                "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
+                                                "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img height='120' src='")
                                                 .append(qrCodePJLab).append("'/><br>")
                                                 .append(rs3.getString("nm_dokter")).append("</td>");
                                         rs4 = koneksi.prepareStatement(
@@ -2818,7 +2832,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                 String qrCodePetugas = QRCodeHelper
                                                         .getPetugasQRPath(rs4.getString("nip"), 90);
                                                 htmlContent.append(
-                                                        "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
+                                                        "<td border='0' align='center'>Petugas Laboratorium <br><img height='120' src='")
                                                         .append(qrCodePetugas).append("'/><br>")
                                                         .append(rs4.getString("nama")).append("</td></tr></table>");
                                             }
@@ -3026,7 +3040,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             String qrCodePJRad = QRCodeHelper
                                                     .getDoctorQRPath(rs3.getString("kd_dokterrad"), 90);
                                             htmlContent.append(
-                                                    "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
+                                                    "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img height='120' src='")
                                                     .append(qrCodePJRad).append("'/><br>")
                                                     .append(rs3.getString("nm_dokter")).append("</td>");
                                             rs4 = koneksi.prepareStatement(
@@ -3041,7 +3055,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     String qrCodePetugas = QRCodeHelper
                                                             .getPetugasQRPath(rs4.getString("nip"), 90);
                                                     htmlContent.append(
-                                                            "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
+                                                            "<td border='0' align='center'>Petugas Radiologi <br><img height='120' src='")
                                                             .append(qrCodePetugas).append("'/><br>")
                                                             .append(rs4.getString("nama")).append("</td></tr></table>");
                                                 }
@@ -5101,7 +5115,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             // Generate QR code dokter konsultasi secara lokal
                             String qrCodeDokterKonsul = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"), 90);
                             htmlContent
-                                    .append("Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                    .append("Dokter Penanggung Jawab<br><img height='120' src='")
                                     .append(qrCodeDokterKonsul).append("'/><br>")
                                     .append(rs2.getString("dokterkonsul"));
 
@@ -5112,7 +5126,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             String qrCodeDokterDikonsuli = QRCodeHelper
                                     .getDoctorQRPath(rs2.getString("kd_dokter_dikonsuli"), 90);
                             htmlContent.append(
-                                    "&nbsp;&nbsp;&nbsp;&nbsp;Dokter Penanggung Jawab<br>&nbsp;&nbsp;&nbsp;&nbsp;<img width='90' height='90' src='")
+                                    "&nbsp;&nbsp;&nbsp;&nbsp;Dokter Penanggung Jawab<br>&nbsp;&nbsp;&nbsp;&nbsp;<img height='120' src='")
                                     .append(qrCodeDokterDikonsuli).append("'/><br>&nbsp;&nbsp;&nbsp;&nbsp;")
                                     .append(rs2.getString("dokterdikonsuli"));
 
@@ -5416,19 +5430,17 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                 .append(rs2.getString("diagnosa"))
                                                 .append("</td></tr></tr><tr><td valign='top' width='20%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kamar Diminta</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
                                                 .append(rs2.getString("nm_bangsal"))
-                                                .append("</td></tr><tr><td valign='top' width='50%'>Memerlukan perawatan inap di RS BUNDA PALEMBANG</td></tr>");
+                                                .append("</td></tr><tr><td valign='top' width='50%'>Memerlukan perawatan inap di TASIKMALAYA</td></tr>");
 
                                         rs2.beforeFirst();
                                         while (rs2.next()) {
-                                            // Generate QR code secara lokal
-                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"),
-                                                    90);
-
+                                            String ttdDokterUrl = getTTDDokterUrl(norawat);
+                                            String ttdHtml = ttdDokterUrl.isEmpty() ? "<br><br><br><br><br>" : "<img height='120' src='" + ttdDokterUrl + "'/><br>";
                                             htmlContent.append(
-                                                    "<tr><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>PALEMBANG, ")
+                                                    "<tr><td valign='top' width='100%' align='center' colspan='7'>TASIKMALAYA, ")
                                                     .append(rs2.getString("tanggal"))
-                                                    .append("<br>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
-                                                    .append(qrCodeDPJP).append("'/><br>")
+                                                    .append("<br>Dokter Penanggung Jawab<br>")
+                                                    .append(ttdHtml)
                                                     .append(rs2.getString("nm_dokter")).append("</td></tr>");
                                         }
 
@@ -5483,14 +5495,12 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     + "</td></tr><tr><td>Tgl. Entri</td><td>: "
                                                     + rs2.getString("tgl_surat")
                                                     + "</td></tr><td colspan='2'>Demikian atas bantuannya diucapkan banyak terima kasih</td></tr></table>");
-                                            // dokter dpjp - Generate QR code secara lokal
-                                            String kodeDokterDPJP = Sequel.cariIsi(
-                                                    "select dokter.kd_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
-                                                    rs2.getString("kd_dokter_bpjs"));
-                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kodeDokterDPJP, 150);
+                                            // dokter dpjp
+                                            String ttdDokterUrl = getTTDDokterUrl(norawat);
+                                            String ttdHtml = ttdDokterUrl.isEmpty() ? "<br><br><br><br><br>" : "<img height='120' src='" + ttdDokterUrl + "'/><br>";
                                             htmlContent.append("<table><tr><td width='600'>Tgl.Cetak " + lokal
-                                                    + "</td><td>Mengetahui DPJP</td></tr><tr><td></td><td><img width='150' src='")
-                                                    .append(qrCodeDPJP).append("' /><br>")
+                                                    + "</td><td>Mengetahui DPJP</td></tr><tr><td></td><td>")
+                                                    .append(ttdHtml)
                                                     .append(Sequel.cariIsi(
                                                             "select dokter.nm_dokter from dokter INNER JOIN maping_dokter_dpjpvclaim ON dokter.kd_dokter=maping_dokter_dpjpvclaim.kd_dokter WHERE maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",
                                                             rs2.getString("kd_dokter_bpjs")))
@@ -5806,6 +5816,83 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         }
     }
 
+    private String getObatDiRSFallback(String obatDiRS, String norawat) {
+        if (obatDiRS != null && !obatDiRS.trim().isEmpty()) {
+            return obatDiRS;
+        }
+        StringBuilder obatBuilder = new StringBuilder();
+        try {
+            java.sql.PreparedStatement psObat = koneksi.prepareStatement(
+                    "select detail_pemberian_obat.tgl_perawatan,detail_pemberian_obat.jam,databarang.nama_brng,detail_pemberian_obat.jml,databarang.kode_sat,detail_pemberian_obat.no_rawat,detail_pemberian_obat.kode_brng " +
+                    "from detail_pemberian_obat inner join databarang on detail_pemberian_obat.kode_brng=databarang.kode_brng " +
+                    "where detail_pemberian_obat.no_rawat=? order by detail_pemberian_obat.tgl_perawatan, detail_pemberian_obat.jam");
+            try {
+                psObat.setString(1, norawat);
+                java.sql.ResultSet rsObat = psObat.executeQuery();
+                while (rsObat.next()) {
+                    String aturan = Sequel.cariIsi("select aturan_pakai.aturan from aturan_pakai where aturan_pakai.tgl_perawatan='" + rsObat.getString("tgl_perawatan") + "' and aturan_pakai.jam='" + rsObat.getString("jam") + "' and aturan_pakai.no_rawat='" + rsObat.getString("no_rawat") + "' and aturan_pakai.kode_brng='" + rsObat.getString("kode_brng") + "'");
+                    if (aturan == null) aturan = "";
+                    obatBuilder.append(rsObat.getString("nama_brng")).append(" : ").append(rsObat.getString("jml")).append(" ").append(rsObat.getString("kode_sat")).append(" ").append(aturan).append(", ");
+                }
+            } finally {
+                if (psObat != null) psObat.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi Obat : " + e);
+        }
+        return obatBuilder.toString();
+    }
+
+
+    private String getTindakanDiRSFallback(String tindakanDiRS, String norawat) {
+        if (tindakanDiRS != null && !tindakanDiRS.trim().isEmpty()) {
+            return tindakanDiRS;
+        }
+        java.util.Set<String> tindakanSet = new java.util.LinkedHashSet<>();
+        
+        try {
+            java.sql.PreparedStatement ps = koneksi.prepareStatement(
+                    "select jns_perawatan.nm_perawatan from rawat_jl_dr INNER JOIN jns_perawatan ON rawat_jl_dr.kd_jenis_prw=jns_perawatan.kd_jenis_prw where rawat_jl_dr.no_rawat=? order by rawat_jl_dr.tgl_perawatan,rawat_jl_dr.jam_rawat");
+            try {
+                ps.setString(1, norawat);
+                java.sql.ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    tindakanSet.add(rs.getString("nm_perawatan"));
+                }
+            } finally {
+                if (ps != null) ps.close();
+            }
+            
+            ps = koneksi.prepareStatement(
+                    "select jns_perawatan_inap.nm_perawatan from rawat_inap_dr INNER JOIN jns_perawatan_inap ON rawat_inap_dr.kd_jenis_prw=jns_perawatan_inap.kd_jenis_prw where rawat_inap_dr.no_rawat=? order by rawat_inap_dr.tgl_perawatan,rawat_inap_dr.jam_rawat");
+            try {
+                ps.setString(1, norawat);
+                java.sql.ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    tindakanSet.add(rs.getString("nm_perawatan"));
+                }
+            } finally {
+                if (ps != null) ps.close();
+            }
+            
+            ps = koneksi.prepareStatement(
+                    "select paket_operasi.nm_perawatan from operasi INNER JOIN paket_operasi ON operasi.kode_paket=paket_operasi.kode_paket where operasi.no_rawat=? order by operasi.tgl_operasi");
+            try {
+                ps.setString(1, norawat);
+                java.sql.ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    tindakanSet.add(rs.getString("nm_perawatan"));
+                }
+            } finally {
+                if (ps != null) ps.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Notifikasi Tindakan : " + e);
+        }
+        
+        return String.join(", ", tindakanSet);
+    }
+
     private void menampilkanRESUMEBPJS(String norawat) {
         // tgl_masuk = Sequel.cariIsi("SELECT DISTINCT(concat(tgl_masuk,' ',jam_masuk))
         // FROM kamar_inap WHERE no_rawat='"+norawat+"' ORDER BY tgl_masuk ASC LIMIT
@@ -5842,9 +5929,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             +
                                             "left join dokter on resume_pasien.kd_dokter=dokter.kd_dokter inner join dokter as dokter_reg on reg_periksa.kd_dokter=dokter_reg.kd_dokter "
                                             +
-                                            "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec "
+                                            "left join kelurahan on pasien.kd_kel=kelurahan.kd_kel left join kecamatan on pasien.kd_kec=kecamatan.kd_kec "
                                             +
-                                            "inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab inner join propinsi on pasien.kd_prop=propinsi.kd_prop "
+                                            "left join kabupaten on pasien.kd_kab=kabupaten.kd_kab left join propinsi on pasien.kd_prop=propinsi.kd_prop "
                                             +
                                             "where reg_periksa.no_rawat='" + rs.getString("no_rawat") + "'")
                                     .executeQuery();
@@ -5914,7 +6001,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append("</b></td></tr><tr><td valign='top' colspan='4'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='60%' border='0'>&nbsp;<b>")
                                             .append(rs2.getString("free_text").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr></table></td></tr><tr><td valign='top' colspan='4'>Obat-obatan waktu pulang/nasihat :<br><b>")
-                                            .append(rs2.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append((rs2.getString("obat_pulang")==null?"":rs2.getString("obat_pulang")).replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr>");
                                     w++;
@@ -5924,13 +6011,13 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     if (!ttdDokterUrl.isEmpty()) {
                                         // Use freehand signature
                                         htmlContent.append(
-                                                "<tr class='isi2'><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='3'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                                "<tr class='isi2'><td valign='middle' width='50%' colspan='2'></td><td valign='middle' width='50%' align='center' colspan='2'>Dokter Penanggung Jawab<br><img height='120' src='")
                                                 .append(ttdDokterUrl).append("'/><br>")
                                                 .append(rs2.getString("nm_dokter")).append("</td></tr>");
                                     } else {
                                         // No signature - show only doctor name
                                         htmlContent.append(
-                                                "<tr class='isi2'><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='3'>Dokter Penanggung Jawab<br><br><br><br>")
+                                                "<tr class='isi2'><td valign='middle' width='50%' colspan='2'></td><td valign='middle' width='50%' align='center' colspan='2'>Dokter Penanggung Jawab<br><br><br><br>")
                                                 .append(rs2.getString("nm_dokter")).append("</td></tr>");
                                     }
                                 }
@@ -5956,13 +6043,15 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             rs2 = koneksi.prepareStatement(
                                     "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,IFNULL(resume_pasien_ranap.kd_dokter,reg_periksa.kd_dokter) as kd_dokter,IFNULL(dokter.nm_dokter,pengirim.nm_dokter) as nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
                                             +
-                                            "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,IFNULL(resume_pasien_ranap.diagnosa_awal,'') as diagnosa_awal,IFNULL(resume_pasien_ranap.alasan,'') as alasan,IFNULL(resume_pasien_ranap.keluhan_utama,'') as keluhan_utama,IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'') as pemeriksaan_fisik,"
+                                            "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,IFNULL(resume_pasien_ranap.diagnosa_awal,'') as diagnosa_awal,IFNULL(resume_pasien_ranap.alasan,'') as alasan," +
+                                                "IF(resume_pasien_ranap.no_rawat IS NULL, IFNULL((SELECT anamnesa_singkat FROM data_triase_igdsekunder WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL(resume_pasien_ranap.keluhan_utama,'')) as keluhan_utama," +
+                                                "IF(resume_pasien_ranap.no_rawat IS NULL, IF(reg_periksa.kd_dokter IN ('D004','D058'), IFNULL((SELECT concat_ws('','Kepala: TD: ',obj_td_sistol,'/',obj_td_diastol,' mmHg, Nadi: ',obj_hr,' x/menit, RR: ',obj_rr,' x/menit, Suhu: ',obj_suhu,' C, SpO2: ',obj_spo2,' %, ',obj_kepala, ', Mata: ',obj_mata, ', Leher: ',obj_leher, ', Thorax: ',obj_thorax, ', Abdomen: Inspeksi : ',obj_inspeksi, ', TFU : ',obj_tfu, ' cm, TBBJ : ',obj_tbbj, ', His : ',obj_his, ', Leopold I : ',obj_leopold1, ', Leopold II : ',obj_leopold2, ', Leopold III : ',obj_leopold3, ', Leopold IV : ',obj_leopold4, ', Auskultasi : ',obj_auskultasi, ', Genitalia (Pukul ',obj_pukul, ' WIB): Pervaginam : ',obj_pengeluaran, ', VT : ',obj_pmxdalam, ', Inspekulo : ',obj_inspekulo, ', Ekstremitas: Oedema : ',obj_oedema1, ' / ',obj_oedema2, ', Varises : ',obj_varises1, ' / ',obj_varises2, ', Reflek : ',obj_reflek1, ' / ',obj_reflek2) FROM penilaian_awal_keperawatan_ponek WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL((SELECT concat_ws(', ', concat('TD: ', td, ' mmHg'), concat('Nadi: ', nadi, ' x/menit'), concat('RR: ', rr, ' x/menit'), concat('Suhu: ', suhu, ' C'), concat('SpO2: ', spo, ' %'), concat('BB: ', bb, ' Kg'), concat('TB: ', tb, ' cm'), concat('Kepala: ', kepala), concat('Mata: ', mata), concat('Gigi: ', gigi), concat('Leher: ', leher), concat('Thoraks: ', thoraks), concat('Abdomen: ', abdomen), concat('Ekstremitas: ', ekstremitas), concat('Genital: ', genital), concat('Ket Fisik: ', ket_fisik), concat('Ket Lokalis: ', ket_lokalis)) FROM penilaian_medis_igd WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),'')), IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'')) as pemeriksaan_fisik,"
                                             +
                                             "IFNULL(resume_pasien_ranap.jalannya_penyakit,'') as jalannya_penyakit,IFNULL(resume_pasien_ranap.pemeriksaan_penunjang,'') as pemeriksaan_penunjang,IFNULL(resume_pasien_ranap.hasil_laborat,'') as hasil_laborat,IFNULL(resume_pasien_ranap.tindakan_dan_operasi,'') as tindakan_dan_operasi,IFNULL(resume_pasien_ranap.obat_di_rs,'') as obat_di_rs,"
                                             +
                                             "IFNULL(resume_pasien_ranap.alergi,'') as alergi,IFNULL(resume_pasien_ranap.diet,'') as diet,IFNULL(resume_pasien_ranap.lab_belum,'') as lab_belum,IFNULL(resume_pasien_ranap.edukasi,'') as edukasi,IFNULL(resume_pasien_ranap.cara_keluar,'') as cara_keluar,IFNULL(resume_pasien_ranap.ket_keluar,'') as ket_keluar,IFNULL(resume_pasien_ranap.keadaan,'') as keadaan,"
                                             +
-                                            "IFNULL(resume_pasien_ranap.ket_keadaan,'') as ket_keadaan,IFNULL(resume_pasien_ranap.dilanjutkan,'') as dilanjutkan,IFNULL(resume_pasien_ranap.ket_dilanjutkan,'') as ket_dilanjutkan,IFNULL(resume_pasien_ranap.kontrol,'') as kontrol,IFNULL(resume_pasien_ranap.obat_pulang,'') as obat_pulang,IFNULL(resume_pasien_ranap.pemeriksaan_lain,'') as pemeriksaan_lain,IFNULL(resume_pasien_ranap.free_text,'') as free_text,reg_periksa.kd_pj,penjab.png_jawab,"
+                                            "IFNULL(resume_pasien_ranap.ket_keadaan,'') as ket_keadaan,IFNULL(resume_pasien_ranap.dilanjutkan,'') as dilanjutkan,IFNULL(resume_pasien_ranap.ket_dilanjutkan,'') as ket_dilanjutkan,IFNULL(resume_pasien_ranap.kontrol,'') as kontrol,IFNULL(resume_pasien_ranap.obat_pulang,'') as obat_pulang,reg_periksa.kd_pj,penjab.png_jawab,"
                                             +
                                             "reg_periksa.umurdaftar,reg_periksa.sttsumur,pasien.pekerjaan,pasien.jk,pasien.tgl_lahir,concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab) as alamat "
                                             +
@@ -5970,7 +6059,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             +
                                             "left join resume_pasien_ranap on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat left join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
                                             +
-                                            "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
+                                            "left join kelurahan on pasien.kd_kel=kelurahan.kd_kel left join kecamatan on pasien.kd_kec=kecamatan.kd_kec left join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
                                             +
                                             "inner join penjab on penjab.kd_pj=reg_periksa.kd_pj " +
                                             "where reg_periksa.no_rawat='" + rs.getString("no_rawat") + "'")
@@ -6142,45 +6231,40 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append("</b></td><td valign='top' align='center'><b>")
                                             .append(rs2.getString("kontrol"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Diagnosa Awal Masuk :<br><b>")
-                                            .append(rs2.getString("diagnosa_awal").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append((rs2.getString("diagnosa_awal")==null?"":rs2.getString("diagnosa_awal")).replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Alasan Masuk Dirawat :<br><b>")
-                                            .append(rs2.getString("alasan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append((rs2.getString("alasan")==null?"":rs2.getString("alasan")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Keluhan Utama Riwayat Penyakit :<br><b>")
-                                            .append(rs2.getString("keluhan_utama").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append((rs2.getString("keluhan_utama")==null?"":rs2.getString("keluhan_utama")).replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Pemeriksaan Fisik :<br><b>")
-                                            .append(rs2.getString("pemeriksaan_fisik").replaceAll("(\r\n|\r|\n|\n\r)",
-                                                    "<br>"))
-                                            .append("</b></td></tr><tr><td valign='top' colspan='4'>Pemeriksaan TTV :<br><b>")
-                                            .append(rs2.getString("pemeriksaan_lain").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append((rs2.getString("pemeriksaan_fisik")==null?"":rs2.getString("pemeriksaan_fisik")).replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Jalannya Penyakit Selama Perawatan :<br><b>")
-                                            .append(rs2.getString("jalannya_penyakit").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append((rs2.getString("jalannya_penyakit")==null?"":rs2.getString("jalannya_penyakit")).replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Pemeriksaan Penunjang Rad Terpenting :<br><b>")
                                             .append(rs2.getString("pemeriksaan_penunjang")
                                                     .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Pemeriksaan Penunjang Lab Terpenting :<br><b>")
-                                            .append(rs2.getString("hasil_laborat").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append((rs2.getString("hasil_laborat")==null?"":rs2.getString("hasil_laborat")).replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                            .append(rs2.getString("tindakan_dan_operasi")
+                                            .append(getTindakanDiRSFallback(rs2.getString("tindakan_dan_operasi"), rs2.getString("no_rawat"))
                                                     .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                            .append(rs2.getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
-                                            .append("</b></td></tr><tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='60%' border='0'><b>")
-                                            .append(rs2.getString("free_text").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append(getObatDiRSFallback(rs2.getString("obat_di_rs"), rs2.getString("no_rawat")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr></table></td></tr><tr><td valign='top' colspan='7'>Alergi Obat :<br><b>")
-                                            .append(rs2.getString("alergi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
-                                            .append("</td></tr><tr><td valign='top' colspan='7'>Diet :<br><b>")
-                                            .append(rs2.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append((rs2.getString("alergi")==null?"":rs2.getString("alergi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append("</b></td></tr><tr><td valign='top' colspan='7'>Diet :<br><b>")
+                                            .append((rs2.getString("diet")==null?"":rs2.getString("diet")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
-                                            .append(rs2.getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
-                                            .append("</b></td></tr><tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
-                                            .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append((rs2.getString("lab_belum")==null?"":rs2.getString("lab_belum")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append("</b></td></tr><tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
+                                            .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr><tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                            .append(rs2.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append((rs2.getString("obat_pulang")==null?"":rs2.getString("obat_pulang")).replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr>");
                                     w++;
@@ -6192,9 +6276,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         if (rs3.next()) {
                                             htmlContent.append(
                                                     "<tr class='isi2'>" +
-                                                            "<td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td>"
-                                                            +
-                                                            "<td valign='top' width='79%' align='center'colspan='5'>" +
+                                                            "<td valign='top' width='100%' align='center' colspan='7'>" +
                                                             "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
                                                             +
                                                             "<tr class='isi2'>");
@@ -6207,7 +6289,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     // Use freehand signature from DlgTTDDokter
                                                     htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
                                                             .append(urutdpjp)
-                                                            .append("<br><img width='90' height='90' src='")
+                                                            .append("<br><img height='120' src='")
                                                             .append(ttdDokterUrl).append("'/><br>")
                                                             .append(rs3.getString("nm_dokter")).append("</td>");
                                                 } else {
@@ -6229,14 +6311,14 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                             if (!ttdDokterUrl.isEmpty()) {
                                                 htmlContent.append(
-                                                        "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
+                                                        "<tr class='isi2'><td valign='top' width='100%' align='center' colspan='7'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter DPJP<br><br><img height='120' src='")
                                                         .append(ttdDokterUrl).append("'/><br>")
-                                                        .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                                        .append(rs.getString("nm_dokter")).append("</td></tr></table></td></tr>");
                                             } else {
                                                 // No signature - show only doctor name
                                                 htmlContent.append(
-                                                        "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><br><br><br>")
-                                                        .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                                        "<tr class='isi2'><td valign='top' width='100%' align='center' colspan='7'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter DPJP<br><br><br><br><br>")
+                                                        .append(rs.getString("nm_dokter")).append("</td></tr></table></td></tr>");
                                             }
                                         }
                                     } catch (Exception e) {
@@ -6406,14 +6488,14 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                         if (!ttdDokterUrl.isEmpty()) {
                                             htmlContent.append(
-                                                    "<tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='2'>Dokter Poli<br><img width='90' height='90' src='")
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='2'></td><td valign='middle' width='50%' align='center' colspan='2'>Dokter Poli<br><img height='120' src='")
                                                     .append(ttdDokterUrl)
                                                     .append("'/><br>").append(rs.getString("nm_dokter"))
                                                     .append("</td></tr>");
                                         } else {
                                             // No signature - show only doctor name
                                             htmlContent.append(
-                                                    "<tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='2'>Dokter Poli<br><br><br><br>")
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='2'></td><td valign='middle' width='50%' align='center' colspan='2'>Dokter Poli<br><br><br><br>")
                                                     .append(rs.getString("nm_dokter"))
                                                     .append("</td></tr>");
                                         }
@@ -6439,7 +6521,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 rs2 = koneksi.prepareStatement(
                                         "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,IFNULL(resume_pasien_ranap.kd_dokter,reg_periksa.kd_dokter) as kd_dokter,IFNULL(dokter.nm_dokter,pengirim.nm_dokter) as nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
                                                 +
-                                                "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,IFNULL(resume_pasien_ranap.diagnosa_awal,'') as diagnosa_awal,IFNULL(resume_pasien_ranap.alasan,'') as alasan,IFNULL(resume_pasien_ranap.keluhan_utama,'') as keluhan_utama,IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'') as pemeriksaan_fisik,"
+                                                "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,IFNULL(resume_pasien_ranap.diagnosa_awal,'') as diagnosa_awal,IFNULL(resume_pasien_ranap.alasan,'') as alasan," +
+                                                "IF(resume_pasien_ranap.no_rawat IS NULL, IFNULL((SELECT anamnesa_singkat FROM data_triase_igdsekunder WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL(resume_pasien_ranap.keluhan_utama,'')) as keluhan_utama," +
+                                                "IF(resume_pasien_ranap.no_rawat IS NULL, IF(reg_periksa.kd_dokter IN ('D004','D058'), IFNULL((SELECT concat_ws('','Kepala: TD: ',obj_td_sistol,'/',obj_td_diastol,' mmHg, Nadi: ',obj_hr,' x/menit, RR: ',obj_rr,' x/menit, Suhu: ',obj_suhu,' C, SpO2: ',obj_spo2,' %, ',obj_kepala, ', Mata: ',obj_mata, ', Leher: ',obj_leher, ', Thorax: ',obj_thorax, ', Abdomen: Inspeksi : ',obj_inspeksi, ', TFU : ',obj_tfu, ' cm, TBBJ : ',obj_tbbj, ', His : ',obj_his, ', Leopold I : ',obj_leopold1, ', Leopold II : ',obj_leopold2, ', Leopold III : ',obj_leopold3, ', Leopold IV : ',obj_leopold4, ', Auskultasi : ',obj_auskultasi, ', Genitalia (Pukul ',obj_pukul, ' WIB): Pervaginam : ',obj_pengeluaran, ', VT : ',obj_pmxdalam, ', Inspekulo : ',obj_inspekulo, ', Ekstremitas: Oedema : ',obj_oedema1, ' / ',obj_oedema2, ', Varises : ',obj_varises1, ' / ',obj_varises2, ', Reflek : ',obj_reflek1, ' / ',obj_reflek2) FROM penilaian_awal_keperawatan_ponek WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL((SELECT concat_ws(', ', concat('TD: ', td, ' mmHg'), concat('Nadi: ', nadi, ' x/menit'), concat('RR: ', rr, ' x/menit'), concat('Suhu: ', suhu, ' C'), concat('SpO2: ', spo, ' %'), concat('BB: ', bb, ' Kg'), concat('TB: ', tb, ' cm'), concat('Kepala: ', kepala), concat('Mata: ', mata), concat('Gigi: ', gigi), concat('Leher: ', leher), concat('Thoraks: ', thoraks), concat('Abdomen: ', abdomen), concat('Ekstremitas: ', ekstremitas), concat('Genital: ', genital), concat('Ket Fisik: ', ket_fisik), concat('Ket Lokalis: ', ket_lokalis)) FROM penilaian_medis_igd WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),'')), IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'')) as pemeriksaan_fisik,"
                                                 +
                                                 "IFNULL(resume_pasien_ranap.jalannya_penyakit,'') as jalannya_penyakit,IFNULL(resume_pasien_ranap.pemeriksaan_penunjang,'') as pemeriksaan_penunjang,IFNULL(resume_pasien_ranap.hasil_laborat,'') as hasil_laborat,IFNULL(resume_pasien_ranap.tindakan_dan_operasi,'') as tindakan_dan_operasi,IFNULL(resume_pasien_ranap.obat_di_rs,'') as obat_di_rs,"
                                                 +
@@ -6455,11 +6539,11 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                 +
                                                 "IFNULL(resume_pasien_ranap.kd_diagnosa_sekunder4,'') as kd_diagnosa_sekunder4,IFNULL(resume_pasien_ranap.prosedur_utama,'') as prosedur_utama,IFNULL(resume_pasien_ranap.kd_prosedur_utama,'') as kd_prosedur_utama,IFNULL(resume_pasien_ranap.prosedur_sekunder,'') as prosedur_sekunder,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder,'') as kd_prosedur_sekunder,"
                                                 +
-                                                "IFNULL(resume_pasien_ranap.prosedur_sekunder2,'') as prosedur_sekunder2,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder2,'') as kd_prosedur_sekunder2,IFNULL(resume_pasien_ranap.prosedur_sekunder3,'') as prosedur_sekunder3,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder3,'') as kd_prosedur_sekunder3,IFNULL(resume_pasien_ranap.pemeriksaan_lain,'') as pemeriksaan_lain from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                                                "IFNULL(resume_pasien_ranap.prosedur_sekunder2,'') as prosedur_sekunder2,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder2,'') as kd_prosedur_sekunder2,IFNULL(resume_pasien_ranap.prosedur_sekunder3,'') as prosedur_sekunder3,IFNULL(resume_pasien_ranap.kd_prosedur_sekunder3,'') as kd_prosedur_sekunder3 from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                                                 +
                                                 "left join resume_pasien_ranap on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat left join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
                                                 +
-                                                "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
+                                                "left join kelurahan on pasien.kd_kel=kelurahan.kd_kel left join kecamatan on pasien.kd_kec=kecamatan.kd_kec left join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
                                                 +
                                                 "inner join penjab on penjab.kd_pj=reg_periksa.kd_pj " +
                                                 "where reg_periksa.no_rawat='" + rs.getString("no_rawat") + "'")
@@ -6586,99 +6670,6 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     while (rs2.next()) {
                                         if (rs2.getString("keadaan").toLowerCase().equals("meninggal")) {
                                             htmlContent.append(""
-                                                    // + "<tr><td valign='top'
-                                                    // align='center'><b>"+rs.getString("status_lanjut")+"</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>"+rs2.getString("kd_dokter")+"</b></td><"
-                                                    // + "td valign='top'><b>"+rs2.getString("nm_dokter")+"</b></td>"
-                                                    // + "<td valign='top' align='center'
-                                                    // ><b>"+rs2.getString("keadaan")).append(rs2.getString("ket_keadaan").isEmpty()
-                                                    // ? "" : ", "+rs2.getString("ket_keadaan")).append("</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>").append(rs2.getString("cara_keluar")).append(rs2.getString("ket_keluar").isEmpty()
-                                                    // ? "" : ", "+rs2.getString("ket_keluar")).append("</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>").append(rs2.getString("dilanjutkan")).append(rs2.getString("ket_dilanjutkan").isEmpty()
-                                                    // ? "" : ", "+rs2.getString("ket_dilanjutkan")).append("</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>").append(rs2.getString("kontrol")).append("</b></td></tr>"
-                                                    // + "<tr><td valign='top' colspan='7'>Diagnosa Awal Masuk
-                                                    // :<br><b>").append(rs2.getString("diagnosa_awal").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Alasan Masuk Dirawat
-                                                    // :<br><b>").append(rs2.getString("alasan").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Keluhan Utama Riwayat Penyakit
-                                                    // :<br><b>").append(rs2.getString("keluhan_utama").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Pemeriksaan Fisik
-                                                    // :<br><b>").append(rs2.getString("pemeriksaan_fisik").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Jalannya Penyakit Selama Perawatan
-                                                    // :<br><b>").append(rs2.getString("jalannya_penyakit").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Pemeriksaan Penunjang Rad Terpenting
-                                                    // :<br><b>").append(rs2.getString("pemeriksaan_penunjang").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Pemeriksaan Penunjang Lab Terpenting
-                                                    // :<br><b>").append(rs2.getString("hasil_laborat").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan
-                                                    // :<br><b>").append(rs2.getString("tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Obat-obatan Selama Perawatan
-                                                    // :<br><b>").append(rs2.getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%'
-                                                    // border='0' align='center' cellpadding='3px' cellspacing='0'
-                                                    // class='tbl_form'><tr align='left' border='0'><td valign='top'
-                                                    // width='20%' border='0'>Diagnosa Utama</td><td valign='top'
-                                                    // width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_utama")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_utama")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 1</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 2</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder2")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder2")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 3</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder3")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder3")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 4</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder4")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder4")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Utama</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("prosedur_utama")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_utama")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Sekunder 1</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("prosedur_sekunder")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_sekunder")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Sekunder 2</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("prosedur_sekunder2")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_sekunder2")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Sekunder 3</td><td valign='top' width='60%'
-                                                    // border='0'></b>:&nbsp;").append(rs2.getString("prosedur_sekunder3")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_sekunder3")).append("</b></td></tr></table></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Alergi Obat
-                                                    // :<br><b>").append(rs2.getString("alergi").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td></tr><tr><td
-                                                    // valign='top' colspan='7'>Diet
-                                                    // :<br><b>").append(rs2.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending)
-                                                    // :<br><b>").append(rs2.getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow
-                                                    // Up)
-                                                    // :<br></b>").append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Obat-obatan Waktu Pulang
-                                                    // :<br><b>").append(rs2.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr>");
                                                     + "<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
                                                     .append(rs2.getString("alasan").replaceAll("(\r\n|\r|\n|\n\r)",
                                                             "<br>"))
@@ -6722,11 +6713,11 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     .append(rs2.getString("prosedur_sekunder3"))
                                                     .append("</b></td></tr></table></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                                    .append(rs2.getString("tindakan_dan_operasi")
+                                                    .append(getTindakanDiRSFallback(rs2.getString("tindakan_dan_operasi"), rs2.getString("no_rawat"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                                    .append(rs2.getString("obat_di_rs")
+                                                    .append(getObatDiRSFallback(rs2.getString("obat_di_rs"), rs2.getString("no_rawat"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
@@ -6737,7 +6728,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     .append(rs2.getString("lab_belum")
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
-                                                            + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
+                                                            + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
                                                     .append(rs2.getString("edukasi")
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
@@ -6749,120 +6740,26 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     .append("</b></td></tr>");
                                         } else {
                                             htmlContent.append(""
-                                                    // + "<tr><td valign='top'
-                                                    // align='center'><b>"+rs.getString("status_lanjut")+"</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>"+rs2.getString("kd_dokter")+"</b></td><"
-                                                    // + "td valign='top'><b>"+rs2.getString("nm_dokter")+"</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>"+rs2.getString("keadaan")).append(rs2.getString("ket_keadaan").isEmpty()
-                                                    // ? "" : ", "+rs2.getString("ket_keadaan")).append("</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>").append(rs2.getString("cara_keluar")).append(rs2.getString("ket_keluar").isEmpty()
-                                                    // ? "" : ", "+rs2.getString("ket_keluar")).append("</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>").append(rs2.getString("dilanjutkan")).append(rs2.getString("ket_dilanjutkan").isEmpty()
-                                                    // ? "" : ", "+rs2.getString("ket_dilanjutkan")).append("</b></td>"
-                                                    // + "<td valign='top'
-                                                    // align='center'><b>").append(rs2.getString("kontrol")).append("</b></td></tr>"
-                                                    // + "<tr><td valign='top' colspan='7'>Diagnosa Awal Masuk
-                                                    // :<br><b>").append(rs2.getString("diagnosa_awal").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Alasan Masuk Dirawat
-                                                    // :<br><b>").append(rs2.getString("alasan").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Keluhan Utama Riwayat Penyakit
-                                                    // :<br><b>").append(rs2.getString("keluhan_utama").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Pemeriksaan Fisik
-                                                    // :<br><b>").append(rs2.getString("pemeriksaan_fisik").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Jalannya Penyakit Selama Perawatan
-                                                    // :<br><b>").append(rs2.getString("jalannya_penyakit").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Pemeriksaan Penunjang Rad Terpenting
-                                                    // :<br><b>").append(rs2.getString("pemeriksaan_penunjang").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Pemeriksaan Penunjang Lab Terpenting
-                                                    // :<br><b>").append(rs2.getString("hasil_laborat").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan
-                                                    // :<br><b>").append(rs2.getString("tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Obat-obatan Selama Perawatan
-                                                    // :<br><b>").append(rs2.getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%'
-                                                    // border='0' align='center' cellpadding='3px' cellspacing='0'
-                                                    // class='tbl_form'><tr align='left' border='0'><td valign='top'
-                                                    // width='20%' border='0'>Diagnosa Utama</td><td valign='top'
-                                                    // width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_utama")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_utama")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 1</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 2</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder2")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder2")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 3</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder3")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder3")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Diagnosa Sekunder 4</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("diagnosa_sekunder4")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_diagnosa_sekunder4")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Utama</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("prosedur_utama")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_utama")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Sekunder 1</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("prosedur_sekunder")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_sekunder")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Sekunder 2</td><td valign='top' width='60%'
-                                                    // border='0'><b>:&nbsp;").append(rs2.getString("prosedur_sekunder2")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_sekunder2")).append("</b></td></tr><tr
-                                                    // align='left' border='0'><td valign='top' width='20%'
-                                                    // border='0'>Prosedur Sekunder 3</td><td valign='top' width='60%'
-                                                    // border='0'></b>:&nbsp;").append(rs2.getString("prosedur_sekunder3")).append("</b></td><td
-                                                    // valign='top' width='20%'
-                                                    // border='0'><b>&nbsp;").append(rs2.getString("kd_prosedur_sekunder3")).append("</b></td></tr></table></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Alergi Obat
-                                                    // :<br><b>").append(rs2.getString("alergi").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td></tr><tr><td
-                                                    // valign='top' colspan='7'>Diet
-                                                    // :<br><b>").append(rs2.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending)
-                                                    // :<br><b>").append(rs2.getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow
-                                                    // Up)
-                                                    // :<br></b>").append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr><tr><td
-                                                    // valign='top' colspan='7'>Obat-obatan Waktu Pulang
-                                                    // :<br><b>").append(rs2.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</b></td></tr>");
                                                     + "<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
-                                                    .append(rs2.getString("alasan").replaceAll("(\r\n|\r|\n|\n\r)",
-                                                            "<br>"))
+                                                    .append((rs2.getString("alasan")==null?"":rs2.getString("alasan")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td><td valign='top' colspan='3'>Alergi :<br><b>")
-                                                    .append(rs2.getString("alergi")
+                                                    .append((rs2.getString("alergi")==null?"":rs2.getString("alergi"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Anamnesis :<br><b>")
-                                                    .append(rs2.getString("keluhan_utama")
+                                                    .append((rs2.getString("keluhan_utama")==null?"":rs2.getString("keluhan_utama"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Pemeriksaan Fisik dan TTV :<br><b>")
-                                                    .append(rs2.getString("pemeriksaan_fisik")
+                                                    .append((rs2.getString("pemeriksaan_fisik")==null?"":rs2.getString("pemeriksaan_fisik"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Pemeriksaan Rad Terpenting :<br><b>")
-                                                    .append(rs2.getString("pemeriksaan_penunjang")
+                                                    .append((rs2.getString("pemeriksaan_penunjang")==null?"":rs2.getString("pemeriksaan_penunjang"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Pemeriksaan Lab Terpenting :<br><b>")
-                                                    .append(rs2.getString("hasil_laborat")
+                                                    .append((rs2.getString("hasil_laborat")==null?"":rs2.getString("hasil_laborat"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
@@ -6885,23 +6782,23 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     .append(rs2.getString("prosedur_sekunder3"))
                                                     .append("</b></td></tr></table></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                                    .append(rs2.getString("tindakan_dan_operasi")
+                                                    .append(getTindakanDiRSFallback(rs2.getString("tindakan_dan_operasi"), rs2.getString("no_rawat"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                                    .append(rs2.getString("obat_di_rs")
+                                                    .append(getObatDiRSFallback(rs2.getString("obat_di_rs"), rs2.getString("no_rawat"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
-                                                    .append(rs2.getString("diet")
+                                                    .append((rs2.getString("diet")==null?"":rs2.getString("diet"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
-                                                    .append(rs2.getString("lab_belum")
+                                                    .append((rs2.getString("lab_belum")==null?"":rs2.getString("lab_belum"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
-                                                            + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
-                                                    .append(rs2.getString("edukasi")
+                                                            + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
+                                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi"))
                                                             .replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien "
@@ -6912,11 +6809,10 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                             + (rs2.getString("ket_keluar").isEmpty() ? ""
                                                                     : ", " + rs2.getString("ket_keluar"))
                                                             + ", Tanggal Kontrol ke RS "
-                                                            + rs2.getString("kontrol").substring(0, 16)
+                                                            + (rs2.getString("kontrol")==null||rs2.getString("kontrol").length()<16?rs2.getString("kontrol")==null?"":rs2.getString("kontrol"):rs2.getString("kontrol").substring(0, 16))
                                                             + "</b> </td></tr>"
                                                             + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                                    .append(rs2.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
-                                                            "<br>"))
+                                                    .append((rs2.getString("obat_pulang")==null?"":rs2.getString("obat_pulang")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                                     .append("</b></td></tr>");
                                         }
                                         w++;
@@ -6928,10 +6824,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             if (rs3.next()) {
                                                 htmlContent.append(
                                                         "<tr class='isi2'>" +
-                                                                "<td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td>"
-                                                                +
-                                                                "<td valign='top' width='79%' align='center'colspan='5'>"
-                                                                +
+                                                                "<td valign='top' width='100%' align='center' colspan='7'>" +
                                                                 "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
                                                                 +
                                                                 "<tr class='isi2'>");
@@ -6944,7 +6837,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                         // Use freehand signature from DlgTTDDokter
                                                         htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
                                                                 .append(urutdpjp)
-                                                                .append("<br><img width='90' height='90' src='")
+                                                                .append("<br><img height='120' src='")
                                                                 .append(ttdDokterUrl).append("'/><br>")
                                                                 .append(rs3.getString("nm_dokter")).append("</td>");
                                                     } else {
@@ -6965,14 +6858,14 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                 String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                                 if (!ttdDokterUrl.isEmpty()) {
                                                     htmlContent.append(
-                                                            "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
+                                                            "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><img height='120' src='")
                                                             .append(ttdDokterUrl).append("'/><br>")
-                                                            .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                                            .append(rs.getString("nm_dokter")).append("</td></tr></table>");
                                                 } else {
                                                     // No signature - show only doctor name
                                                     htmlContent.append(
-                                                            "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><br><br><br>")
-                                                            .append(rs.getString("nm_dokter")).append("</td></tr>");
+                                                            "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><br><br>")
+                                                            .append(rs.getString("nm_dokter")).append("</td></tr></table>");
                                                 }
                                             }
                                         } catch (Exception e) {
@@ -7058,15 +6951,15 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
 
                                         rs2.beforeFirst();
                                         while (rs2.next()) {
-                                            // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"),
-                                                    90);
+                                            // Generate TTD Dokter DPJP secara lokal
+                                            String ttdDokterUrl = getTTDDokterUrl(norawat);
+                                            String ttdHtml = ttdDokterUrl.isEmpty() ? "<br><br><br><br><br>" : "<img height='120' src='" + ttdDokterUrl + "'/><br>";
 
                                             htmlContent.append(
-                                                    "<tr></tr><tr><td valign='middle' width='18%'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='1'>PALEMBANG, ")
+                                                    "<tr></tr><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center' colspan='1'>TASIKMALAYA, ")
                                                     .append(rs2.getString("tgl_registrasi"))
-                                                    .append("<br>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
-                                                    .append(qrCodeDPJP).append("'/><br>")
+                                                    .append("<br>Dokter Penanggung Jawab<br>")
+                                                    .append(ttdHtml)
                                                     .append(rs2.getString("nm_dokter")).append("</td></tr>");
                                         }
 
@@ -7311,9 +7204,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
                         String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append(
-                                "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                "<tr><td><br><br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter Penanggung Jawab<br><img height='120' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
-                                .append("</td></tr></table></tr>");
+                                .append("</td></tr></table></td></tr>");
 
                     }
                     htmlContent.append(
@@ -7618,9 +7511,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
                         String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append("<tr><br><br></tr>"
-                                + "<tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                + "<tr><td><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter Penanggung Jawab<br><img height='120' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
-                                .append("</td></tr></table></tr></table>");
+                                .append("</td></tr></table></td></tr></table>");
 
                     }
 
@@ -7847,9 +7740,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
                         String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append(
-                                "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                "<tr><td><br><br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter Penanggung Jawab<br><img height='120' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
-                                .append("</td></tr></table></tr>");
+                                .append("</td></tr></table></td></tr>");
 
                     }
                     htmlContent.append(
@@ -8154,9 +8047,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         // Generate QR code Dokter DPJP secara lokal (using NIK)
                         String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nik"), 90);
                         htmlContent.append("<tr><br><br></tr>"
-                                + "<tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                + "<tr><td><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter Penanggung Jawab<br><img height='120' src='")
                                 .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
-                                .append("</td></tr></table></tr></table>");
+                                .append("</td></tr></table></td></tr></table>");
 
                     }
 
@@ -10243,9 +10136,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             // Generate QR code Dokter DPJP secara lokal
                             String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kd_dokter"), 90);
                             htmlContent.append(
-                                    "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                    "<tr><td><br><br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter Penanggung Jawab<br><img height='120' src='")
                                     .append(qrCodeDPJP).append("'/><br>")
-                                    .append(rs2.getString("nm_dokter")).append("</td></tr></table></tr>");
+                                    .append(rs2.getString("nm_dokter")).append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
                                 "</table>" +
@@ -10273,7 +10166,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             if (chkOperasiVK.isSelected() == true) {
                 try {
                     rs2 = koneksi.prepareStatement(
-                            "SELECT laporan_operasi.tanggal,laporan_operasi.diagnosa_preop,laporan_operasi.diagnosa_postop,laporan_operasi.jaringan_dieksekusi,laporan_operasi.selesaioperasi,laporan_operasi.permintaan_pa,laporan_operasi.laporan_operasi,( SELECT kd_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as kdoperator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as operator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator2 ) as operator2,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator3 ) as operator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator1 ) as asistenoperator1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator2 ) as asistenoperator2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator3 ) as asistenoperator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.instrumen ) as instrumen,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anak ) as dokteranak,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawaat_resusitas )as perawatresusitas,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anestesi ) as anastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi ) as asistenanastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi2 ) as asistenanastesi2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan ) as bidan1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan2 ) as bidan2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan3 ) as bidan3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawat_luar ) as perawatluar,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop ) as omloop,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop2 ) as omloop2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop3 ) as omloop3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop4 ) as omloop4,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop5 ) as omloop5,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_pjanak ) as pjanak,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_umum ) as dokumum from operasi inner join laporan_operasi on operasi.no_rawat=laporan_operasi.no_rawat and operasi.tgl_operasi=laporan_operasi.tanggal where operasi.no_rawat='"
+                            "SELECT DATE_FORMAT(laporan_operasi.tanggal, '%d-%m-%Y %H:%i:%s') as tanggal,laporan_operasi.diagnosa_preop,laporan_operasi.diagnosa_postop,laporan_operasi.jaringan_dieksekusi,laporan_operasi.selesaioperasi,laporan_operasi.permintaan_pa,laporan_operasi.laporan_operasi,( SELECT kd_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as kdoperator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator1 ) as operator1,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator2 ) as operator2,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.operator3 ) as operator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator1 ) as asistenoperator1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator2 ) as asistenoperator2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_operator3 ) as asistenoperator3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.instrumen ) as instrumen,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anak ) as dokteranak,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawaat_resusitas )as perawatresusitas,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_anestesi ) as anastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi ) as asistenanastesi,( SELECT nama FROM petugas WHERE petugas.nip = operasi.asisten_anestesi2 ) as asistenanastesi2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan ) as bidan1,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan2 ) as bidan2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.bidan3 ) as bidan3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.perawat_luar ) as perawatluar,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop ) as omloop,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop2 ) as omloop2,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop3 ) as omloop3,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop4 ) as omloop4,( SELECT nama FROM petugas WHERE petugas.nip = operasi.omloop5 ) as omloop5,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_pjanak ) as pjanak,( SELECT nm_dokter FROM dokter WHERE dokter.kd_dokter = operasi.dokter_umum ) as dokumum from operasi inner join laporan_operasi on operasi.no_rawat=laporan_operasi.no_rawat and operasi.tgl_operasi=laporan_operasi.tanggal where operasi.no_rawat='"
                                     + norawat + "'")
                             .executeQuery();
                     if (rs2.next()) {
@@ -10425,7 +10318,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             // Hasil Laporan Operasi
                             htmlContent.append(
                                     "<tr></tr><tr><td valign='top' align='center' bgcolor='#A9A9A9'>POST SURGICAL REPORT</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td colspan='1'>Tanggal & Waktu : ")
-                                    .append(rs2.getString("tgl_operasi"))
+                                    .append(rs2.getString("tanggal"))
                                     .append(" WIB</td></tr><tr><td colspan='1'>Tipe / Jenis Anastesi : ")
                                     .append(rs2.getString("jenis_anasthesi"))
                                     .append("</td></tr><tr><td colspan='1'>Dikirm ke Pemeriksaan PA : ")
@@ -10471,17 +10364,25 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
 
                             // Generate signature Operator secara lokal / TTD Freehand
                             String ttdDokterUrl = getTTDDokterUrl(norawat);
+                            String tglOperasi = rs2.getString("tanggal");
+                            if (tglOperasi != null && tglOperasi.contains(" ")) {
+                                tglOperasi = tglOperasi.split(" ")[0];
+                            }
                             if (!ttdDokterUrl.isEmpty()) {
                                 htmlContent.append(
-                                        "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                        "<tr><td><br><br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>TASIKMALAYA, ")
+                                        .append(tglOperasi)
+                                        .append("<br>Dokter Penanggung Jawab<br><img height='120' src='")
                                         .append(ttdDokterUrl).append("'/><br>")
-                                        .append(rs2.getString("operator1")).append("</td></tr></table></tr>");
+                                        .append(rs2.getString("operator1")).append("</td></tr></table></td></tr>");
                             } else {
                                 String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("kdoperator1"), 90);
                                 htmlContent.append(
-                                        "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                        "<tr><td><br><br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>TASIKMALAYA, ")
+                                        .append(tglOperasi)
+                                        .append("<br>Dokter Penanggung Jawab<br><img height='120' src='")
                                         .append(qrCodeDPJP).append("'/><br>")
-                                        .append(rs2.getString("operator1")).append("</td></tr></table></tr>");
+                                        .append(rs2.getString("operator1")).append("</td></tr></table></td></tr>");
                             }
                         }
 
@@ -10511,7 +10412,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             if (chkLaporanOperasi.isSelected() == true) {
                 try {
                     rs2 = koneksi.prepareStatement(
-                            "select laporan_operasi_casemix.tanggal, laporan_operasi_casemix.jammulaioperasi, laporan_operasi_casemix.jamselesaioperasi, "
+                            "select DATE_FORMAT(laporan_operasi_casemix.tanggal, '%d-%m-%Y') as tanggal, DATE_FORMAT(laporan_operasi_casemix.jammulaioperasi, '%d-%m-%Y %H:%i:%s') as jammulaioperasi, DATE_FORMAT(laporan_operasi_casemix.jamselesaioperasi, '%d-%m-%Y %H:%i:%s') as jamselesaioperasi, "
                                     + "laporan_operasi_casemix.klasifikasioperasi, laporan_operasi_casemix.diagnosaprabedah, laporan_operasi_casemix.diagnosapascabedah, "
                                     + "laporan_operasi_casemix.tindakan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.uraian, "
                                     + "laporan_operasi_casemix.jenisoperasi, laporan_operasi_casemix.jenisanestesi, laporan_operasi_casemix.posisi, "
@@ -10560,8 +10461,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         while (rs2.next()) {
                             htmlContent.append(
                                     "<tr></tr><tr><td valign='top' align='center' bgcolor='#A9A9A9'>SURGICAL REPORT</td></tr><tr><td valign='top'><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td colspan='1'>Tanggal & Waktu Dimulai : ")
-                                    .append(rs2.getString("tanggal"))
-                                    .append(" ").append(rs2.getString("jammulaioperasi"))
+                                    .append(rs2.getString("jammulaioperasi"))
                                     .append("</td></tr><tr><td colspan='1'>Waktu Selesai : ")
                                     .append(rs2.getString("jamselesaioperasi"))
                                     .append("</td></tr><tr><td colspan='1'>Macam Operasi : ")
@@ -10642,18 +10542,17 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             String kddokterbedah = rs2.getString("kddokterbedah");
                             if (kddokterbedah != null && !kddokterbedah.isEmpty() && !kddokterbedah.equals("-")) {
                                 String ttdDokterUrl = getTTDDokterUrl(norawat);
-                                if (!ttdDokterUrl.isEmpty()) {
-                                    htmlContent.append(
-                                            "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
-                                            .append(ttdDokterUrl).append("'/><br>")
-                                            .append(rs2.getString("dokterbedah")).append("</td></tr></table></tr>");
-                                } else {
-                                    String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(kddokterbedah, 90);
-                                    htmlContent.append(
-                                            "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
-                                            .append(qrCodeDPJP).append("'/><br>")
-                                            .append(rs2.getString("dokterbedah")).append("</td></tr></table></tr>");
+                                String ttdHtml = ttdDokterUrl.isEmpty() ? "<br><br><br><br><br>" : "<img height='120' src='" + ttdDokterUrl + "'/><br>";
+                                String tglOperasi = rs2.getString("jammulaioperasi");
+                                if (tglOperasi != null && tglOperasi.contains(" ")) {
+                                    tglOperasi = tglOperasi.split(" ")[0];
                                 }
+                                htmlContent.append(
+                                        "<tr><td><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>TASIKMALAYA, ")
+                                        .append(tglOperasi)
+                                        .append("<br>Dokter Bedah<br>")
+                                        .append(ttdHtml)
+                                        .append(rs2.getString("dokterbedah")).append("</td></tr></table></td></tr>");
                             }
                         }
 
@@ -10750,9 +10649,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             // Generate QR code Petugas secara lokal
                             String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs2.getString("nip"), 90);
                             htmlContent.append(
-                                    "<tr><br><br></tr><tr><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='40%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='40%' align='center' colspan='5'>Dokter Penanggung Jawab<br><img width='90' height='90' src='")
+                                    "<tr><td><br><br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='middle' width='50%'></td><td valign='middle' width='50%' align='center'>Dokter Penanggung Jawab<br><img height='120' src='")
                                     .append(qrCodeDPJP).append("'/><br>").append(rs2.getString("nama"))
-                                    .append("</td></tr></table></tr>");
+                                    .append("</td></tr></table></td></tr>");
                         }
 
                         htmlContent.append(
@@ -11252,7 +11151,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td><td width='50%' valign='top'>Tatalaksana Lainnya : ")
                                     .append(rs2.getString("tatalaksana").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -12897,7 +12796,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VI. TATALAKSANA<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
                                     .append(rs2.getString("tata").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -13047,7 +12946,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VI. TATALAKSANA<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
                                     .append(rs2.getString("tata").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -16780,7 +16679,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr><tr><td width='100%' border='0'>Tindakan/Rencana Tindakan : ")
                                     .append(rs2.getString("tindakan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -16927,7 +16826,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr><tr><td width='100%' border='0'>Tindakan/Rencana Tindakan : ")
                                     .append(rs2.getString("tindakan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -17218,7 +17117,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr><tr><td width='100%' border='0'>Tindakan/Rencana Tindakan : ")
                                     .append(rs2.getString("tindakan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -17354,7 +17253,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr><tr><td width='100%' border='0'>Tindakan/Rencana Tindakan : ")
                                     .append(rs2.getString("tindakan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -17484,7 +17383,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr><tr><td width='100%' border='0'>Tindakan/Rencana Tindakan : ")
                                     .append(rs2.getString("tindakan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -17614,7 +17513,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr><tr><td width='100%' border='0'>Tindakan/Rencana Tindakan : ")
                                     .append(rs2.getString("tindakan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%' border='0'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -19835,7 +19734,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     .append("</td></tr><tr><td width='100%'>Tindakan/Rencana Tindakan : ")
                                     .append(rs2.getString("tindakan").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr><tr><td valign='top'>VIII. EDUKASI<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'><tr><td width='100%'>")
-                                    .append(rs2.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                    .append((rs2.getString("edukasi")==null?"":rs2.getString("edukasi")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                     .append("</td></tr></table></td></tr>");
                         }
                         htmlContent.append(
@@ -20450,7 +20349,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         rsresume = koneksi.prepareStatement(
                                 "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,resume_pasien_ranap.kd_dokter,dokter.nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
                                         +
-                                        "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan,resume_pasien_ranap.keluhan_utama,resume_pasien_ranap.pemeriksaan_fisik,"
+                                        "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan," +
+                                        "IF(resume_pasien_ranap.no_rawat IS NULL, IFNULL((SELECT anamnesa_singkat FROM data_triase_igdsekunder WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL(resume_pasien_ranap.keluhan_utama,'')) as keluhan_utama," +
+                                        "IF(resume_pasien_ranap.no_rawat IS NULL, IF(reg_periksa.kd_dokter IN ('D004','D058'), IFNULL((SELECT concat_ws('','Kepala: TD: ',obj_td_sistol,'/',obj_td_diastol,' mmHg, Nadi: ',obj_hr,' x/menit, RR: ',obj_rr,' x/menit, Suhu: ',obj_suhu,' C, SpO2: ',obj_spo2,' %, ',obj_kepala, ', Mata: ',obj_mata, ', Leher: ',obj_leher, ', Thorax: ',obj_thorax, ', Abdomen: Inspeksi : ',obj_inspeksi, ', TFU : ',obj_tfu, ' cm, TBBJ : ',obj_tbbj, ', His : ',obj_his, ', Leopold I : ',obj_leopold1, ', Leopold II : ',obj_leopold2, ', Leopold III : ',obj_leopold3, ', Leopold IV : ',obj_leopold4, ', Auskultasi : ',obj_auskultasi, ', Genitalia (Pukul ',obj_pukul, ' WIB): Pervaginam : ',obj_pengeluaran, ', VT : ',obj_pmxdalam, ', Inspekulo : ',obj_inspekulo, ', Ekstremitas: Oedema : ',obj_oedema1, ' / ',obj_oedema2, ', Varises : ',obj_varises1, ' / ',obj_varises2, ', Reflek : ',obj_reflek1, ' / ',obj_reflek2) FROM penilaian_awal_keperawatan_ponek WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL((SELECT concat_ws(', ', concat('TD: ', td, ' mmHg'), concat('Nadi: ', nadi, ' x/menit'), concat('RR: ', rr, ' x/menit'), concat('Suhu: ', suhu, ' C'), concat('SpO2: ', spo, ' %'), concat('BB: ', bb, ' Kg'), concat('TB: ', tb, ' cm'), concat('Kepala: ', kepala), concat('Mata: ', mata), concat('Gigi: ', gigi), concat('Leher: ', leher), concat('Thoraks: ', thoraks), concat('Abdomen: ', abdomen), concat('Ekstremitas: ', ekstremitas), concat('Genital: ', genital), concat('Ket Fisik: ', ket_fisik), concat('Ket Lokalis: ', ket_lokalis)) FROM penilaian_medis_igd WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),'')), IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'')) as pemeriksaan_fisik,"
                                         +
                                         "resume_pasien_ranap.jalannya_penyakit,resume_pasien_ranap.pemeriksaan_penunjang,resume_pasien_ranap.hasil_laborat,resume_pasien_ranap.tindakan_dan_operasi,resume_pasien_ranap.obat_di_rs,"
                                         +
@@ -20466,11 +20367,11 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         +
                                         "resume_pasien_ranap.kd_diagnosa_sekunder4,resume_pasien_ranap.prosedur_utama,resume_pasien_ranap.kd_prosedur_utama,resume_pasien_ranap.prosedur_sekunder,resume_pasien_ranap.kd_prosedur_sekunder,"
                                         +
-                                        "resume_pasien_ranap.prosedur_sekunder2,resume_pasien_ranap.kd_prosedur_sekunder2,resume_pasien_ranap.prosedur_sekunder3,resume_pasien_ranap.kd_prosedur_sekunder3,resume_pasien_ranap.pemeriksaan_lain from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                                        "resume_pasien_ranap.prosedur_sekunder2,resume_pasien_ranap.kd_prosedur_sekunder2,resume_pasien_ranap.prosedur_sekunder3,resume_pasien_ranap.kd_prosedur_sekunder3 from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                                         +
                                         "inner join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
                                         +
-                                        "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
+                                        "left join kelurahan on pasien.kd_kel=kelurahan.kd_kel left join kecamatan on pasien.kd_kec=kecamatan.kd_kec left join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
                                         +
                                         "inner join penjab on penjab.kd_pj=reg_periksa.kd_pj " +
                                         "where resume_pasien_ranap.no_rawat='" + no_rawat_bayi + "'")
@@ -20570,6 +20471,100 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             "</tr>");
 
                             rsresume.beforeFirst();
+                            boolean hasResumeData_IGD = rsresume.next();
+                            rsresume.beforeFirst();
+                            if (!hasResumeData_IGD) {
+                                htmlContent.append("<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
+                                        .append("</b></td><td valign='top' colspan='3'>Alergi :<br><b>")
+                                        .append("</td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Anamnesis :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Fisik dan TTV :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Rad Terpenting :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Lab Terpenting :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 3</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 4</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td><td valign='top' width='80%' border='0'></b>:&nbsp;")
+                                        .append("</b></td></tr></table></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien ")
+                                        .append("</b> </td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
+                                        .append("</b></td></tr>");
+                                w++;
+                                try {
+                                    rs3 = koneksi.prepareStatement(
+                                            "select dpjp_ranap.kd_dokter,dokter.nm_dokter from dpjp_ranap inner join dokter on dpjp_ranap.kd_dokter=dokter.kd_dokter where dpjp_ranap.no_rawat='"
+                                                    + rs.getString("no_rawat") + "' ")
+                                            .executeQuery();
+                                    if (rs3.next()) {
+                                        htmlContent.append(
+                                                "<tr class='isi2'>" +
+                                                        "<td valign='top' width='100%' align='center' colspan='7'>" +
+                                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
+                                                        +
+                                                        "<tr class='isi2'>");
+                                        rs3.beforeFirst();
+                                        urutdpjp = 1;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        while (rs3.next()) {
+                                            if (!ttdDokterUrl.isEmpty()) {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><img height='120' src='")
+                                                        .append(ttdDokterUrl).append("'/><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            } else {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><br><br><br><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            }
+                                            urutdpjp++;
+                                        }
+                                        htmlContent.append(
+                                                "</tr>" +
+                                                        "</table>" +
+                                                        "</td>");
+                                    } else {
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        if (!ttdDokterUrl.isEmpty()) {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><img height='120' src='")
+                                                    .append(ttdDokterUrl).append("'/><br>").append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr></table>");
+                                        } else {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><br><br><br>")
+                                                    .append(rs.getString("nm_dokter")).append("</td></tr></table>");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Tanda Tangan IGD : " + e);
+                                } finally {
+                                    if (rs3 != null) {
+                                        rs3.close();
+                                    }
+                                }
+                            }
                             while (rsresume.next()) {
                                 if (rsresume.getString("keadaan").toLowerCase().equals("meninggal")) {
                                     htmlContent.append("<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
@@ -20584,59 +20579,35 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     .getString("keluhan_utama").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Fisik dan TTV :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "pemeriksaan_fisik").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Rad Terpenting :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "pemeriksaan_penunjang").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Lab Terpenting :<br><b>")
-                                            .append(rsresume
-                                                    .getString("hasil_laborat").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_utama"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder2"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 3</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder3"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 4</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder4"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_utama"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder2"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td><td valign='top' width='80%' border='0'></b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder3"))
                                             .append("</b></td></tr></table></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                            .append(rsresume
-                                                    .getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
-                                            .append(rsresume.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
-                                            .append(rsresume
-                                                    .getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
-                                            .append(rsresume
-                                                    .getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien "
-                                                    + rsresume.getString("keadaan") + "</b> </td></tr>"
+                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien ")
+                                            .append("</b> </td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                            .append(rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append(rsresume.getString("obat_pulang")==null?"":rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr>");
                                 } else {
@@ -20674,47 +20645,33 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 4</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
                                             .append(rsresume.getString("diagnosa_sekunder4"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_utama"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder2"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td><td valign='top' width='80%' border='0'></b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder3"))
                                             .append("</b></td></tr></table></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                            .append(rsresume
-                                                    .getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
-                                            .append(rsresume.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
-                                            .append(rsresume
-                                                    .getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
-                                            .append(rsresume
-                                                    .getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien "
-                                                    + rsresume.getString("keadaan")
-                                                    + (rsresume.getString("ket_keadaan").isEmpty() ? ""
-                                                            : ", " + rsresume.getString("ket_keadaan"))
-                                                    + " dan Pulang " + rsresume.getString("cara_keluar")
-                                                    + (rsresume.getString("ket_keluar").isEmpty() ? ""
-                                                            : ", " + rsresume.getString("ket_keluar"))
-                                                    + ", Tanggal Kontrol ke RS "
-                                                    + rsresume.getString("kontrol").substring(0, 16) + "</b> </td></tr>"
+                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien ")
+                                            .append("</b> </td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                            .append(rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
-                                                    "<br>"))
                                             .append("</b></td></tr>");
                                 }
+                                
+                            htmlContent.append(
+                                    "</table>" +
+                                            "</td>" +
+                                            "</tr>");
+                        }
+                            
+                    
                                 w++;
                                 try {
                                     rs3 = koneksi.prepareStatement(
@@ -20724,23 +20681,26 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     if (rs3.next()) {
                                         htmlContent.append(
                                                 "<tr class='isi2'>" +
-                                                        "<td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td>"
-                                                        +
-                                                        "<td valign='top' width='79%' align='center'colspan='5'>" +
+                                                        "<td valign='top' width='100%' align='center' colspan='7'>" +
                                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
                                                         +
                                                         "<tr class='isi2'>");
                                         rs3.beforeFirst();
                                         urutdpjp = 1;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                         while (rs3.next()) {
-                                            // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokter"),
-                                                    90);
-                                            htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
-                                                    .append(urutdpjp)
-                                                    .append("<br><img width='90' height='90' src='")
-                                                    .append(qrCodeDPJP).append("'/><br>")
-                                                    .append(rs3.getString("nm_dokter")).append("</td>");
+                                            if (!ttdDokterUrl.isEmpty()) {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><img height='120' src='")
+                                                        .append(ttdDokterUrl).append("'/><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            } else {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><br><br><br><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            }
                                             urutdpjp++;
                                         }
                                         htmlContent.append(
@@ -20748,15 +20708,17 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                         "</table>" +
                                                         "</td>");
                                     } else {
-                                        // Generate QR code Dokter DPJP secara lokal
-                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
-
-                                        htmlContent.append(
-                                                "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
-                                                .append(qrCodeDPJP).append("'/><br>").append(rs.getString("nm_dokter"))
-                                                .append("</td></tr>")
-                                        // "<fieldset>"+
-                                        ;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        if (!ttdDokterUrl.isEmpty()) {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><img height='120' src='")
+                                                    .append(ttdDokterUrl).append("'/><br>").append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr></table>");
+                                        } else {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><br><br><br>")
+                                                    .append(rs.getString("nm_dokter")).append("</td></tr></table>");
+                                        }
                                     }
                                 } catch (Exception e) {
                                     System.out.println("Tanda Tangan IGD : " + e);
@@ -20766,12 +20728,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     }
                                 }
                             }
-                            htmlContent.append(
-                                    "</table>" +
-                                            "</td>" +
-                                            "</tr>");
-                        }
-                    } catch (Exception e) {
+                            }
+                             catch (Exception e) {
                         System.out.println("Notifikasi : " + e);
                     } finally {
                         if (rs2 != null) {
@@ -20821,7 +20779,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         rsresume = koneksi.prepareStatement(
                                 "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,resume_pasien_ranap.kd_dokter,dokter.nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
                                         +
-                                        "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan,resume_pasien_ranap.keluhan_utama,resume_pasien_ranap.pemeriksaan_fisik,"
+                                        "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan," +
+                                        "IF(resume_pasien_ranap.no_rawat IS NULL, IFNULL((SELECT anamnesa_singkat FROM data_triase_igdsekunder WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL(resume_pasien_ranap.keluhan_utama,'')) as keluhan_utama," +
+                                        "IF(resume_pasien_ranap.no_rawat IS NULL, IF(reg_periksa.kd_dokter IN ('D004','D058'), IFNULL((SELECT concat_ws('','Kepala: TD: ',obj_td_sistol,'/',obj_td_diastol,' mmHg, Nadi: ',obj_hr,' x/menit, RR: ',obj_rr,' x/menit, Suhu: ',obj_suhu,' C, SpO2: ',obj_spo2,' %, ',obj_kepala, ', Mata: ',obj_mata, ', Leher: ',obj_leher, ', Thorax: ',obj_thorax, ', Abdomen: Inspeksi : ',obj_inspeksi, ', TFU : ',obj_tfu, ' cm, TBBJ : ',obj_tbbj, ', His : ',obj_his, ', Leopold I : ',obj_leopold1, ', Leopold II : ',obj_leopold2, ', Leopold III : ',obj_leopold3, ', Leopold IV : ',obj_leopold4, ', Auskultasi : ',obj_auskultasi, ', Genitalia (Pukul ',obj_pukul, ' WIB): Pervaginam : ',obj_pengeluaran, ', VT : ',obj_pmxdalam, ', Inspekulo : ',obj_inspekulo, ', Ekstremitas: Oedema : ',obj_oedema1, ' / ',obj_oedema2, ', Varises : ',obj_varises1, ' / ',obj_varises2, ', Reflek : ',obj_reflek1, ' / ',obj_reflek2) FROM penilaian_awal_keperawatan_ponek WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL((SELECT concat_ws(', ', concat('TD: ', td, ' mmHg'), concat('Nadi: ', nadi, ' x/menit'), concat('RR: ', rr, ' x/menit'), concat('Suhu: ', suhu, ' C'), concat('SpO2: ', spo, ' %'), concat('BB: ', bb, ' Kg'), concat('TB: ', tb, ' cm'), concat('Kepala: ', kepala), concat('Mata: ', mata), concat('Gigi: ', gigi), concat('Leher: ', leher), concat('Thoraks: ', thoraks), concat('Abdomen: ', abdomen), concat('Ekstremitas: ', ekstremitas), concat('Genital: ', genital), concat('Ket Fisik: ', ket_fisik), concat('Ket Lokalis: ', ket_lokalis)) FROM penilaian_medis_igd WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),'')), IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'')) as pemeriksaan_fisik,"
                                         +
                                         "resume_pasien_ranap.jalannya_penyakit,resume_pasien_ranap.pemeriksaan_penunjang,resume_pasien_ranap.hasil_laborat,resume_pasien_ranap.tindakan_dan_operasi,resume_pasien_ranap.obat_di_rs,"
                                         +
@@ -20837,11 +20797,11 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         +
                                         "resume_pasien_ranap.kd_diagnosa_sekunder4,resume_pasien_ranap.prosedur_utama,resume_pasien_ranap.kd_prosedur_utama,resume_pasien_ranap.prosedur_sekunder,resume_pasien_ranap.kd_prosedur_sekunder,"
                                         +
-                                        "resume_pasien_ranap.prosedur_sekunder2,resume_pasien_ranap.kd_prosedur_sekunder2,resume_pasien_ranap.prosedur_sekunder3,resume_pasien_ranap.kd_prosedur_sekunder3,resume_pasien_ranap.pemeriksaan_lain from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                                        "resume_pasien_ranap.prosedur_sekunder2,resume_pasien_ranap.kd_prosedur_sekunder2,resume_pasien_ranap.prosedur_sekunder3,resume_pasien_ranap.kd_prosedur_sekunder3 from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                                         +
                                         "inner join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
                                         +
-                                        "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
+                                        "left join kelurahan on pasien.kd_kel=kelurahan.kd_kel left join kecamatan on pasien.kd_kec=kecamatan.kd_kec left join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
                                         +
                                         "inner join penjab on penjab.kd_pj=reg_periksa.kd_pj " +
                                         "where resume_pasien_ranap.no_rawat='" + no_rawat_bayi + "'")
@@ -20941,6 +20901,100 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             "</tr>");
 
                             rsresume.beforeFirst();
+                            boolean hasResumeData_Bayi = rsresume.next();
+                            rsresume.beforeFirst();
+                            if (!hasResumeData_Bayi) {
+                                htmlContent.append("<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
+                                        .append("</b></td><td valign='top' colspan='3'>Alergi :<br><b>")
+                                        .append("</td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Anamnesis :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Fisik dan TTV :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Rad Terpenting :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Lab Terpenting :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 3</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 4</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td><td valign='top' width='80%' border='0'></b>:&nbsp;")
+                                        .append("</b></td></tr></table></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien ")
+                                        .append("</b> </td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
+                                        .append("</b></td></tr>");
+                                w++;
+                                try {
+                                    rs3 = koneksi.prepareStatement(
+                                            "select dpjp_ranap.kd_dokter,dokter.nm_dokter from dpjp_ranap inner join dokter on dpjp_ranap.kd_dokter=dokter.kd_dokter where dpjp_ranap.no_rawat='"
+                                                    + rsbayigabung.getString("no_rawat") + "' ")
+                                            .executeQuery();
+                                    if (rs3.next()) {
+                                        htmlContent.append(
+                                                "<tr class='isi2'>" +
+                                                        "<td valign='top' width='100%' align='center' colspan='7'>" +
+                                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
+                                                        +
+                                                        "<tr class='isi2'>");
+                                        rs3.beforeFirst();
+                                        urutdpjp = 1;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        while (rs3.next()) {
+                                            if (!ttdDokterUrl.isEmpty()) {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><img height='120' src='")
+                                                        .append(ttdDokterUrl).append("'/><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            } else {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><br><br><br><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            }
+                                            urutdpjp++;
+                                        }
+                                        htmlContent.append(
+                                                "</tr>" +
+                                                        "</table>" +
+                                                        "</td>");
+                                    } else {
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        if (!ttdDokterUrl.isEmpty()) {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><img height='120' src='")
+                                                    .append(ttdDokterUrl).append("'/><br>").append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr></table>");
+                                        } else {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><br><br><br>")
+                                                    .append(rs.getString("nm_dokter")).append("</td></tr></table>");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Tanda Tangan IGD : " + e);
+                                } finally {
+                                    if (rs3 != null) {
+                                        rs3.close();
+                                    }
+                                }
+                            }
                             while (rsresume.next()) {
                                 if (rsresume.getString("keadaan").toLowerCase().equals("meninggal")) {
                                     htmlContent.append("<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
@@ -20986,12 +21040,10 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append(rsresume.getString("prosedur_sekunder3"))
                                             .append("</b></td></tr></table></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append(getTindakanDiRSFallback(rsresume.getString("tindakan_dan_operasi"), rsresume.getString("no_rawat")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                            .append(rsresume
-                                                    .getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append(getObatDiRSFallback(rsresume.getString("obat_di_rs"), rsresume.getString("no_rawat")).replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
                                             .append(rsresume.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
@@ -21000,14 +21052,14 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append(rsresume
                                                     .getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
+                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
                                             .append(rsresume
-                                                    .getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    .getString("edukasi")==null?"":rsresume.getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien "
                                                     + rsresume.getString("keadaan") + "</b> </td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                            .append(rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append(rsresume.getString("obat_pulang")==null?"":rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr>");
                                 } else {
@@ -21045,47 +21097,31 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 4</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
                                             .append(rsresume.getString("diagnosa_sekunder4"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_utama"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder2"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td><td valign='top' width='80%' border='0'></b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder3"))
                                             .append("</b></td></tr></table></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                            .append(rsresume
-                                                    .getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
-                                            .append(rsresume.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
-                                            .append(rsresume
-                                                    .getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
-                                            .append(rsresume
-                                                    .getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien "
-                                                    + rsresume.getString("keadaan")
-                                                    + (rsresume.getString("ket_keadaan").isEmpty() ? ""
-                                                            : ", " + rsresume.getString("ket_keadaan"))
-                                                    + " dan Pulang " + rsresume.getString("cara_keluar")
-                                                    + (rsresume.getString("ket_keluar").isEmpty() ? ""
-                                                            : ", " + rsresume.getString("ket_keluar"))
-                                                    + ", Tanggal Kontrol ke RS "
-                                                    + rsresume.getString("kontrol").substring(0, 16) + "</b> </td></tr>"
+                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien ")
+                                            .append("</b> </td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                            .append(rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
-                                                    "<br>"))
                                             .append("</b></td></tr>");
                                 }
+                                
+                            htmlContent.append(
+                                    "</table>" +
+                                            "</td>" +
+                                            "</tr>");
+                        
                                 w++;
                                 try {
                                     rs3 = koneksi.prepareStatement(
@@ -21095,23 +21131,26 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     if (rs3.next()) {
                                         htmlContent.append(
                                                 "<tr class='isi2'>" +
-                                                        "<td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td>"
-                                                        +
-                                                        "<td valign='top' width='79%' align='center'colspan='5'>" +
+                                                        "<td valign='top' width='100%' align='center' colspan='7'>" +
                                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
                                                         +
                                                         "<tr class='isi2'>");
                                         rs3.beforeFirst();
                                         urutdpjp = 1;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                         while (rs3.next()) {
-                                            // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokter"),
-                                                    90);
-                                            htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
-                                                    .append(urutdpjp)
-                                                    .append("<br><img width='90' height='90' src='")
-                                                    .append(qrCodeDPJP).append("'/><br>")
-                                                    .append(rs3.getString("nm_dokter")).append("</td>");
+                                            if (!ttdDokterUrl.isEmpty()) {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><img height='120' src='")
+                                                        .append(ttdDokterUrl).append("'/><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            } else {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><br><br><br><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            }
                                             urutdpjp++;
                                         }
                                         htmlContent.append(
@@ -21119,15 +21158,17 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                         "</table>" +
                                                         "</td>");
                                     } else {
-                                        // Generate QR code Dokter DPJP secara lokal
-                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
-
-                                        htmlContent.append(
-                                                "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
-                                                .append(qrCodeDPJP).append("'/><br>").append(rs.getString("nm_dokter"))
-                                                .append("</td></tr>")
-                                        // "<fieldset>"+
-                                        ;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        if (!ttdDokterUrl.isEmpty()) {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><img height='120' src='")
+                                                    .append(ttdDokterUrl).append("'/><br>").append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr></table>");
+                                        } else {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><br><br><br>")
+                                                    .append(rs.getString("nm_dokter")).append("</td></tr></table>");
+                                        }
                                     }
                                 } catch (Exception e) {
                                     System.out.println("Tanda Tangan IGD : " + e);
@@ -21137,11 +21178,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     }
                                 }
                             }
-                            htmlContent.append(
-                                    "</table>" +
-                                            "</td>" +
-                                            "</tr>");
-                        }
+                            }
+                            
                     } catch (Exception e) {
                         System.out.println("Notifikasi : " + e);
                     } finally {
@@ -21192,7 +21230,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                         rsresume = koneksi.prepareStatement(
                                 "select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,resume_pasien_ranap.kd_dokter,dokter.nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,"
                                         +
-                                        "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan,resume_pasien_ranap.keluhan_utama,resume_pasien_ranap.pemeriksaan_fisik,"
+                                        "reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan," +
+                                        "IF(resume_pasien_ranap.no_rawat IS NULL, IFNULL((SELECT anamnesa_singkat FROM data_triase_igdsekunder WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL(resume_pasien_ranap.keluhan_utama,'')) as keluhan_utama," +
+                                        "IF(resume_pasien_ranap.no_rawat IS NULL, IF(reg_periksa.kd_dokter IN ('D004','D058'), IFNULL((SELECT concat_ws('','Kepala: TD: ',obj_td_sistol,'/',obj_td_diastol,' mmHg, Nadi: ',obj_hr,' x/menit, RR: ',obj_rr,' x/menit, Suhu: ',obj_suhu,' C, SpO2: ',obj_spo2,' %, ',obj_kepala, ', Mata: ',obj_mata, ', Leher: ',obj_leher, ', Thorax: ',obj_thorax, ', Abdomen: Inspeksi : ',obj_inspeksi, ', TFU : ',obj_tfu, ' cm, TBBJ : ',obj_tbbj, ', His : ',obj_his, ', Leopold I : ',obj_leopold1, ', Leopold II : ',obj_leopold2, ', Leopold III : ',obj_leopold3, ', Leopold IV : ',obj_leopold4, ', Auskultasi : ',obj_auskultasi, ', Genitalia (Pukul ',obj_pukul, ' WIB): Pervaginam : ',obj_pengeluaran, ', VT : ',obj_pmxdalam, ', Inspekulo : ',obj_inspekulo, ', Ekstremitas: Oedema : ',obj_oedema1, ' / ',obj_oedema2, ', Varises : ',obj_varises1, ' / ',obj_varises2, ', Reflek : ',obj_reflek1, ' / ',obj_reflek2) FROM penilaian_awal_keperawatan_ponek WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),''), IFNULL((SELECT concat_ws(', ', concat('TD: ', td, ' mmHg'), concat('Nadi: ', nadi, ' x/menit'), concat('RR: ', rr, ' x/menit'), concat('Suhu: ', suhu, ' C'), concat('SpO2: ', spo, ' %'), concat('BB: ', bb, ' Kg'), concat('TB: ', tb, ' cm'), concat('Kepala: ', kepala), concat('Mata: ', mata), concat('Gigi: ', gigi), concat('Leher: ', leher), concat('Thoraks: ', thoraks), concat('Abdomen: ', abdomen), concat('Ekstremitas: ', ekstremitas), concat('Genital: ', genital), concat('Ket Fisik: ', ket_fisik), concat('Ket Lokalis: ', ket_lokalis)) FROM penilaian_medis_igd WHERE no_rawat=reg_periksa.no_rawat LIMIT 1),'')), IFNULL(resume_pasien_ranap.pemeriksaan_fisik,'')) as pemeriksaan_fisik,"
                                         +
                                         "resume_pasien_ranap.jalannya_penyakit,resume_pasien_ranap.pemeriksaan_penunjang,resume_pasien_ranap.hasil_laborat,resume_pasien_ranap.tindakan_dan_operasi,resume_pasien_ranap.obat_di_rs,"
                                         +
@@ -21208,11 +21248,11 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         +
                                         "resume_pasien_ranap.kd_diagnosa_sekunder4,resume_pasien_ranap.prosedur_utama,resume_pasien_ranap.kd_prosedur_utama,resume_pasien_ranap.prosedur_sekunder,resume_pasien_ranap.kd_prosedur_sekunder,"
                                         +
-                                        "resume_pasien_ranap.prosedur_sekunder2,resume_pasien_ranap.kd_prosedur_sekunder2,resume_pasien_ranap.prosedur_sekunder3,resume_pasien_ranap.kd_prosedur_sekunder3,resume_pasien_ranap.pemeriksaan_lain from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                                        "resume_pasien_ranap.prosedur_sekunder2,resume_pasien_ranap.kd_prosedur_sekunder2,resume_pasien_ranap.prosedur_sekunder3,resume_pasien_ranap.kd_prosedur_sekunder3 from resume_pasien_ranap inner join reg_periksa on resume_pasien_ranap.no_rawat=reg_periksa.no_rawat inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                                         +
                                         "inner join dokter on resume_pasien_ranap.kd_dokter=dokter.kd_dokter inner join dokter as pengirim on reg_periksa.kd_dokter=pengirim.kd_dokter "
                                         +
-                                        "inner join kelurahan on pasien.kd_kel=kelurahan.kd_kel inner join kecamatan on pasien.kd_kec=kecamatan.kd_kec inner join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
+                                        "left join kelurahan on pasien.kd_kel=kelurahan.kd_kel left join kecamatan on pasien.kd_kec=kecamatan.kd_kec left join kabupaten on pasien.kd_kab=kabupaten.kd_kab "
                                         +
                                         "inner join penjab on penjab.kd_pj=reg_periksa.kd_pj " +
                                         "where resume_pasien_ranap.no_rawat='" + no_rawat_bayi + "'")
@@ -21312,6 +21352,100 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             "</tr>");
 
                             rsresume.beforeFirst();
+                            boolean hasResumeData_Kandungan = rsresume.next();
+                            rsresume.beforeFirst();
+                            if (!hasResumeData_Kandungan) {
+                                htmlContent.append("<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
+                                        .append("</b></td><td valign='top' colspan='3'>Alergi :<br><b>")
+                                        .append("</td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Anamnesis :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Fisik dan TTV :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Rad Terpenting :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Pemeriksaan Lab Terpenting :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 3</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 4</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
+                                        .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td><td valign='top' width='80%' border='0'></b>:&nbsp;")
+                                        .append("</b></td></tr></table></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
+                                        .append("</b></td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien ")
+                                        .append("</b> </td></tr>"
+                                                + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
+                                        .append("</b></td></tr>");
+                                w++;
+                                try {
+                                    rs3 = koneksi.prepareStatement(
+                                            "select dpjp_ranap.kd_dokter,dokter.nm_dokter from dpjp_ranap inner join dokter on dpjp_ranap.kd_dokter=dokter.kd_dokter where dpjp_ranap.no_rawat='"
+                                                    + rs.getString("no_rawat") + "' ")
+                                            .executeQuery();
+                                    if (rs3.next()) {
+                                        htmlContent.append(
+                                                "<tr class='isi2'>" +
+                                                        "<td valign='top' width='100%' align='center' colspan='7'>" +
+                                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
+                                                        +
+                                                        "<tr class='isi2'>");
+                                        rs3.beforeFirst();
+                                        urutdpjp = 1;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        while (rs3.next()) {
+                                            if (!ttdDokterUrl.isEmpty()) {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><img height='120' src='")
+                                                        .append(ttdDokterUrl).append("'/><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            } else {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><br><br><br><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            }
+                                            urutdpjp++;
+                                        }
+                                        htmlContent.append(
+                                                "</tr>" +
+                                                        "</table>" +
+                                                        "</td>");
+                                    } else {
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        if (!ttdDokterUrl.isEmpty()) {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><img height='120' src='")
+                                                    .append(ttdDokterUrl).append("'/><br>").append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr></table>");
+                                        } else {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><br><br><br>")
+                                                    .append(rs.getString("nm_dokter")).append("</td></tr></table>");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Tanda Tangan IGD : " + e);
+                                } finally {
+                                    if (rs3 != null) {
+                                        rs3.close();
+                                    }
+                                }
+                            }
                             while (rsresume.next()) {
                                 if (rsresume.getString("keadaan").toLowerCase().equals("meninggal")) {
                                     htmlContent.append("<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
@@ -21326,84 +21460,59 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     .getString("keluhan_utama").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Fisik dan TTV :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "pemeriksaan_fisik").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Rad Terpenting :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "pemeriksaan_penunjang").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Lab Terpenting :<br><b>")
-                                            .append(rsresume
-                                                    .getString("hasil_laborat").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_utama"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder2"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 3</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder3"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Sekunder 4</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("diagnosa_sekunder4"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_utama"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 1</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 2</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder2"))
                                             .append("</b></td></tr><tr align='left' border='0'><td valign='top' width='20%' border='0'>Prosedur Sekunder 3</td><td valign='top' width='80%' border='0'></b>:&nbsp;")
-                                            .append(rsresume.getString("prosedur_sekunder3"))
                                             .append("</b></td></tr></table></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                            .append(rsresume
-                                                    .getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
-                                            .append(rsresume.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
-                                            .append(rsresume
-                                                    .getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
-                                            .append(rsresume
-                                                    .getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien "
-                                                    + rsresume.getString("keadaan") + "</b> </td></tr>"
+                                                    + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien ")
+                                            .append("</b> </td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                            .append(rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
+                                            .append(rsresume.getString("obat_pulang")==null?"":rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
                                                     "<br>"))
                                             .append("</b></td></tr>");
                                 } else {
                                     htmlContent.append("<tr><td valign='top' colspan='4'>Alasan Masuk Dirawat :<br><b>")
-                                            .append(rsresume.getString("alasan").replaceAll("(\r\n|\r|\n|\n\r)",
-                                                    "<br>"))
+                                            .append(rsresume.getString("alasan").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td><td valign='top' colspan='3'>Alergi :<br><b>")
                                             .append(rsresume
-                                                    .getString("alergi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    .getString("alergi").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Anamnesis :<br><b>")
                                             .append(rsresume
-                                                    .getString("keluhan_utama").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    .getString("keluhan_utama").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Fisik dan TTV :<br><b>")
                                             .append(rsresume.getString(
-                                                    "pemeriksaan_fisik").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    "pemeriksaan_fisik").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Rad Terpenting :<br><b>")
                                             .append(rsresume.getString(
-                                                    "pemeriksaan_penunjang").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    "pemeriksaan_penunjang").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Pemeriksaan Lab Terpenting :<br><b>")
                                             .append(rsresume
-                                                    .getString("hasil_laborat").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    .getString("hasil_laborat").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diagnosa Akhir :<br><table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr align='left' border='0'><td valign='top' width='20%' border='0'>Diagnosa Utama</td><td valign='top' width='80%' border='0'><b>:&nbsp;")
                                             .append(rsresume.getString("diagnosa_utama"))
@@ -21425,23 +21534,20 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             .append(rsresume.getString("prosedur_sekunder3"))
                                             .append("</b></td></tr></table></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Tindakan/Operasi Selama Perawatan :<br><b>")
-                                            .append(rsresume.getString(
-                                                    "tindakan_dan_operasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append(getTindakanDiRSFallback(rsresume.getString("tindakan_dan_operasi"), rsresume.getString("no_rawat")).replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Selama Perawatan :<br><b>")
-                                            .append(rsresume
-                                                    .getString("obat_di_rs").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append(getObatDiRSFallback(rsresume.getString("obat_di_rs"), rsresume.getString("no_rawat")).replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Diet :<br><b>")
-                                            .append(rsresume.getString("diet").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                            .append(rsresume.getString("diet").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Hasil Lab Yang Belum Selesai (Pending) :<br><b>")
                                             .append(rsresume
-                                                    .getString("lab_belum").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    .getString("lab_belum").replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
-                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br></b>")
-                                            .append(rsresume
-                                                    .getString("edukasi").replaceAll("(\r\n|\r|\n|\n\r)", "<br>"))
+                                                    + "<tr><td valign='top' colspan='7'>Instruksi/Anjuran Dan Edukasi (Follow Up) :<br><b>")
+                                            .append((rsresume.getString("edukasi")==null?"":rsresume.getString("edukasi")).replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Alasan pulang : <b> Keadaan Pasien "
                                                     + rsresume.getString("keadaan")
@@ -21453,8 +21559,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                     + ", Tanggal Kontrol ke RS "
                                                     + rsresume.getString("kontrol").substring(0, 16) + "</b> </td></tr>"
                                                     + "<tr><td valign='top' colspan='7'>Obat-obatan Waktu Pulang :<br><b>")
-                                            .append(rsresume.getString("obat_pulang").replaceAll("(\r\n|\r|\n|\n\r)",
-                                                    "<br>"))
+                                            .append((rsresume.getString("obat_pulang")==null?"":rsresume.getString("obat_pulang")).replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", "<br>"))
                                             .append("</b></td></tr>");
                                 }
                                 w++;
@@ -21466,23 +21571,26 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     if (rs3.next()) {
                                         htmlContent.append(
                                                 "<tr class='isi2'>" +
-                                                        "<td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td>"
-                                                        +
-                                                        "<td valign='top' width='79%' align='center'colspan='5'>" +
+                                                        "<td valign='top' width='100%' align='center' colspan='7'>" +
                                                         "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
                                                         +
                                                         "<tr class='isi2'>");
                                         rs3.beforeFirst();
                                         urutdpjp = 1;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
                                         while (rs3.next()) {
-                                            // Generate QR code Dokter DPJP secara lokal
-                                            String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokter"),
-                                                    90);
-                                            htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
-                                                    .append(urutdpjp)
-                                                    .append("<br><img width='90' height='90' src='")
-                                                    .append(qrCodeDPJP).append("'/><br>")
-                                                    .append(rs3.getString("nm_dokter")).append("</td>");
+                                            if (!ttdDokterUrl.isEmpty()) {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><img height='120' src='")
+                                                        .append(ttdDokterUrl).append("'/><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            } else {
+                                                htmlContent.append("<td border='0' align='center'>Dokter DPJP ")
+                                                        .append(urutdpjp)
+                                                        .append("<br><br><br><br><br>")
+                                                        .append(rs3.getString("nm_dokter")).append("</td>");
+                                            }
                                             urutdpjp++;
                                         }
                                         htmlContent.append(
@@ -21490,15 +21598,17 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                                         "</table>" +
                                                         "</td>");
                                     } else {
-                                        // Generate QR code Dokter DPJP secara lokal
-                                        String qrCodeDPJP = QRCodeHelper.getDoctorQRPath(rs.getString("kd_dokter"), 90);
-
-                                        htmlContent.append(
-                                                "<table width='100%' border='1' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr class='isi2'><td valign='middle' width='18%' colspan='2'>Tanda Tangan/Verifikasi :</td><td valign='middle' width='79%' align='center' colspan='5'>Dokter DPJP<br><img width='90' height='90' src='")
-                                                .append(qrCodeDPJP).append("'/><br>").append(rs.getString("nm_dokter"))
-                                                .append("</td></tr>")
-                                        // "<fieldset>"+
-                                        ;
+                                        String ttdDokterUrl = getTTDDokterUrl(rs.getString("no_rawat"));
+                                        if (!ttdDokterUrl.isEmpty()) {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><img height='120' src='")
+                                                    .append(ttdDokterUrl).append("'/><br>").append(rs.getString("nm_dokter"))
+                                                    .append("</td></tr></table>");
+                                        } else {
+                                            htmlContent.append(
+                                                    "<tr class='isi2'><td valign='middle' width='50%' colspan='4'></td><td valign='middle' width='50%' align='center' colspan='3'>Dokter DPJP<br><br><br><br><br>")
+                                                    .append(rs.getString("nm_dokter")).append("</td></tr></table>");
+                                        }
                                     }
                                 } catch (Exception e) {
                                     System.out.println("Tanda Tangan IGD : " + e);
@@ -21872,7 +21982,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 String qrCodeDokterLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
                                         90);
                                 htmlContent.append(
-                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
+                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img height='120' src='")
                                         .append(qrCodeDokterLab).append("'/><br>")
                                         .append(rs3.getString("nm_dokter")).append("</td>")
                                 // "<fieldset>"+
@@ -21889,7 +21999,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         String qrCodePetugasLab = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
                                                 90);
                                         htmlContent.append(
-                                                "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
+                                                "<td border='0' align='center'>Petugas Laboratorium <br><img height='120' src='")
                                                 .append(qrCodePetugasLab).append("'/><br>")
                                                 .append(rs4.getString("nama"))
                                                 .append("</td></tr></table>");
@@ -22251,7 +22361,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 String qrCodeDokterLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
                                         90);
                                 htmlContent.append(
-                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
+                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img height='120' src='")
                                         .append(qrCodeDokterLab).append("'/><br>")
                                         .append(rs3.getString("nm_dokter")).append("</td>")
                                 // "<fieldset>"+
@@ -22268,7 +22378,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         String qrCodePetugasLab = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
                                                 90);
                                         htmlContent.append(
-                                                "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
+                                                "<td border='0' align='center'>Petugas Laboratorium <br><img height='120' src='")
                                                 .append(qrCodePetugasLab).append("'/><br>")
                                                 .append(rs4.getString("nama"))
                                                 .append("</td></tr></table>");
@@ -22630,7 +22740,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 String qrCodeDokterLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
                                         90);
                                 htmlContent.append(
-                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img width='90' height='90' src='")
+                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img height='120' src='")
                                         .append(qrCodeDokterLab).append("'/><br>")
                                         .append(rs3.getString("nm_dokter")).append("</td>")
                                 // "<fieldset>"+
@@ -22647,7 +22757,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                         String qrCodePetugasLab = QRCodeHelper.getPetugasQRPath(rs4.getString("nip"),
                                                 90);
                                         htmlContent.append(
-                                                "<td border='0' align='center'>Petugas Laboratorium <br><img width='90' height='90' src='")
+                                                "<td border='0' align='center'>Petugas Laboratorium <br><img height='120' src='")
                                                 .append(qrCodePetugasLab).append("'/><br>")
                                                 .append(rs4.getString("nama"))
                                                 .append("</td></tr></table>");
@@ -22868,7 +22978,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     String qrCodeDokterRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
                                             90);
                                     htmlContent.append(
-                                            "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
+                                            "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img height='120' src='")
                                             .append(qrCodeDokterRad).append("'/><br>")
                                             .append(rs3.getString("nm_dokter")).append("</td>")
                                     // "<fieldset>"+
@@ -22885,7 +22995,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             String qrCodePetugasRad = QRCodeHelper
                                                     .getPetugasQRPath(rs4.getString("nip"), 90);
                                             htmlContent.append(
-                                                    "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
+                                                    "<td border='0' align='center'>Petugas Radiologi <br><img height='120' src='")
                                                     .append(qrCodePetugasRad).append("'/><br>")
                                                     .append(rs4.getString("nama")).append("</td></tr></table>");
                                         }
@@ -23156,7 +23266,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     String qrCodeDokterRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
                                             90);
                                     htmlContent.append(
-                                            "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
+                                            "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img height='120' src='")
                                             .append(qrCodeDokterRad).append("'/><br>")
                                             .append(rs3.getString("nm_dokter")).append("</td>")
                                     // "<fieldset>"+
@@ -23173,7 +23283,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             String qrCodePetugasRad = QRCodeHelper
                                                     .getPetugasQRPath(rs4.getString("nip"), 90);
                                             htmlContent.append(
-                                                    "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
+                                                    "<td border='0' align='center'>Petugas Radiologi <br><img height='120' src='")
                                                     .append(qrCodePetugasRad).append("'/><br>")
                                                     .append(rs4.getString("nama")).append("</td></tr></table>");
                                         }
@@ -23444,7 +23554,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                     String qrCodeDokterRad = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterrad"),
                                             90);
                                     htmlContent.append(
-                                            "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img width='90' height='90' src='")
+                                            "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Radiologi <br><img height='120' src='")
                                             .append(qrCodeDokterRad).append("'/><br>")
                                             .append(rs3.getString("nm_dokter")).append("</td>")
                                     // "<fieldset>"+
@@ -23461,7 +23571,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                             String qrCodePetugasRad = QRCodeHelper
                                                     .getPetugasQRPath(rs4.getString("nip"), 90);
                                             htmlContent.append(
-                                                    "<td border='0' align='center'>Petugas Radiologi <br><img width='90' height='90' src='")
+                                                    "<td border='0' align='center'>Petugas Radiologi <br><img height='120' src='")
                                                     .append(qrCodePetugasRad).append("'/><br>")
                                                     .append(rs4.getString("nama")).append("</td></tr></table>");
                                         }
@@ -24063,6 +24173,12 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         String namaFile = Sequel.cariIsi(
                 "SELECT file_ttd FROM ttd_dokter_ralan WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1",
                 noRawat);
+                
+        if (namaFile == null || namaFile.isEmpty()) {
+            namaFile = Sequel.cariIsi(
+                    "SELECT file_ttd FROM ttd_dokter_ranap WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1",
+                    noRawat);
+        }
 
         if (namaFile != null && !namaFile.isEmpty()) {
             try {

@@ -1195,6 +1195,7 @@ import fungsi.sekuel;
  * @author perpustakaan
  */
 public class frmUtama extends javax.swing.JFrame {
+    private static java.util.List<java.awt.Window> minimizedDialogs = new java.util.ArrayList<>();
 
     private final Connection koneksi = koneksiDB.condb();
     private final sekuel Sequel = new sekuel();
@@ -8882,8 +8883,22 @@ public class frmUtama extends javax.swing.JFrame {
     }// GEN-LAST:event_BtnToolRegActionPerformed
 
     private void formWindowStateChanged(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowStateChanged
-        if (this.getState() == 1) {
-            isTutup();
+        if (this.getState() == java.awt.Frame.ICONIFIED) {
+            minimizedDialogs.clear();
+            for (java.awt.Window win : java.awt.Window.getWindows()) {
+                if (win instanceof javax.swing.JDialog && win.isVisible()) {
+                    minimizedDialogs.add(win);
+                    win.setVisible(false);
+                }
+            }
+        } else if (this.getState() == java.awt.Frame.NORMAL) {
+            for (java.awt.Window win : minimizedDialogs) {
+                if (win != null) {
+                    win.setVisible(true);
+                    win.toFront();
+                }
+            }
+            minimizedDialogs.clear();
         }
     }// GEN-LAST:event_formWindowStateChanged
 

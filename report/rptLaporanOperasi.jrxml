@@ -1470,14 +1470,7 @@
                 </textElement>
                 <text><![CDATA[Selesai Operasi]]></text>
             </staticText>
-            <componentElement>
-                <reportElement x="423" y="697" width="109" height="51" isRemoveLineWhenBlank="true" uuid="92ab0356-8454-4b64-a117-5ac52c90d28f">
-                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                </reportElement>
-                <jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" errorCorrectionLevel="H">
-                    <jr:codeExpression><![CDATA[$P{finger}]]></jr:codeExpression>
-                </jr:QRCode>
-            </componentElement>
+
             <line>
                 <reportElement x="0" y="800" width="534" height="1" uuid="b3a4f55b-ef2f-4f60-bbb5-92b2f31a7ad7"/>
                 <graphicElement>
@@ -1496,7 +1489,7 @@
                     <font fontName="Tahoma" size="8" isBold="false"/>
                     <paragraph lineSpacing="Single"/>
                 </textElement>
-                <textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{tgl_operasi}]]></textFieldExpression>
             </textField>
         </band>
     </detail>

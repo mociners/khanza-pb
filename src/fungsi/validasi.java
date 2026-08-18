@@ -61,7 +61,7 @@ public final class validasi {
     private String s,s1,auto,PEMBULATANHARGAOBAT=koneksiDB.PEMBULATANHARGAOBAT();
     private final Connection connect=koneksiDB.condb();
     private final sekuel sek=new sekuel();
-    private final java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+    //private final java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
     private final DecimalFormat df2 = new DecimalFormat("###,###,###,###,###,###,###");  
     private final DecimalFormat df4 = new DecimalFormat("###,###,###,###,###,###,###.#################");  
     private final DecimalFormat df5 = new DecimalFormat("###,###,###,###,###,###,###.##");  
@@ -880,7 +880,7 @@ public void MyReportPDFqryUpload(String reportName, String reportDirName, String
                     String namafile="./"+reportDirName+"/"+reportName;
                     JasperPrint jasperPrint = JasperFillManager.fillReport(namafile, parameters, connect);
                     JasperExportManager.exportReportToPdfFile(jasperPrint,"./"+reportDirName+"/"+reportName.replaceAll("jasper","pdf"));
-                    Desktop.getDesktop().open(f);
+                    DesktopApi.open(f);
                 } catch (Exception rptexcpt) {
                     System.out.println("Report Can't view because : " + rptexcpt);
                     JOptionPane.showMessageDialog(null,"Report Can't view because : "+ rptexcpt);
@@ -1020,7 +1020,7 @@ public void MyReportPDFqryUpload(String reportName, String reportDirName, String
                 JRResultSetDataSource rsdt = new JRResultSetDataSource(rs);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(namafile, parameters,rsdt);
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"./"+reportDirName+"/"+reportName.replaceAll("jasper","pdf"));
-                Desktop.getDesktop().open(f);
+                DesktopApi.open(f);
             } catch (Exception rptexcpt) {
                 System.out.println("Report Can't view because : " + rptexcpt);
                 JOptionPane.showMessageDialog(null,"Report Can't view because : "+ rptexcpt);
@@ -1425,7 +1425,7 @@ public void MyReportPDFqryUpload(String reportName, String reportDirName, String
     
     public void printUrl(String url) throws URISyntaxException{
         try{
-           desktop.print(new File(new java.net.URI("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+url)));  
+           DesktopApi.print(new File(new java.net.URI("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+url)));  
         }catch (Exception e) {
            System.out.println(e);
         }

@@ -332,7 +332,8 @@ public final class RMCariPemeriksaan extends javax.swing.JDialog {
         Valid.tabelKosong(tabMode);
         try{
             ps=koneksi.prepareStatement(
-                    "select pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat,pemeriksaan_ralan.pemeriksaan "+
+                    "select pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat, " +
+                    "concat('S: ',pemeriksaan_ralan.keluhan,', O: ',pemeriksaan_ralan.pemeriksaan,', A: ',pemeriksaan_ralan.penilaian,', P: ',pemeriksaan_ralan.rtl,', TTV - Suhu: ',pemeriksaan_ralan.suhu_tubuh,', Tensi: ',pemeriksaan_ralan.tensi,', Nadi: ',pemeriksaan_ralan.nadi,', RR: ',pemeriksaan_ralan.respirasi,', GCS: ',pemeriksaan_ralan.gcs,', SpO2: ',pemeriksaan_ralan.spo2) as pemeriksaan "+
                     "from pemeriksaan_ralan where pemeriksaan_ralan.no_rawat=? and "+
                     "(pemeriksaan_ralan.tgl_perawatan like ? or pemeriksaan_ralan.pemeriksaan like ?) "+
                     "order by pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat");
@@ -362,10 +363,89 @@ public final class RMCariPemeriksaan extends javax.swing.JDialog {
         
         try{
             ps=koneksi.prepareStatement(
-                    "select pemeriksaan_ranap.tgl_perawatan,pemeriksaan_ranap.jam_rawat,pemeriksaan_ranap.pemeriksaan "+
+                    "select pemeriksaan_ranap.tgl_perawatan,pemeriksaan_ranap.jam_rawat, " +
+                    "concat('S: ',pemeriksaan_ranap.keluhan,', O: ',pemeriksaan_ranap.pemeriksaan,', A: ',pemeriksaan_ranap.penilaian,', P: ',pemeriksaan_ranap.rtl,', TTV - Suhu: ',pemeriksaan_ranap.suhu_tubuh,', Tensi: ',pemeriksaan_ranap.tensi,', Nadi: ',pemeriksaan_ranap.nadi,', RR: ',pemeriksaan_ranap.respirasi,', GCS: ',pemeriksaan_ranap.gcs,', SpO2: ',pemeriksaan_ranap.spo2) as pemeriksaan "+
                     "from pemeriksaan_ranap where pemeriksaan_ranap.no_rawat=? and "+
                     "(pemeriksaan_ranap.tgl_perawatan like ? or pemeriksaan_ranap.pemeriksaan like ?) "+
                     "order by pemeriksaan_ranap.tgl_perawatan,pemeriksaan_ranap.jam_rawat");
+            try{
+                ps.setString(1,norawat);
+                ps.setString(2,"%"+TCari.getText().trim()+"%");
+                ps.setString(3,"%"+TCari.getText().trim()+"%");
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    tabMode.addRow(new String[] {
+                        rs.getString(1),rs.getString(2),rs.getString(3)
+                    });
+                }
+            }catch(Exception ex){
+                System.out.println(ex);
+            }finally{
+                if(rs!=null){
+                    rs.close();
+                }
+                if(ps!=null){
+                    ps.close();
+                }
+            }
+        }catch(Exception e){
+            System.out.println("Notifikasi : "+e);
+        }
+        
+        try{
+            ps=koneksi.prepareStatement(
+                    "select date_format(penilaian_awal_keperawatan_ponek.tanggal,'%Y-%m-%d'),date_format(penilaian_awal_keperawatan_ponek.tanggal,'%H:%M:%S'), "+
+                    "concat('Pemeriksaan Fisik : ',"+
+                    "'TD: ',penilaian_awal_keperawatan_ponek.obj_td_sistol,'/',penilaian_awal_keperawatan_ponek.obj_td_diastol,' mmHg, ', "+
+                    "'Nadi: ',penilaian_awal_keperawatan_ponek.obj_hr,' x/menit, ', "+
+                    "'RR: ',penilaian_awal_keperawatan_ponek.obj_rr,' x/menit, ', "+
+                    "'Suhu: ',penilaian_awal_keperawatan_ponek.obj_suhu,' C, ', "+
+                    "'SpO2: ',penilaian_awal_keperawatan_ponek.obj_spo2,' %, ', "+
+                    "'Kepala: ',penilaian_awal_keperawatan_ponek.obj_kepala, "+
+                    "', Mata: ',penilaian_awal_keperawatan_ponek.obj_mata, "+
+                    "', Leher: ',penilaian_awal_keperawatan_ponek.obj_leher, "+
+                    "', Thorax: ',penilaian_awal_keperawatan_ponek.obj_thorax, "+
+                    "', Abdomen: Inspeksi : ',penilaian_awal_keperawatan_ponek.obj_inspeksi, ', TFU : ',penilaian_awal_keperawatan_ponek.obj_tfu, ' cm, TBBJ : ',penilaian_awal_keperawatan_ponek.obj_tbbj, ', His : ',penilaian_awal_keperawatan_ponek.obj_his, "+
+                    "', Leopold I : ',penilaian_awal_keperawatan_ponek.obj_leopold1, "+
+                    "', Leopold II : ',penilaian_awal_keperawatan_ponek.obj_leopold2, "+
+                    "', Leopold III : ',penilaian_awal_keperawatan_ponek.obj_leopold3, "+
+                    "', Leopold IV : ',penilaian_awal_keperawatan_ponek.obj_leopold4, "+
+                    "', Auskultasi : ',penilaian_awal_keperawatan_ponek.obj_auskultasi, "+
+                    "', Genitalia (Pukul ',penilaian_awal_keperawatan_ponek.obj_pukul, ' WIB): Pervaginam : ',penilaian_awal_keperawatan_ponek.obj_pengeluaran, ', VT : ',penilaian_awal_keperawatan_ponek.obj_pmxdalam, ', Inspekulo : ',penilaian_awal_keperawatan_ponek.obj_inspekulo, "+
+                    "', Ekstremitas: Oedema : ',penilaian_awal_keperawatan_ponek.obj_oedema1, ' / ',penilaian_awal_keperawatan_ponek.obj_oedema2, ', Varises : ',penilaian_awal_keperawatan_ponek.obj_varises1, ' / ',penilaian_awal_keperawatan_ponek.obj_varises2, ', Reflek : ',penilaian_awal_keperawatan_ponek.obj_reflek1, ' / ',penilaian_awal_keperawatan_ponek.obj_reflek2) "+
+                    "from penilaian_awal_keperawatan_ponek where penilaian_awal_keperawatan_ponek.no_rawat=? and "+
+                    "(penilaian_awal_keperawatan_ponek.tanggal like ? or penilaian_awal_keperawatan_ponek.obj_kepala like ?) "+
+                    "order by penilaian_awal_keperawatan_ponek.tanggal");
+            try{
+                ps.setString(1,norawat);
+                ps.setString(2,"%"+TCari.getText().trim()+"%");
+                ps.setString(3,"%"+TCari.getText().trim()+"%");
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    tabMode.addRow(new String[] {
+                        rs.getString(1),rs.getString(2),rs.getString(3)
+                    });
+                }
+            }catch(Exception ex){
+                System.out.println(ex);
+            }finally{
+                if(rs!=null){
+                    rs.close();
+                }
+                if(ps!=null){
+                    ps.close();
+                }
+            }
+        }catch(Exception e){
+            System.out.println("Notifikasi : "+e);
+        }
+        try{
+            ps=koneksi.prepareStatement(
+                    "select date_format(penilaian_medis_ranap_kandungan1.tanggal,'%Y-%m-%d'),date_format(penilaian_medis_ranap_kandungan1.tanggal,'%H:%M:%S'), "+
+                    "penilaian_medis_ranap_kandungan1.ket_fisik "+
+                    "from penilaian_medis_ranap_kandungan1 where penilaian_medis_ranap_kandungan1.no_rawat=? and "+
+                    "(penilaian_medis_ranap_kandungan1.tanggal like ? or penilaian_medis_ranap_kandungan1.ket_fisik like ?) "+
+                    "order by penilaian_medis_ranap_kandungan1.tanggal");
             try{
                 ps.setString(1,norawat);
                 ps.setString(2,"%"+TCari.getText().trim()+"%");

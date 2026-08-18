@@ -1712,6 +1712,7 @@ public final class RMSkriningMPPFormA extends javax.swing.JDialog {
     private void tbObatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbObatMouseClicked
         if(tabMode.getRowCount()!=0){
             try {
+                getData();
                 ChkAccor.setSelected(true);
                 isMenu();
                 getMasalah();
@@ -1724,6 +1725,7 @@ public final class RMSkriningMPPFormA extends javax.swing.JDialog {
         if(tabMode.getRowCount()!=0){
             if((evt.getKeyCode()==KeyEvent.VK_ENTER)||(evt.getKeyCode()==KeyEvent.VK_UP)||(evt.getKeyCode()==KeyEvent.VK_DOWN)){
                 try {
+                    getData();
                     ChkAccor.setSelected(true);
                     isMenu();
                     getMasalah();
@@ -2140,19 +2142,19 @@ public final class RMSkriningMPPFormA extends javax.swing.JDialog {
     private javax.swing.ButtonGroup identifikasiGroup;
     private javax.swing.ButtonGroup rencanaGroup;
     // Identifikasi Masalah
-    private javax.swing.JRadioButton masalahKepatuhan, masalahTingkatAsuhan, masalahKompleks, masalahPerburukan;
-    private javax.swing.JRadioButton masalahFinansial, masalahSistemPembayaran, masalahDukunganKeluarga;
-    private javax.swing.JRadioButton masalahPengetahuan, masalahKomplain, masalahReadmission;
-    private javax.swing.JRadioButton masalahPemulangan, masalahUtilisasi, masalahRujukan;
+    private javax.swing.JCheckBox masalahKepatuhan, masalahTingkatAsuhan, masalahKompleks, masalahPerburukan;
+    private javax.swing.JCheckBox masalahFinansial, masalahSistemPembayaran, masalahDukunganKeluarga;
+    private javax.swing.JCheckBox masalahPengetahuan, masalahKomplain, masalahReadmission;
+    private javax.swing.JCheckBox masalahPemulangan, masalahUtilisasi, masalahRujukan;
     
     // Perencanaan MPP
-    private javax.swing.JRadioButton rencanaUtilisasi;
-    private javax.swing.JRadioButton rencanaAdvokasiInformasi, rencanaAdvokasiDiskusi, rencanaAdvokasiDukungan;
-    private javax.swing.JRadioButton rencanaEdukasi;
-    private javax.swing.JRadioButton rencanaKoordinasiMasalah, rencanaKoordinasiIntensif, rencanaKoordinasiSaran, rencanaKoordinasiTerminasi;
-    private javax.swing.JRadioButton rencanaKolaborasiDPJP, rencanaKolaborasiDietisien, rencanaKolaborasiKeuangan, rencanaKolaborasiSpesialis, rencanaKolaborasiFisioterapis, rencanaKolaborasiPimpinan, rencanaKolaborasiPerawat, rencanaKolaborasiApoteker, rencanaKolaborasiPsikolog, rencanaKolaborasiRohaniawan;
+    private javax.swing.JCheckBox rencanaUtilisasi;
+    private javax.swing.JCheckBox rencanaAdvokasiInformasi, rencanaAdvokasiDiskusi, rencanaAdvokasiDukungan;
+    private javax.swing.JCheckBox rencanaEdukasi;
+    private javax.swing.JCheckBox rencanaKoordinasiMasalah, rencanaKoordinasiIntensif, rencanaKoordinasiSaran, rencanaKoordinasiTerminasi;
+    private javax.swing.JCheckBox rencanaKolaborasiDPJP, rencanaKolaborasiDietisien, rencanaKolaborasiKeuangan, rencanaKolaborasiSpesialis, rencanaKolaborasiFisioterapis, rencanaKolaborasiPimpinan, rencanaKolaborasiPerawat, rencanaKolaborasiApoteker, rencanaKolaborasiPsikolog, rencanaKolaborasiRohaniawan;
     private javax.swing.JTextField rencanaKolaborasiSpesialisSebutkan, rencanaKolaborasiLainnyaSebutkan;
-    private javax.swing.JRadioButton rencanaEvaluasiFollowUp, rencanaEvaluasiEfektifitas;
+    private javax.swing.JCheckBox rencanaEvaluasiFollowUp, rencanaEvaluasiEfektifitas;
     private javax.swing.JTextField rencanaEvaluasiFollowUpSebutkan, rencanaEvaluasiEfektifitasSebutkan;
 
     private javax.swing.JLabel createLabel(String text, int x, int y, int w, int h) {
@@ -2171,6 +2173,16 @@ public final class RMSkriningMPPFormA extends javax.swing.JDialog {
         label.setBounds(x, y, w, h);
         FormInput.add(label);
         return label;
+    }
+
+    private javax.swing.JCheckBox createCheckBox(String text, int x, int y, int w, int h) {
+        javax.swing.JCheckBox cb = new javax.swing.JCheckBox(text);
+        cb.setFont(new java.awt.Font("Tahoma", 0, 11));
+        cb.setBackground(new java.awt.Color(255, 255, 255));
+        cb.setForeground(new java.awt.Color(50, 50, 50));
+        cb.setBounds(x, y, w, h);
+        FormInput.add(cb);
+        return cb;
     }
 
     private javax.swing.JRadioButton createRadioButton(String text, int x, int y, int w, int h) {
@@ -2963,25 +2975,25 @@ public final class RMSkriningMPPFormA extends javax.swing.JDialog {
         createTitleLabel("IDENTIFIKASI MASALAH", 10, 1165, 400, 23);
         
         createLabel("Masalah Kesehatan :", 10, 1195, 250, 23);
-        masalahKepatuhan = createRadioButton("Ketidakpatuhan pasien dalam proses asuhan", 270, 1195, 550, 23, identifikasiGroup);
-        masalahTingkatAsuhan = createRadioButton("Tingkat Asuhan yang tidak sesuai dengan regulasi dan/atau norma", 270, 1220, 550, 23, identifikasiGroup);
-        masalahKompleks = createRadioButton("Pasien dengan perawatan kompleks", 270, 1245, 550, 23, identifikasiGroup);
-        masalahPerburukan = createRadioButton("Pasien mengalami penurunan / perburukan kondisi / peningkatan komplikasi", 270, 1270, 550, 23, identifikasiGroup);
+        masalahKepatuhan = createCheckBox("Ketidakpatuhan pasien dalam proses asuhan", 270, 1195, 550, 23);
+        masalahTingkatAsuhan = createCheckBox("Tingkat Asuhan yang tidak sesuai dengan regulasi dan/atau norma", 270, 1220, 550, 23);
+        masalahKompleks = createCheckBox("Pasien dengan perawatan kompleks", 270, 1245, 550, 23);
+        masalahPerburukan = createCheckBox("Pasien mengalami penurunan / perburukan kondisi / peningkatan komplikasi", 270, 1270, 550, 23);
 
         createLabel("Masalah Spiritual, Psiko, Sosial, Ekonomi, Budaya :", 10, 1300, 250, 23);
-        masalahFinansial = createRadioButton("Kendala finansial akibat adanya perburukan kondisi, peningkatan komplikasi", 270, 1300, 550, 23, identifikasiGroup);
-        masalahSistemPembayaran = createRadioButton("Kendala system pembayaran", 270, 1325, 550, 23, identifikasiGroup);
-        masalahDukunganKeluarga = createRadioButton("Kurangnya dukungan keluarga berdampak pada perawatan", 270, 1350, 550, 23, identifikasiGroup);
+        masalahFinansial = createCheckBox("Kendala finansial akibat adanya perburukan kondisi, peningkatan komplikasi", 270, 1300, 550, 23);
+        masalahSistemPembayaran = createCheckBox("Kendala system pembayaran", 270, 1325, 550, 23);
+        masalahDukunganKeluarga = createCheckBox("Kurangnya dukungan keluarga berdampak pada perawatan", 270, 1350, 550, 23);
 
         createLabel("Pemahaman Yang Kurang Memadai :", 10, 1380, 250, 23);
-        masalahPengetahuan = createRadioButton("Pengetahuan pasien / keluarga tentang Kesehatan yang rendah", 270, 1380, 550, 23, identifikasiGroup);
-        masalahKomplain = createRadioButton("Resiko tinggi komplain", 270, 1405, 550, 23, identifikasiGroup);
-        masalahReadmission = createRadioButton("Pasien readmission", 270, 1430, 550, 23, identifikasiGroup);
+        masalahPengetahuan = createCheckBox("Pengetahuan pasien / keluarga tentang Kesehatan yang rendah", 270, 1380, 550, 23);
+        masalahKomplain = createCheckBox("Resiko tinggi komplain", 270, 1405, 550, 23);
+        masalahReadmission = createCheckBox("Pasien readmission", 270, 1430, 550, 23);
 
         createLabel("Kontinuitas Pelayanan :", 10, 1460, 250, 23);
-        masalahPemulangan = createRadioButton("Rencana pemulangan yang belum memenuhi kriteria dan/atau penundaan", 270, 1460, 550, 23, identifikasiGroup);
-        masalahUtilisasi = createRadioButton("Over dan/atau under utilisasi layanan atas dasar regulasi yang berlaku", 270, 1485, 550, 23, identifikasiGroup);
-        masalahRujukan = createRadioButton("Rujukan ke fasilitas Kesehatan lain", 270, 1510, 550, 23, identifikasiGroup);
+        masalahPemulangan = createCheckBox("Rencana pemulangan yang belum memenuhi kriteria dan/atau penundaan", 270, 1460, 550, 23);
+        masalahUtilisasi = createCheckBox("Over dan/atau under utilisasi layanan atas dasar regulasi yang berlaku", 270, 1485, 550, 23);
+        masalahRujukan = createCheckBox("Rujukan ke fasilitas Kesehatan lain", 270, 1510, 550, 23);
 
         // Separator 2
         javax.swing.JSeparator sep2 = new javax.swing.JSeparator();
@@ -2992,46 +3004,46 @@ public final class RMSkriningMPPFormA extends javax.swing.JDialog {
         createTitleLabel("PERENCANAAN MPP", 10, 1570, 400, 23);
         
         createLabel("Utilisasi / Mutu Asuhan :", 10, 1600, 250, 23);
-        rencanaUtilisasi = createRadioButton("Kaji efektifitas pelayanan di ruangan oleh PPA (terapi DPJP, dll)", 270, 1600, 550, 23, rencanaGroup);
+        rencanaUtilisasi = createCheckBox("Kaji efektifitas pelayanan di ruangan oleh PPA (terapi DPJP, dll)", 270, 1600, 550, 23);
 
         createLabel("Advokasi :", 10, 1630, 250, 23);
-        rencanaAdvokasiInformasi = createRadioButton("Pastikan pasien / keluarga mendapatkan informasi kondisi kesehatannya", 270, 1630, 550, 23, rencanaGroup);
-        rencanaAdvokasiDiskusi = createRadioButton("Beri kesempatan pasien / keluarga untuk berdiskusi tentang hal", 270, 1655, 550, 23, rencanaGroup);
-        rencanaAdvokasiDukungan = createRadioButton("Beri dukungan moral / spiritual pada pasien / keluarga", 270, 1680, 550, 23, rencanaGroup);
+        rencanaAdvokasiInformasi = createCheckBox("Pastikan pasien / keluarga mendapatkan informasi kondisi kesehatannya", 270, 1630, 550, 23);
+        rencanaAdvokasiDiskusi = createCheckBox("Beri kesempatan pasien / keluarga untuk berdiskusi tentang hal", 270, 1655, 550, 23);
+        rencanaAdvokasiDukungan = createCheckBox("Beri dukungan moral / spiritual pada pasien / keluarga", 270, 1680, 550, 23);
 
         createLabel("Edukasi :", 10, 1710, 250, 23);
-        rencanaEdukasi = createRadioButton("Beri informasi / edukasi tambahan jika diperlukan", 270, 1710, 550, 23, rencanaGroup);
+        rencanaEdukasi = createCheckBox("Beri informasi / edukasi tambahan jika diperlukan", 270, 1710, 550, 23);
 
         createLabel("Koordinasi :", 10, 1740, 250, 23);
-        rencanaKoordinasiMasalah = createRadioButton("Diskusikan dengan DPJP / PPA / Pimpinan RS jika ditemukan masalah", 270, 1740, 550, 23, rencanaGroup);
-        rencanaKoordinasiIntensif = createRadioButton("Diskusikan dengan DPJP / PPA jika pasien diindikasi perawatan intensif", 270, 1765, 550, 23, rencanaGroup);
-        rencanaKoordinasiSaran = createRadioButton("Beri saran pada DPJP / PPA untuk pembahasan kasus kompleks", 270, 1790, 550, 23, rencanaGroup);
-        rencanaKoordinasiTerminasi = createRadioButton("Diskusikan dengan DPJP / PPA untuk melakukan terminasi layanan MPP", 270, 1815, 550, 23, rencanaGroup);
+        rencanaKoordinasiMasalah = createCheckBox("Diskusikan dengan DPJP / PPA / Pimpinan RS jika ditemukan masalah", 270, 1740, 550, 23);
+        rencanaKoordinasiIntensif = createCheckBox("Diskusikan dengan DPJP / PPA jika pasien diindikasi perawatan intensif", 270, 1765, 550, 23);
+        rencanaKoordinasiSaran = createCheckBox("Beri saran pada DPJP / PPA untuk pembahasan kasus kompleks", 270, 1790, 550, 23);
+        rencanaKoordinasiTerminasi = createCheckBox("Diskusikan dengan DPJP / PPA untuk melakukan terminasi layanan MPP", 270, 1815, 550, 23);
 
         createLabel("Kolaborasi :", 10, 1845, 250, 23);
-        rencanaKolaborasiDPJP = createRadioButton("DPJP", 270, 1845, 150, 23, rencanaGroup);
-        rencanaKolaborasiDietisien = createRadioButton("Dietisien", 430, 1845, 150, 23, rencanaGroup);
-        rencanaKolaborasiKeuangan = createRadioButton("Bagian keuangan", 590, 1845, 180, 23, rencanaGroup);
+        rencanaKolaborasiDPJP = createCheckBox("DPJP", 270, 1845, 150, 23);
+        rencanaKolaborasiDietisien = createCheckBox("Dietisien", 430, 1845, 150, 23);
+        rencanaKolaborasiKeuangan = createCheckBox("Bagian keuangan", 590, 1845, 180, 23);
         
-        rencanaKolaborasiSpesialis = createRadioButton("Dokter Spesialis lainnya (sebutkan) :", 270, 1870, 210, 23, rencanaGroup);
+        rencanaKolaborasiSpesialis = createCheckBox("Dokter Spesialis lainnya (sebutkan) :", 270, 1870, 210, 23);
         rencanaKolaborasiSpesialisSebutkan = createTextField(480, 1870, 350, 23);
         
-        rencanaKolaborasiFisioterapis = createRadioButton("Fisioterapis", 270, 1895, 150, 23, rencanaGroup);
-        rencanaKolaborasiPimpinan = createRadioButton("Pimpinan RS", 430, 1895, 150, 23, rencanaGroup);
+        rencanaKolaborasiFisioterapis = createCheckBox("Fisioterapis", 270, 1895, 150, 23);
+        rencanaKolaborasiPimpinan = createCheckBox("Pimpinan RS", 430, 1895, 150, 23);
         
-        rencanaKolaborasiPerawat = createRadioButton("Perawat", 270, 1920, 150, 23, rencanaGroup);
-        rencanaKolaborasiApoteker = createRadioButton("Apoteker", 430, 1920, 150, 23, rencanaGroup);
+        rencanaKolaborasiPerawat = createCheckBox("Perawat", 270, 1920, 150, 23);
+        rencanaKolaborasiApoteker = createCheckBox("Apoteker", 430, 1920, 150, 23);
         
-        rencanaKolaborasiPsikolog = createRadioButton("Psikolog", 270, 1945, 150, 23, rencanaGroup);
-        rencanaKolaborasiRohaniawan = createRadioButton("Petugas Rohaniawan", 430, 1945, 150, 23, rencanaGroup);
+        rencanaKolaborasiPsikolog = createCheckBox("Psikolog", 270, 1945, 150, 23);
+        rencanaKolaborasiRohaniawan = createCheckBox("Petugas Rohaniawan", 430, 1945, 150, 23);
         
         createLabel("Lainnya :", 270, 1970, 80, 23);
         rencanaKolaborasiLainnyaSebutkan = createTextField(350, 1970, 480, 23);
 
         createLabel("Evaluasi :", 10, 2000, 250, 23);
-        rencanaEvaluasiFollowUp = createRadioButton("Follow up hasil pembahasan masalah kompleks (jelaskan) :", 270, 2000, 320, 23, rencanaGroup);
+        rencanaEvaluasiFollowUp = createCheckBox("Follow up hasil pembahasan masalah kompleks (jelaskan) :", 270, 2000, 320, 23);
         rencanaEvaluasiFollowUpSebutkan = createTextField(590, 2000, 240, 23);
-        rencanaEvaluasiEfektifitas = createRadioButton("Evaluasi efektifitas pelayanan (terapi DPJP, dll) (jelaskan) :", 270, 2025, 560, 23, rencanaGroup);
+        rencanaEvaluasiEfektifitas = createCheckBox("Evaluasi efektifitas pelayanan (terapi DPJP, dll) (jelaskan) :", 270, 2025, 560, 23);
         rencanaEvaluasiEfektifitasSebutkan = createTextField(270, 2050, 560, 23);
 
         // Update layout preference
@@ -3167,99 +3179,99 @@ public final class RMSkriningMPPFormA extends javax.swing.JDialog {
                     psd.setString(2, tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString());
                     java.sql.ResultSet rsd = psd.executeQuery();
                     if (rsd.next()) {
-setGroupValue(ewsGroup, rs.getString("skor_ews"));
-                        ewsAnalisis.setText(rs.getString("analisis_ews")!=null?rs.getString("analisis_ews"):"");
-                        setGroupValue(adlGroup, rs.getString("penurunan_adl"));
-                        adlSebutkan.setText(rs.getString("adl_sebutkan")!=null?rs.getString("adl_sebutkan"):"");
-                        setGroupValue(riwayatGroup, rs.getString("riwayat_kesehatan"));
-                        riwayatPenyakitKronisSebutkan.setText(rs.getString("riwayat_penyakit_kronis")!=null?rs.getString("riwayat_penyakit_kronis"):"");
-                        kebiasaanMerokok.setSelected("Ya".equals(rs.getString("kebiasaan_merokok")));
-                        kebiasaanAlkohol.setSelected("Ya".equals(rs.getString("kebiasaan_alkohol")));
-                        kebiasaanLain.setSelected("Ya".equals(rs.getString("kebiasaan_lain")));
-                        kebiasaanLainSebutkan.setText(rs.getString("kebiasaan_lain_sebutkan")!=null?rs.getString("kebiasaan_lain_sebutkan"):"");
-                        riwayatLainSebutkan.setText(rs.getString("riwayat_lain_sebutkan")!=null?rs.getString("riwayat_lain_sebutkan"):"");
-                        setGroupValue(perilakuGroup, rs.getString("perilaku"));
-                        perilakuAgamaSebutkan.setText(rs.getString("perilaku_agama")!=null?rs.getString("perilaku_agama"):"");
-                        perilakuSosialSebutkan.setText(rs.getString("perilaku_sosial")!=null?rs.getString("perilaku_sosial"):"");
-                        perilakuBudayaSebutkan.setText(rs.getString("perilaku_budaya")!=null?rs.getString("perilaku_budaya"):"");
-                        lingkunganTidakAda.setSelected("Ya".equals(rs.getString("lingkungan_tidak_ada")));
-                        lingkunganTidakMenerima.setSelected("Ya".equals(rs.getString("lingkungan_tidak_menerima")));
-                        lingkunganSendirian.setSelected("Ya".equals(rs.getString("lingkungan_sendirian")));
-                        lingkunganJauhFaskes.setSelected("Ya".equals(rs.getString("lingkungan_jauh_faskes")));
-                        lingkunganPanti.setSelected("Ya".equals(rs.getString("lingkungan_panti")));
-                        lingkunganDekatFaskes.setSelected("Ya".equals(rs.getString("lingkungan_dekat_faskes")));
-                        lingkunganLain.setSelected("Ya".equals(rs.getString("lingkungan_lain")));
-                        lingkunganLainSebutkan.setText(rs.getString("lingkungan_lain_sebutkan")!=null?rs.getString("lingkungan_lain_sebutkan"):"");
-                        keluargaTidakAda.setSelected("Ya".equals(rs.getString("keluarga_tidak_ada")));
-                        keluargaTidakMenerima.setSelected("Ya".equals(rs.getString("keluarga_tidak_menerima")));
-                        keluargaTidakMenunggui.setSelected("Ya".equals(rs.getString("keluarga_tidak_menunggui")));
-                        keluargaTidakMampu.setSelected("Ya".equals(rs.getString("keluarga_tidak_mampu")));
-                        keluargaTidakBisaDihubungi.setSelected("Ya".equals(rs.getString("keluarga_tidak_bisa_dihubungi")));
-                        keluargaTidakTahu.setSelected("Ya".equals(rs.getString("keluarga_tidak_tahu")));
-                        keluargaLain.setSelected("Ya".equals(rs.getString("keluarga_lain")));
-                        keluargaLainSebutkan.setText(rs.getString("keluarga_lain_sebutkan")!=null?rs.getString("keluarga_lain_sebutkan"):"");
-                        finansialTidakAda.setSelected("Ya".equals(rs.getString("finansial_tidak_ada")));
-                        finansialAsuransi.setSelected("Ya".equals(rs.getString("finansial_asuransi")));
-                        finansialTidakMampu.setSelected("Ya".equals(rs.getString("finansial_tidak_mampu")));
-                        finansialTidakAdaPj.setSelected("Ya".equals(rs.getString("finansial_tidak_ada_pj")));
-                        finansialBelumAdaAsuransi.setSelected("Ya".equals(rs.getString("finansial_belum_ada_asuransi")));
-                        finansialMelebihiKlaim.setSelected("Ya".equals(rs.getString("finansial_melebihi_klaim")));
-                        finansialLain.setSelected("Ya".equals(rs.getString("finansial_lain")));
-                        finansialLainSebutkan.setText(rs.getString("finansial_lain_sebutkan")!=null?rs.getString("finansial_lain_sebutkan"):"");
-                        setGroupValue(mentalGroup, rs.getString("kesehatan_mental"));
-                        mentalTidakBaikSebutkan.setText(rs.getString("mental_tidak_baik")!=null?rs.getString("mental_tidak_baik"):"");
-                        setGroupValue(alternatifGroup, rs.getString("pengobatan_alternatif"));
-                        alternatifAdaSebutkan.setText(rs.getString("alternatif_ada")!=null?rs.getString("alternatif_ada"):"");
-                        setGroupValue(pemahamanGroup, rs.getString("pemahaman_kesehatan"));
-                        pemahamanKurangSebutkan.setText(rs.getString("pemahaman_kurang")!=null?rs.getString("pemahaman_kurang"):"");
-                        harapanMembaik.setSelected("Ya".equals(rs.getString("harapan_membaik")));
-                        harapanTindakan.setSelected("Ya".equals(rs.getString("harapan_tindakan")));
-                        harapanPasrah.setSelected("Ya".equals(rs.getString("harapan_pasrah")));
-                        harapanLain.setSelected("Ya".equals(rs.getString("harapan_lain")));
-                        harapanLainSebutkan.setText(rs.getString("harapan_lain_sebutkan")!=null?rs.getString("harapan_lain_sebutkan"):"");
-                        setGroupValue(asuransiGroup, rs.getString("status_asuransi"));
-                        setGroupValue(traumaGroup, rs.getString("riwayat_trauma"));
-                        traumaAdaSebutkan.setText(rs.getString("trauma_ada")!=null?rs.getString("trauma_ada"):"");
-                        setGroupValue(legalGroup, rs.getString("aspek_legal"));
-                        legalDibutuhkanSebutkan.setText(rs.getString("legal_dibutuhkan")!=null?rs.getString("legal_dibutuhkan"):"");
-                        masalahKepatuhan.setSelected("Ya".equals(rs.getString("masalah_kepatuhan")));
-                        masalahTingkatAsuhan.setSelected("Ya".equals(rs.getString("masalah_tingkat_asuhan")));
-                        masalahKompleks.setSelected("Ya".equals(rs.getString("masalah_kompleks")));
-                        masalahPerburukan.setSelected("Ya".equals(rs.getString("masalah_perburukan")));
-                        masalahFinansial.setSelected("Ya".equals(rs.getString("masalah_finansial")));
-                        masalahSistemPembayaran.setSelected("Ya".equals(rs.getString("masalah_sistem_pembayaran")));
-                        masalahDukunganKeluarga.setSelected("Ya".equals(rs.getString("masalah_dukungan_keluarga")));
-                        masalahPengetahuan.setSelected("Ya".equals(rs.getString("masalah_pengetahuan")));
-                        masalahKomplain.setSelected("Ya".equals(rs.getString("masalah_komplain")));
-                        masalahReadmission.setSelected("Ya".equals(rs.getString("masalah_readmission")));
-                        masalahPemulangan.setSelected("Ya".equals(rs.getString("masalah_pemulangan")));
-                        masalahUtilisasi.setSelected("Ya".equals(rs.getString("masalah_utilisasi")));
-                        masalahRujukan.setSelected("Ya".equals(rs.getString("masalah_rujukan")));
-                        rencanaUtilisasi.setSelected("Ya".equals(rs.getString("rencana_utilisasi")));
-                        rencanaAdvokasiInformasi.setSelected("Ya".equals(rs.getString("rencana_advokasi_informasi")));
-                        rencanaAdvokasiDiskusi.setSelected("Ya".equals(rs.getString("rencana_advokasi_diskusi")));
-                        rencanaAdvokasiDukungan.setSelected("Ya".equals(rs.getString("rencana_advokasi_dukungan")));
-                        rencanaEdukasi.setSelected("Ya".equals(rs.getString("rencana_edukasi")));
-                        rencanaKoordinasiMasalah.setSelected("Ya".equals(rs.getString("rencana_koordinasi_masalah")));
-                        rencanaKoordinasiIntensif.setSelected("Ya".equals(rs.getString("rencana_koordinasi_intensif")));
-                        rencanaKoordinasiSaran.setSelected("Ya".equals(rs.getString("rencana_koordinasi_saran")));
-                        rencanaKoordinasiTerminasi.setSelected("Ya".equals(rs.getString("rencana_koordinasi_terminasi")));
-                        rencanaKolaborasiDPJP.setSelected("Ya".equals(rs.getString("kolaborasi_dpjp")));
-                        rencanaKolaborasiDietisien.setSelected("Ya".equals(rs.getString("kolaborasi_dietisien")));
-                        rencanaKolaborasiKeuangan.setSelected("Ya".equals(rs.getString("kolaborasi_keuangan")));
-                        rencanaKolaborasiSpesialis.setSelected("Ya".equals(rs.getString("kolaborasi_spesialis")));
-                        rencanaKolaborasiSpesialisSebutkan.setText(rs.getString("kolaborasi_spesialis_sebutkan")!=null?rs.getString("kolaborasi_spesialis_sebutkan"):"");
-                        rencanaKolaborasiFisioterapis.setSelected("Ya".equals(rs.getString("kolaborasi_fisioterapis")));
-                        rencanaKolaborasiPimpinan.setSelected("Ya".equals(rs.getString("kolaborasi_pimpinan")));
-                        rencanaKolaborasiPerawat.setSelected("Ya".equals(rs.getString("kolaborasi_perawat")));
-                        rencanaKolaborasiApoteker.setSelected("Ya".equals(rs.getString("kolaborasi_apoteker")));
-                        rencanaKolaborasiPsikolog.setSelected("Ya".equals(rs.getString("kolaborasi_psikolog")));
-                        rencanaKolaborasiRohaniawan.setSelected("Ya".equals(rs.getString("kolaborasi_rohaniawan")));
-                        rencanaKolaborasiLainnyaSebutkan.setText(rs.getString("kolaborasi_lainnya_sebutkan")!=null?rs.getString("kolaborasi_lainnya_sebutkan"):"");
-                        rencanaEvaluasiFollowUp.setSelected("Ya".equals(rs.getString("evaluasi_follow_up")));
-                        rencanaEvaluasiFollowUpSebutkan.setText(rs.getString("evaluasi_follow_up_sebutkan")!=null?rs.getString("evaluasi_follow_up_sebutkan"):"");
-                        rencanaEvaluasiEfektifitas.setSelected("Ya".equals(rs.getString("evaluasi_efektifitas")));
-                        rencanaEvaluasiEfektifitasSebutkan.setText(rs.getString("evaluasi_efektifitas_sebutkan")!=null?rs.getString("evaluasi_efektifitas_sebutkan"):"");
+setGroupValue(ewsGroup, rsd.getString("skor_ews"));
+                        ewsAnalisis.setText(rsd.getString("analisis_ews")!=null?rsd.getString("analisis_ews"):"");
+                        setGroupValue(adlGroup, rsd.getString("penurunan_adl"));
+                        adlSebutkan.setText(rsd.getString("adl_sebutkan")!=null?rsd.getString("adl_sebutkan"):"");
+                        setGroupValue(riwayatGroup, rsd.getString("riwayat_kesehatan"));
+                        riwayatPenyakitKronisSebutkan.setText(rsd.getString("riwayat_penyakit_kronis")!=null?rsd.getString("riwayat_penyakit_kronis"):"");
+                        kebiasaanMerokok.setSelected("Ya".equals(rsd.getString("kebiasaan_merokok")));
+                        kebiasaanAlkohol.setSelected("Ya".equals(rsd.getString("kebiasaan_alkohol")));
+                        kebiasaanLain.setSelected("Ya".equals(rsd.getString("kebiasaan_lain")));
+                        kebiasaanLainSebutkan.setText(rsd.getString("kebiasaan_lain_sebutkan")!=null?rsd.getString("kebiasaan_lain_sebutkan"):"");
+                        riwayatLainSebutkan.setText(rsd.getString("riwayat_lain_sebutkan")!=null?rsd.getString("riwayat_lain_sebutkan"):"");
+                        setGroupValue(perilakuGroup, rsd.getString("perilaku"));
+                        perilakuAgamaSebutkan.setText(rsd.getString("perilaku_agama")!=null?rsd.getString("perilaku_agama"):"");
+                        perilakuSosialSebutkan.setText(rsd.getString("perilaku_sosial")!=null?rsd.getString("perilaku_sosial"):"");
+                        perilakuBudayaSebutkan.setText(rsd.getString("perilaku_budaya")!=null?rsd.getString("perilaku_budaya"):"");
+                        lingkunganTidakAda.setSelected("Ya".equals(rsd.getString("lingkungan_tidak_ada")));
+                        lingkunganTidakMenerima.setSelected("Ya".equals(rsd.getString("lingkungan_tidak_menerima")));
+                        lingkunganSendirian.setSelected("Ya".equals(rsd.getString("lingkungan_sendirian")));
+                        lingkunganJauhFaskes.setSelected("Ya".equals(rsd.getString("lingkungan_jauh_faskes")));
+                        lingkunganPanti.setSelected("Ya".equals(rsd.getString("lingkungan_panti")));
+                        lingkunganDekatFaskes.setSelected("Ya".equals(rsd.getString("lingkungan_dekat_faskes")));
+                        lingkunganLain.setSelected("Ya".equals(rsd.getString("lingkungan_lain")));
+                        lingkunganLainSebutkan.setText(rsd.getString("lingkungan_lain_sebutkan")!=null?rsd.getString("lingkungan_lain_sebutkan"):"");
+                        keluargaTidakAda.setSelected("Ya".equals(rsd.getString("keluarga_tidak_ada")));
+                        keluargaTidakMenerima.setSelected("Ya".equals(rsd.getString("keluarga_tidak_menerima")));
+                        keluargaTidakMenunggui.setSelected("Ya".equals(rsd.getString("keluarga_tidak_menunggui")));
+                        keluargaTidakMampu.setSelected("Ya".equals(rsd.getString("keluarga_tidak_mampu")));
+                        keluargaTidakBisaDihubungi.setSelected("Ya".equals(rsd.getString("keluarga_tidak_bisa_dihubungi")));
+                        keluargaTidakTahu.setSelected("Ya".equals(rsd.getString("keluarga_tidak_tahu")));
+                        keluargaLain.setSelected("Ya".equals(rsd.getString("keluarga_lain")));
+                        keluargaLainSebutkan.setText(rsd.getString("keluarga_lain_sebutkan")!=null?rsd.getString("keluarga_lain_sebutkan"):"");
+                        finansialTidakAda.setSelected("Ya".equals(rsd.getString("finansial_tidak_ada")));
+                        finansialAsuransi.setSelected("Ya".equals(rsd.getString("finansial_asuransi")));
+                        finansialTidakMampu.setSelected("Ya".equals(rsd.getString("finansial_tidak_mampu")));
+                        finansialTidakAdaPj.setSelected("Ya".equals(rsd.getString("finansial_tidak_ada_pj")));
+                        finansialBelumAdaAsuransi.setSelected("Ya".equals(rsd.getString("finansial_belum_ada_asuransi")));
+                        finansialMelebihiKlaim.setSelected("Ya".equals(rsd.getString("finansial_melebihi_klaim")));
+                        finansialLain.setSelected("Ya".equals(rsd.getString("finansial_lain")));
+                        finansialLainSebutkan.setText(rsd.getString("finansial_lain_sebutkan")!=null?rsd.getString("finansial_lain_sebutkan"):"");
+                        setGroupValue(mentalGroup, rsd.getString("kesehatan_mental"));
+                        mentalTidakBaikSebutkan.setText(rsd.getString("mental_tidak_baik")!=null?rsd.getString("mental_tidak_baik"):"");
+                        setGroupValue(alternatifGroup, rsd.getString("pengobatan_alternatif"));
+                        alternatifAdaSebutkan.setText(rsd.getString("alternatif_ada")!=null?rsd.getString("alternatif_ada"):"");
+                        setGroupValue(pemahamanGroup, rsd.getString("pemahaman_kesehatan"));
+                        pemahamanKurangSebutkan.setText(rsd.getString("pemahaman_kurang")!=null?rsd.getString("pemahaman_kurang"):"");
+                        harapanMembaik.setSelected("Ya".equals(rsd.getString("harapan_membaik")));
+                        harapanTindakan.setSelected("Ya".equals(rsd.getString("harapan_tindakan")));
+                        harapanPasrah.setSelected("Ya".equals(rsd.getString("harapan_pasrah")));
+                        harapanLain.setSelected("Ya".equals(rsd.getString("harapan_lain")));
+                        harapanLainSebutkan.setText(rsd.getString("harapan_lain_sebutkan")!=null?rsd.getString("harapan_lain_sebutkan"):"");
+                        setGroupValue(asuransiGroup, rsd.getString("status_asuransi"));
+                        setGroupValue(traumaGroup, rsd.getString("riwayat_trauma"));
+                        traumaAdaSebutkan.setText(rsd.getString("trauma_ada")!=null?rsd.getString("trauma_ada"):"");
+                        setGroupValue(legalGroup, rsd.getString("aspek_legal"));
+                        legalDibutuhkanSebutkan.setText(rsd.getString("legal_dibutuhkan")!=null?rsd.getString("legal_dibutuhkan"):"");
+                        masalahKepatuhan.setSelected("Ya".equals(rsd.getString("masalah_kepatuhan")));
+                        masalahTingkatAsuhan.setSelected("Ya".equals(rsd.getString("masalah_tingkat_asuhan")));
+                        masalahKompleks.setSelected("Ya".equals(rsd.getString("masalah_kompleks")));
+                        masalahPerburukan.setSelected("Ya".equals(rsd.getString("masalah_perburukan")));
+                        masalahFinansial.setSelected("Ya".equals(rsd.getString("masalah_finansial")));
+                        masalahSistemPembayaran.setSelected("Ya".equals(rsd.getString("masalah_sistem_pembayaran")));
+                        masalahDukunganKeluarga.setSelected("Ya".equals(rsd.getString("masalah_dukungan_keluarga")));
+                        masalahPengetahuan.setSelected("Ya".equals(rsd.getString("masalah_pengetahuan")));
+                        masalahKomplain.setSelected("Ya".equals(rsd.getString("masalah_komplain")));
+                        masalahReadmission.setSelected("Ya".equals(rsd.getString("masalah_readmission")));
+                        masalahPemulangan.setSelected("Ya".equals(rsd.getString("masalah_pemulangan")));
+                        masalahUtilisasi.setSelected("Ya".equals(rsd.getString("masalah_utilisasi")));
+                        masalahRujukan.setSelected("Ya".equals(rsd.getString("masalah_rujukan")));
+                        rencanaUtilisasi.setSelected("Ya".equals(rsd.getString("rencana_utilisasi")));
+                        rencanaAdvokasiInformasi.setSelected("Ya".equals(rsd.getString("rencana_advokasi_informasi")));
+                        rencanaAdvokasiDiskusi.setSelected("Ya".equals(rsd.getString("rencana_advokasi_diskusi")));
+                        rencanaAdvokasiDukungan.setSelected("Ya".equals(rsd.getString("rencana_advokasi_dukungan")));
+                        rencanaEdukasi.setSelected("Ya".equals(rsd.getString("rencana_edukasi")));
+                        rencanaKoordinasiMasalah.setSelected("Ya".equals(rsd.getString("rencana_koordinasi_masalah")));
+                        rencanaKoordinasiIntensif.setSelected("Ya".equals(rsd.getString("rencana_koordinasi_intensif")));
+                        rencanaKoordinasiSaran.setSelected("Ya".equals(rsd.getString("rencana_koordinasi_saran")));
+                        rencanaKoordinasiTerminasi.setSelected("Ya".equals(rsd.getString("rencana_koordinasi_terminasi")));
+                        rencanaKolaborasiDPJP.setSelected("Ya".equals(rsd.getString("kolaborasi_dpjp")));
+                        rencanaKolaborasiDietisien.setSelected("Ya".equals(rsd.getString("kolaborasi_dietisien")));
+                        rencanaKolaborasiKeuangan.setSelected("Ya".equals(rsd.getString("kolaborasi_keuangan")));
+                        rencanaKolaborasiSpesialis.setSelected("Ya".equals(rsd.getString("kolaborasi_spesialis")));
+                        rencanaKolaborasiSpesialisSebutkan.setText(rsd.getString("kolaborasi_spesialis_sebutkan")!=null?rsd.getString("kolaborasi_spesialis_sebutkan"):"");
+                        rencanaKolaborasiFisioterapis.setSelected("Ya".equals(rsd.getString("kolaborasi_fisioterapis")));
+                        rencanaKolaborasiPimpinan.setSelected("Ya".equals(rsd.getString("kolaborasi_pimpinan")));
+                        rencanaKolaborasiPerawat.setSelected("Ya".equals(rsd.getString("kolaborasi_perawat")));
+                        rencanaKolaborasiApoteker.setSelected("Ya".equals(rsd.getString("kolaborasi_apoteker")));
+                        rencanaKolaborasiPsikolog.setSelected("Ya".equals(rsd.getString("kolaborasi_psikolog")));
+                        rencanaKolaborasiRohaniawan.setSelected("Ya".equals(rsd.getString("kolaborasi_rohaniawan")));
+                        rencanaKolaborasiLainnyaSebutkan.setText(rsd.getString("kolaborasi_lainnya_sebutkan")!=null?rsd.getString("kolaborasi_lainnya_sebutkan"):"");
+                        rencanaEvaluasiFollowUp.setSelected("Ya".equals(rsd.getString("evaluasi_follow_up")));
+                        rencanaEvaluasiFollowUpSebutkan.setText(rsd.getString("evaluasi_follow_up_sebutkan")!=null?rsd.getString("evaluasi_follow_up_sebutkan"):"");
+                        rencanaEvaluasiEfektifitas.setSelected("Ya".equals(rsd.getString("evaluasi_efektifitas")));
+                        rencanaEvaluasiEfektifitasSebutkan.setText(rsd.getString("evaluasi_efektifitas_sebutkan")!=null?rsd.getString("evaluasi_efektifitas_sebutkan"):"");
 
                     }
                 } finally {

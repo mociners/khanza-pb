@@ -9529,7 +9529,7 @@ public final class RMPenilaianAwalPerina extends javax.swing.JDialog {
                 for(i=0;i<tbMasalahKeperawatan.getRowCount();i++){
                     if(tbMasalahKeperawatan.getValueAt(i,0).toString().equals("true")){
                         for(JsonNode list:response){
-                            if(list.path("KodeMasalah").asText().toLowerCase().equals(tbMasalahKeperawatan.getValueAt(i,1).toString())&&
+                            if(list.path("KodeMasalah").asText().toLowerCase().equals(tbMasalahKeperawatan.getValueAt(i,1).toString().toLowerCase())&&
                                     list.path("NamaRencana").asText().toLowerCase().contains(TCariRencana.getText().toLowerCase())){
                                 tabModeRencana.addRow(new Object[]{
                                     false,list.path("KodeRencana").asText(),list.path("NamaRencana").asText()

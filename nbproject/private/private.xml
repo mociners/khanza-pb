@@ -28,34 +28,28 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/surat/SuratPersetujuanUmum.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgIGD.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/bridging/BPJSDataSEP.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgKamarInap.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMCatatanADIMEGizi.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMCari5SOAPTerakhirAdime.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgRawatJalan.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/ValidasiHandOver.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMGenerateKlaim.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMDischargePlanning.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgCariPeriksaRadiologi.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/permintaan/DlgPermintaanRanap.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMDataResumePasienRanap.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/frmUtama.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMHandOver.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMTTVBalanceCairan.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMTriaseIGD.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMPenilaianAwalMedisRanapAnak1.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/laporan/DlgBerkasRawat.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMTransferPasienAntarRuang.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/GrafikBalanceCairanRanap.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgRawatInap.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/inventory/DlgPeresepanDokter.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgKasirRalan.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMPenilaianAwalMedisRanapKandungan1.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/simrskhanza/DlgReg.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMPenilaianAwalKeperawatanRanap.java</file>
-            <file>file:/home/mociners/Documents/rsthbfinal/src/rekammedis/RMPenilaianAwalKeperawatanRanapDewasa.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/simrskhanza/DlgPeriksaRadiologi.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/simrskhanza/DlgKamarInap.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMDataResumePasienRanap.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMTransferPasienAntarRuang.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMDischargePlanning.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/simrskhanza/DlgIGD.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/simrskhanza/DlgRawatInap.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMPenilaianAwalMedisRanapKandungan1.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMPenilaianAwalKeperawatanRanapAnakNeo.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMPenilaianAwalKeperawatanPonek.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMCariHasilLaborat.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMHandOver.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMGenerateKlaim.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/permintaan/DlgBookingOperasi.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/keuangan/DlgCariDaftarOperasi.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMPenilaianAwalMedisRanapDewasa.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMPenilaianAwalMedisIGD.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/simrskhanza/frmUtama.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMLaporanOperasi.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMRiwayatPerawatan.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/fungsi/akses.java</file>
+            <file>file:/home/itrsupb/Documents/khanza-pb/src/rekammedis/RMPenilaianAwalKeperawatanRanapDewasa.java</file>
         </group>
     </open-files>
 </project-private>

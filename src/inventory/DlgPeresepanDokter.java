@@ -5199,6 +5199,8 @@ public final class DlgPeresepanDokter extends javax.swing.JDialog {
                 }
             }
         }
+        
+        tampilobat();
     }
 
     private void hitungDanTampilkanDetailRacikanTemplate(String templateId, String templateNoRacik, String newNoRacik) { // Tambahkan

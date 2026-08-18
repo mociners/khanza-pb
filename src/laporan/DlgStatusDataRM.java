@@ -1722,8 +1722,8 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             if(tbRawatJalan.getSelectedRow()!= -1){
                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 RMGenerateKlaim resume=new RMGenerateKlaim(null,true);
-                resume.setNoRm(TNoRM.getText(),TPasien.getText());
                 resume.setNoRawat(tbRawatJalan.getValueAt(tbRawatJalan.getSelectedRow(), 0).toString());
+                resume.setNoRm(TNoRM.getText(),TPasien.getText());
                 resume.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
                 resume.setLocationRelativeTo(internalFrame1);
                 resume.setVisible(true);

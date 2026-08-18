@@ -3259,18 +3259,8 @@ public class RMPenilaianAwalKeperawatanRanapDewasa extends JDialog {
         this.CmbCpotKetegangan.setSelectedIndex(0);
         this.CmbCpotVentilator.setSelectedIndex(0);
         this.CmbCpotVokalisasi.setSelectedIndex(0);
-        this.TCpotTotal.setText("");
-        this.TCpotKategori.setText("");
-
-        this.TCpotKategori.setText("");
-                this.CmbSeverityMetode.setSelectedIndex(0);
-                this.CmbTimeSetiap.setSelectedIndex(0);
-        this.CmbTimeSelama.setSelectedIndex(0);
-                this.CmbCpotEkspresi.setSelectedIndex(0);
-        this.CmbCpotGerakan.setSelectedIndex(0);
-        this.CmbCpotKetegangan.setSelectedIndex(0);
-        this.CmbCpotVentilator.setSelectedIndex(0);
-        this.CmbCpotVokalisasi.setSelectedIndex(0);
+        this.TCpotTotal.setText("0");
+        this.TCpotKategori.setText("Tidak Nyeri");
                                         this.ChkAsesmen.setSelected(true);
         this.ChkTiba.setSelected(true);
         this.jam();

@@ -197,7 +197,7 @@ public final class DlgResepObat extends javax.swing.JDialog {
 
         TNoRw.setDocument(new batasInput((byte) 17).getKata(TNoRw));
         KdDokter.setDocument(new batasInput((byte) 20).getKata(KdDokter));
-        NoResep.setDocument(new batasInput((byte) 10).getKata(NoResep));
+        NoResep.setDocument(new batasInput((byte) 50).getKata(NoResep));
         TCari.setDocument(new batasInput((byte) 100).getKata(TCari));
         if (koneksiDB.CARICEPAT().equals("aktif")) {
             TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -3321,8 +3321,20 @@ public final class DlgResepObat extends javax.swing.JDialog {
 
     private void getData() {
         if (tbResep.getSelectedRow() != -1) {
+            int viewRow = tbResep.getSelectedRow();
+            int modelRow = tbResep.convertRowIndexToModel(viewRow);
+            String no_resep = tbResep.getModel().getValueAt(modelRow, 0).toString();
+            String tgl_jam = tbResep.getModel().getValueAt(modelRow, 1).toString();
+            
+            // Loop upwards in the MODEL to find the header row if a detail row is clicked
+            while (no_resep.equals("") && modelRow > 0) {
+                modelRow--;
+                no_resep = tbResep.getModel().getValueAt(modelRow, 0).toString();
+                tgl_jam = tbResep.getModel().getValueAt(modelRow, 1).toString();
+            }
+            
             getno = 1;
-            NoResep.setText(tbResep.getValueAt(tbResep.getSelectedRow(), 0).toString());
+            NoResep.setText(no_resep);
             if (!NoResep.getText().equals("")) {
                 Sequel.cariIsi("select resep_obat.no_rawat from resep_obat where resep_obat.no_resep=?", TNoRw,
                         NoResep.getText());
@@ -3333,10 +3345,10 @@ public final class DlgResepObat extends javax.swing.JDialog {
                 Sequel.cariIsi("select resep_obat.kd_dokter from resep_obat where resep_obat.no_resep=?", KdDokter,
                         NoResep.getText());
                 NmDokter.setText(dokter.tampil3(KdDokter.getText()));
-                cmbJam.setSelectedItem(tbResep.getValueAt(tbResep.getSelectedRow(), 1).toString().substring(11, 13));
-                cmbMnt.setSelectedItem(tbResep.getValueAt(tbResep.getSelectedRow(), 1).toString().substring(14, 16));
-                cmbDtk.setSelectedItem(tbResep.getValueAt(tbResep.getSelectedRow(), 1).toString().substring(17, 19));
-                Valid.SetTgl(DTPBeri, tbResep.getValueAt(tbResep.getSelectedRow(), 1).toString().substring(0, 10));
+                cmbJam.setSelectedItem(tgl_jam.substring(11, 13));
+                cmbMnt.setSelectedItem(tgl_jam.substring(14, 16));
+                cmbDtk.setSelectedItem(tgl_jam.substring(17, 19));
+                Valid.SetTgl(DTPBeri, tgl_jam.substring(0, 10));
 
                 TabDataMouseClicked(null);
             }

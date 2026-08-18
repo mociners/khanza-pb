@@ -69,6 +69,7 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
     private int index = 0;
     private Point[] arr = new Point[100000];
     private BufferedImage img;
+    private BufferedImage strokeImage = null;
     private SimpleDateFormat tanggalNow = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat jamNow = new SimpleDateFormat("HH:mm:ss");
     /** Creates new form DlgPemberianObat
@@ -251,6 +252,11 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
         g2.setColor(new Color(255, 255, 255, 0));
         g2.fillRect(0, 0, PanelWall.getWidth(), PanelWall.getHeight());
         PanelWall.print(g2);
+        
+        if (strokeImage != null) {
+            g2.drawImage(strokeImage, 0, 0, null);
+        }
+        
         g2.dispose();
 
         try {
@@ -303,12 +309,23 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowActivated
 
     private void PanelWallMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelWallMouseDragged
-        arr[index] = new Point(evt.getXOnScreen(), evt.getYOnScreen());
+        arr[index] = new Point(evt.getX(), evt.getY());
         index++;
-        Graphics g = getGraphics() ;
+        
+        if (strokeImage == null) {
+            strokeImage = new BufferedImage(PanelWall.getWidth(), PanelWall.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        }
+        Graphics2D gStroke = strokeImage.createGraphics();
+        gStroke.setColor(Color.red);
+        
+        Graphics g = PanelWall.getGraphics() ;
         g.setColor(Color.red);
-        for (int i = 0; i < index - 1; i++)
-        g.drawLine(arr[i].x, arr[i].y, arr[i + 1].x, arr[i + 1].y);
+        
+        for (int i = 0; i < index - 1; i++) {
+            g.drawLine(arr[i].x, arr[i].y, arr[i + 1].x, arr[i + 1].y);
+            gStroke.drawLine(arr[i].x, arr[i].y, arr[i + 1].x, arr[i + 1].y);
+        }
+        gStroke.dispose();
 //        System.out.println(index);
     }//GEN-LAST:event_PanelWallMouseDragged
 
@@ -320,6 +337,7 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
 
 //        System.out.println(index);
+        strokeImage = null;
         repaint();
     }//GEN-LAST:event_BtnHapusActionPerformed
 
@@ -330,6 +348,7 @@ public class DlgMarkingImageAssMedisIGD extends javax.swing.JDialog {
     private void BtnHapus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapus1ActionPerformed
         index = 0;
         arr = new Point[100000];
+        strokeImage = null;
         repaint();
         imageAssesment("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/masterimage/semua.png");
     }//GEN-LAST:event_BtnHapus1ActionPerformed

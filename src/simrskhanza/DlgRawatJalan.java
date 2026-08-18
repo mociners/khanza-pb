@@ -14557,6 +14557,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
         } catch (Exception e) {
             System.out.println("Notifikasi aturUrutanTombolFormMenu: " + e);
         }
+            sembunyikanBiayaTindakan();
     }
 
     private void tampilPemeriksaan() {
@@ -16969,7 +16970,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
                         BtnKamar
                 };
 
-                FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 5));
+                FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 1, 1));
 
                 FormMenu.removeAll();
 
@@ -16979,8 +16980,8 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
                     }
                 }
 
-                javax.swing.JSeparator garis = new javax.swing.JSeparator(javax.swing.SwingConstants.VERTICAL);
-                garis.setPreferredSize(new java.awt.Dimension(2, 30));
+                javax.swing.JSeparator garis = new javax.swing.JSeparator(javax.swing.SwingConstants.HORIZONTAL);
+                garis.setPreferredSize(new java.awt.Dimension(190, 2));
                 FormMenu.add(garis);
 
                 for (java.awt.Component c : comps) {
@@ -17098,7 +17099,7 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
                 // 13. Rujuk Keluar
                 prioritasList.add(BtnRujukKeluar);
 
-                FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 5));
+                FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 1, 1));
                 FormMenu.removeAll();
 
                 // Tambahkan tombol prioritas
@@ -17109,8 +17110,8 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
                 }
 
                 // Tambahkan separator
-                javax.swing.JSeparator garis = new javax.swing.JSeparator(javax.swing.SwingConstants.VERTICAL);
-                garis.setPreferredSize(new java.awt.Dimension(2, 30));
+                javax.swing.JSeparator garis = new javax.swing.JSeparator(javax.swing.SwingConstants.HORIZONTAL);
+                garis.setPreferredSize(new java.awt.Dimension(190, 2));
                 FormMenu.add(garis);
 
                 // Tambahkan tombol lainnya yang bukan prioritas
@@ -17128,5 +17129,105 @@ public final class DlgRawatJalan extends javax.swing.JDialog {
             System.out.println("Notifikasi Gagal Urutkan FormMenu : " + e);
         }
     }
+
+
+    private void sembunyikanBiayaTindakan() {
+        boolean sembunyikan = false;
+        
+        String username = akses.getkode().toLowerCase();
+        String nama = TPegawai.getText().toLowerCase();
+        String jbt_ui = Jabatan.getText().toLowerCase();
+        
+        String jbt_db = Sequel.cariIsi("select jbtn from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        String dep_db = Sequel.cariIsi("select departemen from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        String bdg_db = Sequel.cariIsi("select bidang from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        
+        String allInfo = username + " " + nama + " " + jbt_ui + " " + jbt_db + " " + dep_db + " " + bdg_db;
+        
+        if ((allInfo.contains("perawat") || allInfo.contains("bidan") || allInfo.contains("perina") || allInfo.contains("gizi") || 
+            allInfo.contains("dokter") || allInfo.contains("medis") || allInfo.contains("vk") || allInfo.contains("igd") || 
+            allInfo.contains("icu") || allInfo.contains("poli") || allInfo.contains("ranap") || allInfo.contains("kandungan") || 
+            allInfo.contains("kia") || allInfo.contains("ponek") || allInfo.contains("kebidanan")) && !allInfo.contains("admin")) {
+            sembunyikan = true;
+        }
+        
+        if (!sembunyikan) {
+            if (Sequel.cariInteger("select count(kd_dokter) from dokter where kd_dokter='" + akses.getkode() + "'") > 0) {
+                sembunyikan = true;
+            }
+        }
+
+        if (akses.getkode().equals("Admin Utama")) {
+            sembunyikan = false;
+        }
+        
+        if (sembunyikan) {
+            int[] hideTindakan = {4, 5, 6, 7, 8, 9, 10};
+            for(int i : hideTindakan) {
+                try {
+                    tbTindakan.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbTindakan.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbTindakan.getColumnModel().getColumn(i).setWidth(0);
+                    tbTindakan2.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbTindakan2.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbTindakan2.getColumnModel().getColumn(i).setWidth(0);
+                    tbTindakan3.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbTindakan3.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbTindakan3.getColumnModel().getColumn(i).setWidth(0);
+                } catch(Exception e){}
+            }
+            int[] hideDrPrTbl = {9, 11, 12, 13, 14, 15};
+            for(int i : hideDrPrTbl) {
+                try {
+                    tbRawatDr.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbRawatDr.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbRawatDr.getColumnModel().getColumn(i).setWidth(0);
+                    tbRawatPr.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbRawatPr.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbRawatPr.getColumnModel().getColumn(i).setWidth(0);
+                } catch(Exception e){}
+            }
+            int[] hideRawatDrPr = {11, 13, 14, 15, 16, 17, 18};
+            for(int i : hideRawatDrPr) {
+                try {
+                    tbRawatDrPr.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbRawatDrPr.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbRawatDrPr.getColumnModel().getColumn(i).setWidth(0);
+                } catch(Exception e){}
+            }
+        } else {
+            // Restore only natively visible cost columns for non-hidden roles
+            try {
+                tbTindakan.getColumnModel().getColumn(4).setMinWidth(15);
+                tbTindakan.getColumnModel().getColumn(4).setMaxWidth(150);
+                tbTindakan.getColumnModel().getColumn(4).setPreferredWidth(90);
+                
+                tbTindakan2.getColumnModel().getColumn(4).setMinWidth(15);
+                tbTindakan2.getColumnModel().getColumn(4).setMaxWidth(150);
+                tbTindakan2.getColumnModel().getColumn(4).setPreferredWidth(90);
+                
+                tbTindakan3.getColumnModel().getColumn(4).setMinWidth(15);
+                tbTindakan3.getColumnModel().getColumn(4).setMaxWidth(150);
+                tbTindakan3.getColumnModel().getColumn(4).setPreferredWidth(90);
+                
+                tbRawatDr.getColumnModel().getColumn(9).setMinWidth(15);
+                tbRawatDr.getColumnModel().getColumn(9).setMaxWidth(150);
+                tbRawatDr.getColumnModel().getColumn(9).setPreferredWidth(105);
+                
+                tbRawatPr.getColumnModel().getColumn(9).setMinWidth(15);
+                tbRawatPr.getColumnModel().getColumn(9).setMaxWidth(150);
+                tbRawatPr.getColumnModel().getColumn(9).setPreferredWidth(105);
+                
+                tbRawatDrPr.getColumnModel().getColumn(11).setMinWidth(15);
+                tbRawatDrPr.getColumnModel().getColumn(11).setMaxWidth(150);
+                tbRawatDrPr.getColumnModel().getColumn(11).setPreferredWidth(105);
+            } catch(Exception e){}
+        }
+    }
+
+
+
+
+
 
 }

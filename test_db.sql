@@ -1,4 +1,0 @@
-SELECT reg_periksa.no_rawat, penilaian_awal_keperawatan_ralan.tanggal
-FROM reg_periksa 
-INNER JOIN penilaian_awal_keperawatan_ralan ON reg_periksa.no_rawat=penilaian_awal_keperawatan_ralan.no_rawat
-LIMIT 1;

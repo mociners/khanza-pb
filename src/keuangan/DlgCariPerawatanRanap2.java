@@ -3082,7 +3082,58 @@ private void ppPetugasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     public void isCek() {
         BtnTambah.setEnabled(akses.gettarif_ranap());
         TCari.requestFocus();
+        sembunyikanBiayaTindakan();
     }
+
+    private void sembunyikanBiayaTindakan() {
+        boolean sembunyikan = false;
+        
+        String username = akses.getkode().toLowerCase();
+        String nama = Sequel.cariIsi("select nama from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        
+        String jbt_db = Sequel.cariIsi("select jbtn from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        String dep_db = Sequel.cariIsi("select departemen from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        String bdg_db = Sequel.cariIsi("select bidang from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        
+        String allInfo = username + " " + nama + " " + jbt_db + " " + dep_db + " " + bdg_db;
+        
+        if ((allInfo.contains("perawat") || allInfo.contains("bidan") || allInfo.contains("perina") || allInfo.contains("gizi") || 
+            allInfo.contains("dokter") || allInfo.contains("medis") || allInfo.contains("vk") || allInfo.contains("igd") || 
+            allInfo.contains("icu") || allInfo.contains("poli") || allInfo.contains("ranap") || allInfo.contains("kandungan") || 
+            allInfo.contains("kia") || allInfo.contains("ponek") || allInfo.contains("kebidanan")) && !allInfo.contains("admin")) {
+            sembunyikan = true;
+        }
+        
+        if (!sembunyikan) {
+            if (Sequel.cariInteger("select count(kd_dokter) from dokter where kd_dokter='" + akses.getkode() + "'") > 0) {
+                sembunyikan = true;
+            }
+        }
+
+        if (akses.getkode().equals("Admin Utama")) {
+            sembunyikan = false;
+        }
+        
+        if (sembunyikan) {
+            int[] hideCols = {7, 8, 9, 10, 11, 12, 13};
+            for(int i : hideCols) {
+                try {
+                    tbKamar.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbKamar.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbKamar.getColumnModel().getColumn(i).setWidth(0);
+                } catch(Exception e){}
+            }
+        } else {
+            try {
+                tbKamar.getColumnModel().getColumn(7).setMinWidth(15);
+                tbKamar.getColumnModel().getColumn(7).setMaxWidth(150);
+                tbKamar.getColumnModel().getColumn(7).setPreferredWidth(90);
+            } catch(Exception e){}
+        }
+    }
+
+
+
 
     public void setNoRm(String norwt, String pilihtable, Date tanggal, String jam, String menit, String detik, boolean status, String pasien) {
         TNoRw.setText(norwt);

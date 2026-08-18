@@ -14867,8 +14867,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             if (tbKasirRalan.getSelectedRow() != -1) {
                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 RMGenerateKlaim resume = new RMGenerateKlaim(null, true);
-                resume.setNoRm(TNoRMCari.getText(), TPasienCari.getText());
                 resume.setNoRawat(TNoRw.getText());
+                resume.setNoRm(TNoRMCari.getText(), TPasienCari.getText());
                 resume.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
                 resume.setLocationRelativeTo(internalFrame1);
                 resume.setVisible(true);

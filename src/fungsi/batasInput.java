@@ -25,32 +25,14 @@ public class batasInput {
         filter=new PlainDocument(){
             @Override
             public void insertString(int offs, String str, AttributeSet a)throws BadLocationException{
-                StringBuilder buf=new StringBuilder();
-                int c=0;
-                char[] upp=str.toCharArray();
-                for(int i=0;i<upp.length;i++){
-                    upp[i]=Character.toUpperCase(upp[i]);
-                        boolean isOnlyAngka=Character.isDigit(upp[i]);
-                        boolean isOnlyLetter=Character.isLetter(upp[i]);
-                        boolean isOnlySpasi=Character.isSpaceChar(upp[i]);                        
-                        if(isOnlyLetter==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyAngka==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlySpasi==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyLetter==false){
-                            upp[c]=upp[i];
-                            c++;
-                        }
-                }
-                buf.append(upp,0,c);
-                int x=inputan.getText().length();
-                if(x<length){
-                   super.insertString(offs,new String(buf).replaceAll("'","").replaceAll("\\\\", ""), a);
+                if (str == null) return;
+                int x = super.getLength();
+                if (x < length) {
+                    String filtered = str.toUpperCase().replaceAll("'", "").replaceAll("\\\\", "");
+                    if (x + filtered.length() > length) {
+                        filtered = filtered.substring(0, length - x);
+                    }
+                    super.insertString(offs, filtered, a);
                 }
             }
         };return filter;
@@ -60,32 +42,14 @@ public class batasInput {
         filter=new PlainDocument(){
             @Override
             public void insertString(int offs, String str, AttributeSet a)throws BadLocationException{
-                StringBuilder buf=new StringBuilder();
-                int c=0;
-                char[] upp=str.toCharArray();
-                for(int i=0;i<upp.length;i++){
-                    upp[i]=Character.toUpperCase(upp[i]);
-                        boolean isOnlyAngka=Character.isDigit(upp[i]);
-                        boolean isOnlyLetter=Character.isLetter(upp[i]);
-                        boolean isOnlySpasi=Character.isSpaceChar(upp[i]);
-                        if(isOnlyLetter==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyAngka==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlySpasi==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyLetter==false){
-                            upp[c]=upp[i];
-                            c++;
-                        }
-                }
-                buf.append(upp,0,c);
-                int x=inputan.getText().length();
-                if(x<length){
-                   super.insertString(offs,new String(buf).replaceAll("'","").replaceAll("\\\\", ""), a);
+                if (str == null) return;
+                int x = super.getLength();
+                if (x < length) {
+                    String filtered = str.toUpperCase().replaceAll("'", "").replaceAll("\\\\", "");
+                    if (x + filtered.length() > length) {
+                        filtered = filtered.substring(0, length - x);
+                    }
+                    super.insertString(offs, filtered, a);
                 }
             }
         };return filter;
@@ -95,21 +59,21 @@ public class batasInput {
         filter=new PlainDocument(){
             @Override
             public void insertString(int offs, String str, AttributeSet a)throws BadLocationException{
-                StringBuffer buf=new StringBuffer();
-                int c=0;
+                if (str == null) return;
+                StringBuilder buf=new StringBuilder();
                 char[] upp=str.toCharArray();
                 for(int i=0;i<upp.length;i++){
-                    upp[i]=Character.toUpperCase(upp[i]);
-                        boolean isOnlyAngka=Character.isDigit(upp[i]);
-                        if(isOnlyAngka==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }
+                    if(Character.isDigit(upp[i])){
+                        buf.append(upp[i]);
+                    }
                 }
-                buf.append(upp,0,c);
-                int x=inputan.getText().length();
-                if(x<length){
-                    super.insertString(offs,new String(buf), a);
+                int x = super.getLength();
+                if (x < length) {
+                    String filtered = buf.toString();
+                    if (x + filtered.length() > length) {
+                        filtered = filtered.substring(0, length - x);
+                    }
+                    super.insertString(offs, filtered, a);
                 }
             }
         };return filter;
@@ -119,32 +83,14 @@ public class batasInput {
         filter=new PlainDocument(){
             @Override
             public void insertString(int offs, String str, AttributeSet a)throws BadLocationException{
-                StringBuilder buf=new StringBuilder();
-                int c=0;
-                char[] upp=str.toCharArray();
-                for(int i=0;i<upp.length;i++){
-                        boolean isOnlyAngka=Character.isDigit(upp[i]);
-                        boolean isOnlyLetter=Character.isLetter(upp[i]);
-                        boolean isOnlySpasi=Character.isSpaceChar(upp[i]);
-                        
-                        if(isOnlyLetter==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyAngka==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlySpasi==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyLetter==false){
-                            upp[c]=upp[i];
-                            c++;
-                        }
-                }
-                buf.append(upp,0,c);
-                int x=inputan.getText().length();
-                if(x<length){
-                   super.insertString(offs,new String(buf).replaceAll("'","").replaceAll("\\\\", ""), a);
+                if (str == null) return;
+                int x = super.getLength();
+                if (x < length) {
+                    String filtered = str.replaceAll("'", "").replaceAll("\\\\", "");
+                    if (x + filtered.length() > length) {
+                        filtered = filtered.substring(0, length - x);
+                    }
+                    super.insertString(offs, filtered, a);
                 }
             }
         };return filter;
@@ -154,32 +100,14 @@ public class batasInput {
         filter=new PlainDocument(){
             @Override
             public void insertString(int offs, String str, AttributeSet a)throws BadLocationException{
-                StringBuilder buf=new StringBuilder();
-                int c=0;
-                char[] upp=str.toCharArray();
-                for(int i=0;i<upp.length;i++){
-                        boolean isOnlyAngka=Character.isDigit(upp[i]);
-                        boolean isOnlyLetter=Character.isLetter(upp[i]);
-                        boolean isOnlySpasi=Character.isSpaceChar(upp[i]);
-                        
-                        if(isOnlyLetter==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyAngka==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlySpasi==true){
-                            upp[c]=upp[i];
-                            c++;
-                        }else if(isOnlyLetter==false){
-                            upp[c]=upp[i];
-                            c++;
-                        }
-                }
-                buf.append(upp,0,c);
-                int x=inputan.getText().length();
-                if(x<length){
-                   super.insertString(offs,new String(buf).replaceAll("'","").replaceAll("\\\\", ""), a);
+                if (str == null) return;
+                int x = super.getLength();
+                if (x < length) {
+                    String filtered = str.replaceAll("'", "").replaceAll("\\\\", "");
+                    if (x + filtered.length() > length) {
+                        filtered = filtered.substring(0, length - x);
+                    }
+                    super.insertString(offs, filtered, a);
                 }
             }
         };return filter;

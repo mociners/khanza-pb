@@ -49,7 +49,8 @@
     <entry key="USERKEYAPIBPJS">Sn6ejyW16Hky3yu/IIUG++92mz4W38EFIq4ji6Sm0eH7yLZMrfiTGSg8M2s3DL44</entry>
     <entry key="DIAGNOSARUJUKANMASUKAPIBPJS">yes</entry>
     
-    <entry key="JADIKANBOOKINGSURATKONTROLAPIBPJS">no</entry>
+    <entry key="JADIKANBOOKINGSURATKONTROLAPIBPJS">yes</entry>
+    <entry key="JADIKANBOOKINGSURATKONTROL">yes</entry>
     <entry key="URLAPIAPLICARE">https://new-api.bpjs-kesehatan.go.id/aplicaresws</entry>
     <entry key="SECRETKEYAPIAPLICARE">Ji7FuL79DBwEtcisHB9oJA==</entry>
     <entry key="CONSIDAPIAPLICARE">emDDB2wn1tda/6mF/dvPsA==</entry>

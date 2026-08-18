@@ -11613,6 +11613,9 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
                                         "<tr><td valign='top' width='30%'>Lokalis</td><td valign='top'>: "
                                         + rs2.getString("ket_lokalis").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")
                                         + "</td></tr>" +
+                                        (Sequel.cariIsi("select url_image from asesmen_medis_igd_image_marking where no_rawat='" + norawat + "'").equals("") ? "" : 
+                                        "<tr><td valign='top' width='30%'>Gambar Lokalis</td><td valign='top'>:<br>"
+                                        + "<img src='http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/" + Sequel.cariIsi("select url_image from asesmen_medis_igd_image_marking where no_rawat='" + norawat + "'") + "' width='300' height='300'/></td></tr>") +
 
                                         "<tr><td valign='top' colspan='2'><b>IV. PEMERIKSAAN PENUNJANG</b></td></tr>" +
                                         "<tr><td valign='top' width='30%'>EKG</td><td valign='top'>: "
@@ -14468,7 +14471,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
                                             + "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'>"
                                             + "<tr>"
                                             + "<td width='100%' border='0' align='center'><img alt='Gambar Lokalis' src='"
-                                            + (getClass().getResource("/picture/semua.png"))
+                                            + (Sequel.cariIsi("select url_image from asesmen_medis_ranap_dewasa_image_marking where no_rawat='" + norawat + "'").equals("") ? getClass().getResource("/picture/semua.png") : "http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB() + "/imagefreehand/" + Sequel.cariIsi("select url_image from asesmen_medis_ranap_dewasa_image_marking where no_rawat='" + norawat + "'"))
                                             + "' width='100%' height='400'/></td>"
                                             + "</tr>"
                                             + "<tr>"

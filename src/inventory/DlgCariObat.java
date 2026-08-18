@@ -1849,6 +1849,9 @@ public final class DlgCariObat extends javax.swing.JDialog {
                     sukses = true;
                     ttlhpp = 0;
                     ttljual = 0;
+                    String tgl = Valid.SetTgl(DTPTgl.getSelectedItem() + "");
+                    String jam = cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem();
+
                     for (i = 0; i < tbObat.getRowCount(); i++) {
                         if (Valid.SetAngka(tbObat.getValueAt(i, 1).toString()) > 0) {
                             if (tbObat.getValueAt(i, 0).toString().equals("true")) {
@@ -1860,9 +1863,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                     if (carikapasitas.next()) {
                                         if (Sequel.menyimpantf2("detail_pemberian_obat", "?,?,?,?,?,?,?,?,?,?,?,?,?,?",
                                                 "data", 14, new String[] {
-                                                        Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                                + cmbDtk.getSelectedItem(),
+                                                        tgl,
+                                                        jam,
                                                         TNoRw.getText(), tbObat.getValueAt(i, 2).toString(),
                                                         tbObat.getValueAt(i, 13).toString(),
                                                         tbObat.getValueAt(i, 6).toString(),
@@ -1895,9 +1897,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                                                     / carikapasitas.getDouble(1)));
                                             if (!tbObat.getValueAt(i, 11).toString().equals("")) {
                                                 Sequel.menyimpan("aturan_pakai", "?,?,?,?,?", 5, new String[] {
-                                                        Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                                + cmbDtk.getSelectedItem(),
+                                                        tgl,
+                                                        jam,
                                                         TNoRw.getText(), tbObat.getValueAt(i, 2).toString(),
                                                         tbObat.getValueAt(i, 11).toString()
                                                 });
@@ -1985,9 +1986,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                                         "" + (Double.parseDouble(tbObat.getValueAt(i, 1).toString())
                                                                 / carikapasitas.getDouble(1)),
                                                         "0", "", TNoRw.getText(),
-                                                        Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                                + cmbDtk.getSelectedItem(),
+                                                        tgl,
+                                                        jam,
                                                         tbObat.getValueAt(i, 2).toString(),
                                                         tbObat.getValueAt(i, 16).toString(),
                                                         tbObat.getValueAt(i, 17).toString());
@@ -1998,9 +1998,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                     } else {
                                         if (Sequel.menyimpantf2("detail_pemberian_obat", "?,?,?,?,?,?,?,?,?,?,?,?,?,?",
                                                 "data", 14, new String[] {
-                                                        Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                                + cmbDtk.getSelectedItem(),
+                                                        tgl,
+                                                        jam,
                                                         TNoRw.getText(), tbObat.getValueAt(i, 2).toString(),
                                                         tbObat.getValueAt(i, 13).toString(),
                                                         tbObat.getValueAt(i, 6).toString(),
@@ -2029,9 +2028,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                                             Double.parseDouble(tbObat.getValueAt(i, 1).toString()));
                                             if (!tbObat.getValueAt(i, 11).toString().equals("")) {
                                                 Sequel.menyimpan("aturan_pakai", "?,?,?,?,?", 5, new String[] {
-                                                        Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                                + cmbDtk.getSelectedItem(),
+                                                        tgl,
+                                                        jam,
                                                         TNoRw.getText(), tbObat.getValueAt(i, 2).toString(),
                                                         tbObat.getValueAt(i, 11).toString()
                                                 });
@@ -2113,9 +2111,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                                         signa1, signa2,
                                                         "" + Double.parseDouble(tbObat.getValueAt(i, 1).toString()),
                                                         "0", "", TNoRw.getText(),
-                                                        Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                                + cmbDtk.getSelectedItem(),
+                                                        tgl,
+                                                        jam,
                                                         tbObat.getValueAt(i, 2).toString(),
                                                         tbObat.getValueAt(i, 16).toString(),
                                                         tbObat.getValueAt(i, 17).toString());
@@ -2135,11 +2132,10 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                     }
                                 }
                             } else {
-                                if (Sequel.menyimpantf2("detail_pemberian_obat", "?,?,?,?,?,?,?,?,?,?,?,?,?,?", "data",
+                                        if (Sequel.menyimpantf2("detail_pemberian_obat", "?,?,?,?,?,?,?,?,?,?,?,?,?,?", "data",
                                         14, new String[] {
-                                                Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                        + cmbDtk.getSelectedItem(),
+                                                tgl,
+                                                jam,
                                                 TNoRw.getText(), tbObat.getValueAt(i, 2).toString(),
                                                 tbObat.getValueAt(i, 13).toString(),
                                                 tbObat.getValueAt(i, 6).toString(),
@@ -2163,9 +2159,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                                     Double.parseDouble(tbObat.getValueAt(i, 1).toString()));
                                     if (!tbObat.getValueAt(i, 11).toString().equals("")) {
                                         Sequel.menyimpan("aturan_pakai", "?,?,?,?,?", 5, new String[] {
-                                                Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                        + cmbDtk.getSelectedItem(),
+                                                tgl,
+                                                jam,
                                                 TNoRw.getText(), tbObat.getValueAt(i, 2).toString(),
                                                 tbObat.getValueAt(i, 11).toString()
                                         });
@@ -2238,9 +2233,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                                 signa1, signa2,
                                                 "" + Double.parseDouble(tbObat.getValueAt(i, 1).toString()), "0", "",
                                                 TNoRw.getText(),
-                                                Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                        + cmbDtk.getSelectedItem(),
+                                                tgl,
+                                                jam,
                                                 tbObat.getValueAt(i, 2).toString(), tbObat.getValueAt(i, 16).toString(),
                                                 tbObat.getValueAt(i, 17).toString());
                                     }
@@ -2255,9 +2249,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                         if (Valid.SetAngka(tbObatRacikan.getValueAt(i, 4).toString()) > 0) {
                             if (Sequel.menyimpantf2("obat_racikan", "?,?,?,?,?,?,?,?,?", "Obat Racikan", 9,
                                     new String[] {
-                                            Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                            cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                    + cmbDtk.getSelectedItem(),
+                                            tgl,
+                                            jam,
                                             TNoRw.getText(),
                                             tbObatRacikan.getValueAt(i, 0).toString(),
                                             tbObatRacikan.getValueAt(i, 1).toString(),
@@ -2274,19 +2267,17 @@ public final class DlgCariObat extends javax.swing.JDialog {
                     for (i = 0; i < tbDetailObatRacikan.getRowCount(); i++) {
                         if (Valid.SetAngka(tbDetailObatRacikan.getValueAt(i, 10).toString()) > 0) {
                             if (Sequel.menyimpantf2("detail_obat_racikan", "?,?,?,?,?", "Data", 5, new String[] {
-                                    Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                    cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                            + cmbDtk.getSelectedItem(),
+                                    tgl,
+                                    jam,
                                     TNoRw.getText(),
                                     tbDetailObatRacikan.getValueAt(i, 0).toString(),
                                     tbDetailObatRacikan.getValueAt(i, 1).toString()
                             }) == true) {
-                                if (Sequel
+                                    if (Sequel
                                         .menyimpantf2("detail_pemberian_obat", "?,?,?,?,?,?,?,?,?,?,?,?,?,?", "data",
                                                 14, new String[] {
-                                                        Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                        cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                                + cmbDtk.getSelectedItem(),
+                                                        tgl,
+                                                        jam,
                                                         TNoRw.getText(),
                                                         tbDetailObatRacikan.getValueAt(i, 1).toString(),
                                                         tbDetailObatRacikan.getValueAt(i, 5).toString(),
@@ -2368,9 +2359,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                     if (aktifpcare.equals("yes")) {
                                         arrSplit = Sequel
                                                 .cariIsi("select aturan_pakai from obat_racikan where tgl_perawatan='"
-                                                        + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "' and " +
-                                                        "jam='" + cmbJam.getSelectedItem() + ":"
-                                                        + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem()
+                                                        + tgl + "' and " +
+                                                        "jam='" + jam
                                                         + "' and " +
                                                         "no_rawat='" + TNoRw.getText() + "' and no_racik='"
                                                         + tbDetailObatRacikan.getValueAt(i, 0).toString() + "'")
@@ -2400,9 +2390,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
                                                 "" + Double
                                                         .parseDouble(tbDetailObatRacikan.getValueAt(i, 10).toString()),
                                                 "0", "", TNoRw.getText(),
-                                                Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
-                                                cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                                        + cmbDtk.getSelectedItem(),
+                                                tgl,
+                                                jam,
                                                 tbDetailObatRacikan.getValueAt(i, 1).toString(),
                                                 tbDetailObatRacikan.getValueAt(i, 16).toString(),
                                                 tbObat.getValueAt(i, 17).toString());
@@ -2418,9 +2407,8 @@ public final class DlgCariObat extends javax.swing.JDialog {
 
                     if (!noresep.equals("")) {
                         Sequel.mengedit("resep_obat", "no_resep='" + noresep + "'",
-                                "tgl_perawatan='" + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "',jam='"
-                                        + cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":"
-                                        + cmbDtk.getSelectedItem() + "'");
+                                "tgl_perawatan='" + tgl + "',jam='"
+                                        + jam + "'");
                     }
 
                     if (sukses == true) {

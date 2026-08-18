@@ -1,5 +1,6 @@
 package inventory;
 
+import fungsi.akses;
 import fungsi.koneksiDB;
 import fungsi.sekuel;
 import fungsi.validasi;
@@ -34,6 +35,24 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
         tbTemplate.getColumnModel().getColumn(0).setPreferredWidth(150);
         tbTemplate.getColumnModel().getColumn(1).setPreferredWidth(300);
         tbTemplate.getColumnModel().getColumn(2).setPreferredWidth(200);
+        
+        dokter.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                if(dokter.getTable().getSelectedRow()!= -1){
+                    CrDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),1).toString());
+                }
+                CrDokter.requestFocus();
+                tampil();
+            }
+        });
+        
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                InitTemplateResep();
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -44,6 +63,9 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
         Scroll = new widget.ScrollPane();
         tbTemplate = new widget.Table();
         panelisi3 = new widget.panelisi();
+        jLabelDokter = new widget.Label();
+        CrDokter = new widget.TextBox();
+        BtnSeekDokter = new widget.Button();
         label9 = new widget.Label();
         TCari = new widget.TextBox();
         BtnCari = new widget.Button();
@@ -81,13 +103,51 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
         panelisi3.setPreferredSize(new java.awt.Dimension(100, 43));
         panelisi3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 4, 9));
 
+        jLabelDokter.setText("Dokter :");
+        jLabelDokter.setName("jLabelDokter"); // NOI18N
+        jLabelDokter.setPreferredSize(new java.awt.Dimension(50, 23));
+        panelisi3.add(jLabelDokter);
+
+        CrDokter.setEditable(false);
+        CrDokter.setName("CrDokter"); // NOI18N
+        CrDokter.setPreferredSize(new java.awt.Dimension(220, 23));
+        CrDokter.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
+                    BtnSeekDokter.requestFocus();
+                }else if(evt.getKeyCode()==KeyEvent.VK_PAGE_UP){
+                    BtnKeluar.requestFocus();
+                }else if(evt.getKeyCode()==KeyEvent.VK_UP){
+                    tbTemplate.requestFocus();
+                }else if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+                    tampil();
+                }else if(evt.getKeyCode()==KeyEvent.VK_SPACE || evt.getKeyCode()==KeyEvent.VK_BACK_SPACE || evt.getKeyCode()==KeyEvent.VK_DELETE){
+                    CrDokter.setText("");
+                    tampil();
+                }
+            }
+        });
+        panelisi3.add(CrDokter);
+
+        BtnSeekDokter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        BtnSeekDokter.setMnemonic('4');
+        BtnSeekDokter.setToolTipText("Alt+4");
+        BtnSeekDokter.setName("BtnSeekDokter"); // NOI18N
+        BtnSeekDokter.setPreferredSize(new java.awt.Dimension(28, 23));
+        BtnSeekDokter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSeekDokterActionPerformed(evt);
+            }
+        });
+        panelisi3.add(BtnSeekDokter);
+
         label9.setText("Key Word :");
         label9.setName("label9"); // NOI18N
         label9.setPreferredSize(new java.awt.Dimension(70, 23));
         panelisi3.add(label9);
 
         TCari.setName("TCari"); // NOI18N
-        TCari.setPreferredSize(new java.awt.Dimension(400, 23));
+        TCari.setPreferredSize(new java.awt.Dimension(200, 23));
         TCari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TCariKeyPressed(evt);
@@ -143,6 +203,14 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_BtnKeluarActionPerformed
 
+    private void BtnSeekDokterActionPerformed(java.awt.event.ActionEvent evt) {
+        dokter.isCek();
+        dokter.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+        dokter.setLocationRelativeTo(internalFrame1);
+        dokter.setAlwaysOnTop(false);
+        dokter.setVisible(true);
+    }
+
     private void TCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             BtnCariActionPerformed(null);
@@ -173,6 +241,7 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
     private void tbTemplateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbTemplateKeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
             if(tbTemplate.getSelectedRow()!=-1){
+                evt.consume();
                 dispose();
             }
         }
@@ -182,13 +251,17 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
     private widget.Button BtnAll;
     private widget.Button BtnCari;
     private widget.Button BtnKeluar;
+    private widget.Button BtnSeekDokter;
+    private widget.TextBox CrDokter;
     private widget.ScrollPane Scroll;
     private widget.TextBox TCari;
     private widget.InternalFrame internalFrame1;
+    private widget.Label jLabelDokter;
     private widget.Label label9;
     private widget.panelisi panelisi3;
     private widget.Table tbTemplate;
     // End of variables declaration//GEN-END:variables
+    private kepegawaian.DlgCariDokter dokter = new kepegawaian.DlgCariDokter(null, false);
 
     public void tampil() {
         Valid.tabelKosong(tabMode);
@@ -196,16 +269,10 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
             String sql = "SELECT t.kd_template, t.nm_template, d.nm_dokter " +
                 "FROM template_resep_dokter t " +
                 "INNER JOIN dokter d ON t.kd_dokter = d.kd_dokter " +
-                "WHERE t.kd_dokter LIKE ? AND (t.nm_template LIKE ? OR d.nm_dokter LIKE ?) ORDER BY t.nm_template";
-            if (kodedokter.equals("D034")) {
-                sql = "SELECT t.kd_template, t.nm_template, d.nm_dokter " +
-                "FROM template_resep_dokter t " +
-                "INNER JOIN dokter d ON t.kd_dokter = d.kd_dokter " +
-                "WHERE (t.kd_dokter LIKE ? OR t.kd_dokter='D065') AND (t.nm_template LIKE ? OR d.nm_dokter LIKE ?) ORDER BY t.nm_template";
-            }
+                "WHERE d.nm_dokter LIKE ? AND (t.nm_template LIKE ? OR d.nm_dokter LIKE ?) ORDER BY t.nm_template";
             ps = koneksi.prepareStatement(sql);
             try {
-                ps.setString(1, "%" + kodedokter + "%");
+                ps.setString(1, "%" + CrDokter.getText().trim() + "%");
                 ps.setString(2, "%" + TCari.getText().trim() + "%");
                 ps.setString(3, "%" + TCari.getText().trim() + "%");
                 rs = ps.executeQuery();
@@ -233,5 +300,25 @@ public class DlgCariTemplateResep extends javax.swing.JDialog {
     
     public void setDokter(String kd_dokter) {
         this.kodedokter = kd_dokter;
+    }
+    
+    public void InitTemplateResep() {
+        String kddokter = akses.getkode();
+        if (kddokter.equals("Admin Utama")) {
+            CrDokter.setText("");
+        } else {
+            String namaDokter = Sequel.cariIsi("select nm_dokter from dokter where kd_dokter=?", kddokter);
+            if (!namaDokter.equals("")) {
+                String spesialis = Sequel.cariIsi("select spesialis.nm_sps from dokter inner join spesialis on dokter.kd_sps=spesialis.kd_sps where dokter.kd_dokter=?", kddokter);
+                if (spesialis != null && (spesialis.toLowerCase().contains("umum") || spesialis.toLowerCase().contains("gigi") || spesialis.equals("-") || spesialis.equals(""))) {
+                    CrDokter.setText("");
+                } else {
+                    CrDokter.setText(namaDokter);
+                }
+            } else {
+                CrDokter.setText("");
+            }
+        }
+        tampil();
     }
 }

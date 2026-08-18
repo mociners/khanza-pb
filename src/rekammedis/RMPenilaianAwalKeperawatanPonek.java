@@ -522,7 +522,7 @@ public final class RMPenilaianAwalKeperawatanPonek extends javax.swing.JDialog {
         tbRencanaDetail.setDefaultRenderer(Object.class, new WarnaTable());
 
         TNoRw.setDocument(new batasInput((byte) 17).getKata(TNoRw));
-        KeluhanUtama.setDocument(new batasInput((int) 150).getKata(KeluhanUtama));
+        KeluhanUtama.setDocument(new batasInput((int) 500).getKata(KeluhanUtama));
         RPD.setDocument(new batasInput((int) 100).getKata(RPD));
         RPO.setDocument(new batasInput((int) 100).getKata(RPO));
         Gravida.setDocument(new batasInput((byte) 20).getKata(Gravida));
@@ -2385,13 +2385,13 @@ public final class RMPenilaianAwalKeperawatanPonek extends javax.swing.JDialog {
         ObjLeopold1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "Kepala janin teraba di bagian fundus, keras, bundar dan melenting", "Bokong janin teraba di bagian fundus, lunak, kurang bundar dan kurang melenting", "Fundus kosong, posisi janin melintang pada rahim" }));
         lblLeopold2 = new widget.Label();
         ObjLeopold2 = new widget.ComboBox();
-        ObjLeopold2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "Menentukan dimana letak punggung ataupun kaki janin pada kedua sisi perut ibu bagian punggung akan teraba jelas rata cembung kaku/tidak dapat digerakkan bagian-bagian kecil (tangan dan kaki) akan teraba kecil, bentuk/posisi tidak jelas dan menonjol, kemungkinan teraba gerakan kaki janin secara aktif maupun pasif" }));
+        ObjLeopold2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "punggung kiri", "Punggung kanan", "Kepala di kanan, kaki di kiri", "Kepala di kiri, kaki di kanan" }));
         lblLeopold3 = new widget.Label();
         ObjLeopold3 = new widget.ComboBox();
-        ObjLeopold3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "Menentukan bagian kepala sudah masuk PAP atau belum", "Menentukan bagian bokong sudah masuk PAP atau belum" }));
+        ObjLeopold3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "bagian bawah janin kepala sudah mantap", "bagian bawah kepala masih bisa digoyang", "bagian bawah bokong sudah mantap", "bagian bawah bokong masih bisa digoyang" }));
         lblLeopold4 = new widget.Label();
         ObjLeopold4 = new widget.ComboBox();
-        ObjLeopold4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "Bagian kepala sudah masuk PAP", "Bagian kepala belum masuk PAP", "Bagian bokong sudah masuk PAP", "Bagian bokong belum masuk PAP" }));
+        ObjLeopold4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "konvergen", "divergen" }));
         lblTBBJ = new widget.Label();
         ObjTBBJ = new widget.TextBox();
         lblHis = new widget.Label();
@@ -3096,7 +3096,6 @@ public final class RMPenilaianAwalKeperawatanPonek extends javax.swing.JDialog {
             return;
         }
         if (tbObat.getSelectedRow() > -1) {
-            if (akses.getkode().equals("Admin Utama") || KdPetugas.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(), 91).toString())) {
                 StringBuilder riwKandungan = new StringBuilder();
                 for (int j = 0; j < tbRiwayatKehamilan.getRowCount(); j++) {
                     riwKandungan.append((tbRiwayatKehamilan.getValueAt(j, 0)==null?"":tbRiwayatKehamilan.getValueAt(j, 0).toString())).append("|")
@@ -3145,9 +3144,6 @@ public final class RMPenilaianAwalKeperawatanPonek extends javax.swing.JDialog {
                     tampil();
                     emptTeks();
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Hanya bisa diganti oleh petugas yang bersangkutan..!!");
-            }
         } else {
             JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih data terlebih dahulu..!!");
         }

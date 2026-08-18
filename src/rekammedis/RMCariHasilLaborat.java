@@ -40,11 +40,35 @@ public final class RMCariHasilLaborat extends javax.swing.JDialog {
     /** Creates new form DlgPenyakit
      * @param parent
      * @param modal */
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JMenuItem MnPilihSemua;
+
     public RMCariHasilLaborat(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocation(10,2);
         setSize(656,250);
+        
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        MnPilihSemua = new javax.swing.JMenuItem();
+        
+        jPopupMenu1.setName("jPopupMenu1"); // NOI18N
+        MnPilihSemua.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPilihSemua.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPilihSemua.setText("Pilih Semua");
+        MnPilihSemua.setName("MnPilihSemua"); // NOI18N
+        MnPilihSemua.setPreferredSize(new java.awt.Dimension(130, 26));
+        MnPilihSemua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                for(int i=0;i<tbKamar.getRowCount();i++){
+                    tbKamar.setValueAt(true,i,0);
+                }
+            }
+        });
+        jPopupMenu1.add(MnPilihSemua);
+        tbKamar.setComponentPopupMenu(jPopupMenu1);
+        Scroll.setComponentPopupMenu(jPopupMenu1);
+        Scroll.getViewport().setComponentPopupMenu(jPopupMenu1);
 
         Object[] row={"P","Tanggal","Jam","Hasil Pemeriksaan"};
         tabMode=new DefaultTableModel(null,row){

@@ -340,6 +340,8 @@ public class DlgTTDDokter extends JDialog {
         try {
             java.sql.Connection conn = koneksiDB.condb();
 
+            boolean isRanap = false;
+            
             // Ambil tgl_perawatan dan jam_rawat dari pemeriksaan_ralan (untuk FK
             // constraint)
             String getSql = "SELECT tgl_perawatan, jam_rawat, nip FROM pemeriksaan_ralan WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1";
@@ -348,12 +350,24 @@ public class DlgTTDDokter extends JDialog {
             java.sql.ResultSet getRs = getPs.executeQuery();
 
             if (!getRs.next()) {
-                System.out.println("No pemeriksaan_ralan record found for no_rawat: " + noRawat);
                 getRs.close();
                 getPs.close();
-                JOptionPane.showMessageDialog(this,
-                        "Tidak ada data pemeriksaan untuk no rawat ini. Silakan isi SOAP terlebih dahulu.");
-                return false;
+                
+                // Coba cek di pemeriksaan_ranap
+                getSql = "SELECT tgl_perawatan, jam_rawat, nip FROM pemeriksaan_ranap WHERE no_rawat=? ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1";
+                getPs = conn.prepareStatement(getSql);
+                getPs.setString(1, noRawat);
+                getRs = getPs.executeQuery();
+                
+                if (!getRs.next()) {
+                    System.out.println("No pemeriksaan_ralan or pemeriksaan_ranap record found for no_rawat: " + noRawat);
+                    getRs.close();
+                    getPs.close();
+                    JOptionPane.showMessageDialog(this,
+                            "Tidak ada data pemeriksaan untuk no rawat ini. Silakan isi SOAP terlebih dahulu.");
+                    return false;
+                }
+                isRanap = true;
             }
 
             String tglPerawatan = getRs.getString("tgl_perawatan");
@@ -362,8 +376,10 @@ public class DlgTTDDokter extends JDialog {
             getRs.close();
             getPs.close();
 
+            String targetTable = isRanap ? "ttd_dokter_ranap" : "ttd_dokter_ralan";
+
             // Cek apakah sudah ada TTD untuk noRawat + tgl + jam ini
-            String cekSql = "SELECT COUNT(*) FROM ttd_dokter_ralan WHERE no_rawat=? AND tgl_perawatan=? AND jam_rawat=?";
+            String cekSql = "SELECT COUNT(*) FROM " + targetTable + " WHERE no_rawat=? AND tgl_perawatan=? AND jam_rawat=?";
             java.sql.PreparedStatement cekPs = conn.prepareStatement(cekSql);
             cekPs.setString(1, noRawat);
             cekPs.setString(2, tglPerawatan);
@@ -379,7 +395,7 @@ public class DlgTTDDokter extends JDialog {
 
             if (count > 0) {
                 // Update existing record
-                sql = "UPDATE ttd_dokter_ralan SET file_ttd=? WHERE no_rawat=? AND tgl_perawatan=? AND jam_rawat=?";
+                sql = "UPDATE " + targetTable + " SET file_ttd=? WHERE no_rawat=? AND tgl_perawatan=? AND jam_rawat=?";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, fileName);
                 ps.setString(2, noRawat);
@@ -387,7 +403,7 @@ public class DlgTTDDokter extends JDialog {
                 ps.setString(4, jamRawat);
             } else {
                 // Insert new record dengan FK yang valid
-                sql = "INSERT INTO ttd_dokter_ralan (no_rawat, tgl_perawatan, jam_rawat, kd_dokter, file_ttd) VALUES (?, ?, ?, ?, ?)";
+                sql = "INSERT INTO " + targetTable + " (no_rawat, tgl_perawatan, jam_rawat, kd_dokter, file_ttd) VALUES (?, ?, ?, ?, ?)";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, noRawat);
                 ps.setString(2, tglPerawatan);

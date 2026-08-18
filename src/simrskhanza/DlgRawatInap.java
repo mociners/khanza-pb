@@ -112,7 +112,7 @@ import rekammedis.RMPemantauanEWSNeonatus;
 import rekammedis.RMPenatalaksanaanKegawatdaruratanEksravasasi;
 import rekammedis.RMPengkajianRestrain;
 import rekammedis.RMPenilaianAwalKeperawatanKebidananRanap;
-import rekammedis.RMPenilaianAwalKeperawatanRanap;
+import rekammedis.RMPenilaianAwalKeperawatanRanapDewasa;
 import rekammedis.RMPenilaianAwalMedisHemodialisa;
 import rekammedis.RMPenilaianAwalMedisRanapDewasa;
 import rekammedis.RMPenilaianAwalMedisRanapKandungan;
@@ -140,7 +140,7 @@ import rekammedis.RMPenilaianTambahanGeriatri;
 import rekammedis.RMPenilaianTambahanMelarikanDiri;
 import rekammedis.RMPenilaianTambahanPerilakuKekerasan;
 import rekammedis.RMPenilaianUlangNyeri;
-import rekammedis.RMPerencanaanPemulangan;
+import rekammedis.RMDischargePlanning;
 import rekammedis.RMRekonsiliasiObat;
 import rekammedis.RMRiwayatOperasi;
 import rekammedis.RMRiwayatPengobatan;
@@ -201,6 +201,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
     public DlgRawatInap(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        initRanapNew();
         
         TRecommendation.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
@@ -7336,13 +7337,13 @@ public final class DlgRawatInap extends javax.swing.JDialog {
                             if (akses.getkode().equals("Admin Utama")) {
                                 if (Sequel.menyimpantf("pemeriksaan_ranap", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 20, new String[]{
                                     TNoRw.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""), cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(),
-                                    TSuhu.getText(), TTensi.getText(), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(),
+                                    TSuhu.getText(), (TTensi.getText().trim().equals("") ? "" : TTensi.getText() + (TTensi2.getText().trim().equals("") ? "" : "/" + TTensi2.getText())), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(),
                                     cmbKesadaran.getSelectedItem().toString(), TKeluhan.getText(), TPemeriksaan.getText(), TAlergi.getText(),
                                     TPenilaian.getText(), TindakLanjut.getText(), TInstruksi.getText(), TEvaluasi.getText(), KdPeg.getText()
                                 }) == true) {
                                     tabModePemeriksaan.addRow(new Object[]{
                                         false, TNoRw.getText(), TNoRM.getText(), TPasien.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""), cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(),
-                                        TSuhu.getText(), TTensi.getText(), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(), cmbKesadaran.getSelectedItem().toString(),
+                                        TSuhu.getText(), (TTensi.getText().trim().equals("") ? "" : TTensi.getText() + (TTensi2.getText().trim().equals("") ? "" : "/" + TTensi2.getText())), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(), cmbKesadaran.getSelectedItem().toString(),
                                         TKeluhan.getText(), TPemeriksaan.getText(), TAlergi.getText(), TPenilaian.getText(), TindakLanjut.getText(), TInstruksi.getText(), TEvaluasi.getText(), KdPeg.getText(), TPegawai.getText(),
                                         Jabatan.getText()
                                     });
@@ -7357,13 +7358,13 @@ public final class DlgRawatInap extends javax.swing.JDialog {
                                 if (akses.getkode().equals(KdPeg.getText())) {
                                     if (Sequel.menyimpantf("pemeriksaan_ranap", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 20, new String[]{
                                         TNoRw.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""), cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(),
-                                        TSuhu.getText(), TTensi.getText(), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(),
+                                        TSuhu.getText(), (TTensi.getText().trim().equals("") ? "" : TTensi.getText() + (TTensi2.getText().trim().equals("") ? "" : "/" + TTensi2.getText())), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(),
                                         cmbKesadaran.getSelectedItem().toString(), TKeluhan.getText(), TPemeriksaan.getText(), TAlergi.getText(),
                                         TPenilaian.getText(), TindakLanjut.getText(), TInstruksi.getText(), TEvaluasi.getText(), KdPeg.getText()
                                     }) == true) {
                                         tabModePemeriksaan.addRow(new Object[]{
                                             false, TNoRw.getText(), TNoRM.getText(), TPasien.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""), cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(),
-                                            TSuhu.getText(), TTensi.getText(), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(), cmbKesadaran.getSelectedItem().toString(),
+                                            TSuhu.getText(), (TTensi.getText().trim().equals("") ? "" : TTensi.getText() + (TTensi2.getText().trim().equals("") ? "" : "/" + TTensi2.getText())), TNadi.getText(), TRespirasi.getText(), TTinggi.getText(), TBerat.getText(), SpO2.getText(), TGCS.getText(), cmbKesadaran.getSelectedItem().toString(),
                                             TKeluhan.getText(), TPemeriksaan.getText(), TAlergi.getText(), TPenilaian.getText(), TindakLanjut.getText(), TInstruksi.getText(), TEvaluasi.getText(), KdPeg.getText(), TPegawai.getText(),
                                             Jabatan.getText()
                                         });
@@ -7547,7 +7548,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
                             if (akses.getkode().equals("Admin Utama")) {
                                 Sequel.menyimpan("catatan_adime_gizi", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 20, new String[]{
                                     TNoRw.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""),cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(),
-                                    TSuhu1.getText(), TTensi1.getText(), TNadi1.getText(), TRespirasi1.getText(), TTinggi1.getText(), TBerat1.getText(), SpO3.getText(), TGCS1.getText(),
+                                    TSuhu1.getText(), (TTensi1.getText().trim().equals("") ? "" : TTensi1.getText() + (TTensi1_2.getText().trim().equals("") ? "" : "/" + TTensi1_2.getText())), TNadi1.getText(), TRespirasi1.getText(), TTinggi1.getText(), TBerat1.getText(), SpO3.getText(), TGCS1.getText(),
                                     cmbKesadaran1.getSelectedItem().toString(), Asesmen.getText(), Diagnosis.getText(), TAlergi1.getText(),
                                     Intervensi.getText(), Monitoring.getText(), Evaluasi.getText(), Instruksi.getText(), KdPetugas.getText()
                                 });
@@ -7557,7 +7558,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
                                 if (akses.getkode().equals(KdPeg.getText())) {
                                     Sequel.menyimpan("catatan_adime_gizi", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 20, new String[]{
                                         TNoRw.getText(), Valid.SetTgl(DTPTgl.getSelectedItem() + ""),cmbJam.getSelectedItem() + ":" + cmbMnt.getSelectedItem() + ":" + cmbDtk.getSelectedItem(),
-                                        TSuhu1.getText(), TTensi1.getText(), TNadi1.getText(), TRespirasi1.getText(), TTinggi1.getText(), TBerat1.getText(), SpO3.getText(), TGCS1.getText(),
+                                        TSuhu1.getText(), (TTensi1.getText().trim().equals("") ? "" : TTensi1.getText() + (TTensi1_2.getText().trim().equals("") ? "" : "/" + TTensi1_2.getText())), TNadi1.getText(), TRespirasi1.getText(), TTinggi1.getText(), TBerat1.getText(), SpO3.getText(), TGCS1.getText(),
                                         cmbKesadaran1.getSelectedItem().toString(), Asesmen.getText(), Diagnosis.getText(), TAlergi1.getText(),
                                         Intervensi.getText(), Monitoring.getText(), Evaluasi.getText(), Instruksi.getText(), KdPetugas.getText()
                                     });
@@ -7613,6 +7614,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         TKdPrwDokterPetugas.setText("");
         TNmPrwDokterPetugas.setText("");
         TTensi.setText("");
+        TTensi2.setText("");
         TKeluhan.setText("");
         TPemeriksaan.setText("");
         TPenilaian.setText("");
@@ -8869,7 +8871,7 @@ private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                             if (Sequel.mengedittf("pemeriksaan_ranap", "no_rawat='" + tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 1)
                                     + "' and tgl_perawatan='" + tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 4)
                                     + "' and jam_rawat='" + tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 5) + "'",
-                                    "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu.getText() + "',tensi='" + TTensi.getText() + "',"
+                                    "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu.getText() + "',tensi='" + (TTensi.getText().trim().equals("") ? "" : TTensi.getText() + (TTensi2.getText().trim().equals("") ? "" : "/" + TTensi2.getText())) + "',"
                                     + "keluhan='" + TKeluhan.getText() + "',pemeriksaan='" + TPemeriksaan.getText() + "',spo2='" + SpO2.getText() + "',"
                                     + "nadi='" + TNadi.getText() + "',respirasi='" + TRespirasi.getText() + "',tinggi='" + TTinggi.getText() + "',berat='" + TBerat.getText() + "',"
                                     + "gcs='" + TGCS.getText() + "',kesadaran='" + cmbKesadaran.getSelectedItem() + "',alergi='" + TAlergi.getText() + "',tgl_perawatan='" + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "',"
@@ -8906,7 +8908,7 @@ private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 if (Sequel.mengedittf("pemeriksaan_ranap", "no_rawat='" + tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 1)
                                         + "' and tgl_perawatan='" + tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 4)
                                         + "' and jam_rawat='" + tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 5) + "'",
-                                        "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu.getText() + "',tensi='" + TTensi.getText() + "',"
+                                        "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu.getText() + "',tensi='" + (TTensi.getText().trim().equals("") ? "" : TTensi.getText() + (TTensi2.getText().trim().equals("") ? "" : "/" + TTensi2.getText())) + "',"
                                         + "keluhan='" + TKeluhan.getText() + "',pemeriksaan='" + TPemeriksaan.getText() + "',spo2='" + SpO2.getText() + "',"
                                         + "nadi='" + TNadi.getText() + "',respirasi='" + TRespirasi.getText() + "',tinggi='" + TTinggi.getText() + "',berat='" + TBerat.getText() + "',"
                                         + "gcs='" + TGCS.getText() + "',kesadaran='" + cmbKesadaran.getSelectedItem() + "',alergi='" + TAlergi.getText() + "',tgl_perawatan='" + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "',"
@@ -9141,7 +9143,7 @@ private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                             Sequel.mengedit("pemeriksaan_ranap", "no_rawat='" + tbPemeriksaan1.getValueAt(tbPemeriksaan1.getSelectedRow(), 1)
                                     + "' and tgl_perawatan='" + tbPemeriksaan1.getValueAt(tbPemeriksaan1.getSelectedRow(), 4)
                                     + "' and jam_rawat='" + tbPemeriksaan1.getValueAt(tbPemeriksaan1.getSelectedRow(), 5) + "'",
-                                    "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu1.getText() + "',tensi='" + TTensi1.getText() + "',"
+                                    "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu1.getText() + "',tensi='" + (TTensi1.getText().trim().equals("") ? "" : TTensi1.getText() + (TTensi1_2.getText().trim().equals("") ? "" : "/" + TTensi1_2.getText())) + "',"
                                     + "keluhan='" + Asesmen.getText() + "',pemeriksaan='" + Diagnosis.getText() + "',spo2='" + SpO3.getText() + "',"
                                     + "nadi='" + TNadi1.getText() + "',respirasi='" + TRespirasi1.getText() + "',tinggi='" + TTinggi1.getText() + "',berat='" + TBerat1.getText() + "',"
                                     + "gcs='" + TGCS1.getText() + "',kesadaran='" + cmbKesadaran1.getSelectedItem() + "',alergi='" + TAlergi1.getText() + "',tgl_perawatan='" + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "',"
@@ -9154,7 +9156,7 @@ private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 Sequel.mengedit("pemeriksaan_ranap", "no_rawat='" + tbPemeriksaan1.getValueAt(tbPemeriksaan1.getSelectedRow(), 1)
                                         + "' and tgl_perawatan='" + tbPemeriksaan1.getValueAt(tbPemeriksaan1.getSelectedRow(), 4)
                                         + "' and jam_rawat='" + tbPemeriksaan1.getValueAt(tbPemeriksaan1.getSelectedRow(), 5) + "'",
-                                        "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu1.getText() + "',tensi='" + TTensi1.getText() + "',"
+                                        "no_rawat='" + TNoRw.getText() + "',suhu_tubuh='" + TSuhu1.getText() + "',tensi='" + (TTensi1.getText().trim().equals("") ? "" : TTensi1.getText() + (TTensi1_2.getText().trim().equals("") ? "" : "/" + TTensi1_2.getText())) + "',"
                                         + "keluhan='" + Asesmen.getText() + "',pemeriksaan='" + Diagnosis.getText() + "',spo2='" + SpO3.getText() + "',"
                                         + "nadi='" + TNadi1.getText() + "',respirasi='" + TRespirasi1.getText() + "',tinggi='" + TTinggi1.getText() + "',berat='" + TBerat1.getText() + "',"
                                         + "gcs='" + TGCS1.getText() + "',kesadaran='" + cmbKesadaran1.getSelectedItem() + "',alergi='" + TAlergi1.getText() + "',tgl_perawatan='" + Valid.SetTgl(DTPTgl.getSelectedItem() + "") + "',"
@@ -9455,7 +9457,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 TCari.requestFocus();
             } else {
                 perawatan2.setNoRm(TNoRw.getText(), "rawat_inap_dr", DTPTgl.getDate(), cmbJam.getSelectedItem().toString(), cmbMnt.getSelectedItem().toString(), cmbDtk.getSelectedItem().toString(), false, TPasien.getText());
-                perawatan2.setPetugas(KdDok.getText(), TDokter.getText(), TSuhu.getText(), TTensi.getText(), TKeluhan.getText(), TPemeriksaan.getText(), "", "",
+                perawatan2.setPetugas(KdDok.getText(), TDokter.getText(), TSuhu.getText(), TTensi.getText() + "/" + TTensi2.getText(), TKeluhan.getText(), TPemeriksaan.getText(), "", "",
                         TBerat.getText(), TTinggi.getText(), TNadi.getText(), TRespirasi.getText(), TGCS.getText(), TAlergi.getText());
                 akses.setform("DlgRawatInap");
                 perawatan2.isCek();
@@ -9509,7 +9511,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 TCari.requestFocus();
             } else {
                 perawatan2.setNoRm(TNoRw.getText(), "rawat_inap_pr", DTPTgl.getDate(), cmbJam.getSelectedItem().toString(), cmbMnt.getSelectedItem().toString(), cmbDtk.getSelectedItem().toString(), false, TPasien.getText());
-                perawatan2.setPetugas(kdptg.getText(), TPerawat.getText(), TSuhu.getText(), TTensi.getText(), TKeluhan.getText(), TPemeriksaan.getText(), "", "",
+                perawatan2.setPetugas(kdptg.getText(), TPerawat.getText(), TSuhu.getText(), TTensi.getText() + "/" + TTensi2.getText(), TKeluhan.getText(), TPemeriksaan.getText(), "", "",
                         TBerat.getText(), TTinggi.getText(), TNadi.getText(), TRespirasi.getText(), TGCS.getText(), TAlergi.getText());
                 akses.setform("DlgRawatInap");
                 perawatan2.isCek();
@@ -9567,7 +9569,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 TCari.requestFocus();
             } else {
                 perawatan2.setNoRm(TNoRw.getText(), "rawat_inap_drpr", DTPTgl.getDate(), cmbJam.getSelectedItem().toString(), cmbMnt.getSelectedItem().toString(), cmbDtk.getSelectedItem().toString(), false, TPasien.getText());
-                perawatan2.setPetugas(KdDok2.getText(), TDokter2.getText(), TSuhu.getText(), TTensi.getText(), TKeluhan.getText(), TPemeriksaan.getText(), kdptg2.getText(), TPerawat2.getText(),
+                perawatan2.setPetugas(KdDok2.getText(), TDokter2.getText(), TSuhu.getText(), TTensi.getText() + "/" + TTensi2.getText(), TKeluhan.getText(), TPemeriksaan.getText(), kdptg2.getText(), TPerawat2.getText(),
                         TBerat.getText(), TTinggi.getText(), TNadi.getText(), TRespirasi.getText(), TGCS.getText(), TAlergi.getText());
                 akses.setform("DlgRawatInap");
                 perawatan2.isCek();
@@ -10272,13 +10274,22 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPenilaianAwalKeperawatanRanap form = new RMPenilaianAwalKeperawatanRanap(null, false);
+            RMPenilaianAwalKeperawatanRanapDewasa form = new RMPenilaianAwalKeperawatanRanapDewasa(null, false);
             form.isCek();
+            form.emptTeks();
+            form.setNoRm(TNoRw.getText());
+            form.setTTVFromPonek();
+            
+            String kddokter = Sequel.cariIsi("select dpjp_ranap.kd_dokter from dpjp_ranap where dpjp_ranap.no_rawat=?", TNoRw.getText());
+            if(kddokter.equals("")){
+                kddokter = Sequel.cariIsi("select reg_periksa.kd_dokter from reg_periksa where reg_periksa.no_rawat=?", TNoRw.getText());
+            }
+            String nmdokter = Sequel.cariIsi("select dokter.nm_dokter from dokter where dokter.kd_dokter=?", kddokter);
+            form.setDokter(kddokter, nmdokter);
+            
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
             form.setVisible(true);
-            form.emptTeks();
-            form.setNoRm(TNoRw.getText(), DTPCari1.getDate(), jenisbayar, TNoRM.getText());
             this.setCursor(Cursor.getDefaultCursor());
         }
     }//GEN-LAST:event_BtnAwalKeperawatanUmumActionPerformed
@@ -10369,13 +10380,13 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             TCari.requestFocus();
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            RMPerencanaanPemulangan form = new RMPerencanaanPemulangan(null, false);
+            RMDischargePlanning form = new RMDischargePlanning(null, false);
             form.isCek();
             form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
             form.setLocationRelativeTo(internalFrame1);
             form.setVisible(true);
-            form.emptTeks();
             form.setNoRm(TNoRw.getText(), DTPCari2.getDate());
+            form.emptTeks();
             this.setCursor(Cursor.getDefaultCursor());
         }
     }//GEN-LAST:event_BtnPerencanaanPemulanganActionPerformed
@@ -13399,6 +13410,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             TPegawai4.setText(pegawai.tampil3(KdPeg4.getText()));
             Jabatan2.setText(pegawai.tampilJbatan(KdPeg4.getText()));
         }
+            sembunyikanBiayaTindakan();
     }
 
     private void jam() {
@@ -13517,6 +13529,21 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             System.out.println("Notifikasi : " + e);
         }
         LCount.setText("" + tabModePemeriksaan.getRowCount());
+        
+        if (tabModePemeriksaan.getRowCount() == 0 && !TNoRw.getText().trim().equals("")) {
+            if (TKeluhan.getText().trim().equals("")) {
+                String keluhan = Sequel.cariIsi("select keluhan_utama from penilaian_awal_keperawatan_ponek where no_rawat=?", TNoRw.getText());
+                if (!keluhan.trim().equals("")) {
+                    TKeluhan.setText(keluhan);
+                }
+            }
+            if (TPenilaian.getText().trim().equals("")) {
+                String penilaian = Sequel.cariIsi("select diagnosa_utama from transfer_pasien_antar_ruang where no_rawat=? order by tanggal_pindah desc limit 1", TNoRw.getText());
+                if (!penilaian.trim().equals("")) {
+                    TPenilaian.setText(penilaian);
+                }
+            }
+        }
     }
 
     private void getDataPemeriksaan() {
@@ -13525,7 +13552,15 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             TNoRM.setText(tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 2).toString());
             TPasien.setText(tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 3).toString());
             TSuhu.setText(tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 6).toString());
-            TTensi.setText(tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 7).toString());
+                        String tdOld = tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 7).toString();
+            if (tdOld != null && tdOld.contains("/")) {
+                String[] parts = tdOld.split("/", 2);
+                TTensi.setText(parts[0]);
+                if (parts.length > 1) TTensi2.setText(parts[1]);
+            } else {
+                TTensi.setText(tdOld);
+                TTensi2.setText("");
+            }
             TNadi.setText(tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 8).toString());
             TRespirasi.setText(tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 9).toString());
             TTinggi.setText(tbPemeriksaan.getValueAt(tbPemeriksaan.getSelectedRow(), 10).toString());
@@ -14332,6 +14367,190 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 }
             }
         }
+    }
+
+
+    private void sembunyikanBiayaTindakan() {
+        boolean sembunyikan = false;
+        
+        String username = akses.getkode().toLowerCase();
+        String nama = TPegawai.getText().toLowerCase();
+        String jbt_ui = Jabatan.getText().toLowerCase();
+        
+        String jbt_db = Sequel.cariIsi("select jbtn from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        String dep_db = Sequel.cariIsi("select departemen from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        String bdg_db = Sequel.cariIsi("select bidang from pegawai where nik='" + akses.getkode() + "'").toLowerCase();
+        
+        String allInfo = username + " " + nama + " " + jbt_ui + " " + jbt_db + " " + dep_db + " " + bdg_db;
+        
+        if ((allInfo.contains("perawat") || allInfo.contains("bidan") || allInfo.contains("perina") || allInfo.contains("gizi") || 
+            allInfo.contains("dokter") || allInfo.contains("medis") || allInfo.contains("vk") || allInfo.contains("igd") || 
+            allInfo.contains("icu") || allInfo.contains("poli") || allInfo.contains("ranap") || allInfo.contains("kandungan") || 
+            allInfo.contains("kia") || allInfo.contains("ponek") || allInfo.contains("kebidanan")) && !allInfo.contains("admin")) {
+            sembunyikan = true;
+        }
+        
+        if (!sembunyikan) {
+            if (Sequel.cariInteger("select count(kd_dokter) from dokter where kd_dokter='" + akses.getkode() + "'") > 0) {
+                sembunyikan = true;
+            }
+        }
+
+        if (akses.getkode().equals("Admin Utama")) {
+            sembunyikan = false;
+        }
+        
+        if (sembunyikan) {
+            int[] hideDr = {9, 11, 12, 13, 14, 15};
+            for(int i : hideDr) {
+                try {
+                    tbRawatDr.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbRawatDr.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbRawatDr.getColumnModel().getColumn(i).setWidth(0);
+                    tbRawatPr.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbRawatPr.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbRawatPr.getColumnModel().getColumn(i).setWidth(0);
+                } catch(Exception e){}
+            }
+            int[] hideDrPr = {11, 13, 14, 15, 16, 17, 18};
+            for(int i : hideDrPr) {
+                try {
+                    tbRawatDrPr.getColumnModel().getColumn(i).setMinWidth(0);
+                    tbRawatDrPr.getColumnModel().getColumn(i).setMaxWidth(0);
+                    tbRawatDrPr.getColumnModel().getColumn(i).setWidth(0);
+                } catch(Exception e){}
+            }
+        } else {
+            try {
+                // Hanya restore kolom Biaya (yang aslinya memang terlihat)
+                tbRawatDr.getColumnModel().getColumn(9).setMinWidth(15);
+                tbRawatDr.getColumnModel().getColumn(9).setMaxWidth(150);
+                tbRawatDr.getColumnModel().getColumn(9).setPreferredWidth(90);
+                
+                tbRawatPr.getColumnModel().getColumn(9).setMinWidth(15);
+                tbRawatPr.getColumnModel().getColumn(9).setMaxWidth(150);
+                tbRawatPr.getColumnModel().getColumn(9).setPreferredWidth(90);
+                
+                tbRawatDrPr.getColumnModel().getColumn(11).setMinWidth(15);
+                tbRawatDrPr.getColumnModel().getColumn(11).setMaxWidth(150);
+                tbRawatDrPr.getColumnModel().getColumn(11).setPreferredWidth(90);
+            } catch(Exception e){}
+        }
+    }
+
+    private widget.TextBox TTensi2;
+    private widget.TextBox TTensi1_2;
+    private widget.Label jLabelTensi;
+    private widget.Label jLabelTensi1;
+
+    private void initRanapNew() {
+        // Tab 1 & 2 Compact Flow Layout
+        jLabel103.setText("TB (Cm) :");
+        jLabel105.setText("RR (/menit) :");
+
+        // TAB 1 (Pemeriksaan)
+        // Row 160: Tensi, Nadi, RR
+        jLabel4.setBounds(0, 160, 85, 23);
+        TTensi.setBounds(85, 160, 38, 23);
+        
+        jLabelTensi = new widget.Label();
+        jLabelTensi.setText("/");
+        panelGlass12.add(jLabelTensi);
+        jLabelTensi.setBounds(125, 160, 10, 23);
+        
+        TTensi2 = new widget.TextBox();
+        TTensi2.setHighlighter(null);
+        TTensi2.setName("TTensi2");
+        TTensi2.setDocument(new batasInput((byte)8).getKata(TTensi2));
+        TTensi2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TTensi2KeyPressed(evt);
+            }
+        });
+        panelGlass12.add(TTensi2);
+        TTensi2.setBounds(137, 160, 38, 23);
+        
+        jLabel61.setBounds(183, 160, 82, 23);
+        TNadi.setBounds(265, 160, 45, 23);
+        
+        jLabel41.setBounds(320, 160, 75, 23);
+        TRespirasi.setBounds(395, 160, 45, 23);
+        
+        // Row 190: Suhu, SpO2, Berat
+        jLabel7.setBounds(0, 190, 65, 23);
+        TSuhu.setBounds(65, 190, 45, 23);
+        
+        jLabel56.setBounds(120, 190, 65, 23);
+        SpO2.setBounds(185, 190, 45, 23);
+        
+        jLabel16.setBounds(240, 190, 65, 23);
+        TBerat.setBounds(305, 190, 45, 23);
+        
+        // Row 220: Tinggi, GCS, Kesadaran
+        jLabel17.setBounds(0, 220, 60, 23);
+        TTinggi.setBounds(60, 220, 45, 23);
+        
+        jLabel22.setBounds(115, 220, 80, 23);
+        TGCS.setBounds(195, 220, 45, 23);
+        
+        jLabel58.setBounds(250, 220, 70, 23);
+        cmbKesadaran.setBounds(320, 220, 130, 23);
+        
+        
+        // TAB 2 (Adime)
+        // Row 190: Tensi, Nadi, RR
+        jLabel69.setBounds(0, 190, 45, 23);
+        TTensi1.setBounds(45, 190, 38, 23);
+        
+        jLabelTensi1 = new widget.Label();
+        jLabelTensi1.setText("/");
+        panelGlass18.add(jLabelTensi1);
+        jLabelTensi1.setBounds(85, 190, 10, 23);
+        
+        TTensi1_2 = new widget.TextBox();
+        TTensi1_2.setHighlighter(null);
+        TTensi1_2.setName("TTensi1_2");
+        TTensi1_2.setDocument(new batasInput((byte)8).getKata(TTensi1_2));
+        TTensi1_2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TTensi1_2KeyPressed(evt);
+            }
+        });
+        panelGlass18.add(TTensi1_2);
+        TTensi1_2.setBounds(97, 190, 38, 23);
+        
+        jLabel102.setBounds(145, 190, 82, 23);
+        TNadi1.setBounds(227, 190, 45, 23);
+        
+        jLabel105.setBounds(282, 190, 75, 23);
+        TRespirasi1.setBounds(357, 190, 45, 23);
+        
+        // Row 220: Suhu, SpO2, Berat
+        jLabel23.setBounds(0, 220, 65, 23);
+        TSuhu1.setBounds(65, 220, 45, 23);
+        
+        jLabel112.setBounds(120, 220, 65, 23);
+        SpO3.setBounds(185, 220, 45, 23);
+        
+        jLabel101.setBounds(240, 220, 65, 23);
+        TBerat1.setBounds(305, 220, 45, 23);
+        
+        // Row 250: Tinggi, GCS, Kesadaran
+        jLabel103.setBounds(0, 250, 60, 23);
+        TTinggi1.setBounds(60, 250, 45, 23);
+        
+        jLabel113.setBounds(115, 250, 80, 23);
+        TGCS1.setBounds(195, 250, 45, 23);
+        
+        jLabel114.setBounds(250, 250, 70, 23);
+        cmbKesadaran1.setBounds(320, 250, 130, 23);
+    }
+    private void TTensi2KeyPressed(java.awt.event.KeyEvent evt) {
+        Valid.pindah(evt, TTensi, TNadi);
+    }
+    
+    private void TTensi1_2KeyPressed(java.awt.event.KeyEvent evt) {
+        Valid.pindah(evt, TTensi1, TNadi1);
     }
 
 }

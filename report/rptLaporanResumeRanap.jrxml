@@ -677,36 +677,7 @@ where resume_pasien_ranap.no_rawat= $P{norawat}]]>
                 </textElement>
                 <text><![CDATA[Jalannya Penyakit Selama Perawatan :]]></text>
             </staticText>
-            <textField isStretchWithOverflow="true">
-                <reportElement positionType="Float" x="366" y="776" width="164" height="22" uuid="61481e35-032b-4bda-8774-c5fa08d79a61"/>
-                <textElement textAlignment="Center">
-                    <font fontName="Tahoma" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{nm_dokter}]]></textFieldExpression>
-            </textField>
-            <staticText>
-                <reportElement positionType="Float" x="366" y="714" width="164" height="11" uuid="e310e9c8-eb47-4aab-8710-9d2c1ca5fff8"/>
-                <textElement textAlignment="Center">
-                    <font fontName="Tahoma" size="8" isBold="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <text><![CDATA[Dokter Penanggung Jawab]]></text>
-            </staticText>
-            <componentElement>
-                <reportElement positionType="Float" x="370" y="727" width="157" height="49" isRemoveLineWhenBlank="true" uuid="92ab0356-8454-4b64-a117-5ac52c90d28f">
-                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                </reportElement>
-                <jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" errorCorrectionLevel="H">
-                    <jr:codeExpression><![CDATA[$P{finger}]]></jr:codeExpression>
-                </jr:QRCode>
-            </componentElement>
-            <line>
-                <reportElement x="0" y="800" width="534" height="1" uuid="b3a4f55b-ef2f-4f60-bbb5-92b2f31a7ad7"/>
-                <graphicElement>
-                    <pen lineWidth="0.5"/>
-                </graphicElement>
-            </line>
+
             <staticText>
                 <reportElement x="5" y="133" width="70" height="10" uuid="f92a4437-1f82-4af9-a5e4-033d9bb6a0ca"/>
                 <textElement>
@@ -1716,60 +1687,7 @@ where resume_pasien_ranap.no_rawat= $P{norawat}]]>
                 </textElement>
                 <text><![CDATA[:]]></text>
             </staticText>
-            <textField isStretchWithOverflow="true">
-                <reportElement positionType="Float" x="189" y="776" width="164" height="22" uuid="fae1507e-cf7f-423f-9d85-4c84604706d3">
-                    <printWhenExpression><![CDATA[(!$P{namadokter2}.toLowerCase().equals("") ? 
-  Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
-                </reportElement>
-                <textElement textAlignment="Center">
-                    <font fontName="Tahoma" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{namadokter2}]]></textFieldExpression>
-            </textField>
-            <staticText>
-                <reportElement positionType="Float" x="189" y="714" width="164" height="11" uuid="d284ebcf-9d5f-4513-919b-ee8e3c96a6d9">
-                    <printWhenExpression><![CDATA[(!$P{namadokter2}.toLowerCase().equals("") ? 
-  Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
-                </reportElement>
-                <textElement textAlignment="Center">
-                    <font fontName="Tahoma" size="8" isBold="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <text><![CDATA[Dokter Penanggung Jawab 2]]></text>
-            </staticText>
-            <componentElement>
-                <reportElement positionType="Float" x="193" y="727" width="157" height="49" isRemoveLineWhenBlank="true" uuid="048d3d12-a99d-4b7e-9f96-7b9a4c98a0ed">
-                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
-                    <printWhenExpression><![CDATA[(!$P{namadokter2}.toLowerCase().equals("") ? 
-  Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
-                </reportElement>
-                <jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" errorCorrectionLevel="H">
-                    <jr:codeExpression><![CDATA[$P{finger2}]]></jr:codeExpression>
-                </jr:QRCode>
-            </componentElement>
-            <textField isStretchWithOverflow="true">
-                <reportElement positionType="Float" x="7" y="776" width="164" height="22" uuid="8d9bd58a-1076-4fcb-a6c4-321344f19078">
-                    <printWhenExpression><![CDATA[(!$P{namadokter3}.toLowerCase().equals("") ? 
-  Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
-                </reportElement>
-                <textElement textAlignment="Center">
-                    <font fontName="Tahoma" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{namadokter3}]]></textFieldExpression>
-            </textField>
-            <staticText>
-                <reportElement positionType="Float" x="7" y="714" width="164" height="11" uuid="d7e956d3-251c-4999-99d5-3eb04bebd3b6">
-                    <printWhenExpression><![CDATA[(!$P{namadokter3}.toLowerCase().equals("") ? 
-  Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
-                </reportElement>
-                <textElement textAlignment="Center">
-                    <font fontName="Tahoma" size="8" isBold="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <text><![CDATA[Dokter Penanggung Jawab 3]]></text>
-            </staticText>
+
             <textField isStretchWithOverflow="true" pattern="HH:mm:ss">
                 <reportElement x="446" y="121" width="82" height="10" uuid="38322434-b93a-4112-b655-b1e7b381ebb3"/>
                 <textElement>
@@ -1786,14 +1704,74 @@ where resume_pasien_ranap.no_rawat= $P{norawat}]]>
                 </textElement>
                 <textFieldExpression><![CDATA[$P{jamkeluar}]]></textFieldExpression>
             </textField>
-            <staticText>
-                <reportElement x="30" y="730" width="122" height="40" uuid="4ed2d710-08a1-43b6-bcc4-32e35f1dc988"/>
-                <textElement textAlignment="Center">
-                    <font fontName="Tahoma" size="8" isBold="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <text><![CDATA[#]]></text>
-            </staticText>
+            <frame>
+                <reportElement positionType="Float" x="0" y="696" width="534" height="106" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd66"/>
+                <staticText>
+                    <reportElement x="366" y="24" width="164" height="11" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd67"/>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8" isBold="false"/>
+                        <paragraph lineSpacing="Single"/>
+                    </textElement>
+                    <text><![CDATA[Dokter Penanggung Jawab]]></text>
+                </staticText>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="366" y="86" width="164" height="11" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd68"/>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+                        <paragraph lineSpacing="Single"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{nm_dokter}]]></textFieldExpression>
+                </textField>
+                
+                <staticText>
+                    <reportElement x="189" y="24" width="164" height="11" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd69">
+                        <printWhenExpression><![CDATA[(!$P{namadokter2}.toLowerCase().equals("") ? Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
+                    </reportElement>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8" isBold="false"/>
+                        <paragraph lineSpacing="Single"/>
+                    </textElement>
+                    <text><![CDATA[Dokter Penanggung Jawab 2]]></text>
+                </staticText>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="189" y="86" width="164" height="11" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd70">
+                        <printWhenExpression><![CDATA[(!$P{namadokter2}.toLowerCase().equals("") ? Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
+                    </reportElement>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+                        <paragraph lineSpacing="Single"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{namadokter2}]]></textFieldExpression>
+                </textField>
+
+                <staticText>
+                    <reportElement x="7" y="24" width="164" height="11" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd71">
+                        <printWhenExpression><![CDATA[(!$P{namadokter3}.toLowerCase().equals("") ? Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
+                    </reportElement>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8" isBold="false"/>
+                        <paragraph lineSpacing="Single"/>
+                    </textElement>
+                    <text><![CDATA[Dokter Penanggung Jawab 3]]></text>
+                </staticText>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="7" y="86" width="164" height="11" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd72">
+                        <printWhenExpression><![CDATA[(!$P{namadokter3}.toLowerCase().equals("") ? Boolean.TRUE:Boolean.FALSE)]]></printWhenExpression>
+                    </reportElement>
+                    <textElement textAlignment="Center">
+                        <font fontName="Tahoma" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+                        <paragraph lineSpacing="Single"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$P{namadokter3}]]></textFieldExpression>
+                </textField>
+
+                <line>
+                    <reportElement x="0" y="105" width="534" height="1" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd73"/>
+                    <graphicElement>
+                        <pen lineWidth="0.5"/>
+                    </graphicElement>
+                </line>
+            </frame>
         </band>
     </detail>
     <columnFooter>

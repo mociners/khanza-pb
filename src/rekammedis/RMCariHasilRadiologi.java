@@ -358,6 +358,80 @@ public final class RMCariHasilRadiologi extends javax.swing.JDialog {
         }catch(Exception e){
             System.out.println("Notifikasi : "+e);
         }
+        
+        try{
+            ps=koneksi.prepareStatement(
+                    "select tanggal, kardio from penilaian_medis_ranap_kandungan1 "+
+                    "where no_rawat=? and kardio != '' and kardio is not null and (tanggal like ? or kardio like ?) "+
+                    "order by tanggal");
+            try{
+                ps.setString(1,norawat);
+                ps.setString(2,"%"+TCari.getText().trim()+"%");
+                ps.setString(3,"%"+TCari.getText().trim()+"%");
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    String tgl = rs.getString("tanggal");
+                    String jam = "";
+                    if(tgl.length() > 10) {
+                        jam = tgl.substring(11);
+                        tgl = tgl.substring(0, 10);
+                    }
+                    tabMode.addRow(new String[] {
+                        tgl, jam, rs.getString("kardio")
+                    });
+                }
+            }catch(Exception ex){
+                System.out.println(ex);
+            }finally{
+                if(rs!=null){
+                    rs.close();
+                }
+                if(ps!=null){
+                    ps.close();
+                }
+            }
+        }catch(Exception e){
+            System.out.println("Notifikasi : "+e);
+        }
+        
+        if (tabMode.getRowCount() == 0) {
+            try {
+                ps = koneksi.prepareStatement(
+                        "select permintaan_radiologi.tgl_permintaan, permintaan_radiologi.jam_permintaan, " +
+                        "concat('PERMINTAAN: ', group_concat(jns_perawatan_radiologi.nm_perawatan separator ', ')) as hasil " +
+                        "from permintaan_radiologi inner join permintaan_pemeriksaan_radiologi " +
+                        "on permintaan_radiologi.noorder=permintaan_pemeriksaan_radiologi.noorder " +
+                        "inner join jns_perawatan_radiologi on permintaan_pemeriksaan_radiologi.kd_jenis_prw=jns_perawatan_radiologi.kd_jenis_prw " +
+                        "where permintaan_radiologi.no_rawat=? and " +
+                        "(permintaan_radiologi.tgl_permintaan like ? or jns_perawatan_radiologi.nm_perawatan like ?) " +
+                        "group by permintaan_radiologi.noorder " +
+                        "order by permintaan_radiologi.tgl_permintaan, permintaan_radiologi.jam_permintaan"
+                );
+                try {
+                    ps.setString(1, norawat);
+                    ps.setString(2, "%" + TCari.getText().trim() + "%");
+                    ps.setString(3, "%" + TCari.getText().trim() + "%");
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        tabMode.addRow(new String[]{
+                            rs.getString(1), rs.getString(2), rs.getString(3)
+                        });
+                    }
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            }
+        }
+        
         LCount.setText(""+tabMode.getRowCount());
     }
 
