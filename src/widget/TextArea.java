@@ -18,8 +18,8 @@ public class TextArea extends JTextArea {
         setWrapStyleWord(true);
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setFont(new java.awt.Font("Tahoma", 0, 11));        
-        setSelectionColor(new Color(255,255,255));
-        setSelectedTextColor(new Color(255,0,0));
+        setSelectionColor(Color.BLUE.brighter());
+        setSelectedTextColor(Color.WHITE);
         setForeground(new Color(50,50,50));
         setBackground(new Color(255,255,255));
         setSize(WIDTH,23);

@@ -240,12 +240,12 @@ public final class DlgTemplateLaporanOperasiCasemix extends javax.swing.JDialog 
         labelKirim.setBounds(0, y, 140, 23);
         FormInput.add(labelKirim);
         KetJaringan = new widget.ComboBox();
-        KetJaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ya", "Tidak" }));
+        KetJaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak", "Ya" }));
         KetJaringan.setBounds(150, y, 80, 23);
         FormInput.add(KetJaringan);
         Jaringan = new widget.ComboBox();
-        Jaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PA", "Kultur" }));
-        Jaringan.setBounds(240, y, 80, 23);
+        Jaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "PA", "Kultur" }));
+        Jaringan.setBounds(240, y, 90, 23); // I'm making it 90px width since "Tidak Ada" is longer than "Kultur" or "PA"
         FormInput.add(Jaringan);
 
         widget.Label labelAsal = new widget.Label();

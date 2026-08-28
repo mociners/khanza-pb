@@ -116,8 +116,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                 "Kode Asisten Bedah", "Asisten Bedah", "Kode Asisten Anestesi", "Nama Asisten",
                 "Jenis Operasi", "Jenis Anestesi", "Diagnosa Pra Bedah", "Diagnosa Pasca Bedah",
                 "Tindakan", "Jam Mulai Operasi", "Jam Selesai Operasi", "Lama Pembedahan",
-                "Cara Pembiusan", "Posisi Pasien", "Jam Mulai Anestesi", "Jam Selesai Anestesi",
-                "Jam Pindah", "Uraian Pembedahan", "Komplikasi", "Perdaraan", "Dikirim",
+                "Cara Pembiusan", "Posisi Pasien", "Uraian Pembedahan", "Komplikasi", "Perdaraan", "Dikirim",
                 "Jenis Pemeriksaan", "Asal Jaringan", "Jenis Pembedahan", "Pasang Implan",
                 "Lokasi Implan", "Jenis Implan", "No.Reg Implan", "Klasifikasi Operasi",
                 "Konsultasi Intra Op"
@@ -139,7 +138,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         int[] columnWidths = { 105, 70, 150, 65, 25, 115, 90, 160, 100, 160,
                 100, 150, 53, 85, 130, 88, 98, 102, 89, 149,
                 109, 90, 120, 90, 120, 90, 120, 90, 120, 90,
-                90, 90, 90, 120, 90, 150, 150, 120, 120, 150 };
+                90, 90, 90, 120, 90, 150, 150 };
 
         for (int i = 0; i < columnWidths.length; i++) {
             tbObat.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
@@ -151,15 +150,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         TNoRw.setDocument(new batasInput((byte) 17).getKata(TNoRw));
         Komplikasi.setDocument(new batasInput((byte) 25).getKata(Komplikasi));
         Tindakan.setDocument(new batasInput((byte) 50).getKata(Tindakan));
-        // KeteranganPersiapanDarah.setDocument(new
-        // batasInput((byte)20).getKata(KeteranganPersiapanDarah));
-        // KeteranganRadiologi.setDocument(new
-        // batasInput((byte)20).getKata(KeteranganRadiologi));
-        // KeteranganEKG.setDocument(new batasInput((byte)20).getKata(KeteranganEKG));
-        // KeteranganUSG.setDocument(new batasInput((byte)20).getKata(KeteranganUSG));
-        // KeteranganCTScan.setDocument(new
-        // batasInput((byte)20).getKata(KeteranganCTScan));
-        // KeteranganMRI.setDocument(new batasInput((byte)20).getKata(KeteranganMRI));
         TCari.setDocument(new batasInput((int) 100).getKata(TCari));
 
         if (koneksiDB.CARICEPAT().equals("aktif")) {
@@ -306,7 +296,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -393,9 +382,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         scrollPane17 = new widget.ScrollPane();
         LaporanOperasi = new widget.TextArea();
         jLabel50 = new widget.Label();
-        jLabel37 = new widget.Label();
-        jLabel38 = new widget.Label();
-        jLabel39 = new widget.Label();
         jLabel40 = new widget.Label();
         PosisiPasien = new widget.TextBox();
         LamaPembedahan = new widget.TextBox();
@@ -403,9 +389,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         KomplikasiOperasi3 = new widget.TextBox();
         jLabel43 = new widget.Label();
         AsalJaringan = new widget.TextBox();
-        TanggalJamSelesaiAnestesi = new widget.Tanggal();
-        TanggalJamMulaiAnestesi = new widget.Tanggal();
-        TanggalJamPindah = new widget.Tanggal();
         TanggalJamMulaiOperasi = new widget.Tanggal();
         TanggalJamSelesaiOperasi = new widget.Tanggal();
 
@@ -801,8 +784,8 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         TglLahir.setBounds(689, 10, 100, 23);
 
         Tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-01-2025 06:39:30" }));
-        Tanggal.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
+        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-01-2025" }));
+        Tanggal.setDisplayFormat("dd-MM-yyyy");
         Tanggal.setName("Tanggal"); // NOI18N
         Tanggal.setOpaque(false);
         Tanggal.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1059,7 +1042,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         FormInput.add(jLabel69);
         jLabel69.setBounds(0, 720, 140, 23);
 
-        KetJaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ya", "Tidak" }));
+        KetJaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak", "Ya" }));
         KetJaringan.setName("KetJaringan"); // NOI18N
         KetJaringan.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1069,7 +1052,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         FormInput.add(KetJaringan);
         KetJaringan.setBounds(150, 720, 130, 23);
 
-        Jaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PA", "Kultur" }));
+        Jaringan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tidak Ada", "PA", "Kultur" }));
         Jaringan.setName("Jaringan"); // NOI18N
         Jaringan.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -1131,23 +1114,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         FormInput.add(jLabel50);
         jLabel50.setBounds(10, 440, 140, 23);
 
-        jLabel37.setText("Jam Mulai Anastesi :");
-        jLabel37.setName("jLabel37"); // NOI18N
-        FormInput.add(jLabel37);
-        jLabel37.setBounds(30, 380, 110, 23);
-
-        jLabel38.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel38.setText("Jam Selesai Anastesi :");
-        jLabel38.setName("jLabel38"); // NOI18N
-        FormInput.add(jLabel38);
-        jLabel38.setBounds(290, 380, 120, 23);
-
-        jLabel39.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel39.setText("Jam Pindah : ");
-        jLabel39.setName("jLabel39"); // NOI18N
-        FormInput.add(jLabel39);
-        jLabel39.setBounds(540, 380, 120, 23);
-
         jLabel40.setText("Posisi Pasien:");
         jLabel40.setName("jLabel40"); // NOI18N
         FormInput.add(jLabel40);
@@ -1200,46 +1166,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         FormInput.add(AsalJaringan);
         AsalJaringan.setBounds(540, 720, 260, 30);
 
-        TanggalJamSelesaiAnestesi.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalJamSelesaiAnestesi
-                .setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-01-2025 06:39:31" }));
-        TanggalJamSelesaiAnestesi.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
-        TanggalJamSelesaiAnestesi.setName("TanggalJamSelesaiAnestesi"); // NOI18N
-        TanggalJamSelesaiAnestesi.setOpaque(false);
-        TanggalJamSelesaiAnestesi.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                TanggalJamSelesaiAnestesiKeyPressed(evt);
-            }
-        });
-        FormInput.add(TanggalJamSelesaiAnestesi);
-        TanggalJamSelesaiAnestesi.setBounds(410, 380, 130, 23);
-
-        TanggalJamMulaiAnestesi.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalJamMulaiAnestesi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-01-2025 06:39:31" }));
-        TanggalJamMulaiAnestesi.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
-        TanggalJamMulaiAnestesi.setName("TanggalJamMulaiAnestesi"); // NOI18N
-        TanggalJamMulaiAnestesi.setOpaque(false);
-        TanggalJamMulaiAnestesi.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                TanggalJamMulaiAnestesiKeyPressed(evt);
-            }
-        });
-        FormInput.add(TanggalJamMulaiAnestesi);
-        TanggalJamMulaiAnestesi.setBounds(150, 380, 130, 23);
-
-        TanggalJamPindah.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalJamPindah.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-01-2025 06:39:31" }));
-        TanggalJamPindah.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
-        TanggalJamPindah.setName("TanggalJamPindah"); // NOI18N
-        TanggalJamPindah.setOpaque(false);
-        TanggalJamPindah.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                TanggalJamPindahKeyPressed(evt);
-            }
-        });
-        FormInput.add(TanggalJamPindah);
-        TanggalJamPindah.setBounds(640, 380, 130, 23);
-
         TanggalJamMulaiOperasi.setForeground(new java.awt.Color(50, 70, 50));
         TanggalJamMulaiOperasi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08-01-2025 06:39:31" }));
         TanggalJamMulaiOperasi.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
@@ -1289,25 +1215,21 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                     "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?",
                     "Data", 32, new String[] {
                             TNoRw.getText(),
-                            Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
-                                    + Tanggal.getSelectedItem().toString().substring(11, 19),
+                            Valid.SetTgl(Tanggal.getSelectedItem() + "") + " 00:00:00",
                             KodeDokterBedah.getText(),
                             KodeDokterAnestesi.getText(), 
                             KdAsistenBedah.getText().equals("") ? NmPetugasRuangan.getText() : KdAsistenBedah.getText(), 
                             KdPenataAnestesi.getText().equals("") ? NmPetugasOK.getText() : KdPenataAnestesi.getText(),
                             JenisOperasi.getSelectedItem().toString(), JenisAnastesi.getSelectedItem().toString(),
                             DiagnosaPrabedah.getText(), DiagnosaPascabedah.getText(), Tindakan.getText(),
-                            Valid.SetTgl(TanggalJamMulaiOperasi.getSelectedItem() + "") + " "
-                                    + TanggalJamMulaiOperasi.getSelectedItem().toString().substring(11, 19),
-                            Valid.SetTgl(TanggalJamSelesaiOperasi.getSelectedItem() + "") + " "
-                                    + TanggalJamSelesaiOperasi.getSelectedItem().toString().substring(11, 19),
+                            Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
+                                    + cmbJamMulai.getSelectedItem() + ":" + cmbMntMulai.getSelectedItem() + ":" + cmbDtkMulai.getSelectedItem(),
+                            Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
+                                    + cmbJamSelesai.getSelectedItem() + ":" + cmbMntSelesai.getSelectedItem() + ":" + cmbDtkSelesai.getSelectedItem(),
                             LamaPembedahan.getText(), CaraPembiusan.getText(), PosisiPasien.getText(),
-                            Valid.SetTgl(TanggalJamMulaiAnestesi.getSelectedItem() + "") + " "
-                                    + TanggalJamMulaiAnestesi.getSelectedItem().toString().substring(11, 19),
-                            Valid.SetTgl(TanggalJamSelesaiAnestesi.getSelectedItem() + "") + " "
-                                    + TanggalJamSelesaiAnestesi.getSelectedItem().toString().substring(11, 19),
-                            Valid.SetTgl(TanggalJamPindah.getSelectedItem() + "") + " "
-                                    + TanggalJamPindah.getSelectedItem().toString().substring(11, 19),
+                            "0000-00-00 00:00:00",
+                            "0000-00-00 00:00:00",
+                            "0000-00-00 00:00:00",
                             LaporanOperasi.getText(), Komplikasi.getText(), JumlahPerdarahan.getText(),
                             KetJaringan.getSelectedItem().toString(), Jaringan.getSelectedItem().toString(),
                             AsalJaringan.getText(),
@@ -1322,25 +1244,18 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                 tabMode.addRow(new String[] {
                         TNoRw.getText(), TNoRM.getText(), TPasien.getText(), TglLahir.getText(),
                         JK.getText(),
-                        Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
-                                + Tanggal.getSelectedItem().toString().substring(11, 19),
+                        Valid.SetTgl(Tanggal.getSelectedItem() + "") + " 00:00:00",
                         KodeDokterBedah.getText(), NamaDokterBedah.getText(),
                         KodeDokterAnestesi.getText(), NamaDokterAnestesi.getText(),
                         KdAsistenBedah.getText(), NmPetugasRuangan.getText(),
                         KdPenataAnestesi.getText(), NmPetugasOK.getText(),
                         JenisOperasi.getSelectedItem().toString(), JenisAnastesi.getSelectedItem().toString(),
                         DiagnosaPrabedah.getText(), DiagnosaPascabedah.getText(), Tindakan.getText(),
-                        Valid.SetTgl(TanggalJamMulaiOperasi.getSelectedItem() + "") + " "
-                                + TanggalJamMulaiOperasi.getSelectedItem().toString().substring(11, 19),
-                        Valid.SetTgl(TanggalJamSelesaiOperasi.getSelectedItem() + "") + " "
-                                + TanggalJamSelesaiOperasi.getSelectedItem().toString().substring(11, 19),
+                        Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
+                                + cmbJamMulai.getSelectedItem() + ":" + cmbMntMulai.getSelectedItem() + ":" + cmbDtkMulai.getSelectedItem(),
+                        Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
+                                + cmbJamSelesai.getSelectedItem() + ":" + cmbMntSelesai.getSelectedItem() + ":" + cmbDtkSelesai.getSelectedItem(),
                         LamaPembedahan.getText(), CaraPembiusan.getText(), PosisiPasien.getText(),
-                        Valid.SetTgl(TanggalJamMulaiAnestesi.getSelectedItem() + "") + " "
-                                + TanggalJamMulaiAnestesi.getSelectedItem().toString().substring(11, 19),
-                        Valid.SetTgl(TanggalJamSelesaiAnestesi.getSelectedItem() + "") + " "
-                                + TanggalJamSelesaiAnestesi.getSelectedItem().toString().substring(11, 19),
-                        Valid.SetTgl(TanggalJamPindah.getSelectedItem() + "") + " "
-                                + TanggalJamPindah.getSelectedItem().toString().substring(11, 19),
                         LaporanOperasi.getText(), Komplikasi.getText(), JumlahPerdarahan.getText(),
                         KetJaringan.getSelectedItem().toString(), Jaringan.getSelectedItem().toString(),
                         AsalJaringan.getText(),
@@ -1451,35 +1366,37 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                 + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Tgl.Lahir</b></td>"
                                 + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>J.K.</b></td>"
                                 + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Tanggal</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>SN/CN</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Tindakan</b></td>"
                                 + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Kode Dokter Bedah</b></td>"
                                 + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Nama Dokter Bedah</b></td>"
                                 + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Kode Dokter Anest</b></td>"
                                 + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Nama Dokter Anestesi</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Identitas</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keadaan Umum</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Penandaan Area Operasi</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Surat Ijin Bedah</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Surat Ijin Anestesi</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Surat Ijin Transfusi</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Persiapan Darah</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keterangan Persiapan Darah</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Perlengkapan Khusus</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Radiologi</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keterangan Radiologi</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>EKG</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keterangan EKG</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>USG</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keterangan USG</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>CT Scan</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keterangan CT Scan</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>MRI</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keterangan MRI</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>NIP Ruangan</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Petugas Ruangan</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>NIP OK</b></td>"
-                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Petugas Ruang OK</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Kode Asisten Bedah</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Asisten Bedah</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Kode Asisten Anest</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Asisten Anestesi</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Jenis Operasi</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Jenis Anestesi</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Diagnosa Pra Bedah</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Diagnosa Pasca Bedah</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Tindakan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Jam Mulai Operasi</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Jam Selesai Operasi</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Lama Pembedahan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Cara Pembiusan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Posisi Pasien</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Uraian Pembedahan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Komplikasi</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Perdarahan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Dikirim</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Jenis Pemeriksaan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Asal Jaringan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Jenis Pembedahan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Pasang Implan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Lokasi Implan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Jenis Implan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>No.Reg Implan</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Klasifikasi Operasi</b></td>"
+                                + "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Konsultasi Intra Op</b></td>"
                                 + "</tr>");
 
                 for (i = 0; i < tabMode.getRowCount(); i++) {
@@ -1520,6 +1437,8 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                     + "<td valign='top'>" + tbObat.getValueAt(i, 32).toString() + "</td>"
                                     + "<td valign='top'>" + tbObat.getValueAt(i, 33).toString() + "</td>"
                                     + "<td valign='top'>" + tbObat.getValueAt(i, 34).toString() + "</td>"
+                                    + "<td valign='top'>" + tbObat.getValueAt(i, 35).toString() + "</td>"
+                                    + "<td valign='top'>" + tbObat.getValueAt(i, 36).toString() + "</td>"
                                     + "</tr>");
                 }
 
@@ -1642,13 +1561,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
             param.put("kontakrs", akses.getkontakrs());
             param.put("emailrs", akses.getemailrs());
             param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
-            // finger=Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner
-            // join pegawai on pegawai.id=sidikjari.id where
-            // pegawai.nik=?",tbObat.getValueAt(tbObat.getSelectedRow(),12).toString());
-            // param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota
-            // "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh
-            // "+tbObat.getValueAt(tbObat.getSelectedRow(),13).toString()+"\nID
-            // "+(finger.equals("")?tbObat.getValueAt(tbObat.getSelectedRow(),13).toString():finger)+"\n"+Tanggal.getSelectedItem());
             finger2 = Sequel.cariIsi(
                     "select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",
                     tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString());
@@ -1660,9 +1572,9 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                             + "\n" + Tanggal.getSelectedItem());
             Valid.MyReportqry("rptFormulirLaporanOperasi.jasper", "report", "::[ Formulir Laporan Operasi ]::",
                     "select reg_periksa.no_rawat, pasien.no_rkm_medis, pasien.nm_pasien, pasien.tgl_lahir, pasien.jk, laporan_operasi_casemix.tanggal, "
-                            + "laporan_operasi_casemix.jampindah, laporan_operasi_casemix.jenisoperasi, laporan_operasi_casemix.jenisanestesi, laporan_operasi_casemix.jammulaioperasi, "
-                            + "laporan_operasi_casemix.jamselesaioperasi, laporan_operasi_casemix.tindakan, TIMEDIFF(laporan_operasi_casemix.jamselesaioperasi, laporan_operasi_casemix.jammulaioperasi) AS selisih_waktu, "
-                            + "laporan_operasi_casemix.jammulaianestesi, laporan_operasi_casemix.jamselesaianestesi, TIMEDIFF(laporan_operasi_casemix.jamselesaianestesi, laporan_operasi_casemix.jammulaianestesi) AS selisih_waktu_anastesi, "
+                            + "laporan_operasi_casemix.jenisoperasi, laporan_operasi_casemix.jenisanestesi, laporan_operasi_casemix.jammulaioperasi, "
+                            + "laporan_operasi_casemix.jamselesaioperasi, laporan_operasi_casemix.tindakan, '' AS selisih_waktu, "
+                            + "'' AS jammulaianestesi, '' AS jamselesaianestesi, '' AS selisih_waktu_anastesi, '' AS jampindah, "
                             + "laporan_operasi_casemix.uraian, laporan_operasi_casemix.kddokterbedah, dokterbedah.nm_dokter as dokterbedah, "
                             + "laporan_operasi_casemix.diagnosaprabedah, laporan_operasi_casemix.diagnosapascabedah, laporan_operasi_casemix.komplikasi, "
                             + "laporan_operasi_casemix.perdarahan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.dikirimket, laporan_operasi_casemix.asaljaringan, "
@@ -1708,6 +1620,8 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
 
     private void btnPetugasOKActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPetugasOKActionPerformed
         pilihan = 2;
+        petugas.kriteriaJabatan = "penata_anestesi";
+        petugas.load();
         petugas.emptTeks();
         petugas.isCek();
         petugas.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
@@ -1760,6 +1674,8 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
 
     private void btnPetugasRuanganActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPetugasRuanganActionPerformed
         pilihan = 1;
+        petugas.kriteriaJabatan = "perawat_ok_rr";
+        petugas.load();
         petugas.emptTeks();
         petugas.isCek();
         petugas.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
@@ -1844,18 +1760,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         // TODO add your handling code here:
     }// GEN-LAST:event_AsalJaringanKeyPressed
 
-    private void TanggalJamSelesaiAnestesiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TanggalJamSelesaiAnestesiKeyPressed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_TanggalJamSelesaiAnestesiKeyPressed
-
-    private void TanggalJamMulaiAnestesiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TanggalJamMulaiAnestesiKeyPressed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_TanggalJamMulaiAnestesiKeyPressed
-
-    private void TanggalJamPindahKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TanggalJamPindahKeyPressed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_TanggalJamPindahKeyPressed
-
     private void TanggalJamMulaiOperasiKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_TanggalJamMulaiOperasiKeyPressed
         // TODO add your handling code here:
     }// GEN-LAST:event_TanggalJamMulaiOperasiKeyPressed
@@ -1926,11 +1830,14 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
     private widget.TextBox TNoRw;
     private widget.TextBox TPasien;
     private widget.Tanggal Tanggal;
-    private widget.Tanggal TanggalJamMulaiAnestesi;
     private widget.Tanggal TanggalJamMulaiOperasi;
-    private widget.Tanggal TanggalJamPindah;
-    private widget.Tanggal TanggalJamSelesaiAnestesi;
     private widget.Tanggal TanggalJamSelesaiOperasi;
+    private widget.ComboBox cmbJamMulai;
+    private widget.ComboBox cmbMntMulai;
+    private widget.ComboBox cmbDtkMulai;
+    private widget.ComboBox cmbJamSelesai;
+    private widget.ComboBox cmbMntSelesai;
+    private widget.ComboBox cmbDtkSelesai;
     private widget.TextBox TglLahir;
     private widget.TextBox Tindakan;
     private widget.Button btnDokterAnestesi;
@@ -1954,9 +1861,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
     private widget.Label jLabel33;
     private widget.Label jLabel35;
     private widget.Label jLabel36;
-    private widget.Label jLabel37;
-    private widget.Label jLabel38;
-    private widget.Label jLabel39;
     private widget.Label jLabel4;
     private widget.Label jLabel40;
     private widget.Label jLabel42;
@@ -1991,7 +1895,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                 + "laporan_operasi_casemix.asistenbedah, laporan_operasi_casemix.asistenanestesi, laporan_operasi_casemix.jenisoperasi, laporan_operasi_casemix.jenisanestesi, "
                                 + "laporan_operasi_casemix.diagnosaprabedah, laporan_operasi_casemix.diagnosapascabedah, laporan_operasi_casemix.tindakan, laporan_operasi_casemix.jammulaioperasi, "
                                 + "laporan_operasi_casemix.jamselesaioperasi, laporan_operasi_casemix.lama, laporan_operasi_casemix.pembiusan, laporan_operasi_casemix.posisi, "
-                                + "laporan_operasi_casemix.jammulaianestesi, laporan_operasi_casemix.jamselesaianestesi, laporan_operasi_casemix.jampindah, laporan_operasi_casemix.uraian, "
+                                + "laporan_operasi_casemix.uraian, "
                                 + "laporan_operasi_casemix.komplikasi, laporan_operasi_casemix.perdarahan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.dikirimket, "
                                 + "laporan_operasi_casemix.asaljaringan, "
                                 + "laporan_operasi_casemix.jenispembedahan, laporan_operasi_casemix.pemasanganimplan, laporan_operasi_casemix.lokasiimplan, "
@@ -2008,8 +1912,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                                 + "laporan_operasi_casemix.jenisanestesi, laporan_operasi_casemix.diagnosaprabedah, laporan_operasi_casemix.diagnosapascabedah, "
                                 + "laporan_operasi_casemix.tindakan, laporan_operasi_casemix.jammulaioperasi, laporan_operasi_casemix.jamselesaioperasi, "
                                 + "laporan_operasi_casemix.lama, laporan_operasi_casemix.pembiusan, laporan_operasi_casemix.posisi, "
-                                + "laporan_operasi_casemix.jammulaianestesi, laporan_operasi_casemix.jamselesaianestesi, "
-                                + "laporan_operasi_casemix.jampindah, laporan_operasi_casemix.uraian, laporan_operasi_casemix.komplikasi, "
+                                + "laporan_operasi_casemix.uraian, laporan_operasi_casemix.komplikasi, "
                                 + "laporan_operasi_casemix.perdarahan, laporan_operasi_casemix.dikirim, laporan_operasi_casemix.dikirimket, "
                                 + "laporan_operasi_casemix.asaljaringan, "
                                 + "laporan_operasi_casemix.jenispembedahan, laporan_operasi_casemix.pemasanganimplan, laporan_operasi_casemix.lokasiimplan, "
@@ -2038,20 +1941,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     tabMode.addRow(new String[] {
-                            /*
-                             * "No.Rawat", "No.RM", "Nama Pasien", "Tgl.Lahir", "J.K.", "Tanggal",
-                             * "Kode Dokter Bedah", "Dokter Bedah", "Kode Dokter Anestesi",
-                             * "Dokter Anestesi",
-                             * "Kode Asisten Bedah", "Asisten Bedah", "Kode Asisten Anestesi",
-                             * "Nama Asisten",
-                             * "Jenis Operasi", "Jenis Anestesi", "Diagnosa Pra Bedah",
-                             * "Diagnosa Pasca Bedah",
-                             * "Tindakan", "Jam Mulai Operasi", "Jam Selesai Operasi", "Lama Pembedahan",
-                             * "Cara Pembiusan", "Posisi Pasien", "Jam Mulai Anestesi",
-                             * "Jam Selesai Anestesi",
-                             * "Jam Pindah", "Uraian Pembedahan", "Komplikasi", "Perdaraan", "Dikirim",
-                             * "Jenis Pemeriksaan", "Asal Jaringan"
-                             */
                             rs.getString("no_rawat"), rs.getString("no_rkm_medis"), rs.getString("nm_pasien"),
                             rs.getString("tgl_lahir"),
                             rs.getString("jk"), rs.getString("tanggal"), rs.getString("kddokterbedah"),
@@ -2064,9 +1953,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                             rs.getString("diagnosapascabedah"), rs.getString("tindakan"),
                             rs.getString("jammulaioperasi"), rs.getString("jamselesaioperasi"), rs.getString("lama"),
                             rs.getString("pembiusan"),
-                            rs.getString("posisi"), rs.getString("jammulaianestesi"),
-                            rs.getString("jamselesaianestesi"), rs.getString("jampindah"),
-                            rs.getString("uraian"), rs.getString("komplikasi"), rs.getString("perdarahan"),
+                            rs.getString("posisi"), rs.getString("uraian"), rs.getString("komplikasi"), rs.getString("perdarahan"),
                             rs.getString("dikirim"), rs.getString("dikirimket"),
                             rs.getString("asaljaringan"), rs.getString("jenispembedahan"),
                             rs.getString("pemasanganimplan"), rs.getString("lokasiimplan"),
@@ -2093,7 +1980,9 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
     }
 
     private void initLaporanOperasi() {
-        // === TAHAP 1: Geser komponen Y >= 260 ke bawah 30px untuk Jenis Pembedahan ===
+        TanggalJamMulaiOperasi.setVisible(false);
+        TanggalJamSelesaiOperasi.setVisible(false);
+
         java.awt.Component[] components = FormInput.getComponents();
         for (java.awt.Component comp : components) {
             java.awt.Rectangle bounds = comp.getBounds();
@@ -2102,7 +1991,6 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
             }
         }
 
-        // Label Jenis Pembedahan
         lblJenisPembedahan = new widget.Label();
         lblJenisPembedahan.setText("Jenis Pembedahan :");
         lblJenisPembedahan.setName("lblJenisPembedahan");
@@ -2116,21 +2004,30 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         FormInput.add(JenisPembedahan);
         JenisPembedahan.setBounds(150, 260, 170, 23);
 
-        // === TAHAP 2: Geser komponen Y >= 440 ke bawah 120px untuk 4 baris Implan ===
         components = FormInput.getComponents();
         for (java.awt.Component comp : components) {
             java.awt.Rectangle bounds = comp.getBounds();
-            if (bounds.y >= 440) {
+            if (bounds.y >= 320) {
+                comp.setBounds(bounds.x, bounds.y + 30, bounds.width, bounds.height);
+            }
+        }
+        
+        jLabel36.setBounds(40, 320, 110, 23);
+        TanggalJamSelesaiOperasi.setBounds(160, 320, 90, 23);
+
+        components = FormInput.getComponents();
+        for (java.awt.Component comp : components) {
+            java.awt.Rectangle bounds = comp.getBounds();
+            if (bounds.y >= 470) {
                 comp.setBounds(bounds.x, bounds.y + 120, bounds.width, bounds.height);
             }
         }
 
-        // --- Baris 1: Pemasangan Implan (Y=440) ---
         lblPemasanganImplan = new widget.Label();
         lblPemasanganImplan.setText("Pemasangan Implan :");
         lblPemasanganImplan.setName("lblPemasanganImplan");
         FormInput.add(lblPemasanganImplan);
-        lblPemasanganImplan.setBounds(10, 440, 130, 23);
+        lblPemasanganImplan.setBounds(10, 470, 130, 23);
 
         bgImplan = new javax.swing.ButtonGroup();
         rdImplanYa = new javax.swing.JRadioButton("Ya");
@@ -2140,87 +2037,77 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         bgImplan.add(rdImplanTidak);
         FormInput.add(rdImplanYa);
         FormInput.add(rdImplanTidak);
-        rdImplanYa.setBounds(150, 440, 60, 23);
-        rdImplanTidak.setBounds(220, 440, 80, 23);
+        rdImplanYa.setBounds(150, 470, 60, 23);
+        rdImplanTidak.setBounds(220, 470, 80, 23);
 
-        // --- Baris 2: Lokasi Pemasangan Implan (Y=470) ---
         lblLokasiImplan = new widget.Label();
         lblLokasiImplan.setText("Lokasi Implan :");
         lblLokasiImplan.setName("lblLokasiImplan");
         FormInput.add(lblLokasiImplan);
-        lblLokasiImplan.setBounds(10, 470, 130, 23);
+        lblLokasiImplan.setBounds(10, 500, 130, 23);
 
         LokasiImplan = new widget.TextBox();
         LokasiImplan.setName("LokasiImplan");
         FormInput.add(LokasiImplan);
-        LokasiImplan.setBounds(150, 470, 630, 23);
+        LokasiImplan.setBounds(150, 500, 630, 23);
 
-        // --- Baris 3: Jenis Implan (Y=500) ---
         lblJenisImplan = new widget.Label();
         lblJenisImplan.setText("Jenis Implan :");
         lblJenisImplan.setName("lblJenisImplan");
         FormInput.add(lblJenisImplan);
-        lblJenisImplan.setBounds(10, 500, 130, 23);
+        lblJenisImplan.setBounds(10, 530, 130, 23);
 
         JenisImplan = new widget.TextBox();
         JenisImplan.setName("JenisImplan");
         FormInput.add(JenisImplan);
-        JenisImplan.setBounds(150, 500, 630, 23);
+        JenisImplan.setBounds(150, 530, 630, 23);
 
-        // --- Baris 4: No Registrasi Implan (Y=530) ---
         lblNoRegImplan = new widget.Label();
         lblNoRegImplan.setText("No Reg. Implan :");
         lblNoRegImplan.setName("lblNoRegImplan");
         FormInput.add(lblNoRegImplan);
-        lblNoRegImplan.setBounds(10, 530, 130, 23);
+        lblNoRegImplan.setBounds(10, 560, 130, 23);
 
         NoRegImplan = new widget.TextBox();
         NoRegImplan.setName("NoRegImplan");
         FormInput.add(NoRegImplan);
-        NoRegImplan.setBounds(150, 530, 300, 23);
+        NoRegImplan.setBounds(150, 560, 300, 23);
 
-        // === TAHAP 3: Geser komponen Y >= 560 ke bawah 60px untuk Klasifikasi Operasi
-        // & Konsultasi ===
         components = FormInput.getComponents();
         for (java.awt.Component comp : components) {
             java.awt.Rectangle bounds = comp.getBounds();
-            if (bounds.y >= 560) {
+            if (bounds.y >= 590) {
                 comp.setBounds(bounds.x, bounds.y + 60, bounds.width, bounds.height);
             }
         }
 
-        // --- Baris 5: Klasifikasi Operasi (Y=560) ---
         lblKlasifikasiOperasi = new widget.Label();
         lblKlasifikasiOperasi.setText("Klasifikasi Operasi :");
         lblKlasifikasiOperasi.setName("lblKlasifikasiOperasi");
         FormInput.add(lblKlasifikasiOperasi);
-        lblKlasifikasiOperasi.setBounds(10, 560, 130, 23);
+        lblKlasifikasiOperasi.setBounds(10, 590, 130, 23);
 
         KlasifikasiOperasi = new widget.ComboBox();
         KlasifikasiOperasi.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "Emergency/Cito", "Elektif", "ODS" }));
         KlasifikasiOperasi.setName("KlasifikasiOperasi");
         FormInput.add(KlasifikasiOperasi);
-        KlasifikasiOperasi.setBounds(150, 560, 170, 23);
+        KlasifikasiOperasi.setBounds(150, 590, 170, 23);
 
-        // --- Baris 6: Konsultasi Intra Operatif (Y=590) ---
         lblKonsultasiIntraOperatif = new widget.Label();
         lblKonsultasiIntraOperatif.setText("Konsul Intra Op. :");
         lblKonsultasiIntraOperatif.setName("lblKonsultasiIntraOperatif");
         FormInput.add(lblKonsultasiIntraOperatif);
-        lblKonsultasiIntraOperatif.setBounds(10, 590, 130, 23);
+        lblKonsultasiIntraOperatif.setBounds(10, 620, 130, 23);
 
         KonsultasiIntraOperatif = new widget.TextBox();
         KonsultasiIntraOperatif.setName("KonsultasiIntraOperatif");
         FormInput.add(KonsultasiIntraOperatif);
-        KonsultasiIntraOperatif.setBounds(150, 590, 630, 23);
+        KonsultasiIntraOperatif.setBounds(150, 620, 630, 23);
 
-        // Perbesar tinggi FormInput agar muat semua komponen (+30 + 120 + 60 = 210)
-        // Dan pastikan lebarnya cukup (misal 870) agar komponen tidak overlap/terpotong di layar kecil
         java.awt.Dimension prefSize = FormInput.getPreferredSize();
-        FormInput.setPreferredSize(new java.awt.Dimension(Math.max(prefSize.width, 870), prefSize.height + 210));
+        FormInput.setPreferredSize(new java.awt.Dimension(Math.max(prefSize.width, 870), prefSize.height + 240));
 
-        // Menyembunyikan kode dokter / penata / asisten dan melebarkan text nama
         KodeDokterBedah.setVisible(false);
         NamaDokterBedah.setBounds(90, 70, 275, 23);
 
@@ -2233,11 +2120,87 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         KdPenataAnestesi.setVisible(false);
         NmPetugasOK.setBounds(510, 110, 265, 23);
 
+        cmbJamMulai = new widget.ComboBox();
+        cmbJamMulai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cmbJamMulai.setName("cmbJamMulai");
+        cmbJamMulai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TanggalJamMulaiOperasiKeyPressed(evt);
+            }
+        });
+        FormInput.add(cmbJamMulai);
+        cmbJamMulai.setBounds(160, 290, 50, 23);
+
+        cmbMntMulai = new widget.ComboBox();
+        cmbMntMulai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbMntMulai.setName("cmbMntMulai");
+        cmbMntMulai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TanggalJamMulaiOperasiKeyPressed(evt);
+            }
+        });
+        FormInput.add(cmbMntMulai);
+        cmbMntMulai.setBounds(212, 290, 50, 23);
+
+        cmbDtkMulai = new widget.ComboBox();
+        cmbDtkMulai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbDtkMulai.setName("cmbDtkMulai");
+        cmbDtkMulai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TanggalJamMulaiOperasiKeyPressed(evt);
+            }
+        });
+        FormInput.add(cmbDtkMulai);
+        cmbDtkMulai.setBounds(264, 290, 50, 23);
+
+        cmbJamSelesai = new widget.ComboBox();
+        cmbJamSelesai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cmbJamSelesai.setName("cmbJamSelesai");
+        cmbJamSelesai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TanggalJamSelesaiOperasiKeyPressed(evt);
+            }
+        });
+        FormInput.add(cmbJamSelesai);
+        cmbJamSelesai.setBounds(160, 320, 50, 23);
+
+        cmbMntSelesai = new widget.ComboBox();
+        cmbMntSelesai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbMntSelesai.setName("cmbMntSelesai");
+        cmbMntSelesai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TanggalJamSelesaiOperasiKeyPressed(evt);
+            }
+        });
+        FormInput.add(cmbMntSelesai);
+        cmbMntSelesai.setBounds(212, 320, 50, 23);
+
+        cmbDtkSelesai = new widget.ComboBox();
+        cmbDtkSelesai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59" }));
+        cmbDtkSelesai.setName("cmbDtkSelesai");
+        cmbDtkSelesai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TanggalJamSelesaiOperasiKeyPressed(evt);
+            }
+        });
+        FormInput.add(cmbDtkSelesai);
+        cmbDtkSelesai.setBounds(264, 320, 50, 23);
+
+        java.awt.event.ItemListener hitungLamaListener = new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+                    hitungLamaOperasi();
+                }
+            }
+        };
+        cmbJamMulai.addItemListener(hitungLamaListener);
+        cmbMntMulai.addItemListener(hitungLamaListener);
+        cmbJamSelesai.addItemListener(hitungLamaListener);
+        cmbMntSelesai.addItemListener(hitungLamaListener);
+
         FormInput.revalidate();
         FormInput.repaint();
 
-        // === Tombol Pilih Template Laporan Operasi (di samping BtnAll di panelGlass9)
-        // ===
         BtnTemplate = new widget.Button();
         BtnTemplate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
         BtnTemplate.setText("Template");
@@ -2255,7 +2218,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         });
         panelGlass9.add(BtnTemplate);
 
-        // === WindowListener: isi SEMUA field saat template dialog ditutup ===
+
         template.addWindowListener(new java.awt.event.WindowListener() {
             @Override
             public void windowOpened(java.awt.event.WindowEvent e) {
@@ -2318,6 +2281,27 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
         });
     }
 
+    private void hitungLamaOperasi() {
+        try {
+            int jamMulai = Integer.parseInt(cmbJamMulai.getSelectedItem().toString());
+            int mntMulai = Integer.parseInt(cmbMntMulai.getSelectedItem().toString());
+            int jamSelesai = Integer.parseInt(cmbJamSelesai.getSelectedItem().toString());
+            int mntSelesai = Integer.parseInt(cmbMntSelesai.getSelectedItem().toString());
+
+            int totalMulai = (jamMulai * 60) + mntMulai;
+            int totalSelesai = (jamSelesai * 60) + mntSelesai;
+
+            if (totalSelesai < totalMulai) {
+                totalSelesai += (24 * 60); // Jika melewati tengah malam
+            }
+
+            int selisih = totalSelesai - totalMulai;
+            LamaPembedahan.setText(selisih + " Menit");
+        } catch (Exception e) {
+            // Abaikan jika terjadi error parsing
+        }
+    }
+
     public void emptTeks() {
         TNoRw.setText("");
         TNoRM.setText("");
@@ -2373,32 +2357,33 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
             DiagnosaPrabedah.setText(tbObat.getValueAt(r, 16).toString());
             DiagnosaPascabedah.setText(tbObat.getValueAt(r, 17).toString());
             Tindakan.setText(tbObat.getValueAt(r, 18).toString());
-            Valid.SetTgl2(TanggalJamMulaiOperasi, tbObat.getValueAt(r, 19).toString());
-            Valid.SetTgl2(TanggalJamSelesaiOperasi, tbObat.getValueAt(r, 20).toString());
+            cmbJamMulai.setSelectedItem(tbObat.getValueAt(r, 19).toString().substring(11, 13));
+            cmbMntMulai.setSelectedItem(tbObat.getValueAt(r, 19).toString().substring(14, 16));
+            cmbDtkMulai.setSelectedItem(tbObat.getValueAt(r, 19).toString().substring(17, 19));
+            cmbJamSelesai.setSelectedItem(tbObat.getValueAt(r, 20).toString().substring(11, 13));
+            cmbMntSelesai.setSelectedItem(tbObat.getValueAt(r, 20).toString().substring(14, 16));
+            cmbDtkSelesai.setSelectedItem(tbObat.getValueAt(r, 20).toString().substring(17, 19));
             LamaPembedahan.setText(tbObat.getValueAt(r, 21).toString());
             CaraPembiusan.setText(tbObat.getValueAt(r, 22).toString());
             PosisiPasien.setText(tbObat.getValueAt(r, 23).toString());
-            Valid.SetTgl2(TanggalJamMulaiAnestesi, tbObat.getValueAt(r, 24).toString());
-            Valid.SetTgl2(TanggalJamSelesaiAnestesi, tbObat.getValueAt(r, 25).toString());
-            Valid.SetTgl2(TanggalJamPindah, tbObat.getValueAt(r, 26).toString());
-            LaporanOperasi.setText(tbObat.getValueAt(r, 27).toString());
-            Komplikasi.setText(tbObat.getValueAt(r, 28).toString());
-            JumlahPerdarahan.setText(tbObat.getValueAt(r, 29).toString());
-            Jaringan.setSelectedItem(tbObat.getValueAt(r, 30).toString());
-            KetJaringan.setSelectedItem(tbObat.getValueAt(r, 31).toString());
-            AsalJaringan.setText(tbObat.getValueAt(r, 32).toString());
-            JenisPembedahan.setSelectedItem(tbObat.getValueAt(r, 33).toString());
-            String implan = tbObat.getValueAt(r, 34).toString();
+            LaporanOperasi.setText(tbObat.getValueAt(r, 24).toString());
+            Komplikasi.setText(tbObat.getValueAt(r, 25).toString());
+            JumlahPerdarahan.setText(tbObat.getValueAt(r, 26).toString());
+            KetJaringan.setSelectedItem(tbObat.getValueAt(r, 27).toString());
+            Jaringan.setSelectedItem(tbObat.getValueAt(r, 28).toString());
+            AsalJaringan.setText(tbObat.getValueAt(r, 29).toString());
+            JenisPembedahan.setSelectedItem(tbObat.getValueAt(r, 30).toString());
+            String implan = tbObat.getValueAt(r, 31).toString();
             if (implan.equals("Ya")) {
                 rdImplanYa.setSelected(true);
             } else {
                 rdImplanTidak.setSelected(true);
             }
-            LokasiImplan.setText(tbObat.getValueAt(r, 35).toString());
-            JenisImplan.setText(tbObat.getValueAt(r, 36).toString());
-            NoRegImplan.setText(tbObat.getValueAt(r, 37).toString());
-            KlasifikasiOperasi.setSelectedItem(tbObat.getValueAt(r, 38).toString());
-            KonsultasiIntraOperatif.setText(tbObat.getValueAt(r, 39).toString());
+            LokasiImplan.setText(tbObat.getValueAt(r, 32).toString());
+            JenisImplan.setText(tbObat.getValueAt(r, 33).toString());
+            NoRegImplan.setText(tbObat.getValueAt(r, 34).toString());
+            KlasifikasiOperasi.setSelectedItem(tbObat.getValueAt(r, 35).toString());
+            KonsultasiIntraOperatif.setText(tbObat.getValueAt(r, 36).toString());
         }
     }
 
@@ -2440,11 +2425,17 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                 if (rs.next()) {
                     String tglMulai = rs.getString("tanggal") + " " + rs.getString("jam_mulai");
                     String tglSelesai = rs.getString("tanggal") + " " + rs.getString("jam_selesai");
-                    Valid.SetTgl2(TanggalJamMulaiOperasi, tglMulai);
-                    Valid.SetTgl2(TanggalJamSelesaiOperasi, tglSelesai);
-                    Valid.SetTgl2(TanggalJamMulaiAnestesi, tglMulai);
-                    Valid.SetTgl2(TanggalJamSelesaiAnestesi, tglSelesai);
-                    Valid.SetTgl2(TanggalJamPindah, tglSelesai);
+                    // Valid.SetTgl2(TanggalJamMulaiOperasi, tglMulai);
+                    cmbJamMulai.setSelectedItem(rs.getString("jam_mulai").substring(0, 2));
+                    cmbMntMulai.setSelectedItem(rs.getString("jam_mulai").substring(3, 5));
+                    cmbDtkMulai.setSelectedItem(rs.getString("jam_mulai").substring(6, 8));
+                    // Valid.SetTgl2(TanggalJamSelesaiOperasi, tglSelesai);
+                    cmbJamSelesai.setSelectedItem(rs.getString("jam_selesai").substring(0, 2));
+                    cmbMntSelesai.setSelectedItem(rs.getString("jam_selesai").substring(3, 5));
+                    cmbDtkSelesai.setSelectedItem(rs.getString("jam_selesai").substring(6, 8));
+                    // Valid.SetTgl2(TanggalJamMulaiAnestesi, tglMulai);
+                    // Valid.SetTgl2(TanggalJamSelesaiAnestesi, tglSelesai);
+                    // Valid.SetTgl2(TanggalJamPindah, tglSelesai);
                 }
             } catch (Exception e) {
                 System.out.println("Notif : " + e);
@@ -2541,17 +2532,14 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                     KdPenataAnestesi.getText().equals("") ? NmPetugasOK.getText() : KdPenataAnestesi.getText(),
                     JenisOperasi.getSelectedItem().toString(), JenisAnastesi.getSelectedItem().toString(),
                     DiagnosaPrabedah.getText(), DiagnosaPascabedah.getText(), Tindakan.getText(),
-                    Valid.SetTgl(TanggalJamMulaiOperasi.getSelectedItem() + "") + " "
-                            + TanggalJamMulaiOperasi.getSelectedItem().toString().substring(11, 19),
-                    Valid.SetTgl(TanggalJamSelesaiOperasi.getSelectedItem() + "") + " "
-                            + TanggalJamSelesaiOperasi.getSelectedItem().toString().substring(11, 19),
+                    Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
+                            + cmbJamMulai.getSelectedItem() + ":" + cmbMntMulai.getSelectedItem() + ":" + cmbDtkMulai.getSelectedItem(),
+                    Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
+                            + cmbJamSelesai.getSelectedItem() + ":" + cmbMntSelesai.getSelectedItem() + ":" + cmbDtkSelesai.getSelectedItem(),
                     LamaPembedahan.getText(), CaraPembiusan.getText(), PosisiPasien.getText(),
-                    Valid.SetTgl(TanggalJamMulaiAnestesi.getSelectedItem() + "") + " "
-                            + TanggalJamMulaiAnestesi.getSelectedItem().toString().substring(11, 19),
-                    Valid.SetTgl(TanggalJamSelesaiAnestesi.getSelectedItem() + "") + " "
-                            + TanggalJamSelesaiAnestesi.getSelectedItem().toString().substring(11, 19),
-                    Valid.SetTgl(TanggalJamPindah.getSelectedItem() + "") + " "
-                            + TanggalJamPindah.getSelectedItem().toString().substring(11, 19),
+                    "0000-00-00 00:00:00",
+                    "0000-00-00 00:00:00",
+                    "0000-00-00 00:00:00",
                     LaporanOperasi.getText(), Komplikasi.getText(), JumlahPerdarahan.getText(),
                     KetJaringan.getSelectedItem().toString(), Jaringan.getSelectedItem().toString(),
                     AsalJaringan.getText(),
@@ -2563,8 +2551,7 @@ public final class RMLaporanOperasi extends javax.swing.JDialog {
                     KlasifikasiOperasi.getSelectedItem().toString(),
                     KonsultasiIntraOperatif.getText(),
                     TNoRw.getText(),
-                    Valid.SetTgl(Tanggal.getSelectedItem() + "") + " "
-                            + Tanggal.getSelectedItem().toString().substring(11, 19),
+                    Valid.SetTgl(Tanggal.getSelectedItem() + "") + " 00:00:00",
                     tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString(),
                     tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString()
                 }) == true) {

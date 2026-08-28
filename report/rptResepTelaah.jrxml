@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptResepTelaah" pageWidth="420" pageHeight="595" columnWidth="386" leftMargin="17" rightMargin="17" topMargin="17" bottomMargin="17" uuid="0c7c39b7-7d2e-4b4d-b861-aac0a790796f">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptResepTelaah" language="groovy" pageWidth="420" pageHeight="595" columnWidth="386" leftMargin="17" rightMargin="17" topMargin="17" bottomMargin="17" uuid="0c7c39b7-7d2e-4b4d-b861-aac0a790796f">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -50,7 +50,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 					<font fontName="Tahoma" size="60" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{penanggung}.toUpperCase().contains("BPJS") ? "BPJS" : ($P{penanggung}.toUpperCase().contains("UMUM") ? "UMUM" : "ASURANSI")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{penanggung}.toUpperCase().contains("BPJS") && !$P{penanggung}.toUpperCase().replace(" ", "").replace("-", "").contains("NONBPJS")) ? "BPJS" : ($P{penanggung}.toUpperCase().contains("UMUM") ? "UMUM" : "ASURANSI")]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="0" y="555" width="386" height="1" uuid="75880c77-e716-4606-9366-cbb7980e3875"/>

@@ -89,6 +89,10 @@ public final class RMPenilaianAwalPerina extends javax.swing.JDialog {
             "Rencana Keperawatan Lainnya","Apgar Score","Lingkar Kepala","Lingkar Dada","Lingkar Perut","Lingkar Lengan","Tangis","Gerakan","Refleks Moro","Refleks Genggam","Refleks Rooting","Refleks Hisap","Labio","Cara Minum","Suhu Tubuh","Kepala","Mata Secret","Tali Pusat"
         }){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
+              @Override public Object getValueAt(int row, int col) {
+                  Object val = super.getValueAt(row, col);
+                  return val == null ? "" : val;
+              }
         };
         tbObat.setModel(tabMode);
 
@@ -8636,6 +8640,23 @@ public final class RMPenilaianAwalPerina extends javax.swing.JDialog {
         DiketahuiDietisen.setSelectedIndex(0);
         KeteranganDiketahuiDietisen.setText("");
         Rencana.setText("");
+        Apgar_score.setText("");
+        Lingkar_kepala.setText("");
+        Lingkar_dada.setText("");
+        Lingkar_perut.setText("");
+        Lingkar_lengan.setText("");
+        Tangis.setSelectedIndex(0);
+        Gerakan.setSelectedIndex(0);
+        Refleks_moro.setSelectedIndex(0);
+        Refleks_genggam.setSelectedIndex(0);
+        Refleks_rooting.setSelectedIndex(0);
+        Refleks_hisap.setSelectedIndex(0);
+        Labio.setSelectedIndex(0);
+        Cara_minum.setSelectedIndex(0);
+        Suhu_tubuh.setSelectedIndex(0);
+        Kepala.setSelectedIndex(0);
+        Mata_secret.setSelectedIndex(0);
+        Tali_pusat.setSelectedIndex(0);
         for (i = 0; i < tabModeMasalah.getRowCount(); i++) {
             tabModeMasalah.setValueAt(false,i,0);
         }
@@ -8651,6 +8672,8 @@ public final class RMPenilaianAwalPerina extends javax.swing.JDialog {
             TPasien.setText(tbObat.getValueAt(tbObat.getSelectedRow(),2).toString()); 
             TglLahir.setText(tbObat.getValueAt(tbObat.getSelectedRow(),3).toString()); 
             Jk.setText(tbObat.getValueAt(tbObat.getSelectedRow(),4).toString()); 
+            KdPetugas.setText(tbObat.getValueAt(tbObat.getSelectedRow(),5).toString()); 
+            NmPetugas.setText(tbObat.getValueAt(tbObat.getSelectedRow(),6).toString()); 
             KdPetugas2.setText(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()); 
             NmPetugas2.setText(tbObat.getValueAt(tbObat.getSelectedRow(),8).toString()); 
             KdDPJP.setText(tbObat.getValueAt(tbObat.getSelectedRow(),9).toString()); 

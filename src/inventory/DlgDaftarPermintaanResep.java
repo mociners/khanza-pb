@@ -189,7 +189,7 @@ public class DlgDaftarPermintaanResep extends javax.swing.JDialog {
                 column.setPreferredWidth(70);
             }
         }
-        tbResepRanap.setDefaultRenderer(Object.class, new WarnaTable());
+        tbResepRanap.setDefaultRenderer(Object.class, new WarnaTablePermintaanResep());
         
         tabMode4=new DefaultTableModel(null,new Object[]{
                 "No.Resep","Tgl.Resep","Ruang/Kamar","Status","Pasien","Dokter Peresep"
@@ -335,7 +335,7 @@ public class DlgDaftarPermintaanResep extends javax.swing.JDialog {
                 column.setPreferredWidth(120);
             }
         }
-        tbPermintaanResepPulang.setDefaultRenderer(Object.class, new WarnaTable());
+        tbPermintaanResepPulang.setDefaultRenderer(Object.class, new WarnaTablePermintaanResep());
         
         tabMode8=new DefaultTableModel(null,new Object[]{
                 "No.Permintaan","Tanggal","Ruang/Kamar","Status","Pasien","Dokter Yang Meminta"

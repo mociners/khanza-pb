@@ -25,11 +25,10 @@
                     laporan_operasi_casemix.nip_petugas_ruangan,petugasruangan.nama as petugasruangan,
                     laporan_operasi_casemix.nip_perawat_ok,petugasok.nama as petugasok,laporan_operasi_casemix.jenis_operasi,
 laporan_operasi_casemix.jenis_anastesi,laporan_operasi_casemix.diagnosa_pra_bedah,laporan_operasi_casemix.diagnosa_pasca_bedah,
-laporan_operasi_casemix.komplikasi_operasi,laporan_operasi_casemix.jaringan,laporan_operasi_casemix.ket_jaringan,laporan_operasi_casemix.jam_pindah,
+laporan_operasi_casemix.komplikasi_operasi,laporan_operasi_casemix.jaringan,laporan_operasi_casemix.ket_jaringan,
 laporan_operasi_casemix.jumlah_perdarahan,laporan_operasi_casemix.jumlah_transfusi,laporan_operasi_casemix.implant,
 laporan_operasi_casemix.ket_implant,laporan_operasi_casemix.perawatan_pascaop,laporan_operasi_casemix.jam_mulai_operasi,
-laporan_operasi_casemix.jam_selesai_operasi,TIMEDIFF(laporan_operasi_casemix.jam_selesai_operasi, laporan_operasi_casemix.jam_mulai_operasi) AS selisih_waktu,laporan_operasi_casemix.laporan_operasi,laporan_operasi_casemix.jam_mulai_anastesi,
-laporan_operasi_casemix.jam_selesai_anastesi,TIMEDIFF(laporan_operasi_casemix.jam_selesai_anastesi, laporan_operasi_casemix.jam_mulai_anastesi) AS selisih_waktu_anastesi
+laporan_operasi_casemix.jam_selesai_operasi,laporan_operasi_casemix.laporan_operasi
                     from laporan_operasi_casemix inner join reg_periksa on laporan_operasi_casemix.no_rawat=reg_periksa.no_rawat 
                     inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis 
                     inner join dokter as dokterbedah on dokterbedah.kd_dokter=laporan_operasi_casemix.kd_dokter_bedah 
@@ -119,8 +118,6 @@ laporan_operasi_casemix.jam_selesai_anastesi,TIMEDIFF(laporan_operasi_casemix.ja
     </field>
     <field name="jammulaioperasi" class="java.lang.String"/>
     <field name="jamselesaioperasi" class="java.lang.String"/>
-    <field name="selisih_waktu_anastesi" class="java.lang.String"/>
-    <field name="selisih_waktu" class="java.lang.String"/>
     <field name="jenisoperasi" class="java.lang.String"/>
     <field name="jenisanestesi" class="java.lang.String"/>
     <field name="diagnosaprabedah" class="java.lang.String"/>
@@ -137,13 +134,10 @@ laporan_operasi_casemix.jam_selesai_anastesi,TIMEDIFF(laporan_operasi_casemix.ja
     <field name="jenisimplan" class="java.lang.String"/>
     <field name="noregimplan" class="java.lang.String"/>
     <field name="jenispembedahan" class="java.lang.String"/>
-    <field name="jammulaianestesi" class="java.lang.String"/>
-    <field name="jamselesaianestesi" class="java.lang.String"/>
     <field name="posisi" class="java.lang.String"/>
     <field name="pembiusan" class="java.lang.String"/>
     <field name="lama" class="java.lang.String"/>
     <field name="uraian" class="java.lang.String"/>
-    <field name="jampindah" class="java.lang.String"/>
     <background>
         <band splitType="Stretch"/>
     </background>
@@ -628,7 +622,7 @@ laporan_operasi_casemix.jam_selesai_anastesi,TIMEDIFF(laporan_operasi_casemix.ja
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font fontName="Tahoma" size="8"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{selisih_waktu}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <line>
                 <reportElement x="1" y="183" width="552" height="1" uuid="f03fad55-a55d-45ee-9492-59e2ad4e9da9"/>
@@ -1003,21 +997,21 @@ laporan_operasi_casemix.jam_selesai_anastesi,TIMEDIFF(laporan_operasi_casemix.ja
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font fontName="Tahoma" size="8"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{selisih_waktu_anastesi}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="280" y="424" width="60" height="21" uuid="b273cb00-9201-4bdb-a9af-13ac628233d0"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font fontName="Tahoma" size="8"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{jammulaianestesi}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="341" y="424" width="58" height="21" uuid="50ecd7bc-d8f7-44c2-b491-41292e3eceaa"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font fontName="Tahoma" size="8"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{jamselesaianestesi}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement mode="Transparent" x="5" y="468" width="543" height="145" uuid="536eaceb-f84b-4b48-ad9e-1edd51dccdf7"/>
@@ -1053,7 +1047,7 @@ laporan_operasi_casemix.jam_selesai_anastesi,TIMEDIFF(laporan_operasi_casemix.ja
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font fontName="Tahoma" size="8"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{jampindah}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[""]]></textFieldExpression>
             </textField>
         </band>
     </title>

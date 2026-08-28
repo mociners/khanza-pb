@@ -1,0 +1,21 @@
+<project name="Compile Reports" default="compile" basedir=".">
+    <path id="classpath">
+        <fileset dir="./lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <taskdef name="jrc" classname="net.sf.jasperreports.ant.JRAntCompileTask">
+        <classpath refid="classpath"/>
+    </taskdef>
+    <target name="compile">
+        <jrc destdir="./report" tempdir="./report" keepjava="false">
+            <src>
+                <fileset dir="./report">
+                    <include name="rptResepTelaah.jrxml"/>
+                    <include name="rptResepTelaah1.jrxml"/>
+                </fileset>
+            </src>
+            <classpath refid="classpath"/>
+        </jrc>
+    </target>
+</project>

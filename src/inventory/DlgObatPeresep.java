@@ -22,6 +22,13 @@ import javax.swing.table.TableColumn;
 import kepegawaian.DlgCariDokter;
 import simrskhanza.DlgCariPoli;
 import simrskhanza.DlgCariCaraBayar;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class DlgObatPeresep extends javax.swing.JDialog {
     private final DefaultTableModel tabMode;
@@ -32,10 +39,11 @@ public class DlgObatPeresep extends javax.swing.JDialog {
     private ResultSet rs,rs2; 
     private DlgCariDokter dokter=new DlgCariDokter(null,false);
     private int i=0,a=0;
-    private double total=0;
+    private double total=0,totalJml=0;
     private DlgCariCaraBayar carabayar=new DlgCariCaraBayar(null,false);
     private DlgCariPoli poli=new DlgCariPoli(null,false);
-    private String  No="",Kode="",Nama="",Jml="",Satuan="",Harga="",Subtotal="";
+    private DlgCariKategori kategori=new DlgCariKategori(null,false);
+    private String  No="",Kode="",Nama="",Kategori="",Jml="",Satuan="",Harga="",Subtotal="";
 
     /** Creates new form DlgProgramStudi
      * @param parent
@@ -45,11 +53,11 @@ public class DlgObatPeresep extends javax.swing.JDialog {
         initComponents();
 
         tabMode=new DefaultTableModel(null,new Object[]{
-                "No.","Kode","Nama","Jml","Satuan","Harga","Subtotal"
+                "No.","Kode","Nama","Kategori","Jml","Satuan","Harga","Subtotal"
             }){
              @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
              Class[] types = new Class[] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, 
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
                 java.lang.Double.class, java.lang.String.class,java.lang.Double.class, 
                 java.lang.Double.class
              };
@@ -63,7 +71,7 @@ public class DlgObatPeresep extends javax.swing.JDialog {
         tbDokter.setPreferredScrollableViewportSize(new Dimension(800,800));
         tbDokter.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0;i < 7; i++) {
+        for (i = 0;i < 8; i++) {
             TableColumn column = tbDokter.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(35);
@@ -72,12 +80,14 @@ public class DlgObatPeresep extends javax.swing.JDialog {
             }else if(i==2){
                 column.setPreferredWidth(280);
             }else if(i==3){
-                column.setPreferredWidth(40);
+                column.setPreferredWidth(120);
             }else if(i==4){
-                column.setPreferredWidth(60);
+                column.setPreferredWidth(40);
             }else if(i==5){
-                column.setPreferredWidth(90);
+                column.setPreferredWidth(60);
             }else if(i==6){
+                column.setPreferredWidth(90);
+            }else if(i==7){
                 column.setPreferredWidth(100);
             }
         }
@@ -147,6 +157,28 @@ public class DlgObatPeresep extends javax.swing.JDialog {
             public void windowDeiconified(WindowEvent e) {}
             @Override
             public void windowActivated(WindowEvent e) {carabayar.onCari();}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });   
+        
+        kategori.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
+            @Override
+            public void windowClosing(WindowEvent e) {}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if(kategori.getTable().getSelectedRow()!= -1){
+                    nmkategori.setText(kategori.getTable().getValueAt(kategori.getTable().getSelectedRow(),1).toString());
+                }     
+                prosesCari();
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {kategori.emptTeks();}
             @Override
             public void windowDeactivated(WindowEvent e) {}
         });   
@@ -233,7 +265,7 @@ public class DlgObatPeresep extends javax.swing.JDialog {
         internalFrame1.add(scrollPane1, java.awt.BorderLayout.CENTER);
 
         panelisi4.setName("panelisi4"); // NOI18N
-        panelisi4.setPreferredSize(new java.awt.Dimension(100, 44));
+        panelisi4.setPreferredSize(new java.awt.Dimension(100, 74));
         panelisi4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 9));
 
         label21.setText("Poli/Unit :");
@@ -316,6 +348,35 @@ public class DlgObatPeresep extends javax.swing.JDialog {
             }
         });
         panelisi4.add(BtnSeek3);
+
+        labelKategori = new widget.Label();
+        labelKategori.setText("Kategori :");
+        labelKategori.setName("labelKategori"); // NOI18N
+        labelKategori.setPreferredSize(new java.awt.Dimension(65, 23));
+        panelisi4.add(labelKategori);
+
+        nmkategori = new widget.TextBox();
+        nmkategori.setEditable(false);
+        nmkategori.setName("nmkategori"); // NOI18N
+        nmkategori.setPreferredSize(new java.awt.Dimension(150, 23));
+        panelisi4.add(nmkategori);
+
+        BtnSeekKategori = new widget.Button();
+        BtnSeekKategori.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        BtnSeekKategori.setMnemonic('5');
+        BtnSeekKategori.setToolTipText("Alt+5");
+        BtnSeekKategori.setName("BtnSeekKategori"); // NOI18N
+        BtnSeekKategori.setPreferredSize(new java.awt.Dimension(28, 23));
+        BtnSeekKategori.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kategori.isCek();
+                kategori.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                kategori.setLocationRelativeTo(internalFrame1);
+                kategori.setAlwaysOnTop(false);
+                kategori.setVisible(true);
+            }
+        });
+        panelisi4.add(BtnSeekKategori);
 
         internalFrame1.add(panelisi4, java.awt.BorderLayout.PAGE_START);
 
@@ -411,6 +472,25 @@ public class DlgObatPeresep extends javax.swing.JDialog {
         });
         panelisi1.add(BtnPrint);
 
+        BtnExcel = new widget.Button();
+        BtnExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/export-excel.png"))); // NOI18N
+        BtnExcel.setMnemonic('X');
+        BtnExcel.setText("Excel");
+        BtnExcel.setToolTipText("Alt+X");
+        BtnExcel.setName("BtnExcel"); // NOI18N
+        BtnExcel.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnExcelActionPerformed(evt);
+            }
+        });
+        BtnExcel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                BtnExcelKeyPressed(evt);
+            }
+        });
+        panelisi1.add(BtnExcel);
+
         BtnKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/exit.png"))); // NOI18N
         BtnKeluar.setMnemonic('K');
         BtnKeluar.setText("Keluar");
@@ -470,35 +550,42 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
                     Nama="";
                 }
                 
+                Kategori="";
+                try {
+                    Kategori=tabMode.getValueAt(i,3).toString();
+                } catch (Exception e) {
+                    Kategori="";
+                }
+                
                 Jml="";
                 try {
-                    Jml=Valid.SetAngka(Double.parseDouble(tabMode.getValueAt(i,3).toString()));
+                    Jml=Valid.SetAngka(Double.parseDouble(tabMode.getValueAt(i,4).toString()));
                 } catch (Exception e) {
                     Jml="";
                 }
                 
                 Satuan="";
                 try {
-                    Satuan=tabMode.getValueAt(i,4).toString();
+                    Satuan=tabMode.getValueAt(i,5).toString();
                 } catch (Exception e) {
                     Satuan="";
                 }
                 
                 Harga="";
                 try {
-                    Harga=Valid.SetAngka(Double.parseDouble(tabMode.getValueAt(i,5).toString()));
+                    Harga=Valid.SetAngka(Double.parseDouble(tabMode.getValueAt(i,6).toString()));
                 } catch (Exception e) {
                     Harga="";
                 }
                 
                 Subtotal="";
                 try {
-                    Subtotal=Valid.SetAngka(Double.parseDouble(tabMode.getValueAt(i,6).toString()));
+                    Subtotal=Valid.SetAngka(Double.parseDouble(tabMode.getValueAt(i,7).toString()));
                 } catch (Exception e) {
                     Subtotal="";
                 }
                 
-                Sequel.menyimpan("temporary","'"+i+"','"+No+"','"+Kode+"','"+Nama+"','"+Jml+"','"+Satuan+"','"+Harga+"','"+Subtotal+"','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','"+akses.getalamatip()+"'","Rekap Obat Perdokter Poli"); 
+                Sequel.menyimpan("temporary","'"+i+"','"+No+"','"+Kode+"','"+Nama+"','"+Kategori+"','"+Jml+"','"+Satuan+"','"+Harga+"','"+Subtotal+"','','','','','','','','','','','','','','','','','','','','','','','','','','','','"+akses.getalamatip()+"'","Rekap Obat Perdokter Poli"); 
             }
                         
             Map<String, Object> param = new HashMap<>();
@@ -518,7 +605,7 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
         if(evt.getKeyCode()==KeyEvent.VK_SPACE){
             BtnPrintActionPerformed(null);
         }else{
-            Valid.pindah(evt,BtnAll,BtnKeluar);
+            Valid.pindah(evt,BtnAll,BtnExcel);
         }
     }//GEN-LAST:event_BtnPrintKeyPressed
 
@@ -529,7 +616,7 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
     private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnKeluarKeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_SPACE){
             dispose();
-        }else{Valid.pindah(evt,BtnPrint,Tgl1);}
+        }else{Valid.pindah(evt,BtnExcel,Tgl1);}
     }//GEN-LAST:event_BtnKeluarKeyPressed
 
     private void BtnAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAllActionPerformed
@@ -624,6 +711,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     private widget.Button BtnCari;
     private widget.Button BtnKeluar;
     private widget.Button BtnPrint;
+    private widget.Button BtnExcel;
     private widget.Button BtnSeek2;
     private widget.Button BtnSeek3;
     private widget.Button BtnSeek4;
@@ -637,9 +725,12 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     private widget.Label label19;
     private widget.Label label20;
     private widget.Label label21;
+    private widget.Label labelKategori;
     private widget.TextBox nmdokter;
     private widget.TextBox nmpenjab;
     private widget.TextBox nmpoli;
+    private widget.TextBox nmkategori;
+    private widget.Button BtnSeekKategori;
     private widget.panelisi panelisi1;
     private widget.panelisi panelisi4;
     private widget.ScrollPane scrollPane1;
@@ -656,6 +747,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     " on resep_obat.no_rawat=reg_periksa.no_rawat and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                     " and resep_obat.kd_dokter=dokter.kd_dokter and penjab.kd_pj=reg_periksa.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli where "+
                     " resep_obat.tgl_perawatan between ? and ? and dokter.nm_dokter like ? and penjab.png_jawab like ? and poliklinik.nm_poli like ? "+
+                    " and exists(select detail_pemberian_obat.no_rawat from detail_pemberian_obat inner join databarang on detail_pemberian_obat.kode_brng=databarang.kode_brng inner join kategori_barang on databarang.kode_kategori=kategori_barang.kode where detail_pemberian_obat.no_rawat=resep_obat.no_rawat and detail_pemberian_obat.tgl_perawatan=resep_obat.tgl_perawatan and detail_pemberian_obat.jam=resep_obat.jam and kategori_barang.nama like ?) "+
                     " order by resep_obat.tgl_perawatan,resep_obat.jam ");
             try {
                 ps.setString(1,Valid.SetTgl(Tgl1.getSelectedItem()+""));
@@ -663,36 +755,42 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 ps.setString(3,"%"+nmdokter.getText()+"%");
                 ps.setString(4,"%"+nmpenjab.getText()+"%");
                 ps.setString(5,"%"+nmpoli.getText()+"%");
+                ps.setString(6,"%"+nmkategori.getText()+"%");
                 rs=ps.executeQuery();
                 i=1;
                 total=0;
+                totalJml=0;
                 while(rs.next()){
                     tabMode.addRow(new Object[]{
-                        i,"No.Resep : "+rs.getString("no_resep"),rs.getString("nm_pasien"),null,null,null,null
+                        i,"No.Resep : "+rs.getString("no_resep"),rs.getString("nm_pasien"),null,null,null,null,null
                     });
                     tabMode.addRow(new Object[]{
-                        null,null,"No.Rawat : "+rs.getString("no_rawat"),null,null,null,null
+                        null,null,"No.Rawat : "+rs.getString("no_rawat"),null,null,null,null,null
                     });
                     tabMode.addRow(new Object[]{
-                        null,null,"Tgl.Resep : "+rs.getString("tgl_perawatan"),null,null,null,null
+                        null,null,"Tgl.Resep : "+rs.getString("tgl_perawatan"),null,null,null,null,null
                     });
                     ps2=koneksi.prepareStatement(
-                        "select databarang.kode_brng,databarang.nama_brng,detail_pemberian_obat.jml,detail_pemberian_obat.biaya_obat,"+
+                        "select databarang.kode_brng,databarang.nama_brng,kategori_barang.nama as kategori,detail_pemberian_obat.jml,detail_pemberian_obat.biaya_obat,"+
                         "(detail_pemberian_obat.jml * detail_pemberian_obat.biaya_obat) as total,databarang.kode_sat "+
                         "from detail_pemberian_obat inner join databarang on detail_pemberian_obat.kode_brng=databarang.kode_brng "+
+                        "inner join kategori_barang on databarang.kode_kategori=kategori_barang.kode "+
                         "where detail_pemberian_obat.tgl_perawatan=? and detail_pemberian_obat.jam=? and detail_pemberian_obat.no_rawat=? "+
+                        "and kategori_barang.nama like ? "+
                         "order by databarang.kode_brng");
                     try {
                         ps2.setString(1,rs.getString("tgl_perawatan"));
                         ps2.setString(2,rs.getString("jam"));
                         ps2.setString(3,rs.getString("no_rawat"));
+                        ps2.setString(4,"%"+nmkategori.getText()+"%");
                         rs2=ps2.executeQuery();
                         while(rs2.next()){
                             tabMode.addRow(new Object[]{
-                                null,rs2.getString("kode_brng"),rs2.getString("nama_brng"),rs2.getDouble("jml"),
+                                null,rs2.getString("kode_brng"),rs2.getString("nama_brng"),rs2.getString("kategori"),rs2.getDouble("jml"),
                                 rs2.getString("kode_sat"),rs2.getDouble("biaya_obat"),rs2.getDouble("total")
                             });
                             total=total+rs2.getDouble("total");
+                            totalJml=totalJml+rs2.getDouble("jml");
                         }
                     } catch (Exception e) {
                         System.out.println("Notifikasi : "+e);
@@ -717,10 +815,10 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 }
             }
             tabMode.addRow(new Object[]{
-                null,null,null,null,null,null,null
+                null,null,null,null,null,null,null,null
             });
             tabMode.addRow(new Object[]{
-                ">>","TOTAL",null,null,null,null,total
+                ">>","TOTAL",null,null,totalJml,null,null,total
             });
             this.setCursor(Cursor.getDefaultCursor());             
         }catch(Exception e){
@@ -728,4 +826,84 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         }        
     }
     
+    private void BtnExcelActionPerformed(java.awt.event.ActionEvent evt) {
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data sudah habis. Tidak ada data yang bisa anda export...!!!!");
+            BtnExcel.requestFocus();
+        }else if(tabMode.getRowCount()!=0){
+            exportExcel(tabMode);
+        }
+    }
+
+    private void BtnExcelKeyPressed(java.awt.event.KeyEvent evt) {
+        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+            BtnExcelActionPerformed(null);
+        }else{
+            Valid.pindah(evt, BtnPrint, BtnKeluar);
+        }
+    }
+
+    public void exportExcel(DefaultTableModel tableModel) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Pilih Lokasi Simpan File Excel");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Excel Files (*.xls)", "xls"));
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".xls")) {
+                filePath += ".xls";
+            }
+            WritableWorkbook workbook = null;
+            try {
+                workbook = Workbook.createWorkbook(new File(filePath));
+                WritableSheet sheet = workbook.createSheet("Rekap Obat Per Resep", 0);
+                
+                int colIndex = 0;
+                for (int i = 0; i < tableModel.getColumnCount(); i++) {
+                    Label label = new Label(colIndex, 0, tableModel.getColumnName(i));
+                    sheet.addCell(label);
+                    
+                    int maxColumnWidth = tableModel.getColumnName(i).length() + 5;
+                    for (int j = 0; j < tableModel.getRowCount(); j++) {
+                        Object value = tableModel.getValueAt(j, i);
+                        if (value != null) {
+                            int cellTextLength = value.toString().length();
+                            if (cellTextLength + 5 > maxColumnWidth) {
+                                maxColumnWidth = cellTextLength + 5;
+                            }
+                        }
+                    }
+                    sheet.setColumnView(colIndex, maxColumnWidth);
+                    colIndex++;
+                }
+
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    colIndex = 0;
+                    for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                        Object value = tableModel.getValueAt(i, j);
+                        if (value != null) {
+                            Label label = new Label(colIndex, i + 1, value.toString());
+                            sheet.addCell(label);
+                        }
+                        colIndex++;
+                    }
+                }
+                
+                sheet.getSettings().setVerticalFreeze(1);
+                workbook.write();
+                JOptionPane.showMessageDialog(null, "Data berhasil diekspor ke " + filePath);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error saat menulis file: " + e.getMessage());
+            } finally {
+                if (workbook != null) {
+                    try {
+                        workbook.close();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Error saat menutup file: " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
 }

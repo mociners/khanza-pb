@@ -14,6 +14,7 @@ package simrskhanza;
 import bridging.BPJSCekDataIndukKecelakaan;
 import bridging.BPJSCekSuplesiJasaRaharja;
 import rekammedis.RMRiwayatPerawatan;
+import rekammedis.RMGenerateKlaim;
 import permintaan.DlgBookingOperasi;
 import kepegawaian.DlgCariDokter;
 import inventory.DlgResepObat;
@@ -401,6 +402,23 @@ public final class DlgIGD extends javax.swing.JDialog {
             IPPRINTERTRACER="";
             URUTNOREG="";
         }
+        
+        javax.swing.JMenuItem ppGenerateBerkasKlaim = new javax.swing.JMenuItem();
+        ppGenerateBerkasKlaim.setBackground(new java.awt.Color(255, 255, 254));
+        ppGenerateBerkasKlaim.setFont(new java.awt.Font("Tahoma", 0, 11));
+        ppGenerateBerkasKlaim.setForeground(new java.awt.Color(50, 50, 50));
+        ppGenerateBerkasKlaim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
+        ppGenerateBerkasKlaim.setText("Generate Berkas Klaim");
+        ppGenerateBerkasKlaim.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        ppGenerateBerkasKlaim.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        ppGenerateBerkasKlaim.setName("ppGenerateBerkasKlaim");
+        ppGenerateBerkasKlaim.setPreferredSize(new java.awt.Dimension(200, 26));
+        ppGenerateBerkasKlaim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ppGenerateBerkasKlaimBtnPrintActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(ppGenerateBerkasKlaim);
     }
     
     
@@ -13219,5 +13237,23 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             formSEP = new BPJSDataSEP(null, false);
         }
         return formSEP;
+    }
+    
+    private void ppGenerateBerkasKlaimBtnPrintActionPerformed(java.awt.event.ActionEvent evt) {
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, table masih kosong...!!!!");
+            TCari.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()>-1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                RMGenerateKlaim resume=new RMGenerateKlaim(null,true);
+                resume.setNoRawat(TNoRw.getText());
+                resume.setNoRm(TNoRM.getText(),TPasien.getText());
+                resume.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
+                resume.setLocationRelativeTo(internalFrame1);
+                resume.setVisible(true);
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
     }
 }

@@ -219,6 +219,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         
 
         initRawatInap();
+        aturFokusSoap();
 
         this.setLocation(8, 1);
         setSize(885, 674);
@@ -3160,7 +3161,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass12.add(jLabel56);
         jLabel56.setBounds(0, 220, 70, 23);
 
-        SpO2.setFocusTraversalPolicyProvider(true);
+        SpO2.setFocusTraversalKeysEnabled(true);
         SpO2.setName("SpO2"); // NOI18N
         SpO2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -3175,7 +3176,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass12.add(jLabel22);
         jLabel22.setBounds(120, 220, 70, 23);
 
-        TGCS.setFocusTraversalPolicyProvider(true);
+        TGCS.setFocusTraversalKeysEnabled(true);
         TGCS.setName("TGCS"); // NOI18N
         TGCS.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -3240,7 +3241,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass12.add(jLabel7);
         jLabel7.setBounds(0, 160, 70, 23);
 
-        TSuhu.setFocusTraversalPolicyProvider(true);
+        TSuhu.setFocusTraversalKeysEnabled(true);
         TSuhu.setName("TSuhu"); // NOI18N
         TSuhu.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -3255,7 +3256,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass12.add(jLabel17);
         jLabel17.setBounds(0, 190, 70, 23);
 
-        TTinggi.setFocusTraversalPolicyProvider(true);
+        TTinggi.setFocusTraversalKeysEnabled(true);
         TTinggi.setName("TTinggi"); // NOI18N
         TTinggi.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -3310,7 +3311,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass12.add(TBerat);
         TBerat.setBounds(378, 160, 55, 23);
 
-        TNadi.setFocusTraversalPolicyProvider(true);
+        TNadi.setFocusTraversalKeysEnabled(true);
         TNadi.setName("TNadi"); // NOI18N
         TNadi.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -3887,7 +3888,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass14.add(jLabel32);
         jLabel32.setBounds(476, 10, 130, 23);
 
-        TKualitas_dtk.setFocusTraversalPolicyProvider(true);
+        TKualitas_dtk.setFocusTraversalKeysEnabled(true);
         TKualitas_dtk.setName("TKualitas_dtk"); // NOI18N
         TKualitas_dtk.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -4019,7 +4020,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass14.add(cmbKetuban);
         cmbKetuban.setBounds(846, 40, 62, 23);
 
-        TPortio.setFocusTraversalPolicyProvider(true);
+        TPortio.setFocusTraversalKeysEnabled(true);
         TPortio.setName("TPortio"); // NOI18N
         TPortio.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -5200,7 +5201,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass18.add(jLabel23);
         jLabel23.setBounds(0, 190, 70, 23);
 
-        TSuhu1.setFocusTraversalPolicyProvider(true);
+        TSuhu1.setFocusTraversalKeysEnabled(true);
         TSuhu1.setName("TSuhu1"); // NOI18N
         TSuhu1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -5240,7 +5241,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass18.add(TBerat1);
         TBerat1.setBounds(380, 190, 55, 23);
 
-        TNadi1.setFocusTraversalPolicyProvider(true);
+        TNadi1.setFocusTraversalKeysEnabled(true);
         TNadi1.setName("TNadi1"); // NOI18N
         TNadi1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -5260,7 +5261,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass18.add(jLabel102);
         jLabel102.setBounds(300, 220, 79, 23);
 
-        TTinggi1.setFocusTraversalPolicyProvider(true);
+        TTinggi1.setFocusTraversalKeysEnabled(true);
         TTinggi1.setName("TTinggi1"); // NOI18N
         TTinggi1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -5457,7 +5458,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass18.add(jLabel112);
         jLabel112.setBounds(0, 250, 70, 23);
 
-        SpO3.setFocusTraversalPolicyProvider(true);
+        SpO3.setFocusTraversalKeysEnabled(true);
         SpO3.setName("SpO3"); // NOI18N
         SpO3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -5472,7 +5473,7 @@ public final class DlgRawatInap extends javax.swing.JDialog {
         panelGlass18.add(jLabel113);
         jLabel113.setBounds(120, 250, 70, 23);
 
-        TGCS1.setFocusTraversalPolicyProvider(true);
+        TGCS1.setFocusTraversalKeysEnabled(true);
         TGCS1.setName("TGCS1"); // NOI18N
         TGCS1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -9209,7 +9210,8 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_tbPemeriksaanMouseClicked
 
     private void TAlergiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TAlergiKeyPressed
-        Valid.pindah(evt, cmbKesadaran, TPenilaian);
+        Valid.pindah(evt, TAlergi, TKeluhan);
+        Valid.pindah2(evt, TAlergi, TKeluhan);
     }//GEN-LAST:event_TAlergiKeyPressed
 
     private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkInputActionPerformed
@@ -9674,11 +9676,11 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_TUkuranKeyPressed
 
     private void TKeluhanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKeluhanKeyPressed
-        Valid.pindah2(evt, KdPeg, TPemeriksaan);
+        Valid.pindah2(evt, TKeluhan, TPemeriksaan);
     }//GEN-LAST:event_TKeluhanKeyPressed
 
     private void TPemeriksaanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TPemeriksaanKeyPressed
-        Valid.pindah2(evt, TKeluhan, TSuhu);
+        Valid.pindah2(evt, TPemeriksaan, TPenilaian);
     }//GEN-LAST:event_TPemeriksaanKeyPressed
 
     private void tbRawatDrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbRawatDrKeyReleased
@@ -9979,11 +9981,11 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_BtnRiwayatActionPerformed
 
     private void TPenilaianKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TPenilaianKeyPressed
-        Valid.pindah2(evt, TAlergi, TindakLanjut);
+        Valid.pindah2(evt, TPenilaian, TindakLanjut);
     }//GEN-LAST:event_TPenilaianKeyPressed
 
     private void TindakLanjutKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TindakLanjutKeyPressed
-        Valid.pindah2(evt, TPenilaian, TInstruksi);
+        Valid.pindah2(evt, TindakLanjut, TTensi);
     }//GEN-LAST:event_TindakLanjutKeyPressed
 
     private void BtnResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnResumeActionPerformed
@@ -10064,7 +10066,8 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             BtnSeekPegawaiActionPerformed(null);
         } else {
-            Valid.pindah(evt, TNoRw, TKeluhan);
+            Valid.pindah(evt, KdPeg, TAlergi);
+            Valid.pindah2(evt, KdPeg, TAlergi);
         }
     }//GEN-LAST:event_KdPegKeyPressed
 
@@ -10077,7 +10080,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_BtnSeekPegawaiActionPerformed
 
     private void TInstruksiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TInstruksiKeyPressed
-        Valid.pindah2(evt, TindakLanjut, BtnSimpan);
+        Valid.pindah2(evt, TInstruksi, TEvaluasi);
     }//GEN-LAST:event_TInstruksiKeyPressed
 
     private void BtnJadwalOperasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnJadwalOperasiActionPerformed
@@ -10163,19 +10166,22 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_BtnAwalFisioterapiActionPerformed
 
     private void SpO2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SpO2KeyPressed
-        Valid.pindah(evt, TNadi, TGCS);
+        Valid.pindah(evt, SpO2, TBerat);
+        Valid.pindah2(evt, SpO2, TBerat);
     }//GEN-LAST:event_SpO2KeyPressed
 
     private void TGCSKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TGCSKeyPressed
-        Valid.pindah(evt, TNadi, cmbKesadaran);
+        Valid.pindah(evt, TGCS, cmbKesadaran);
+        Valid.pindah2(evt, TGCS, cmbKesadaran);
     }//GEN-LAST:event_TGCSKeyPressed
 
     private void cmbKesadaranKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbKesadaranKeyPressed
-        Valid.pindah(evt, TGCS, TAlergi);
+        Valid.pindah(evt, cmbKesadaran, TInstruksi);
+        Valid.pindah2(evt, cmbKesadaran, TInstruksi);
     }//GEN-LAST:event_cmbKesadaranKeyPressed
 
     private void TEvaluasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TEvaluasiKeyPressed
-        Valid.pindah2(evt, TInstruksi, BtnSimpan);
+        Valid.pindah2(evt, TEvaluasi, BtnSimpan);
     }//GEN-LAST:event_TEvaluasiKeyPressed
 
     private void BtnPermintaanResepPulangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPermintaanResepPulangActionPerformed
@@ -11257,27 +11263,33 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_BtnSkorStewardPascaAnestesiActionPerformed
 
     private void TSuhuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TSuhuKeyPressed
-        Valid.pindah(evt, TPemeriksaan, TTensi);
+        Valid.pindah(evt, TSuhu, SpO2);
+        Valid.pindah2(evt, TSuhu, SpO2);
     }//GEN-LAST:event_TSuhuKeyPressed
 
     private void TTinggiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TTinggiKeyPressed
-        Valid.pindah(evt, TBerat, TRespirasi);
+        Valid.pindah(evt, TTinggi, TGCS);
+        Valid.pindah2(evt, TTinggi, TGCS);
     }//GEN-LAST:event_TTinggiKeyPressed
 
     private void TTensiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TTensiKeyPressed
-        Valid.pindah(evt, TSuhu, TBerat);
+        Valid.pindah(evt, TTensi, TTensi2);
+        Valid.pindah2(evt, TTensi, TTensi2);
     }//GEN-LAST:event_TTensiKeyPressed
 
     private void TRespirasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TRespirasiKeyPressed
-        Valid.pindah(evt, TTinggi, TNadi);
+        Valid.pindah(evt, TRespirasi, TSuhu);
+        Valid.pindah2(evt, TRespirasi, TSuhu);
     }//GEN-LAST:event_TRespirasiKeyPressed
 
     private void TBeratKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TBeratKeyPressed
-        Valid.pindah(evt, TTensi, TTinggi);
+        Valid.pindah(evt, TBerat, TTinggi);
+        Valid.pindah2(evt, TBerat, TTinggi);
     }//GEN-LAST:event_TBeratKeyPressed
 
     private void TNadiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TNadiKeyPressed
-        Valid.pindah(evt, TRespirasi, SpO2);
+        Valid.pindah(evt, TNadi, TRespirasi);
+        Valid.pindah2(evt, TNadi, TRespirasi);
     }//GEN-LAST:event_TNadiKeyPressed
 
     private void BtnInputKonsulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInputKonsulActionPerformed
@@ -11597,15 +11609,18 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_ChkInput5ActionPerformed
 
     private void TSuhu1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TSuhu1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TSuhu1, SpO3);
+        Valid.pindah2(evt, TSuhu1, SpO3);
     }//GEN-LAST:event_TSuhu1KeyPressed
 
     private void TTensi1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TTensi1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TTensi1, TTensi1_2);
+        Valid.pindah2(evt, TTensi1, TTensi1_2);
     }//GEN-LAST:event_TTensi1KeyPressed
 
     private void TBerat1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TBerat1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TBerat1, TTinggi1);
+        Valid.pindah2(evt, TBerat1, TTinggi1);
     }//GEN-LAST:event_TBerat1KeyPressed
 
     private void TNadi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TNadi1ActionPerformed
@@ -11613,45 +11628,50 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_TNadi1ActionPerformed
 
     private void TNadi1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TNadi1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TNadi1, TRespirasi1);
+        Valid.pindah2(evt, TNadi1, TRespirasi1);
     }//GEN-LAST:event_TNadi1KeyPressed
 
     private void TTinggi1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TTinggi1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TTinggi1, TGCS1);
+        Valid.pindah2(evt, TTinggi1, TGCS1);
     }//GEN-LAST:event_TTinggi1KeyPressed
 
     private void TAlergi1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TAlergi1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TAlergi1, Asesmen);
+        Valid.pindah2(evt, TAlergi1, Asesmen);
     }//GEN-LAST:event_TAlergi1KeyPressed
 
     private void TRespirasi1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TRespirasi1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TRespirasi1, TSuhu1);
+        Valid.pindah2(evt, TRespirasi1, TSuhu1);
     }//GEN-LAST:event_TRespirasi1KeyPressed
 
     private void AsesmenKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AsesmenKeyPressed
-        // TODO add your handling code here:
+        Valid.pindah2(evt, Asesmen, Diagnosis);
     }//GEN-LAST:event_AsesmenKeyPressed
 
     private void DiagnosisKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DiagnosisKeyPressed
-        // TODO add your handling code here:
+        Valid.pindah2(evt, Diagnosis, Intervensi);
     }//GEN-LAST:event_DiagnosisKeyPressed
 
     private void IntervensiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_IntervensiKeyPressed
-        // TODO add your handling code here:
+        Valid.pindah2(evt, Intervensi, Monitoring);
     }//GEN-LAST:event_IntervensiKeyPressed
 
     private void MonitoringKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MonitoringKeyPressed
-        // TODO add your handling code here:
+        Valid.pindah2(evt, Monitoring, TTensi1);
     }//GEN-LAST:event_MonitoringKeyPressed
 
     private void KdPetugasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KdPetugasKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
-            Sequel.cariIsi("select pegawai.nama from pegawai where pegawai.nik=?", NmPetugas, KdPetugas.getText());
+            NmPetugas.setText(pegawai.tampil3(KdPetugas.getText()));
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             BtnSeekPegawai3ActionPerformed(null);
         } else {
-            Valid.pindah(evt, TNoRw, Asesmen);
-        }        // TODO add your handling code here:
+            Valid.pindah(evt, KdPetugas, TAlergi1);
+            Valid.pindah2(evt, KdPetugas, TAlergi1);
+        }
     }//GEN-LAST:event_KdPetugasKeyPressed
 
     private void BtnSeekPegawai3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSeekPegawai3ActionPerformed
@@ -11663,23 +11683,26 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }//GEN-LAST:event_BtnSeekPegawai3ActionPerformed
 
     private void EvaluasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_EvaluasiKeyPressed
-        // TODO add your handling code here:
+        Valid.pindah2(evt, Evaluasi, BtnSimpan);
     }//GEN-LAST:event_EvaluasiKeyPressed
 
     private void SpO3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SpO3KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, SpO3, TBerat1);
+        Valid.pindah2(evt, SpO3, TBerat1);
     }//GEN-LAST:event_SpO3KeyPressed
 
     private void TGCS1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TGCS1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, TGCS1, cmbKesadaran1);
+        Valid.pindah2(evt, TGCS1, cmbKesadaran1);
     }//GEN-LAST:event_TGCS1KeyPressed
 
     private void cmbKesadaran1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbKesadaran1KeyPressed
-        // TODO add your handling code here:
+        Valid.pindah(evt, cmbKesadaran1, Instruksi);
+        Valid.pindah2(evt, cmbKesadaran1, Instruksi);
     }//GEN-LAST:event_cmbKesadaran1KeyPressed
 
     private void InstruksiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_InstruksiKeyPressed
-        // TODO add your handling code here:
+        Valid.pindah2(evt, Instruksi, Evaluasi);
     }//GEN-LAST:event_InstruksiKeyPressed
 
     private void Btn5Soap3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn5Soap3ActionPerformed
@@ -13531,6 +13554,58 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         LCount.setText("" + tabModePemeriksaan.getRowCount());
         
         if (tabModePemeriksaan.getRowCount() == 0 && !TNoRw.getText().trim().equals("")) {
+            try {
+                java.sql.PreparedStatement psrc = koneksi.prepareStatement(
+                        "select keluhan_utama, alergi, td, nadi, rr, suhu, spo, bb, tb, gcs, kesadaran, " +
+                        "ket_fisik, diagnosis, tata, edukasi " +
+                        "from penilaian_medis_ranap where no_rawat=?");
+                try {
+                    psrc.setString(1, TNoRw.getText());
+                    java.sql.ResultSet rsrc = psrc.executeQuery();
+                    try {
+                        if (rsrc.next()) {
+                            if (TKeluhan.getText().trim().equals("")) TKeluhan.setText(rsrc.getString("keluhan_utama"));
+                            if (TAlergi.getText().trim().equals("")) TAlergi.setText(rsrc.getString("alergi"));
+                            if (TTensi.getText().trim().equals("")) {
+                                String tdOld = rsrc.getString("td");
+                                if (tdOld != null && tdOld.contains("/")) {
+                                    String[] parts = tdOld.split("/", 2);
+                                    TTensi.setText(parts[0]);
+                                    if (parts.length > 1) TTensi2.setText(parts[1]);
+                                } else {
+                                    TTensi.setText(tdOld);
+                                    TTensi2.setText("");
+                                }
+                            }
+                            if (TNadi.getText().trim().equals("")) TNadi.setText(rsrc.getString("nadi"));
+                            if (TRespirasi.getText().trim().equals("")) TRespirasi.setText(rsrc.getString("rr"));
+                            if (TSuhu.getText().trim().equals("")) TSuhu.setText(rsrc.getString("suhu"));
+                            if (SpO2.getText().trim().equals("")) SpO2.setText(rsrc.getString("spo"));
+                            if (TBerat.getText().trim().equals("")) TBerat.setText(rsrc.getString("bb"));
+                            if (TTinggi.getText().trim().equals("")) TTinggi.setText(rsrc.getString("tb"));
+                            if (TGCS.getText().trim().equals("")) TGCS.setText(rsrc.getString("gcs"));
+                            cmbKesadaran.setSelectedItem(rsrc.getString("kesadaran"));
+                            if (TPemeriksaan.getText().trim().equals("")) TPemeriksaan.setText(rsrc.getString("ket_fisik"));
+                            if (TPenilaian.getText().trim().equals("")) TPenilaian.setText(rsrc.getString("diagnosis"));
+                            if (TindakLanjut.getText().trim().equals("")) TindakLanjut.setText(rsrc.getString("tata"));
+                            if (TInstruksi.getText().trim().equals("")) TInstruksi.setText(rsrc.getString("edukasi"));
+                        }
+                    } finally {
+                        if (rsrc != null) {
+                            rsrc.close();
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notifikasi : " + e);
+                } finally {
+                    if (psrc != null) {
+                        psrc.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : " + e);
+            }
+
             if (TKeluhan.getText().trim().equals("")) {
                 String keluhan = Sequel.cariIsi("select keluhan_utama from penilaian_awal_keperawatan_ponek where no_rawat=?", TNoRw.getText());
                 if (!keluhan.trim().equals("")) {
@@ -13847,6 +13922,80 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             PanelAccor.setPreferredSize(new Dimension(15, HEIGHT));
             FormMenu.setVisible(false);
             ChkAccor.setVisible(true);
+        }
+    }
+
+    private void aturFokusSoap() {
+        // Tab SOAP Dokter / Perawat (panelGlass12)
+        KdPeg.setFocusTraversalKeysEnabled(false);
+        TPegawai.setFocusTraversalKeysEnabled(false);
+        TAlergi.setFocusTraversalKeysEnabled(false);
+        TKeluhan.setFocusTraversalKeysEnabled(false);
+        TPemeriksaan.setFocusTraversalKeysEnabled(false);
+        TSuhu.setFocusTraversalKeysEnabled(false);
+        TTensi.setFocusTraversalKeysEnabled(false);
+        TTensi2.setFocusTraversalKeysEnabled(false);
+        TTinggi.setFocusTraversalKeysEnabled(false);
+        TBerat.setFocusTraversalKeysEnabled(false);
+        TNadi.setFocusTraversalKeysEnabled(false);
+        TRespirasi.setFocusTraversalKeysEnabled(false);
+        SpO2.setFocusTraversalKeysEnabled(false);
+        TGCS.setFocusTraversalKeysEnabled(false);
+        cmbKesadaran.setFocusTraversalKeysEnabled(false);
+        TPenilaian.setFocusTraversalKeysEnabled(false);
+        TindakLanjut.setFocusTraversalKeysEnabled(false);
+        TInstruksi.setFocusTraversalKeysEnabled(false);
+        TEvaluasi.setFocusTraversalKeysEnabled(false);
+
+        java.awt.Component[] comp12 = {
+            KdPeg, TPegawai, BtnSeekPegawai, Jabatan,
+            TAlergi,
+            scrollPane1, 
+            scrollPane2, 
+            scrollPane3, 
+            scrollPane4, 
+            TTensi, TTensi2, TNadi, TRespirasi, TSuhu, SpO2, TBerat, TTinggi, TGCS, cmbKesadaran,
+            scrollPane7, 
+            scrollPane8
+        };
+        for (int i = 0; i < comp12.length; i++) {
+            panelGlass12.setComponentZOrder(comp12[i], i);
+        }
+
+        // Tab SOAP Gizi / Bidan (panelGlass18)
+        KdPetugas.setFocusTraversalKeysEnabled(false);
+        NmPetugas.setFocusTraversalKeysEnabled(false);
+        TAlergi1.setFocusTraversalKeysEnabled(false);
+        Asesmen.setFocusTraversalKeysEnabled(false);
+        Diagnosis.setFocusTraversalKeysEnabled(false);
+        TSuhu1.setFocusTraversalKeysEnabled(false);
+        TTensi1.setFocusTraversalKeysEnabled(false);
+        TTensi1_2.setFocusTraversalKeysEnabled(false);
+        TTinggi1.setFocusTraversalKeysEnabled(false);
+        TBerat1.setFocusTraversalKeysEnabled(false);
+        TNadi1.setFocusTraversalKeysEnabled(false);
+        TRespirasi1.setFocusTraversalKeysEnabled(false);
+        SpO3.setFocusTraversalKeysEnabled(false);
+        TGCS1.setFocusTraversalKeysEnabled(false);
+        cmbKesadaran1.setFocusTraversalKeysEnabled(false);
+        Intervensi.setFocusTraversalKeysEnabled(false);
+        Monitoring.setFocusTraversalKeysEnabled(false);
+        Evaluasi.setFocusTraversalKeysEnabled(false);
+        Instruksi.setFocusTraversalKeysEnabled(false);
+
+        java.awt.Component[] comp18 = {
+            KdPetugas, NmPetugas, BtnSeekPegawai3, Jabatan3,
+            TAlergi1,
+            scrollPane15, 
+            scrollPane16,
+            scrollPane17, 
+            scrollPane18, 
+            TTensi1, TTensi1_2, TNadi1, TRespirasi1, TSuhu1, SpO3, TBerat1, TTinggi1, TGCS1, cmbKesadaran1,
+            scrollPane20,
+            scrollPane19
+        };
+        for (int i = 0; i < comp18.length; i++) {
+            panelGlass18.setComponentZOrder(comp18[i], i);
         }
     }
 
@@ -14546,11 +14695,15 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         cmbKesadaran1.setBounds(320, 250, 130, 23);
     }
     private void TTensi2KeyPressed(java.awt.event.KeyEvent evt) {
-        Valid.pindah(evt, TTensi, TNadi);
+        Valid.pindah(evt, TTensi2, TNadi);
+        Valid.pindah2(evt, TTensi2, TNadi);
+
     }
     
     private void TTensi1_2KeyPressed(java.awt.event.KeyEvent evt) {
-        Valid.pindah(evt, TTensi1, TNadi1);
+        Valid.pindah(evt, TTensi1_2, TNadi1);
+        Valid.pindah2(evt, TTensi1_2, TNadi1);
+
     }
 
 }

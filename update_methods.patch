@@ -1,0 +1,87 @@
+--- RMPenilaianAwalMedisRanapDewasa.java	2026-08-21 10:10:00.000000000 +0700
++++ RMPenilaianAwalMedisRanapDewasa.java	2026-08-21 10:10:00.000000000 +0700
+@@ -2856,6 +2856,8 @@
+         }
+         ambildataawalmedisigd();
+         loadResepKeTatalaksana();
++        loadLaborat();
++        loadRadiologi();
+     }
+     
+     public void isCek(){
+@@ -3298,4 +3300,56 @@
+         }
+     }
+ 
++    private void loadLaborat() {
++        try {
++            if (TNoRw.getText().trim().equals("")) return;
++            
++            StringBuilder labTxt = new StringBuilder();
++            
++            java.sql.PreparedStatement psLab = koneksi.prepareStatement(
++                "select distinct jns_perawatan_lab.nm_perawatan, date_format(concat(periksa_lab.tgl_periksa,' ',periksa_lab.jam), '%d-%m-%Y %H:%i:%s') as tgl_lab " +
++                "from periksa_lab inner join jns_perawatan_lab on periksa_lab.kd_jenis_prw=jns_perawatan_lab.kd_jenis_prw " +
++                "where periksa_lab.no_rawat=? and periksa_lab.status='Ranap' and periksa_lab.tgl_periksa<>'0000-00-00' " +
++                "order by periksa_lab.tgl_periksa, periksa_lab.jam"
++            );
++            try {
++                psLab.setString(1, TNoRw.getText());
++                java.sql.ResultSet rsLab = psLab.executeQuery();
++                int i = 1;
++                while(rsLab.next()) {
++                    labTxt.append(i).append(". ").append(rsLab.getString("nm_perawatan")).append(" (").append(rsLab.getString("tgl_lab")).append(")\n");
++                    i++;
++                }
++            } finally {
++                psLab.close();
++            }
++            
++            if (labTxt.length() > 0) {
++                if (!Laborat.getText().trim().isEmpty()) {
++                    Laborat.setText(Laborat.getText() + "\n" + labTxt.toString());
++                } else {
++                    Laborat.setText(labTxt.toString());
++                }
++            }
++        } catch (Exception e) {
++            System.out.println("Notif loadLaborat : " + e);
++        }
++    }
++
++    private void loadRadiologi() {
++        try {
++            if (TNoRw.getText().trim().equals("")) return;
++            
++            StringBuilder radTxt = new StringBuilder();
++            
++            java.sql.PreparedStatement psRad = koneksi.prepareStatement(
++                "select distinct jns_perawatan_radiologi.nm_perawatan, date_format(concat(periksa_radiologi.tgl_periksa,' ',periksa_radiologi.jam), '%d-%m-%Y %H:%i:%s') as tgl_rad " +
++                "from periksa_radiologi inner join jns_perawatan_radiologi on periksa_radiologi.kd_jenis_prw=jns_perawatan_radiologi.kd_jenis_prw " +
++                "where periksa_radiologi.no_rawat=? and periksa_radiologi.status='Ranap' and periksa_radiologi.tgl_periksa<>'0000-00-00' " +
++                "order by periksa_radiologi.tgl_periksa, periksa_radiologi.jam"
++            );
++            try {
++                psRad.setString(1, TNoRw.getText());
++                java.sql.ResultSet rsRad = psRad.executeQuery();
++                int i = 1;
++                while(rsRad.next()) {
++                    radTxt.append(i).append(". ").append(rsRad.getString("nm_perawatan")).append(" (").append(rsRad.getString("tgl_rad")).append(")\n");
++                    i++;
++                }
++            } finally {
++                psRad.close();
++            }
++            
++            if (radTxt.length() > 0) {
++                if (!Radiologi.getText().trim().isEmpty()) {
++                    Radiologi.setText(Radiologi.getText() + "\n" + radTxt.toString());
++                } else {
++                    Radiologi.setText(radTxt.toString());
++                }
++            }
++        } catch (Exception e) {
++            System.out.println("Notif loadRadiologi : " + e);
++        }
++    }
++

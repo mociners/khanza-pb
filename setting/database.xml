@@ -44,24 +44,24 @@
     <entry key="TANGGALMUNDUR">yes</entry>
    
     <entry key="URLAPIBPJS">https://apijkn.bpjs-kesehatan.go.id/vclaim-rest</entry>
-    <entry key="SECRETKEYAPIBPJS">Ji7FuL79DBwEtcisHB9oJA==</entry>
+    <entry key="SECRETKEYAPIBPJS">PCfMlPMalZPogefnM6WuhA==</entry>
     <entry key="CONSIDAPIBPJS">emDDB2wn1tda/6mF/dvPsA==</entry>
     <entry key="USERKEYAPIBPJS">Sn6ejyW16Hky3yu/IIUG++92mz4W38EFIq4ji6Sm0eH7yLZMrfiTGSg8M2s3DL44</entry>
     <entry key="DIAGNOSARUJUKANMASUKAPIBPJS">yes</entry>
     
-    <entry key="JADIKANBOOKINGSURATKONTROLAPIBPJS">yes</entry>
-    <entry key="JADIKANBOOKINGSURATKONTROL">yes</entry>
+    <entry key="JADIKANBOOKINGSURATKONTROLAPIBPJS">no</entry>
+    <entry key="JADIKANBOOKINGSURATKONTROL">no</entry>
     <entry key="URLAPIAPLICARE">https://new-api.bpjs-kesehatan.go.id/aplicaresws</entry>
-    <entry key="SECRETKEYAPIAPLICARE">Ji7FuL79DBwEtcisHB9oJA==</entry>
+    <entry key="SECRETKEYAPIAPLICARE">PCfMlPMalZPogefnM6WuhA==</entry>
     <entry key="CONSIDAPIAPLICARE">emDDB2wn1tda/6mF/dvPsA==</entry>
     <entry key="USERKEYAPIAPLICARE">Sn6ejyW16Hky3yu/IIUG++92mz4W38EFIq4ji6Sm0eH7yLZMrfiTGSg8M2s3DL44</entry>
     
     
     <entry key="URLAPIMOBILEJKN">https://apijkn.bpjs-kesehatan.go.id/antreanrs</entry>
-    <entry key="SECRETKEYAPIMOBILEJKN">Ji7FuL79DBwEtcisHB9oJA==</entry>
+    <entry key="SECRETKEYAPIMOBILEJKN">PCfMlPMalZPogefnM6WuhA==</entry>
     <entry key="CONSIDAPIMOBILEJKN">emDDB2wn1tda/6mF/dvPsA==</entry>
     <entry key="USERKEYAPIMOBILEJKN">kVzIcciyA0GERiVXrmlQjyjIcPTzmuOUXRGafcvuXf4e4pIIzR3fD89Vv83xMZVH</entry>
-    <entry key="ADDANTRIANAPIMOBILEJKN">yes</entry>
+    <entry key="ADDANTRIANAPIMOBILEJKN">no</entry>
     
     <entry key="URLAPIAPOTEKBPJS">https://dev-soa.bpjs-kesehatan.go.id/apotek-rest</entry>
     <entry key="SECRETKEYAPIAPOTEKBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
@@ -69,7 +69,7 @@
     <entry key="USERKEYAPIAPOTEKBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
     <entry key="JADIKANPIUTANGAPOTEKBPJS">yes</entry>
     <entry key="URLAPIICARE">https://apijkn.bpjs-kesehatan.go.id/wsihs/api/rs</entry>
-    <entry key="SECRETKEYAPIICARE">Ji7FuL79DBwEtcisHB9oJA==</entry>
+    <entry key="SECRETKEYAPIICARE">PCfMlPMalZPogefnM6WuhA==</entry>
     <entry key="CONSIDAPIICARE">emDDB2wn1tda/6mF/dvPsA==</entry>
     <entry key="USERKEYAPIICARE">Sn6ejyW16Hky3yu/IIUG++92mz4W38EFIq4ji6Sm0eH7yLZMrfiTGSg8M2s3DL44</entry>
     <entry key="URLAPISMARTCLAIM">https://dvlp.bpjs-kesehatan.go.id/eRekamMedis</entry>

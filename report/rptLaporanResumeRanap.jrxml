@@ -32,7 +32,6 @@
     <parameter name="finger3" class="java.lang.String"/>
     <parameter name="namadokter2" class="java.lang.String"/>
     <parameter name="namadokter3" class="java.lang.String"/>
-    <parameter name="jamkeluar" class="java.lang.String"/>
     <queryString>
 		<![CDATA[select reg_periksa.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,resume_pasien_ranap.kd_dokter,dokter.nm_dokter,reg_periksa.kd_dokter as kodepengirim,pengirim.nm_dokter as pengirim,
                     reg_periksa.tgl_registrasi,reg_periksa.jam_reg,resume_pasien_ranap.diagnosa_awal,resume_pasien_ranap.alasan,resume_pasien_ranap.keluhan_utama,resume_pasien_ranap.pemeriksaan_fisik,
@@ -1688,22 +1687,6 @@ where resume_pasien_ranap.no_rawat= $P{norawat}]]>
                 <text><![CDATA[:]]></text>
             </staticText>
 
-            <textField isStretchWithOverflow="true" pattern="HH:mm:ss">
-                <reportElement x="446" y="121" width="82" height="10" uuid="38322434-b93a-4112-b655-b1e7b381ebb3"/>
-                <textElement>
-                    <font fontName="Tahoma" size="8" isBold="false" isItalic="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{jam_reg}]]></textFieldExpression>
-            </textField>
-            <textField isStretchWithOverflow="true">
-                <reportElement x="446" y="133" width="82" height="10" uuid="18d9eeeb-6639-4ac1-8e07-3248bf80c972"/>
-                <textElement>
-                    <font fontName="Tahoma" size="8" isBold="false" isItalic="false"/>
-                    <paragraph lineSpacing="Single"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$P{jamkeluar}]]></textFieldExpression>
-            </textField>
             <frame>
                 <reportElement positionType="Float" x="0" y="696" width="534" height="106" uuid="f2b1d3d6-444a-4a25-a22e-137a892dfd66"/>
                 <staticText>

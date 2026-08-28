@@ -186,6 +186,7 @@ import rekammedis.RMPenilaianTambahanMelarikanDiri;
 import rekammedis.RMPenilaianTambahanPerilakuKekerasan;
 import rekammedis.RMPenilaianUlangNyeri;
 import rekammedis.RMDischargePlanning;
+import rekammedis.RMPenilaianAwalMedisRanapAnak;
 import rekammedis.RMRekonsiliasiObat;
 import rekammedis.RMSignInSebelumAnastesi;
 import rekammedis.RMSignOutSebelumMenutupLuka;
@@ -197,6 +198,7 @@ import rekammedis.RMStatusNeurologi;
 import rekammedis.RMTimeOutSebelumInsisi;
 import rekammedis.RMTransferPasienAntarRuang;
 import rekammedis.RMUjiFungsiKFR;
+import rekammedis.ValidasiSOAPPRI;
 import surat.SuratKeteranganRawatInap;
 import surat.SuratKontrolUmum;
 import surat.SuratPenolakanAnjuranMedis;
@@ -228,7 +230,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
     private sekuel Sequel = new sekuel();
     private validasi Valid = new validasi();
     public DlgIKBBayi ikb = new DlgIKBBayi(null, false);
-
+    public ValidasiSOAPPRI form=new ValidasiSOAPPRI(null,false);
     public DlgKamar kamar = new DlgKamar(null, false);
     private DlgCariReg reg = new DlgCariReg(null, false);
     public DlgBilingRanap billing = new DlgBilingRanap(null, false);
@@ -7339,7 +7341,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
                             + "',ttl_biaya='" + ttlbiaya.getText() + "',stts_pulang='" + cmbStatus.getSelectedItem() + "',diagnosa_akhir='" + diagnosaakhir.getText() + "',lama='" + TJmlHari.getText() + "'") == true) {
                         if (tabMode.getRowCount() > 1) {
                             try {
-                                if (tbKamIn.getValueAt(tbKamIn.getSelectedRow() + 1, 0).toString().equals("")) {
+                                while (tbKamIn.getSelectedRow() + 1 < tabMode.getRowCount() && tbKamIn.getValueAt(tbKamIn.getSelectedRow() + 1, 0).toString().equals("")) {
                                     tabMode.removeRow(tbKamIn.getSelectedRow() + 1);
                                 }
                             } catch (Exception e) {
@@ -7515,12 +7517,13 @@ public class DlgKamarInap extends javax.swing.JDialog {
                         } else if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                             try {
                                 psanak = koneksi.prepareStatement(
-                                        "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                        "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                                 try {
-                                    psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                    psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                     rs2 = psanak.executeQuery();
                                     if (rs2.next()) {
-                                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                                             TCari.requestFocus();
                                         } else {
@@ -7575,9 +7578,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
                         }
                     }
                 } else if (i == 2) {
-                    if (akses.getbilling_ranap() == true) {
-                        MnBillingActionPerformed(null);
-                    }
+                    MnValidasiRanapActionPerformed(null);
                 } else if (i == 3) {
                     if (akses.getresep_pulang() == true) {
                         MnInputResepActionPerformed(null);
@@ -7615,9 +7616,10 @@ public class DlgKamarInap extends javax.swing.JDialog {
                         } else if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                             try {
                                 psanak = koneksi.prepareStatement(
-                                        "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                        "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                                 try {
-                                    psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                    psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                     rs2 = psanak.executeQuery();
                                     if (rs2.next()) {
                                         akses.setform("DlgKamarInap");
@@ -7632,7 +7634,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
                                             akses.setkdbangsal(bangsal);
                                         }
 
-                                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                                             TCari.requestFocus();
                                         } else {
@@ -7678,9 +7680,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
                         }
                     }
                 } else if (i == 2) {
-                    if (akses.getbilling_ranap() == true) {
-                        MnBillingActionPerformed(null);
-                    }
+                    MnValidasiRanapActionPerformed(null);
                 } else if (i == 3) {
                     if (akses.getresep_pulang() == true) {
                         MnInputResepActionPerformed(null);
@@ -7723,6 +7723,10 @@ private void BangsalCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_BangsalCariKeyPressed
 
 private void MnRawatInapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnRawatInapActionPerformed
+    if (akses.getkode().equals("D0037")) {
+        MnValidasiRanapActionPerformed(evt);
+        return;
+    }
     if (tabMode.getRowCount() == 0) {
         JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
         TCari.requestFocus();
@@ -7730,14 +7734,15 @@ private void MnRawatInapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         if (tbKamIn.getSelectedRow() > -1) {
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
-                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                         JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                         TCari.requestFocus();
                     } else {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 akses.setform("DlgKamarInap");
@@ -7761,8 +7766,8 @@ private void MnRawatInapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                                 } else if (R3.isSelected() == true) {
                                     billing.rawatinap.setNoRm(rs2.getString("no_rawat2"), DTPCari3.getDate(), DTPCari4.getDate());
                                 }
-                                billing.rawatinap.setKamar(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 10).toString());
-                                billing.rawatinap.setJenisBayar(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 6).toString());
+                                billing.rawatinap.setKamar(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 10).toString());
+                                billing.rawatinap.setJenisBayar(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 6).toString());
                                 billing.rawatinap.setVisible(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Maaf, Silahkan anda pilih dulu pasien...!!!");
@@ -7824,7 +7829,8 @@ private void MnResepPulangActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2 from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                             + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             akses.setform("DlgKamarInap");
@@ -7907,9 +7913,10 @@ private void MnRujukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             DlgRujuk dlgrjk = new DlgRujuk(null, false);
@@ -7972,9 +7979,10 @@ private void MnPemberianObatActionPerformed(java.awt.event.ActionEvent evt) {//G
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             akses.setform("DlgKamarInap");
@@ -8140,7 +8148,8 @@ private void MnDietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                             "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2 from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                             + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             DlgPemberianDiet rawatinap = new DlgPemberianDiet(null, false);
@@ -8149,11 +8158,11 @@ private void MnDietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                             rawatinap.emptTeks();
                             rawatinap.isCek();
                             if (R1.isSelected() == true) {
-                                rawatinap.setNoRm(rs2.getString("no_rawat2"), rs2.getString("no_rkm_medis") + " " + rs2.getString("nm_pasien"), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 22).toString(), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 10).toString(), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 12).toString(), new Date(), new Date());
+                                rawatinap.setNoRm(rs2.getString("no_rawat2"), rs2.getString("no_rkm_medis") + " " + rs2.getString("nm_pasien"), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 22).toString(), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 10).toString(), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 12).toString(), new Date(), new Date());
                             } else if (R2.isSelected() == true) {
-                                rawatinap.setNoRm(rs2.getString("no_rawat2"), rs2.getString("no_rkm_medis") + " " + rs2.getString("nm_pasien"), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 22).toString(), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 10).toString(), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 12).toString(), DTPCari1.getDate(), DTPCari2.getDate());
+                                rawatinap.setNoRm(rs2.getString("no_rawat2"), rs2.getString("no_rkm_medis") + " " + rs2.getString("nm_pasien"), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 22).toString(), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 10).toString(), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 12).toString(), DTPCari1.getDate(), DTPCari2.getDate());
                             } else if (R3.isSelected() == true) {
-                                rawatinap.setNoRm(rs2.getString("no_rawat2"), rs2.getString("no_rkm_medis") + " " + rs2.getString("nm_pasien"), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 22).toString(), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 10).toString(), tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 12).toString(), DTPCari3.getDate(), DTPCari4.getDate());
+                                rawatinap.setNoRm(rs2.getString("no_rawat2"), rs2.getString("no_rkm_medis") + " " + rs2.getString("nm_pasien"), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 22).toString(), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 10).toString(), tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 12).toString(), DTPCari3.getDate(), DTPCari4.getDate());
                             }
                             rawatinap.setVisible(true);
                         } else {
@@ -8213,14 +8222,15 @@ private void MnPeriksaLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (tbKamIn.getSelectedRow() > -1) {
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
-                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                         JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                         TCari.requestFocus();
                     } else {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 akses.setform("DlgKamarInap");
@@ -8275,7 +8285,7 @@ private void MnOperasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         if (tbKamIn.getSelectedRow() > -1) {
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
-                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                         JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                         TCari.requestFocus();
                     } else {
@@ -8283,7 +8293,8 @@ private void MnOperasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                                 "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2 from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                                 + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgTagihanOperasi dlgro = new DlgTagihanOperasi(null, false);
@@ -8330,12 +8341,13 @@ private void MnHapusTagihanOperasiActionPerformed(java.awt.event.ActionEvent evt
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
-                            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                                 JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                                 TCari.requestFocus();
                             } else {
@@ -8384,12 +8396,13 @@ private void MnHapusObatOperasiActionPerformed(java.awt.event.ActionEvent evt) {
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
-                            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                                 JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                                 TCari.requestFocus();
                             } else {
@@ -8435,9 +8448,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             akses.setform("DlgKamarInap");
@@ -8862,7 +8876,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2 from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                                 + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 bangsal = Sequel.cariIsi("select set_depo_ranap.kd_depo from set_depo_ranap where set_depo_ranap.kd_bangsal=?", Sequel.cariIsi("select kamar.kd_bangsal from kamar where kamar.kd_kamar=?", kdkamar.getText()));
@@ -9193,9 +9208,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 billing.deposit.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
@@ -9252,9 +9268,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgResepObat resep = new DlgResepObat(null, false);
@@ -9328,7 +9345,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         } else {
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
-                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                         JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                         TCari.requestFocus();
                     } else {
@@ -9337,7 +9354,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                     "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2 from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                                     + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     bangsal = Sequel.cariIsi("select set_depo_ranap.kd_depo from set_depo_ranap where set_depo_ranap.kd_bangsal=?", Sequel.cariIsi("select kamar.kd_bangsal from kamar where kamar.kd_kamar=?", kdkamar.getText()));
@@ -9411,14 +9429,15 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
-                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                             TCari.requestFocus();
                         } else {
                             psanak = koneksi.prepareStatement(
-                                    "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                    "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     DlgPeriksaRadiologi periksarad = new DlgPeriksaRadiologi(null, false);
@@ -9605,13 +9624,22 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }//GEN-LAST:event_btnPasienRanapGabungActionPerformed
 
     private void BtnHapusGabungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusGabungActionPerformed
-        Sequel.mengedit("reg_periksa", "no_rawat='" + Sequel.cariIsi("select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?", norawat.getText()) + "'", "status_lanjut='Ralan'");
-        Sequel.meghapus("ranap_gabung", "no_rawat", norawat.getText());
-        NoRawatGabung.setText("");
-        NoRmBayi.setText("");
-        NmBayi.setText("");
-        if (tbKamIn.getSelectedRow() > -1) {
-            tabMode.removeRow(row + 1);
+        if (NoRmBayi.getText().trim().equals("")) {
+             JOptionPane.showMessageDialog(null, "Silahkan pilih/isi No RM Bayi yang akan dihapus dari Gabung Ranap.");
+             return;
+        }
+        
+        String noRawatBayi = Sequel.cariIsi("select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat='" + norawat.getText() + "' and reg_periksa.no_rkm_medis='" + NoRmBayi.getText() + "'");
+        
+        if (!noRawatBayi.equals("")) {
+             Sequel.mengedit("reg_periksa", "no_rawat='" + noRawatBayi + "'", "status_lanjut='Ralan'");
+             Sequel.meghapus("ranap_gabung", "no_rawat2", noRawatBayi);
+             NoRawatGabung.setText("");
+             NoRmBayi.setText("");
+             NmBayi.setText("");
+             tampil();
+        } else {
+             JOptionPane.showMessageDialog(null, "Data bayi tersebut tidak ditemukan dalam data Gabung Ranap ibu ini.");
         }
     }//GEN-LAST:event_BtnHapusGabungActionPerformed
 
@@ -9629,9 +9657,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                     TCari.requestFocus();
                 } else {
                     NoRawatGabung.setText("");
-                    Sequel.cariIsi("select no_rawat2 from ranap_gabung where no_rawat=?", NoRawatGabung, norawat.getText());
-                    Sequel.cariIsi("select reg_periksa.no_rkm_medis from reg_periksa where reg_periksa.no_rawat=?", NoRmBayi, NoRawatGabung.getText());
-                    Sequel.cariIsi("select pasien.nm_pasien from pasien where pasien.no_rkm_medis=?", NmBayi, NoRmBayi.getText());
+                    NoRmBayi.setText("");
+                    NmBayi.setText("");
                     WindowRanapGabung.setLocationRelativeTo(internalFrame1);
                     WindowRanapGabung.setVisible(true);
                 }
@@ -9676,9 +9703,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 akses.setform("DlgKamarInap");
@@ -9766,15 +9794,16 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         } else {
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
-                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                    if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                         JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                         TCari.requestFocus();
                     } else {
                         try {
                             psanak = koneksi.prepareStatement(
-                                    "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                    "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     akses.setform("DlgKamarInap");
@@ -9913,7 +9942,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "from reg_periksa inner join pasien inner join ranap_gabung on "
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10018,9 +10048,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10109,9 +10140,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgDataHAIs hais = new DlgDataHAIs(null, false);
@@ -10189,7 +10221,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
 
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10203,7 +10236,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 param.put("kotars", akses.getkabupatenrs());
                                 param.put("propinsirs", akses.getpropinsirs());
                                 param.put("kontakrs", akses.getkontakrs());
-                                param.put("tanggalmasuk", Sequel.cariIsi("select tgl_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()));
+                                param.put("tanggalmasuk", Sequel.cariIsi("select tgl_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()));
                                 param.put("kamar", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 7).toString());
                                 param.put("carabayar", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 6).toString());
                                 param.put("emailrs", akses.getemailrs());
@@ -10284,9 +10317,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10355,14 +10389,15 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
-                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                             TCari.requestFocus();
                         } else {
                             psanak = koneksi.prepareStatement(
-                                    "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                    "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     DlgRawatJalan dlgrwjl = new DlgRawatJalan(null, false);
@@ -10534,7 +10569,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
 
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10548,7 +10584,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 param.put("kotars", akses.getkabupatenrs());
                                 param.put("propinsirs", akses.getpropinsirs());
                                 param.put("kontakrs", akses.getkontakrs());
-                                param.put("tanggalmasuk", Sequel.cariIsi("select tgl_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()));
+                                param.put("tanggalmasuk", Sequel.cariIsi("select tgl_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()));
                                 param.put("kamar", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 7).toString());
                                 param.put("norawat", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString());
                                 param.put("carabayar", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 6).toString());
@@ -10607,9 +10643,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10677,7 +10714,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2 from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                                 + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgBookingOperasi form = new DlgBookingOperasi(null, false);
@@ -10724,9 +10762,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10785,9 +10824,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10846,9 +10886,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10917,9 +10958,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -10993,7 +11035,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "from reg_periksa inner join pasien inner join ranap_gabung on "
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11063,7 +11106,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "from reg_periksa inner join pasien inner join ranap_gabung on "
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11387,7 +11431,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 "select pasien.no_rkm_medis,pasien.nm_pasien from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                                 + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 SuratKontrolUmum form = new SuratKontrolUmum(null, false);
@@ -11436,9 +11481,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11491,9 +11537,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11542,15 +11589,16 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
             TCari.requestFocus();
         } else if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
-            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                 JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                 TCari.requestFocus();
             } else {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11629,9 +11677,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11690,7 +11739,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
 
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11704,8 +11754,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 param.put("kotars", akses.getkabupatenrs());
                                 param.put("propinsirs", akses.getpropinsirs());
                                 param.put("kontakrs", akses.getkontakrs());
-                                param.put("tanggalmasuk", Sequel.cariIsi("select tgl_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()));
-                                param.put("jammasuk", Sequel.cariIsi("select jam_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()));
+                                param.put("tanggalmasuk", Sequel.cariIsi("select tgl_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()));
+                                param.put("jammasuk", Sequel.cariIsi("select jam_masuk from kamar_inap where no_rawat=? order by tgl_masuk asc limit 1", tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()));
                                 param.put("kamar", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 7).toString());
                                 param.put("norawat", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString());
                                 param.put("carabayar", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 6).toString());
@@ -11810,9 +11860,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11871,7 +11922,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
 
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -11884,7 +11936,7 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 param.put("emailrs", akses.getemailrs());
                                 param.put("kamar", tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 10).toString());
                                 param.put("tanggalmasuk", Sequel.cariIsi("select concat(DATE_FORMAT(reg_periksa.tgl_registrasi, '%e %M %Y'),' ',reg_periksa.jam_reg) from reg_periksa where reg_periksa.no_rawat='" + rs2.getString("no_rawat2") + "'"));
-                                param.put("tanggalkeluar", Sequel.cariIsi("select concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) from kamar_inap where kamar_inap.no_rawat='" + tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString() + "' order by kamar_inap.tgl_keluar desc limit 1"));
+                                param.put("tanggalkeluar", Sequel.cariIsi("select concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) from kamar_inap where kamar_inap.no_rawat='" + tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString() + "' order by kamar_inap.tgl_keluar desc limit 1"));
                                 param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
                                 Valid.MyReportqry("SuratJaminanPelayananInap.jasper", "report", "::[ Surat Jaminan Pelayanan ]::",
                                         "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg, "
@@ -11958,9 +12010,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -12025,9 +12078,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -12092,9 +12146,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -12162,7 +12217,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 "select pasien.no_rkm_medis from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                                 + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgPenjualan penjualan = new DlgPenjualan(null, false);
@@ -12381,15 +12437,16 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
             TCari.requestFocus();
         } else if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
-            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                 JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                 TCari.requestFocus();
             } else {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -12468,9 +12525,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgDataKlasifikasiPasienRanap hais = new DlgDataKlasifikasiPasienRanap(null, false);
@@ -12533,9 +12591,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -12601,14 +12660,15 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
-                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                             TCari.requestFocus();
                         } else {
                             psanak = koneksi.prepareStatement(
-                                    "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                    "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     akses.setform("DlgKamarInap");
@@ -12745,9 +12805,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 ps = koneksi.prepareStatement("select * from bridging_sep where bridging_sep.no_rawat=? order by bridging_sep.tglsep desc limit 1");
@@ -12838,9 +12899,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 SuratKeteranganRawatInap form = new SuratKeteranganRawatInap(null, false);
@@ -13076,7 +13138,8 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                                 + "from reg_periksa inner join pasien inner join ranap_gabung on "
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 Map<String, Object> param = new HashMap<>();
@@ -13303,15 +13366,16 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             JOptionPane.showMessageDialog(null, "Maaf, table masih kosong...!!!!");
             TCari.requestFocus();
         } else if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
-            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+            if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                 JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                 TCari.requestFocus();
             } else {
                 try {
                     psanak = koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                     try {
-                        psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                        psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                         rs2 = psanak.executeQuery();
                         if (rs2.next()) {
                             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -13390,9 +13454,10 @@ private void MnRujukMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -13591,9 +13656,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -13658,9 +13724,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -13711,9 +13778,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -13781,9 +13849,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -13849,14 +13918,15 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
-                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                             TCari.requestFocus();
                         } else {
                             psanak = koneksi.prepareStatement(
-                                    "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                    "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     akses.setform("DlgKamarInap");
@@ -13908,9 +13978,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -13975,9 +14046,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14042,9 +14114,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14099,9 +14172,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14219,9 +14293,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14391,9 +14466,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14458,9 +14534,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14515,9 +14592,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14585,7 +14663,8 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                                 "select pasien.no_rkm_medis,pasien.nm_pasien,ranap_gabung.no_rawat2 from reg_periksa inner join pasien on pasien.no_rkm_medis=reg_periksa.no_rkm_medis "
                                 + "inner join ranap_gabung on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14640,9 +14719,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14697,9 +14777,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14764,9 +14845,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14831,9 +14913,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14898,9 +14981,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -14965,9 +15049,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15032,9 +15117,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15099,9 +15185,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15166,9 +15253,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15221,9 +15309,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15288,9 +15377,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15355,9 +15445,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15446,9 +15537,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15513,9 +15605,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15685,9 +15778,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15771,9 +15865,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15838,9 +15933,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15905,9 +16001,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -15972,9 +16069,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16037,9 +16135,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16106,9 +16205,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16175,9 +16275,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16242,9 +16343,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16309,9 +16411,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16428,9 +16531,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16522,9 +16626,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16641,9 +16746,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16708,9 +16814,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16801,9 +16908,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16870,9 +16978,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -16939,9 +17048,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17008,9 +17118,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17075,9 +17186,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17204,7 +17316,8 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                                 + "from reg_periksa inner join pasien inner join ranap_gabung on "
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17274,7 +17387,8 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                                 + "from reg_periksa inner join pasien inner join ranap_gabung on "
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17339,9 +17453,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgPermintaanKerohanian form = new DlgPermintaanKerohanian(null, false);
@@ -17390,9 +17505,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17505,9 +17621,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17576,9 +17693,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17643,9 +17761,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17739,9 +17858,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17806,9 +17926,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -17973,9 +18094,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -18050,7 +18172,8 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                                 + "pasien.no_rkm_medis=reg_periksa.no_rkm_medis and ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=?");
 
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgDpjp dpjp = new DlgDpjp(null, false);
@@ -18242,7 +18365,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
         } else {
             if (tbKamIn.getSelectedRow() > -1) {
                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                RMPenilaianAwalMedisRanapAnak1 form = new RMPenilaianAwalMedisRanapAnak1(null, false);
+                RMPenilaianAwalMedisRanapAnak form = new RMPenilaianAwalMedisRanapAnak(null, false);
                 form.isCek();
                 form.emptTeks();
                 if (R1.isSelected() == true) {
@@ -18252,10 +18375,6 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 } else if (R3.isSelected() == true) {
                     form.setNoRm(norawat.getText(), DTPCari4.getDate());
                 }
-                
-                String nmdokter = tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 21).toString();
-                String kddokter = Sequel.cariIsi("select kd_dokter from dokter where nm_dokter=?", nmdokter);
-                form.setDPJP(kddokter, nmdokter);
                 
                 form.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
                 form.setLocationRelativeTo(internalFrame1);
@@ -18357,9 +18476,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -18424,9 +18544,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -18491,9 +18612,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -18557,9 +18679,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
-                        psanak = koneksi.prepareStatement("select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                        psanak = koneksi.prepareStatement("select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -18860,14 +18983,15 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
-                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                             TCari.requestFocus();
                         } else {
                             psanak = koneksi.prepareStatement(
-                                    "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                    "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     akses.setform("DlgKamarInap");
@@ -18918,14 +19042,15 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
             if (tbKamIn.getSelectedRow() > -1) {
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
-                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString()) > 0) {
+                        if (Sequel.cariRegistrasi(tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString()) > 0) {
                             JOptionPane.showMessageDialog(rootPane, "Data billing sudah terverifikasi.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                             TCari.requestFocus();
                         } else {
                             psanak = koneksi.prepareStatement(
-                                    "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                    "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                             try {
-                                psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                                psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                                 rs2 = psanak.executeQuery();
                                 if (rs2.next()) {
                                     akses.setform("DlgKamarInap");
@@ -19058,9 +19183,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -19127,9 +19253,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -19196,9 +19323,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -19701,6 +19829,14 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
             MnPermintaanKonsultasiMedik,MnCatatanObservasi,MnDataOperasi,MnMeso;
     private javax.swing.JMenu MnHasilUSG, MnHasilEndoskopi;
 
+    private int getRowIbu(int babyRow) {
+        int r = babyRow;
+        while (r >= 0 && tbKamIn.getValueAt(r, 0).toString().equals("")) {
+            r--;
+        }
+        return r;
+    }
+
     private void tampil() {
         if (R1.isSelected() == true) {
             kmr = " kamar_inap.stts_pulang='-' and reg_periksa.status_bayar like '%" + cmbStatusBayar.getSelectedItem().toString().replaceAll("Semua", "") + "%' ";
@@ -19770,7 +19906,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                     try {
                         psanak.setString(1, rs.getString(1));
                         rs2 = psanak.executeQuery();
-                        if (rs2.next()) {
+                        while (rs2.next()) {
                             tabMode.addRow(new String[]{
                                 "", rs2.getString("no_rkm_medis"), rs2.getString("nm_pasien") + " (" + rs2.getString("umur") + ")",
                                 rs.getString("alamat"), rs.getString("p_jawab"), rs.getString("hubunganpj"), rs.getString("png_jawab"),
@@ -19843,13 +19979,23 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
         TIn.setText("");
         JamMasuk.setText("");
         if (tbKamIn.getSelectedRow() != -1) {
-            norawat.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString());
+            String tempNoRawat = tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString();
+            if (tempNoRawat.equals("")) {
+                try {
+                    String no_rawat_ibu = tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString();
+                    String rm_bayi = tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString();
+                    tempNoRawat = Sequel.cariIsi("select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat='" + no_rawat_ibu + "' and reg_periksa.no_rkm_medis='" + rm_bayi + "'");
+                } catch (Exception e) {
+                    System.out.println("Error cari no_rawat bayi: " + e);
+                }
+            }
+            norawat.setText(tempNoRawat);
             TNoRM.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
             TPasien.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 2).toString());
-            TNoRwCari.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString());
+            TNoRwCari.setText(tempNoRawat);
             TNoRMCari.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
             TPasienCari.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 2).toString());
-            norawatpindah.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString());
+            norawatpindah.setText(tempNoRawat);
             TNoRMpindah.setText(TNoRM.getText());
             TPasienpindah.setText(TPasien.getText());
             kdkamar.setText(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 22).toString());
@@ -20568,7 +20714,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
     private widget.Button BtnAnakResumeMedis;
 
     public void initDokterAnak() {
-        if(BtnAnakMedisNeonatus==null) {
+        if(BtnAnakMedisAnak==null) {
             BtnAnakTindakanPemeriksaan = new widget.Button();
             BtnAnakTindakanPemeriksaan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
             BtnAnakTindakanPemeriksaan.setText("Tindakan/Pemeriksaan");
@@ -20593,21 +20739,9 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 }
             });
 
-            BtnAnakMedisNeonatus = new widget.Button();
-            BtnAnakMedisNeonatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
-            BtnAnakMedisNeonatus.setText("Medis Ranap Neonatus");
-            BtnAnakMedisNeonatus.setPreferredSize(new java.awt.Dimension(165, 26));
-            BtnAnakMedisNeonatus.setGlassColor(new java.awt.Color(255, 153, 153));
-            BtnAnakMedisNeonatus.setMnemonic('M');
-            BtnAnakMedisNeonatus.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    MnPenilaianAwalMedisNeonatusRanapActionPerformed(evt);
-                }
-            });
-
             BtnAnakMedisAnak = new widget.Button();
             BtnAnakMedisAnak.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
-            BtnAnakMedisAnak.setText("Medis Ranap Anak");
+            BtnAnakMedisAnak.setText("Medis Bayi/Anak");
             BtnAnakMedisAnak.setPreferredSize(new java.awt.Dimension(145, 26));
             BtnAnakMedisAnak.setGlassColor(new java.awt.Color(255, 153, 153));
             BtnAnakMedisAnak.setMnemonic('A');
@@ -20625,8 +20759,6 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
         BtnAnakTindakanPemeriksaan.setVisible(true);
         panelCari.add(BtnAnakResumeMedis);
         BtnAnakResumeMedis.setVisible(true);
-        panelCari.add(BtnAnakMedisNeonatus);
-        BtnAnakMedisNeonatus.setVisible(true);
         panelCari.add(BtnAnakMedisAnak);
         BtnAnakMedisAnak.setVisible(true);
         
@@ -21359,9 +21491,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 DlgDpjp dpjp = new DlgDpjp(null, false);
@@ -21464,9 +21597,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -21533,9 +21667,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -21612,9 +21747,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -21681,9 +21817,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -21750,9 +21887,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -21819,9 +21957,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -21888,9 +22027,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -21955,9 +22095,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -22020,9 +22161,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -22155,9 +22297,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -22239,9 +22382,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -22308,7 +22452,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if(tbKamIn.getValueAt(tbKamIn.getSelectedRow(),0).toString().equals("")){
                     try {
                         psanak=koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");            
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");            
                         try {
                             psanak.setString(1,tbKamIn.getValueAt(tbKamIn.getSelectedRow()-1,0).toString());
                             rs2=psanak.executeQuery();
@@ -22377,7 +22521,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if(tbKamIn.getValueAt(tbKamIn.getSelectedRow(),0).toString().equals("")){
                     try {
                         psanak=koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");            
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");            
                         try {
                             psanak.setString(1,tbKamIn.getValueAt(tbKamIn.getSelectedRow()-1,0).toString());
                             rs2=psanak.executeQuery();
@@ -22446,7 +22590,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if(tbKamIn.getValueAt(tbKamIn.getSelectedRow(),0).toString().equals("")){
                     try {
                         psanak=koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");            
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");            
                         try {
                             psanak.setString(1,tbKamIn.getValueAt(tbKamIn.getSelectedRow()-1,0).toString());
                             rs2=psanak.executeQuery();
@@ -22516,7 +22660,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if(tbKamIn.getValueAt(tbKamIn.getSelectedRow(),0).toString().equals("")){
                     try {
                         psanak=koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");            
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");            
                         try {
                             psanak.setString(1,tbKamIn.getValueAt(tbKamIn.getSelectedRow()-1,0).toString());
                             rs2=psanak.executeQuery();
@@ -22605,7 +22749,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if(tbKamIn.getValueAt(tbKamIn.getSelectedRow(),0).toString().equals("")){
                     try {
                         psanak=koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");            
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");            
                         try {
                             psanak.setString(1,tbKamIn.getValueAt(tbKamIn.getSelectedRow()-1,0).toString());
                             rs2=psanak.executeQuery();
@@ -22662,7 +22806,7 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if(tbKamIn.getValueAt(tbKamIn.getSelectedRow(),0).toString().equals("")){
                     try {
                         psanak=koneksi.prepareStatement(
-                            "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");            
+                            "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");            
                         try {
                             psanak.setString(1,tbKamIn.getValueAt(tbKamIn.getSelectedRow()-1,0).toString());
                             rs2=psanak.executeQuery();
@@ -23419,9 +23563,10 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
                 if (tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString().equals("")) {
                     try {
                         psanak = koneksi.prepareStatement(
-                                "select ranap_gabung.no_rawat2 from ranap_gabung where ranap_gabung.no_rawat=?");
+                                "select ranap_gabung.no_rawat2 from ranap_gabung inner join reg_periksa on ranap_gabung.no_rawat2=reg_periksa.no_rawat where ranap_gabung.no_rawat=? and reg_periksa.no_rkm_medis=?");
                         try {
-                            psanak.setString(1, tbKamIn.getValueAt(tbKamIn.getSelectedRow() - 1, 0).toString());
+                            psanak.setString(1, tbKamIn.getValueAt(getRowIbu(tbKamIn.getSelectedRow()), 0).toString());
+                            psanak.setString(2, tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString());
                             rs2 = psanak.executeQuery();
                             if (rs2.next()) {
                                 this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -23605,5 +23750,26 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
         // Menaruh fokus kursor ke input pertama
         Bagian.requestFocus();
     }
+    
+    private void MnValidasiRanapActionPerformed(java.awt.event.ActionEvent evt) {                                            
+         if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, table masih kosong...!!!!");
+            TCari.requestFocus();
+        }else{
+            
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+          //  ValidasiSOAPPRI form=new ValidasiSOAPPRI(null,false);           
+            
+            form.isCek();
+            form.emptTeks();            
+            form.setNoRm(norawat.getText(),DTPCari2.getDate(),TNoRMCari.getText());
+            form.tampil();
+            form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+            form.setLocationRelativeTo(internalFrame1);
+            form.setVisible(true);
+            this.setCursor(Cursor.getDefaultCursor());
+
+         }
+}
 
 }
