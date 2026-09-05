@@ -11,6 +11,16 @@
  */
 package simrskhanza;
 
+import java.math.BigDecimal;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.awt.Desktop;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import java.util.List;
+import java.util.ArrayList;
 import permintaan.DlgPermintaanDarah;
 import bridging.BPJSCekDataIndukKecelakaan;
 import bridging.BPJSCekSuplesiJasaRaharja;
@@ -247,6 +257,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
     private int i, row = 0, pilihan = 1;
     private double lama = 0, persenbayi = 0, hargakamar = 0;
     private String gabungkan = "", norawatgabung = "", kamaryangdigabung = "", dokterranap = "", bangsal = "", diagnosa_akhir = "", namakamar = "", umur = "0", sttsumur = "Th", order = "order by bangsal.nm_bangsal,kamar_inap.tgl_masuk,kamar_inap.jam_masuk";
+    private String noRawatTerakhirCekCritical = "";
     private javax.swing.JDialog DlgTransfusiDarah;
     private widget.InternalFrame internalFrameTransfusi;
     private widget.PanelBiasa panelBiasaTransfusi;
@@ -7472,6 +7483,15 @@ public class DlgKamarInap extends javax.swing.JDialog {
         if (tabMode.getRowCount() != 0) {
             try {
                 getData();
+
+            // ==============================
+            // CEK NILAI KRITIS LAB
+            // ==============================
+            String noRawatSekarang = TNoRwCari.getText().trim();
+            if(!noRawatSekarang.equals(noRawatTerakhirCekCritical)){
+                cekCriticalValueLab(noRawatSekarang);
+                noRawatTerakhirCekCritical = noRawatSekarang;
+            }
             } catch (java.lang.NullPointerException e) {
             }
 
@@ -20659,9 +20679,9 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
 
             BtnPonekSkriningMPP = new widget.Button();
             BtnPonekSkriningMPP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
-            BtnPonekSkriningMPP.setText("Skrining Manager Pelayanan Pasien");
+            BtnPonekSkriningMPP.setText("MPP");
             BtnPonekSkriningMPP.setMnemonic('S');
-            BtnPonekSkriningMPP.setPreferredSize(new java.awt.Dimension(220, 26));
+            BtnPonekSkriningMPP.setPreferredSize(new java.awt.Dimension(80, 26));
             BtnPonekSkriningMPP.setGlassColor(new java.awt.Color(255, 153, 153));
             BtnPonekSkriningMPP.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -23770,6 +23790,1292 @@ private void MnPenilaianAwalKeperawatanRanapActionPerformed(java.awt.event.Actio
             this.setCursor(Cursor.getDefaultCursor());
 
          }
+}
+
+
+    private class CriticalItem {
+
+        String idTemplate;
+        String tanggal;
+        String jam;
+        String pemeriksaan;
+        String hasil;
+        String satuan;
+        String nilaiMin;
+        String nilaiMax;
+        String keterangan;
+
+    }
+    
+     private void cekCriticalValueLab(String noRawat) {
+    PreparedStatement psCritical = null;
+    ResultSet rsCritical = null;
+
+    try {
+
+        // ==========================================
+        // QUERY
+        // ==========================================
+        psCritical = koneksi.prepareStatement(
+         /*   "SELECT " +
+            "dpl.id_template, " +
+            "dpl.nilai, " +
+            "mcv.nama_pemeriksaan, " +
+            "mcv.satuan, " +
+            "mcv.nilai_min, " +
+            "mcv.nilai_max, " +
+            "dpl.tgl_periksa, " +
+            "dpl.jam " +
+            "FROM detail_periksa_lab dpl " +
+            "INNER JOIN master_critical_value mcv " +
+            "ON dpl.id_template = mcv.id_template " +
+            "WHERE dpl.no_rawat = ? " +
+            "AND CONCAT(dpl.tgl_periksa,' ',dpl.jam) = ( " +
+            "    SELECT MAX(CONCAT(tgl_periksa,' ',jam)) " +
+            "    FROM detail_periksa_lab " +
+            "    WHERE no_rawat = ? " +
+            ") " +
+            "ORDER BY dpl.jam, mcv.nama_pemeriksaan" */
+               " SELECT " +
+                "dpl.id_template, " +
+                "dpl.nilai, " +
+                "mcv.nama_pemeriksaan, " +
+                "mcv.satuan, " +
+                "mcv.nilai_min, " +
+                "mcv.nilai_max, " +
+                "dpl.tgl_periksa, " +
+                "dpl.jam " +
+            "FROM detail_periksa_lab dpl "+
+            "JOIN master_critical_value mcv "+
+                 "ON dpl.id_template=mcv.id_template "+
+            "WHERE dpl.no_rawat=? "+
+            "ORDER BY dpl.tgl_periksa DESC, "+
+                     "dpl.jam DESC, "+
+                     "mcv.nama_pemeriksaan"
+        );
+
+        psCritical.setString(1, noRawat);
+       // psCritical.setString(2, noRawat);
+
+        rsCritical = psCritical.executeQuery();
+
+        StringBuilder pesanCritical = new StringBuilder();
+
+        int jumlahCritical = 0;
+        int jumlahDitampilkan = 0;
+
+        String tanggalTerbaru = "";
+        String jamTerbaru = "";
+        
+
+    //List<String> criticalTemplates = new ArrayList<>();
+    List<CriticalItem> criticalList = new ArrayList<>();
+
+        // ==========================================
+        // LOOP DATA
+        // ==========================================
+        while (rsCritical.next()) {
+
+            String idTemplate =
+                rsCritical.getString("id_template");
+
+            String hasil =
+                rsCritical.getString("nilai");
+
+            String pemeriksaan =
+                rsCritical.getString("nama_pemeriksaan");
+
+            String satuan =
+                rsCritical.getString("satuan");
+
+            String nilaiMin =
+                rsCritical.getString("nilai_min");
+
+            String nilaiMax =
+                rsCritical.getString("nilai_max");
+
+           /* tanggalTerbaru =
+                rsCritical.getString("tgl_periksa");
+
+            jamTerbaru =
+                rsCritical.getString("jam");*/
+           String tanggalPeriksa = rsCritical.getString("tgl_periksa");
+            String jamPeriksa     = rsCritical.getString("jam");
+
+
+            // ==========================================
+            // TIDAK ADA HASIL
+            // ==========================================
+            if (hasil == null || hasil.trim().equals("")) {
+                continue;
+            }
+
+            boolean kritis = false;
+            String keterangan = "";
+
+            hasil = hasil.trim();
+
+            if (nilaiMin == null) {
+                nilaiMin = "";
+            }
+
+            if (nilaiMax == null) {
+                nilaiMax = "";
+            }
+
+            nilaiMin = nilaiMin.trim();
+            nilaiMax = nilaiMax.trim();
+
+
+            // ==========================================
+            // CEK NILAI KRITIS
+            // ==========================================
+            try {
+
+                BigDecimal hasilLab =
+                    new BigDecimal(hasil);
+
+
+                // MINIMUM
+                if (!nilaiMin.equals("")) {
+
+                    BigDecimal min =
+                        new BigDecimal(nilaiMin);
+
+                    if (hasilLab.compareTo(min) < 0) {
+
+                        kritis = true;
+
+                        keterangan =
+                            "Hasil lebih kecil dari nilai kritis minimum";
+                    }
+                }
+
+
+                // MAXIMUM
+                if (!nilaiMax.equals("")) {
+
+                    BigDecimal max =
+                        new BigDecimal(nilaiMax);
+
+                    if (hasilLab.compareTo(max) > 0) {
+
+                        kritis = true;
+
+                        keterangan =
+                            "Hasil lebih besar dari nilai kritis maksimum";
+                    }
+                }
+
+            } catch (NumberFormatException e) {
+
+                // ==========================================
+                // HASIL TEKS
+                // ==========================================
+
+                if (!nilaiMin.equals("")) {
+
+                    if (!hasil.equalsIgnoreCase(nilaiMin)) {
+
+                        kritis = true;
+
+                        keterangan =
+                            "Hasil tidak sesuai dengan nilai normal";
+                    }
+                }
+            }
+
+
+            // ==========================================
+            // BUKAN KRITIS
+            // ==========================================
+            if (!kritis) {
+                continue;
+            }
+
+
+            // ==========================================
+            // SUDAH DITANGANI
+            // ==========================================
+            if (sudahDitanganiCriticalValue(
+                    noRawat,
+                    tanggalPeriksa,
+        jamPeriksa,
+                    idTemplate)) {
+
+                continue;
+            }
+
+
+            // ==========================================
+            // HITUNG SEMUA CRITICAL
+            // ==========================================
+            jumlahCritical++;
+
+                // Simpan id_template nilai kritis
+                   // criticalTemplates.add(idTemplate);
+                   CriticalItem item = new CriticalItem();
+
+item.idTemplate = idTemplate;
+item.tanggal = tanggalPeriksa;
+item.jam = jamPeriksa;
+item.pemeriksaan = pemeriksaan;
+item.hasil = hasil;
+item.satuan = satuan;
+item.nilaiMin = nilaiMin;
+item.nilaiMax = nilaiMax;
+item.keterangan = keterangan;
+
+criticalList.add(item);
+            // ==========================================
+            // TAMPILKAN MAKSIMAL 3
+            // ==========================================
+            if (jumlahDitampilkan < 1) {
+
+                pesanCritical.append(
+                    "Pemeriksaan : " + pemeriksaan + "\n" +
+                    "Hasil       : " + hasil + " " + satuan + "\n" +
+                    "Nilai Min   : " + nilaiMin + "\n" +
+                    "Nilai Max   : " + nilaiMax + "\n" +
+                    "Keterangan  : " + keterangan + "\n" +
+                    "----------------------------------------\n\n"
+                );
+
+                jumlahDitampilkan++;
+            }
+        } // <-- TUTUP while
+
+
+        // ==========================================
+        // TAMPILKAN MSGBOX
+        // ==========================================
+        if (jumlahCritical > 0) {
+
+            Object[] pilihan;
+
+            if (jumlahCritical > 0) {
+
+                pilihan = new Object[]{
+                    "OK",
+                    "Lihat Nilai Kritis",
+                    "Sudah Ditangani"
+                };
+
+            } else {
+
+                pilihan = new Object[]{
+                    "OK",
+                    "Sudah Ditangani"
+                };
+            }
+
+            String tanggalPopup = "";
+String jamPopup = "";
+
+if (!criticalList.isEmpty()) {
+    tanggalPopup = criticalList.get(0).tanggal;
+    jamPopup = criticalList.get(0).jam;
+}
+
+            /*String pesan =
+                "!!! NILAI KRITIS LABORATORIUM !!!\n\n" +
+                "No. Rawat       : " + noRawat + "\n" +
+                "No. Rekam Medis : " + TNoRMCari.getText() + "\n" +
+                "Nama Pasien     : " + TPasienCari.getText() + "\n" +
+                "Tanggal         : " + tanggalPopup + "\n" +
+                "Jam             : " + jamPopup + "\n\n" +
+                "Jumlah Nilai Kritis : " + jumlahCritical + "\n\n" +
+                pesanCritical.toString();*/
+                String pesan =
+                    "======================================================\n" +
+                    "      !!! NILAI KRITIS LABORATORIUM !!!\n" +
+                    "======================================================\n\n" +
+
+                    "No. Rawat       : " + noRawat + "\n" +
+                    "No. Rekam Medis : " + TNoRMCari.getText() + "\n" +
+                    "Nama Pasien     : " + TPasienCari.getText() + "\n\n" +
+
+                    "Ditemukan " + jumlahCritical +
+                    " Nilai Kritis yang BELUM DITANGANI\n\n" +
+
+                    pesanCritical.toString() +
+
+                    "Segera lakukan konfirmasi kepada DPJP\n" +
+                    "dan dokumentasikan penanganan sesuai SPO.";
+
+            
+                
+                if (jumlahCritical > 0) {
+
+                pesan +=
+                    "\nMasih terdapat " +
+                    (jumlahCritical - 0) +
+                    " nilai kritis lainnya.\n\n" +
+                    "Silakan pilih 'Lihat Nilai Kritis' untuk melihat\n" +
+                    "laporan lengkap nilai kritis.";
+            }
+
+
+            pesan +=
+                "\n\nSEGERA LAKUKAN TINDAKAN SESUAI\n" +
+                "PROSEDUR PENANGANAN NILAI KRITIS.";
+
+
+            // ==========================================
+            // MSGBOX
+            // ==========================================
+            int pilihanUser = JOptionPane.showOptionDialog(
+                null,
+                pesan,
+                "PERINGATAN NILAI KRITIS",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                pilihan,
+                pilihan[0]
+            );
+
+
+            // ==========================================
+            // TOMBOL
+            // ==========================================
+            if (jumlahCritical > 0) {
+
+                // 0 = OK
+                // 1 = Lihat Nilai Kritis
+                // 2 = Sudah Ditangani
+
+                if (pilihanUser == 1) {
+                    if (!criticalList.isEmpty()) {
+
+        CriticalItem item = criticalList.get(0);
+                    cetakCriticalValueLab(
+                        noRawat,
+                         item.tanggal,
+                            item.jam
+                    );
+                }
+            }
+                else if (pilihanUser == 2) {
+
+                   // for (String idTemplate : criticalTemplates) {
+for (CriticalItem item : criticalList) {
+                simpanPenangananCriticalValue(
+                    noRawat,
+                   /* tanggalTerbaru,
+                    jamTerbaru,
+                    idTemplate*/
+                        item.tanggal,
+        item.jam,
+        item.idTemplate
+                );
+            }
+
+            System.out.println(
+                "Semua nilai kritis sudah ditandai sebagai ditangani."
+            );// LOGIKA SUDAH DITANGANI
+                }
+
+            } else {
+
+                // 0 = OK
+                // 1 = Sudah Ditangani
+
+                if (pilihanUser == 1) {
+
+                  //  for (String idTemplate : criticalTemplates) {
+for (CriticalItem item : criticalList) {
+                simpanPenangananCriticalValue(
+                    noRawat,
+                    /*tanggalTerbaru,
+                    jamTerbaru,
+                    idTemplate*/
+                        item.tanggal,
+        item.jam,
+        item.idTemplate
+                );
+            }
+
+            System.out.println(
+                "Semua nilai kritis sudah ditandai sebagai ditangani."
+            );// LOGIKA SUDAH DITANGANI
+                }
+            }
+
+        } // <-- TUTUP if (jumlahCritical > 0)
+
+
+    } catch (Exception e) {
+
+        System.out.println(
+            "Notifikasi Critical Value Lab : " + e
+        );
+
+
+    } finally {
+
+        // ==========================================
+        // TUTUP RESULTSET
+        // ==========================================
+        if (rsCritical != null) {
+
+            try {
+
+                rsCritical.close();
+
+            } catch (Exception e) {
+            }
+        }
+
+
+        // ==========================================
+        // TUTUP PREPAREDSTATEMENT
+        // ==========================================
+        if (psCritical != null) {
+
+            try {
+
+                psCritical.close();
+
+            } catch (Exception e) {
+            }
+        }
+    }
+
+} // <-- TUTUP METHOD
+ 
+ 
+ 
+ //................................
+ 
+ private boolean sudahDitanganiCriticalValue(
+        String noRawat,
+        String tglPeriksa,
+        String jamPeriksa,
+        String idTemplate) {
+
+    PreparedStatement psCek = null;
+    ResultSet rsCek = null;
+
+    try {
+
+        psCek = koneksi.prepareStatement(
+            "SELECT COUNT(*) FROM critical_value_penanganan " +
+            "WHERE no_rawat=? " +
+            "AND tgl_periksa=? " +
+            "AND jam_periksa=? " +
+            "AND id_template=?"
+        );
+
+        psCek.setString(1, noRawat);
+        psCek.setString(2, tglPeriksa);
+        psCek.setString(3, jamPeriksa);
+        psCek.setString(4, idTemplate);
+
+        rsCek = psCek.executeQuery();
+
+        if(rsCek.next()) {
+            return rsCek.getInt(1) > 0;
+        }
+
+    } catch(Exception e) {
+
+        System.out.println(
+            "Cek status Critical Value : " + e
+        );
+
+    } finally {
+
+        if(rsCek != null) {
+            try {
+                rsCek.close();
+            } catch(Exception e) {}
+        }
+
+        if(psCek != null) {
+            try {
+                psCek.close();
+            } catch(Exception e) {}
+        }
+    }
+
+    return false;
+}
+ 
+ //..........................
+ private void simpanPenangananCriticalValue(
+        String noRawat,
+        String tglPeriksa,
+        String jamPeriksa,
+        String idTemplate) {
+
+    PreparedStatement psSimpan = null;
+
+    try {
+
+        psSimpan = koneksi.prepareStatement(
+            "INSERT IGNORE INTO critical_value_penanganan " +
+            "(no_rawat,tgl_periksa,jam_periksa,id_template,waktu_tangani) " +
+            "VALUES (?,?,?,?,NOW())"
+        );
+
+        psSimpan.setString(1, noRawat);
+        psSimpan.setString(2, tglPeriksa);
+        psSimpan.setString(3, jamPeriksa);
+        psSimpan.setString(4, idTemplate);
+
+        psSimpan.executeUpdate();
+
+    } catch(Exception e) {
+
+        System.out.println(
+            "Simpan penanganan Critical Value : " + e
+        );
+
+    } finally {
+
+        if(psSimpan != null) {
+            try {
+                psSimpan.close();
+            } catch(Exception e) {}
+        }
+    }
+}
+ 
+ private void cetakCriticalValueLab(
+        String noRawat,
+        String tglPeriksa,
+        String jamPeriksa) {
+
+    try {
+
+        System.out.println("Masuk cetakCriticalValueLab()");
+        System.out.println("No Rawat = " + noRawat);
+        System.out.println("Tanggal   = " + tglPeriksa);
+        System.out.println("Jam     = " + jamPeriksa);
+
+        ps = koneksi.prepareStatement(
+    
+    "SELECT " +
+    "dpl.id_template, " +
+    "dpl.nilai, " +
+    "mcv.nama_pemeriksaan, " +
+    "mcv.satuan, " +
+    "mcv.nilai_min, " +
+    "mcv.nilai_max, " +
+    "mcv.keterangan, " +
+    "pl.kd_dokter, " +
+    "d.nm_dokter " +
+
+    "FROM detail_periksa_lab dpl " +
+
+    "INNER JOIN master_critical_value mcv " +
+    "ON dpl.id_template=mcv.id_template " +
+
+    "INNER JOIN periksa_lab pl " +
+    "ON dpl.no_rawat=pl.no_rawat " +
+    "AND dpl.kd_jenis_prw=pl.kd_jenis_prw " +
+    "AND dpl.tgl_periksa=pl.tgl_periksa " +
+    "AND dpl.jam=pl.jam " +
+
+    "LEFT JOIN dokter d " +
+    "ON pl.kd_dokter=d.kd_dokter " +
+
+    "WHERE dpl.no_rawat=? " +
+    "AND dpl.tgl_periksa=? " +
+    "AND dpl.jam=? " +
+
+    "AND dpl.nilai IS NOT NULL " +
+    "AND dpl.nilai<>''"
+);
+
+ps.setString(1, noRawat);
+ps.setString(2, tglPeriksa);
+ps.setString(3, jamPeriksa);
+
+
+        rs = ps.executeQuery();
+
+        System.out.println("Query dijalankan...");
+
+      //  rs = ps.executeQuery();
+
+        int jumlah = 0;
+
+        while(rs.next()) {
+            jumlah++;
+
+            System.out.println(
+                "Critical data ditemukan : " +
+                rs.getString("nama_pemeriksaan") +
+                " = " +
+                rs.getString("nilai")
+            );
+        }
+
+        System.out.println(
+            "Jumlah data ditemukan = " + jumlah
+        );
+
+        if(jumlah == 0) {
+            JOptionPane.showMessageDialog(
+                null,
+                "Tidak ditemukan data pemeriksaan laboratorium untuk No Rawat:\n" +
+                noRawat
+            );
+            return;
+        }
+
+        // PENTING:
+        // setelah while di atas, ResultSet sudah berada di akhir.
+        // Jadi query harus dijalankan ulang untuk membuat report.
+
+        rs.close();
+
+        rs = ps.executeQuery();
+
+        // =====================================================
+        // LANJUTKAN PEMBUATAN HTML ANDA DI SINI
+        // =====================================================
+        String logoPath =
+        System.getProperty("user.dir") +
+        File.separator +
+        "logo_rs.png";
+
+        StringBuilder html = new StringBuilder();
+
+        html.append("<html>");
+        html.append("<head>");
+        html.append("<meta charset='UTF-8'>");
+
+        html.append("<style>");
+
+        html.append("body {");
+        html.append("font-family: Arial, Helvetica, sans-serif;");
+        html.append("font-size: 12px;");
+        html.append("margin: 20px;");
+        html.append("}");
+
+        /* HEADER */
+        html.append(".header {");
+        html.append("width:100%;");
+        html.append("border-bottom:2px solid black;");
+        html.append("padding-bottom:10px;");
+        html.append("margin-bottom:15px;");
+        html.append("}");
+
+        html.append(".header-table {");
+        html.append("width:100%;");
+        html.append("border-collapse:collapse;");
+        html.append("}");
+
+        html.append(".header-table td {");
+        html.append("border:none;");
+        html.append("vertical-align:middle;");
+        html.append("}");
+
+        html.append(".logo-cell {");
+        html.append("width:120px;");
+        html.append("text-align:left;");
+        html.append("}");
+
+        html.append(".logo {");
+        html.append("width:95px;");
+        html.append("height:auto;");
+        html.append("}");
+
+        html.append(".hospital {");
+        html.append("text-align:center;");
+        html.append("font-weight:bold;");
+        html.append("font-size:20px;");
+        html.append("}");
+
+        html.append(".hospital-sub {");
+        html.append("text-align:center;");
+        html.append("font-weight:bold;");
+        html.append("font-size:16px;");
+        html.append("margin-top:5px;");
+        html.append("}");
+
+        /* JUDUL */
+        html.append(".judul {");
+        html.append("text-align:center;");
+        html.append("font-size:16px;");
+        html.append("font-weight:bold;");
+        html.append("margin:15px 0;");
+        html.append("}");
+
+        /* IDENTITAS */
+        html.append(".identitas {");
+        html.append("width:100%;");
+        html.append("border-collapse:collapse;");
+        html.append("margin-bottom:15px;");
+        html.append("}");
+
+        html.append(".identitas td {");
+        html.append("border:none;");
+        html.append("padding:3px;");
+        html.append("text-align:left;");
+        html.append("}");
+
+        html.append(".identitas .label {");
+        html.append("width:150px;");
+        html.append("font-weight:bold;");
+        html.append("}");
+
+        html.append(".identitas .colon {");
+        html.append("width:15px;");
+        html.append("text-align:center;");
+        html.append("}");
+
+        /* TABEL PEMERIKSAAN */
+        html.append(".lab {");
+        html.append("width:100%;");
+        html.append("border-collapse:collapse;");
+        html.append("}");
+
+        html.append(".lab th {");
+        html.append("border:1px solid black;");
+        html.append("padding:7px;");
+        html.append("background:#eeeeee;");
+        html.append("text-align:center;");
+        html.append("}");
+
+        html.append(".lab td {");
+        html.append("border:1px solid black;");
+        html.append("padding:7px;");
+        html.append("}");
+
+        html.append(".critical {");
+        html.append("color:red;");
+        html.append("font-weight:bold;");
+        html.append("}");
+
+        /* TANDA TANGAN */
+        html.append(".ttd {");
+        html.append("width:100%;");
+        html.append("margin-top:50px;");
+        html.append("}");
+
+        html.append(".ttd td {");
+        html.append("border:none;");
+        html.append("text-align:center;");
+        html.append("vertical-align:top;");
+        html.append("}");
+
+        html.append(".ttd-space {");
+        html.append("height:70px;");
+        html.append("}");
+
+        html.append(".dokter {");
+        html.append("font-weight:bold;");
+        html.append("text-decoration:underline;");
+        html.append("}");
+
+        html.append("</style>");
+
+        html.append("</head>");
+        html.append("<body>");
+
+
+        // =====================================================
+        // HEADER
+        // =====================================================
+
+        html.append("<div class='header'>");
+
+        html.append("<table class='header-table'>");
+        html.append("<tr>");
+
+
+        // LOGO KIRI
+        html.append("<td class='logo-cell'>");
+
+        html.append(
+            "<img class='logo' src='file:///" +
+            logoPath.replace("\\", "/") +
+            "'>"
+        );
+
+        html.append("</td>");
+
+
+        // NAMA RUMAH SAKIT
+        html.append("<td>");
+
+        html.append(
+            "<div class='hospital'>RUMAH SAKIT</div>"
+        );
+
+        html.append(
+            "<div class='hospital-sub'>PERMATA BUNDA CIAMIS</div>"
+        );
+
+        html.append("</td>");
+
+        html.append("</tr>");
+        html.append("</table>");
+
+        html.append("</div>");
+
+
+        // =====================================================
+        // JUDUL
+        // =====================================================
+
+        html.append(
+            "<div class='judul'>LAPORAN NILAI CRITICAL VALUE LABORATORIUM</div>"
+        );
+
+
+        // =====================================================
+        // IDENTITAS PASIEN
+        // =====================================================
+
+        html.append("<table class='identitas'>");
+
+        html.append("<tr>");
+        html.append("<td class='label'>No. Rawat</td>");
+        html.append("<td class='colon'>:</td>");
+        html.append("<td>").append(noRawat).append("</td>");
+        html.append("</tr>");
+
+        html.append("<tr>");
+        html.append("<td class='label'>Tanggal</td>");
+        html.append("<td class='colon'>:</td>");
+        html.append("<td>").append(tglPeriksa).append("</td>");
+        html.append("</tr>");
+
+        html.append("<tr>");
+        html.append("<td class='label'>Jam</td>");
+        html.append("<td class='colon'>:</td>");
+        html.append("<td>").append(jamPeriksa).append("</td>");
+        html.append("</tr>");
+
+        html.append("</table>");
+
+
+        // =====================================================
+        // TABEL CRITICAL VALUE
+        // =====================================================
+
+        html.append("<table class='lab'>");
+
+        html.append("<tr>");
+        html.append("<th>Pemeriksaan</th>");
+        html.append("<th>Hasil</th>");
+        html.append("<th>Satuan</th>");
+        html.append("<th>Nilai Minimum</th>");
+        html.append("<th>Nilai Maximum</th>");
+        html.append("<th>Keterangan</th>");
+        html.append("</tr>");
+
+
+        // Jalankan query lagi
+        rs.close();
+        rs = ps.executeQuery();
+
+        String kdDokter = "";
+        String namaDokter = "";
+
+        int jumlahCritical = 0;
+
+        while(rs.next()) {
+
+    String hasil = rs.getString("nilai");
+    String namaPemeriksaan =
+        rs.getString("nama_pemeriksaan");
+
+    String satuan =
+        rs.getString("satuan");
+
+    String nilaiMin =
+        rs.getString("nilai_min");
+
+    String nilaiMax =
+        rs.getString("nilai_max");
+
+    String keterangan =
+        rs.getString("keterangan");
+
+    // =====================================================
+    // DOKTER
+    // =====================================================
+
+    if(kdDokter.equals("")) {
+
+        kdDokter = rs.getString("kd_dokter");
+        namaDokter = rs.getString("nm_dokter");
+
+        if(kdDokter == null) {
+            kdDokter = "";
+        }
+
+        if(namaDokter == null) {
+            namaDokter = "";
+        }
+    }
+
+    // =====================================================
+    // NULL HANDLING
+    // =====================================================
+
+    if(hasil == null) {
+        hasil = "";
+    }
+
+    if(namaPemeriksaan == null) {
+        namaPemeriksaan = "";
+    }
+
+    if(satuan == null) {
+        satuan = "";
+    }
+
+    if(nilaiMin == null) {
+        nilaiMin = "";
+    }
+
+    if(nilaiMax == null) {
+        nilaiMax = "";
+    }
+
+    if(keterangan == null) {
+        keterangan = "";
+    }
+
+    hasil = hasil.trim();
+    nilaiMin = nilaiMin.trim();
+    nilaiMax = nilaiMax.trim();
+
+    // Kalau hasil kosong, jangan dianggap critical
+    if(hasil.equals("")) {
+        continue;
+    }
+
+    // =====================================================
+    // CEK CRITICAL VALUE
+    // =====================================================
+
+    boolean kritis = false;
+
+    String keteranganCritical = "";
+
+    try {
+
+        // =================================================
+        // HASIL ANGKA
+        // =================================================
+
+        BigDecimal hasilLab =
+            new BigDecimal(hasil);
+
+        // =================================================
+        // CEK NILAI MINIMUM
+        // =================================================
+
+        if(!nilaiMin.equals("")) {
+
+            BigDecimal min =
+                new BigDecimal(nilaiMin);
+
+            if(hasilLab.compareTo(min) < 0) {
+
+                kritis = true;
+
+                keteranganCritical =
+                    "Hasil lebih kecil dari nilai kritis minimum";
+            }
+        }
+
+        // =================================================
+        // CEK NILAI MAXIMUM
+        // =================================================
+
+        if(!nilaiMax.equals("")) {
+
+            BigDecimal max =
+                new BigDecimal(nilaiMax);
+
+            if(hasilLab.compareTo(max) > 0) {
+
+                kritis = true;
+
+                keteranganCritical =
+                    "Hasil lebih besar dari nilai kritis maksimum";
+            }
+        }
+
+    } catch(NumberFormatException e) {
+
+        // =================================================
+        // HASIL TEKS
+        //
+        // MASTER       HASIL
+        // NONREAKTIF   REAKTIF       = KRITIS
+        // NONREAKTIF   NONREAKTIF    = NORMAL
+        //
+        // NEGATIF      POSITIF       = KRITIS
+        // NEGATIF      NEGATIF       = NORMAL
+        // =================================================
+
+        if(!nilaiMin.equals("")) {
+
+            if(!hasil.equalsIgnoreCase(nilaiMin)) {
+
+                kritis = true;
+
+                keteranganCritical =
+                    "Hasil tidak sesuai dengan nilai normal";
+            }
+        }
+    }
+
+    // =====================================================
+    // JIKA TIDAK KRITIS
+    // JANGAN MASUK REPORT
+    // =====================================================
+
+    if(!kritis) {
+        continue;
+    }
+
+    jumlahCritical++;
+
+    // =====================================================
+    // KETERANGAN
+    // =====================================================
+
+    // Jika keterangan dari master kosong,
+    // gunakan keterangan hasil pemeriksaan
+    if(keterangan.equals("")) {
+
+        keterangan =
+            keteranganCritical;
+    }
+
+    // =====================================================
+    // TAMPILKAN KE REPORT
+    // =====================================================
+
+    html.append("<tr>");
+
+    // PEMERIKSAAN
+    html.append("<td class='critical'>")
+        .append(namaPemeriksaan)
+        .append("</td>");
+
+    // HASIL
+    html.append("<td class='critical'>")
+        .append(hasil)
+        .append("</td>");
+
+    // SATUAN
+    html.append("<td>")
+        .append(satuan)
+        .append("</td>");
+
+    // NILAI MINIMUM / NORMAL
+    html.append("<td>")
+        .append(nilaiMin)
+        .append("</td>");
+
+    // NILAI MAXIMUM
+    html.append("<td>")
+        .append(nilaiMax)
+        .append("</td>");
+
+    // KETERANGAN
+    html.append("<td class='critical'>")
+        .append(keterangan)
+        .append("</td>");
+
+    html.append("</tr>");
+}
+
+html.append("</table>");
+
+
+        // =====================================================
+        // DOKTER / TANDA TANGAN
+        // =====================================================
+
+        if(kdDokter == null) {
+            kdDokter = "";
+        }
+
+        if(namaDokter == null) {
+            namaDokter = "";
+        }
+                               
+        //QR
+        // =====================================================
+        // QR CODE TANDA TANGAN ELEKTRONIK
+        // =====================================================
+
+        String isiBarcode =
+                "RSU PERMATA BUNDA CIAMIS\n" +
+                "Ditandatangani Secara Elektronik oleh:\n" +
+                "Dokter : " + kdDokter + "\n" +
+                "Nama   : " + namaDokter;
+
+        // File QR hanya satu
+        File barcodeFile = new File(
+            System.getProperty("java.io.tmpdir"),
+            "barcode_ttd_dokter.png"
+        );
+
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(
+            isiBarcode,
+            BarcodeFormat.QR_CODE,
+            180,
+            180
+        );
+
+        MatrixToImageWriter.writeToPath(
+            bitMatrix,
+            "PNG",
+            barcodeFile.toPath()
+        );
+
+        //S QR
+       
+        
+        html.append("<table class='ttd'>");
+        
+        html.append("<tr>");
+
+        html.append("<td style='width:55%;'></td>");
+        
+        
+                
+        html.append("<td style='width:45%;'>");
+        
+        html.append("Ciamis, ");
+                html.append(
+            new java.text.SimpleDateFormat("dd-MM-yyyy")
+            .format(new java.util.Date())
+        );
+                html.append("<br>");
+        html.append("Dokter Pemeriksa Laboratorium");
+
+        //html.append("<div class='ttd-space'></div>");
+        html.append("<div class='ttd-qr'>");
+
+        html.append(
+            "<img src='file:///" +
+            barcodeFile.getAbsolutePath().replace("\\", "/") +
+            "'>"
+        );
+
+        html.append("</div>");
+
+        html.append("<div class='dokter'>")
+            .append(namaDokter)
+            .append("</div>");
+
+        html.append("<div>")
+            .append("Dokter: ")
+            .append(kdDokter)
+            .append("</div>");
+
+        html.append("</td>");
+
+        html.append("</tr>");
+
+        html.append("</table>");
+
+ 
+
+        html.append("</body>");
+        html.append("</html>");
+
+        // =====================================================
+        // BUAT FILE HTML
+        // =====================================================
+
+      /*  File file = new File(
+            System.getProperty("java.io.tmpdir"),
+            "critical_value_" +
+            noRawat.replace("/", "_") +
+            ".html"
+        ); */
+      File file = new File(
+            System.getProperty("java.io.tmpdir"),
+            "critical_value.html"
+        );
+
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(file);
+
+            fos.write(
+                html.toString().getBytes("UTF-8")
+            );
+
+            fos.flush();
+
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        System.out.println(
+            "File report dibuat : " +
+            file.getAbsolutePath()
+        );
+
+        // =====================================================
+        // BUKA REPORT
+        // =====================================================
+
+        if(Desktop.isDesktopSupported()) {
+
+            Desktop.getDesktop().open(file);
+
+            System.out.println(
+                "Report berhasil dibuka."
+            );
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                null,
+                "Desktop tidak didukung oleh komputer ini.\n\n" +
+                "File report berada di:\n" +
+                file.getAbsolutePath()
+            );
+        }
+
+    } catch(Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+            null,
+            "Gagal membuat report Critical Value:\n" +
+            e.getMessage()
+        );
+
+    } finally {
+
+        if(rs != null) {
+            try {
+                rs.close();
+            } catch(Exception e) {}
+        }
+
+        if(ps != null) {
+            try {
+                ps.close();
+            } catch(Exception e) {}
+        }
+    }
 }
 
 }

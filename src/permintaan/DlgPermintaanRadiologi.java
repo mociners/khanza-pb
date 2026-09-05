@@ -536,7 +536,6 @@ public final class DlgPermintaanRadiologi extends javax.swing.JDialog {
         PanelInput.add(TNoPermintaan);
         TNoPermintaan.setBounds(502, 72, 130, 23);
 
-        InformasiTambahan.setHighlighter(null);
         InformasiTambahan.setName("InformasiTambahan"); // NOI18N
         InformasiTambahan.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -551,7 +550,6 @@ public final class DlgPermintaanRadiologi extends javax.swing.JDialog {
         PanelInput.add(jLabel5);
         jLabel5.setBounds(0, 130, 209, 23);
 
-        DiagnosisKlinis.setHighlighter(null);
         DiagnosisKlinis.setName("DiagnosisKlinis"); // NOI18N
         DiagnosisKlinis.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptEtiketRawatInapInfus" pageWidth="184" pageHeight="113" columnWidth="180" leftMargin="2" rightMargin="2" topMargin="2" bottomMargin="2" uuid="d1ab8f1b-4b10-4416-86be-7690bc02c813">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="namars" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select pasien.nm_pasien, pasien.no_rkm_medis, databarang.nama_brng, resep_dokter.aturan_pakai as aturan, resep_obat.tgl_perawatan, resep_obat.jam,
+        ifnull((select bangsal.nm_bangsal from kamar_inap inner join kamar inner join bangsal on kamar_inap.kd_kamar=kamar.kd_kamar and kamar.kd_bangsal=bangsal.kd_bangsal where kamar_inap.no_rawat=resep_obat.no_rawat order by kamar_inap.tgl_masuk desc limit 1),'') as nm_bangsal 
+        from resep_obat inner join reg_periksa on resep_obat.no_rawat=reg_periksa.no_rawat 
+        inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis 
+        inner join resep_dokter on resep_obat.no_resep=resep_dokter.no_resep 
+        inner join databarang on resep_dokter.kode_brng=databarang.kode_brng 
+        where resep_obat.no_resep='123' limit 1]]>
+	</queryString>
+	<field name="nm_pasien" class="java.lang.String"/>
+	<field name="no_rkm_medis" class="java.lang.String"/>
+	<field name="nm_bangsal" class="java.lang.String"/>
+	<field name="nama_brng" class="java.lang.String"/>
+	<field name="aturan" class="java.lang.String"/>
+	<field name="tgl_perawatan" class="java.sql.Date"/>
+	<field name="jam" class="java.sql.Time"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="109" splitType="Stretch">
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="2" y="2" width="28" height="28" uuid="8a3d72cd-5407-4402-8a47-0b1a03bd63f4"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="32" y="2" width="146" height="10" uuid="70b7de18-05b1-4f32-8418-4dc0d76985fa"/>
+				<textElement>
+					<font fontName="Tahoma" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUMAH SAKIT UMUM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="11" width="146" height="12" uuid="a6d05f32-159f-4318-8094-a131b783401f"/>
+				<textElement>
+					<font fontName="Tahoma" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERMATA BUNDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="22" width="146" height="9" uuid="2a17724f-ef12-4217-ba5d-b0dc8159424c"/>
+				<textElement>
+					<font fontName="Tahoma" size="6" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Sahabat Menuju Sehat]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="32" width="180" height="1" uuid="88f01b17-76cd-4860-915f-55cc0193e0e9"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="2" y="34" width="30" height="9" uuid="30b0bcf9-5cb5-45d0-9943-4a1617eab917"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[Nama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="34" width="5" height="9" uuid="c24af55d-3d44-4632-a5e3-6a971c2a05cf"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="37" y="34" width="141" height="9" uuid="c4e8574c-83b6-4ea1-8a9a-50d4d29e797e"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_pasien}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="43" width="30" height="9" uuid="71e3db98-f2b7-4c40-8f92-5eb89e6e8c89"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[No.MR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="43" width="5" height="9" uuid="b1942d4a-bc9c-4860-84cf-d8721c565c40"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="37" y="43" width="55" height="9" uuid="37f68c74-2c09-4af7-9e0c-99f57ebbf71b"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_rkm_medis}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="92" y="43" width="30" height="9" uuid="2e831627-8a16-433b-ab49-41e97d819c96"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[Ruang :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="122" y="43" width="56" height="9" uuid="a699c277-27ea-42fb-803f-4e0ab3b72cc4"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_bangsal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="52" width="40" height="9" uuid="c24a3502-0db6-4444-9343-7a9d0684f00b"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[Cairan infus]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="42" y="52" width="5" height="9" uuid="d1bc0274-1246-4ef3-a1c0-0f2c7a524a13"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="47" y="52" width="131" height="9" uuid="7cf42ff8-86db-4841-ba43-91b48b7b75f5"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_brng}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="61" width="70" height="9" uuid="07338ba4-a828-44fb-ae72-23b0923f6630"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pemberian]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="61" width="5" height="9" uuid="d1bc0274-1246-4ef3-a1c0-0f2c7a524a14"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="77" y="61" width="50" height="9" uuid="af9ab22c-a81d-4458-afad-e61be174826b"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[....................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="127" y="61" width="20" height="9" uuid="af9ab22c-a81d-4458-afad-e61be174826c"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[Jam :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="147" y="61" width="30" height="9" uuid="af9ab22c-a81d-4458-afad-e61be174826d"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[.........]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="70" width="70" height="9" uuid="f9d6c351-a9f9-4444-a957-c0f5be8ff7d2"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[Jumlah Tetesan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="70" width="5" height="9" uuid="df82a7a9-bfa2-4cbb-bd1f-b3b3e8e19b5b"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="77" y="70" width="100" height="9" uuid="0e8d052d-f952-47c3-a3d5-e6a3c6e9cc8a"/>
+				<textElement>
+					<font fontName="Tahoma" size="7"/>
+				</textElement>
+				<text><![CDATA[....................................]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

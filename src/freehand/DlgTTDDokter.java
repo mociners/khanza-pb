@@ -349,6 +349,10 @@ public class DlgTTDDokter extends JDialog {
             getPs.setString(1, noRawat);
             java.sql.ResultSet getRs = getPs.executeQuery();
 
+            String tglPerawatan = "";
+            String jamRawat = "";
+            String nip = "";
+
             if (!getRs.next()) {
                 getRs.close();
                 getPs.close();
@@ -363,18 +367,54 @@ public class DlgTTDDokter extends JDialog {
                     System.out.println("No pemeriksaan_ralan or pemeriksaan_ranap record found for no_rawat: " + noRawat);
                     getRs.close();
                     getPs.close();
-                    JOptionPane.showMessageDialog(this,
-                            "Tidak ada data pemeriksaan untuk no rawat ini. Silakan isi SOAP terlebih dahulu.");
-                    return false;
+                    
+                    // Fallback to reg_periksa if no SOAP exists
+                    getSql = "SELECT status_lanjut, kd_dokter FROM reg_periksa WHERE no_rawat=?";
+                    getPs = conn.prepareStatement(getSql);
+                    getPs.setString(1, noRawat);
+                    getRs = getPs.executeQuery();
+                    if (getRs.next()) {
+                        isRanap = getRs.getString("status_lanjut").equals("Ranap");
+                        nip = getRs.getString("kd_dokter");
+                    }
+                    getRs.close();
+                    getPs.close();
+                    
+                    tglPerawatan = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+                    jamRawat = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date());
+                    if (nip == null || nip.trim().isEmpty()) {
+                        nip = fungsi.akses.getkode();
+                    }
+                    
+                    // Insert dummy SOAP to satisfy foreign key constraint
+                    String insertSoap = isRanap ? 
+                        "INSERT INTO pemeriksaan_ranap (no_rawat, tgl_perawatan, jam_rawat, suhu_tubuh, tensi, nadi, respirasi, tinggi, berat, spo2, gcs, kesadaran, keluhan, pemeriksaan, alergi, penilaian, rtl, instruksi, evaluasi, nip) " +
+                        " VALUES (?, ?, ?, '-', '-', '-', '-', '-', '-', '-', '-', 'Compos Mentis', '-', '-', '-', '-', '-', '-', '-', ?)" :
+                        "INSERT INTO pemeriksaan_ralan (no_rawat, tgl_perawatan, jam_rawat, suhu_tubuh, tensi, nadi, respirasi, tinggi, berat, spo2, gcs, kesadaran, keluhan, pemeriksaan, alergi, lingkar_perut, rtl, penilaian, instruksi, evaluasi, nip) " +
+                        " VALUES (?, ?, ?, '-', '-', '-', '-', '-', '-', '-', '-', 'Compos Mentis', '-', '-', '-', '-', '-', '-', '-', '-', ?)";
+                    
+                    java.sql.PreparedStatement insertSoapPs = conn.prepareStatement(insertSoap);
+                    insertSoapPs.setString(1, noRawat);
+                    insertSoapPs.setString(2, tglPerawatan);
+                    insertSoapPs.setString(3, jamRawat);
+                    insertSoapPs.setString(4, nip);
+                    insertSoapPs.executeUpdate();
+                    insertSoapPs.close();
+                } else {
+                    isRanap = true;
+                    tglPerawatan = getRs.getString("tgl_perawatan");
+                    jamRawat = getRs.getString("jam_rawat");
+                    nip = getRs.getString("nip");
+                    getRs.close();
+                    getPs.close();
                 }
-                isRanap = true;
+            } else {
+                tglPerawatan = getRs.getString("tgl_perawatan");
+                jamRawat = getRs.getString("jam_rawat");
+                nip = getRs.getString("nip");
+                getRs.close();
+                getPs.close();
             }
-
-            String tglPerawatan = getRs.getString("tgl_perawatan");
-            String jamRawat = getRs.getString("jam_rawat");
-            String nip = getRs.getString("nip");
-            getRs.close();
-            getPs.close();
 
             String targetTable = isRanap ? "ttd_dokter_ranap" : "ttd_dokter_ralan";
 

@@ -11,6 +11,7 @@
 
 package simrskhanza;
 
+import rekammedis.MasterCriticalValue;
 import bridging.koneksiDBELIMS;
 import bridging.koneksiDBSysmex;
 import bridging.koneksiDBVANSLAB;
@@ -566,6 +567,20 @@ public final class DlgPeriksaLaboratorium extends javax.swing.JDialog {
         tbTarif = new widget.Table();
         jLabel15 = new widget.Label();
         btnTarif = new widget.Button();
+
+        btnTarif1 = new widget.Button();
+        btnTarif1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/radio.png")));
+        btnTarif1.setMnemonic('2');
+        btnTarif1.setText(" Critical Value");
+        btnTarif1.setToolTipText("Alt+2");
+        btnTarif1.setName("btnTarif1");
+        btnTarif1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTarif1ActionPerformed(evt);
+            }
+        });
+        PanelInput.add(btnTarif1);
+        btnTarif1.setBounds(830, 102, 130, 23);
         rbAnak = new widget.RadioButton();
         rbDewasa = new widget.RadioButton();
         NmDokterPj = new widget.TextBox();
@@ -1352,6 +1367,13 @@ public final class DlgPeriksaLaboratorium extends javax.swing.JDialog {
         isForm();
     }// GEN-LAST:event_ChkInputActionPerformed
 
+
+    private void btnTarif1ActionPerformed(java.awt.event.ActionEvent evt) {
+        MasterCriticalValue master = new MasterCriticalValue(null, false);
+        master.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+        master.setLocationRelativeTo(null);
+        master.setVisible(true);
+    }
     private void btnTarifActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnTarifActionPerformed
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         DlgJnsPerawatanLab tariflab = new DlgJnsPerawatanLab(null, false);
@@ -1577,6 +1599,7 @@ public final class DlgPeriksaLaboratorium extends javax.swing.JDialog {
     private widget.Button btnDokterPj;
     private widget.Button btnPetugas;
     private widget.Button btnTarif;
+    private widget.Button btnTarif1;
     private javax.swing.ButtonGroup buttonGroup1;
     private widget.InternalFrame internalFrame1;
     private widget.Label jLabel10;

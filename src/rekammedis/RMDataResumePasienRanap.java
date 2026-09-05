@@ -83,6 +83,7 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
         initSurkon();
         setPoli();
         DIlanjutkanItemStateChanged(null);
+        initTab();
 
         tabMode = new DefaultTableModel(null, new Object[]{
             "No.Rawat", "No.RM", "Nama Pasien", "Kode Dokter", "Dokter Penanggung Jawab", "Kode Pengirim", "Dokter Pegirim",
@@ -648,6 +649,21 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
         ChkInput.setSelected(false);
         isForm();
 
+    }
+
+    private void initTab() {
+        javax.swing.JTabbedPane tabPane = new javax.swing.JTabbedPane();
+        tabPane.setBackground(new java.awt.Color(255, 255, 254));
+        tabPane.setForeground(new java.awt.Color(50, 50, 50));
+        tabPane.setFont(new java.awt.Font("Tahoma", 0, 11));
+
+        internalFrame1.remove(Scroll);
+        internalFrame1.remove(PanelInput);
+
+        tabPane.addTab("Input Data Resume", PanelInput);
+        tabPane.addTab("Data Resume", Scroll);
+
+        internalFrame1.add(tabPane, java.awt.BorderLayout.CENTER);
     }
 
     /**
@@ -1957,7 +1973,7 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
             }
         });
         FormInput.add(CmbPoli);
-        CmbPoli.setBounds(435, 1510, 105, 23);
+        CmbPoli.setBounds(435, 1510, 155, 23);
 
         Kontrol.setForeground(new java.awt.Color(50, 70, 50));
         Kontrol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "03-01-2025 13:27:57" }));
@@ -1970,13 +1986,13 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
             }
         });
         FormInput.add(Kontrol);
-        Kontrol.setBounds(680, 1510, 135, 23);
+        Kontrol.setBounds(730, 1510, 135, 23);
 
         label13.setText("Tanggal & Jam Kontrol :");
         label13.setName("label13"); // NOI18N
         label13.setPreferredSize(new java.awt.Dimension(70, 23));
         FormInput.add(label13);
-        label13.setBounds(550, 1510, 130, 23);
+        label13.setBounds(600, 1510, 130, 23);
 
         label16.setText("Obat Pulang :");
         label16.setName("label16"); // NOI18N
@@ -3779,7 +3795,7 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
                     if (DiagnosaUtama.getText().trim().equals("")) {
                         String diagnosis = rsLoad.getString("diagnosis");
                         if (diagnosis != null && !diagnosis.trim().isEmpty() && !diagnosis.trim().equals("-")) {
-                            String[] lines = diagnosis.trim().split("\\r?\\n");
+                            String[] lines = diagnosis.trim().split("[,\\r\\n]+");
                             int validLineIdx = 0;
                             for (int i = 0; i < lines.length; i++) {
                                 String line = lines[i].trim();
@@ -3814,6 +3830,125 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
             }
         } catch (Exception e) {
             System.out.println("Notif : "+e);
+        }
+        
+        if (DiagnosaUtama.getText().trim().equals("")) {
+            String diagnosis = Sequel.cariIsi("select diagnosa from validasi_pemeriksaan_ranap2 where no_rawat='" + TNoRw.getText() + "' order by tgl_validasi desc, jam_validasi desc limit 1");
+            if (diagnosis != null && !diagnosis.trim().isEmpty() && !diagnosis.trim().equals("-")) {
+                String[] lines = diagnosis.trim().split("[,\\r\\n]+");
+                int validLineIdx = 0;
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i].trim();
+                    if (line.isEmpty() || line.equals("-")) continue;
+                    
+                    if (validLineIdx == 0) {
+                        DiagnosaUtama.setText(line);
+                    } else if (validLineIdx == 1) {
+                        DiagnosaSekunder1.setText(line);
+                    } else if (validLineIdx == 2) {
+                        DiagnosaSekunder2.setText(line);
+                    } else if (validLineIdx == 3) {
+                        DiagnosaSekunder3.setText(line);
+                    } else {
+                        if (DiagnosaSekunder4.getText().trim().isEmpty()) {
+                            DiagnosaSekunder4.setText(line);
+                        } else {
+                            DiagnosaSekunder4.setText(DiagnosaSekunder4.getText() + ", " + line);
+                        }
+                    }
+                    validLineIdx++;
+                }
+            }
+        }
+        
+        if (KeluhanUtama.getText().trim().equals("")) {
+             String keluhanGabung = "";
+             String s = Sequel.cariIsi("select keluhan from validasi_pemeriksaan_ranap2 where no_rawat='" + TNoRw.getText() + "' order by tgl_validasi desc, jam_validasi desc limit 1");
+             String o = Sequel.cariIsi("select pemeriksaan from validasi_pemeriksaan_ranap2 where no_rawat='" + TNoRw.getText() + "' order by tgl_validasi desc, jam_validasi desc limit 1");
+             if(s != null && !s.trim().equals("-")) s = s.trim(); else s = "";
+             if(o != null && !o.trim().equals("-")) o = o.trim(); else o = "";
+             if (!s.isEmpty() && !o.isEmpty()) keluhanGabung = s + ".\n" + o + ".";
+             else if (!s.isEmpty()) keluhanGabung = s + ".";
+             else if (!o.isEmpty()) keluhanGabung = o + ".";
+             if (!keluhanGabung.isEmpty()) KeluhanUtama.setText(keluhanGabung);
+        }
+        
+        if (PemeriksaanFisik.getText().trim().equals("")) {
+             try {
+                 java.sql.PreparedStatement psVal = koneksi.prepareStatement("select suhu, tensi, rr, nadi, spo, gcs, tb, bb from validasi_pemeriksaan_ranap2 where no_rawat=? order by tgl_validasi desc, jam_validasi desc limit 1");
+                 try {
+                     psVal.setString(1, TNoRw.getText());
+                     java.sql.ResultSet rsVal = psVal.executeQuery();
+                     if (rsVal.next()) {
+                         StringBuilder fisik = new StringBuilder();
+                         String gcs = rsVal.getString("gcs"); if(gcs!=null && !gcs.trim().isEmpty() && !gcs.equals("-")) fisik.append("GCS : ").append(gcs).append("\n");
+                         String tensi = rsVal.getString("tensi"); if(tensi!=null && !tensi.trim().isEmpty() && !tensi.equals("-")) fisik.append("TD : ").append(tensi).append(" mmHg\n");
+                         String nadi = rsVal.getString("nadi"); if(nadi!=null && !nadi.trim().isEmpty() && !nadi.equals("-")) fisik.append("Nadi : ").append(nadi).append(" x/menit\n");
+                         String rr = rsVal.getString("rr"); if(rr!=null && !rr.trim().isEmpty() && !rr.equals("-")) fisik.append("RR : ").append(rr).append(" x/menit\n");
+                         String suhu = rsVal.getString("suhu"); if(suhu!=null && !suhu.trim().isEmpty() && !suhu.equals("-")) fisik.append("Suhu : ").append(suhu).append(" °C\n");
+                         String spo = rsVal.getString("spo"); if(spo!=null && !spo.trim().isEmpty() && !spo.equals("-")) fisik.append("SpO2 : ").append(spo).append(" %\n");
+                         String bb = rsVal.getString("bb"); if(bb!=null && !bb.trim().isEmpty() && !bb.equals("-")) fisik.append("BB : ").append(bb).append(" Kg\n");
+                         String tb = rsVal.getString("tb"); if(tb!=null && !tb.trim().isEmpty() && !tb.equals("-")) fisik.append("TB : ").append(tb).append(" cm\n");
+                         if (fisik.length() > 0) PemeriksaanFisik.setText(fisik.toString().trim());
+                     }
+                 } finally {
+                     if (psVal != null) psVal.close();
+                 }
+             } catch (Exception e) { System.out.println("Notif Fisik: " + e); }
+        }
+        
+        if (HasilLaborat.getText().trim().equals("")) {
+             String labs = Sequel.cariIsi("select group_concat(distinct jns_perawatan_lab.nm_perawatan separator ', ') from periksa_lab inner join jns_perawatan_lab on periksa_lab.kd_jenis_prw=jns_perawatan_lab.kd_jenis_prw where periksa_lab.no_rawat='" + TNoRw.getText() + "'");
+             if (labs != null && !labs.isEmpty() && !labs.equals("-")) HasilLaborat.setText(labs);
+        }
+        
+        if (PemeriksaanRad.getText().trim().equals("")) {
+             String rads = Sequel.cariIsi("select group_concat(distinct jns_perawatan_radiologi.nm_perawatan separator ', ') from periksa_radiologi inner join jns_perawatan_radiologi on periksa_radiologi.kd_jenis_prw=jns_perawatan_radiologi.kd_jenis_prw where periksa_radiologi.no_rawat='" + TNoRw.getText() + "'");
+             if (rads != null && !rads.isEmpty() && !rads.equals("-")) PemeriksaanRad.setText(rads);
+        }
+        
+        if (ObatSelamaDiRS.getText().trim().equals("")) {
+             try {
+                 StringBuilder resepTxt = new StringBuilder();
+                 java.sql.PreparedStatement psResep = koneksi.prepareStatement("select no_resep, date_format(concat(tgl_peresepan,' ',jam_peresepan), '%d-%m-%Y %H:%i:%s') as tgl from resep_obat where no_rawat=? order by tgl_peresepan, jam_peresepan");
+                 try {
+                     psResep.setString(1, TNoRw.getText());
+                     java.sql.ResultSet rsResep = psResep.executeQuery();
+                     while(rsResep.next()) {
+                         String noResep = rsResep.getString("no_resep");
+                         if (resepTxt.length() > 0) resepTxt.append("\n");
+                         resepTxt.append("Tgl Resep: ").append(rsResep.getString("tgl")).append("\n");
+                         
+                         int i = 1;
+                         java.sql.PreparedStatement psBrg = koneksi.prepareStatement("select databarang.nama_brng, resep_dokter.aturan_pakai from resep_dokter inner join databarang on resep_dokter.kode_brng=databarang.kode_brng where resep_dokter.no_resep=?");
+                         try {
+                             psBrg.setString(1, noResep);
+                             java.sql.ResultSet rsBrg = psBrg.executeQuery();
+                             while(rsBrg.next()) {
+                                 resepTxt.append(i).append(". ").append(rsBrg.getString("nama_brng")).append(" - ").append(rsBrg.getString("aturan_pakai")).append("\n");
+                                 i++;
+                             }
+                         } finally {
+                             psBrg.close();
+                         }
+                         
+                         java.sql.PreparedStatement psRacik = koneksi.prepareStatement("select nama_racik, aturan_pakai from resep_dokter_racikan where no_resep=?");
+                         try {
+                             psRacik.setString(1, noResep);
+                             java.sql.ResultSet rsRacik = psRacik.executeQuery();
+                             while(rsRacik.next()) {
+                                 resepTxt.append(i).append(". ").append(rsRacik.getString("nama_racik")).append(" - ").append(rsRacik.getString("aturan_pakai")).append("\n");
+                                 i++;
+                             }
+                         } finally {
+                             psRacik.close();
+                         }
+                     }
+                 } finally {
+                     psResep.close();
+                 }
+                 if (resepTxt.length() > 0) ObatSelamaDiRS.setText(resepTxt.toString().trim());
+             } catch (Exception e) { System.out.println("Notif Resep: " + e); }
         }
     }
 
@@ -3924,17 +4059,9 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
     }
 
     private void isForm() {
-        if (ChkInput.isSelected() == true) {
-            ChkInput.setVisible(false);
-            PanelInput.setPreferredSize(new Dimension(WIDTH, this.getHeight() - 122));
-            scrollInput.setVisible(true);
-            ChkInput.setVisible(true);
-        } else if (ChkInput.isSelected() == false) {
-            ChkInput.setVisible(false);
-            PanelInput.setPreferredSize(new Dimension(WIDTH, 20));
-            scrollInput.setVisible(false);
-            ChkInput.setVisible(true);
-        }
+        ChkInput.setVisible(false);
+        PanelInput.setPreferredSize(new Dimension(WIDTH, this.getHeight() - 122));
+        scrollInput.setVisible(true);
     }
 
     public void isCek() {
@@ -5023,25 +5150,13 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
         
         
         
-        javax.swing.Timer timer = new javax.swing.Timer(1000, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                if (ChkJam.isSelected()) {
-                    java.util.Date now = new java.util.Date();
-                    String hh = new java.text.SimpleDateFormat("HH").format(now);
-                    String mm = new java.text.SimpleDateFormat("mm").format(now);
-                    String ss = new java.text.SimpleDateFormat("ss").format(now);
-                    if (ChkJam.isSelected()) {
-                        cmbJam.setSelectedItem(hh);
-                        cmbMnt.setSelectedItem(mm);
-                        cmbDtk.setSelectedItem(ss);
-                    }
-                                                        }
-            }
-        });
-        timer.start();
+        cmbJam.setSelectedItem("00");
+        cmbMnt.setSelectedItem("00");
+        cmbDtk.setSelectedItem("00");
         
-        ChkJam.setSelected(true);
+        ChkJam.setSelected(false);
+        ChkJam.setVisible(false);
+        cmbDtk.setVisible(false);
         
         
         

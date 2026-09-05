@@ -337,9 +337,9 @@ public class DlgMarkingImageAreaOperasi extends javax.swing.JDialog {
     }// GEN-LAST:event_formWindowActivated
 
     private void PanelWallMouseDragged(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_PanelWallMouseDragged
-        arr[index] = new Point(evt.getXOnScreen(), evt.getYOnScreen());
+        arr[index] = new Point(evt.getX(), evt.getY());
         index++;
-        Graphics g = getGraphics();
+        Graphics g = PanelWall.getGraphics();
         g.setColor(Color.red);
         for (int i = 0; i < index - 1; i++)
             g.drawLine(arr[i].x, arr[i].y, arr[i + 1].x, arr[i + 1].y);

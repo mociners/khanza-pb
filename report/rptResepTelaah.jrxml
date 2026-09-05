@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptResepTelaah" language="groovy" pageWidth="420" pageHeight="595" columnWidth="386" leftMargin="17" rightMargin="17" topMargin="17" bottomMargin="17" uuid="0c7c39b7-7d2e-4b4d-b861-aac0a790796f">
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptResepTelaah" pageWidth="420" pageHeight="595" columnWidth="386" leftMargin="17" rightMargin="17" topMargin="17" bottomMargin="17" uuid="0c7c39b7-7d2e-4b4d-b861-aac0a790796f">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -453,14 +453,14 @@
 				</textElement>
 				<text><![CDATA[Nama Dokter]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement x="2" y="61" width="146" height="11" uuid="af3a79de-d15b-42f2-9dcc-274dd86b9bfe"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{peresep} == null || $P{peresep}.trim().equals("") ? "-" : $P{peresep}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement x="2" y="73" width="146" height="11" uuid="7cf1fb8c-a45b-4c58-9585-8025c8612ca6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="7"/>
@@ -522,7 +522,7 @@
 				</textElement>
 				<text><![CDATA[Umur/TTL]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="289" y="77" width="97" height="11" uuid="88799f61-504e-41c8-b5c1-7822b875104e"/>
 				<textElement verticalAlignment="Top">
 					<font fontName="Tahoma" size="6"/>
@@ -536,7 +536,7 @@
 				</textElement>
 				<text><![CDATA[Alamat]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="289" y="88" width="97" height="20" uuid="f7b61305-55ca-4c70-808c-c68c4352d141"/>
 				<textElement verticalAlignment="Top">
 					<font fontName="Tahoma" size="4.8"/>
@@ -612,7 +612,7 @@
 				</textElement>
 				<text><![CDATA[R/]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="30" y="2" width="170" height="10" uuid="d617ceb2-611d-420d-939c-6d9e3917318e"/>
 				<textElement>
 					<font fontName="Tahoma" size="8"/>
@@ -626,7 +626,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{temp3}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="45" y="13" width="205" height="9" uuid="bf7fe4d7-091d-40ba-933d-76ab7cbe994b"/>
 				<textElement>
 					<font fontName="Tahoma" size="7" isItalic="true"/>

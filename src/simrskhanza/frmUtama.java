@@ -216,6 +216,12 @@ import java.util.Properties;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
 import keuangan.DlgAkunBayar;
 import keuangan.KeuanganBayarPemesananFarmasi;
 import keuangan.DlgBayarPiutang;
@@ -1212,12 +1218,18 @@ public class frmUtama extends javax.swing.JFrame {
     private String coder_nik = "", pilihpage = "", judulform = "",
             tampilkantni = Sequel.cariIsi("select set_tni_polri.tampilkan_tni_polri from set_tni_polri"),
             AKTIFKANTRACKSQL = koneksiDB.AKTIFKANTRACKSQL();
+    private Clip clipCodeBlue = null;
+    private boolean isCodeBlueActive = false;
+    private boolean sayaYangTriggerCodeBlue = false;
+    private String activeCodeBlueRoom = "";
+    private JDialog dlgNotifCodeBlue = null;
     public DlgRekapBPJS dlgRekapBPJS = new DlgRekapBPJS(this, false);
 
     private frmUtama() {
         super();
         initComponents();
         initKhanza();
+        initCodeBlue();
 
         java.awt.event.ActionListener taskPerformer = new java.awt.event.ActionListener() {
             @Override
@@ -22664,6 +22676,14 @@ public class frmUtama extends javax.swing.JFrame {
     private javax.swing.JMenuItem MnSudahPulang4;
     private javax.swing.JMenuItem MnSudahPulang5;
     private javax.swing.JMenuItem MnSudahPulang6;
+    private javax.swing.JMenu MnCodeBlue;
+    private javax.swing.JMenuItem MncbICU;
+    private javax.swing.JMenuItem MncbIGD;
+    private javax.swing.JMenuItem MncbKebidanan;
+    private javax.swing.JMenuItem MncbLantai2;
+    private javax.swing.JMenuItem MncbLantai3;
+    private javax.swing.JMenuItem MncbPerina;
+    private javax.swing.JMenuItem MncbPoliklinik;
     private javax.swing.JMenu MnTarif;
     private javax.swing.JMenu MnTarif1;
     private javax.swing.JPanel PanelUtama;
@@ -48504,4 +48524,304 @@ public class frmUtama extends javax.swing.JFrame {
         btnPendapatanPerAkun.addActionListener(this::btnPendapatanPerAkunActionPerformed);
 
     }
+
+    private void initCodeBlue() {
+        MnCodeBlue = new javax.swing.JMenu();
+        MncbICU = new javax.swing.JMenuItem();
+        MncbIGD = new javax.swing.JMenuItem();
+        MncbLantai3 = new javax.swing.JMenuItem();
+        MncbLantai2 = new javax.swing.JMenuItem();
+        MncbKebidanan = new javax.swing.JMenuItem();
+        MncbPerina = new javax.swing.JMenuItem();
+        MncbPoliklinik = new javax.swing.JMenuItem();
+
+        MnCodeBlue.setBackground(new java.awt.Color(255, 255, 254));
+        MnCodeBlue.setForeground(new java.awt.Color(50, 90, 40));
+        MnCodeBlue.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MnCodeBlue.setText("Code Blue");
+        MnCodeBlue.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnCodeBlue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnCodeBlue.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnCodeBlue.setName("MnCodeBlue"); // NOI18N
+        MnCodeBlue.setPreferredSize(new java.awt.Dimension(205, 30));
+
+        MncbICU.setBackground(new java.awt.Color(255, 255, 254));
+        MncbICU.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MncbICU.setForeground(new java.awt.Color(50, 90, 40));
+        MncbICU.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MncbICU.setText("C.B ICU");
+        MncbICU.setName("MncbICU"); // NOI18N
+        MncbICU.setPreferredSize(new java.awt.Dimension(180, 30));
+        MncbICU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MncbICUActionPerformed(evt);
+            }
+        });
+        MnCodeBlue.add(MncbICU);
+
+        MncbIGD.setBackground(new java.awt.Color(255, 255, 254));
+        MncbIGD.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MncbIGD.setForeground(new java.awt.Color(50, 90, 40));
+        MncbIGD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MncbIGD.setText("C.B IGD");
+        MncbIGD.setName("MncbIGD"); // NOI18N
+        MncbIGD.setPreferredSize(new java.awt.Dimension(180, 30));
+        MncbIGD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MncbIGDActionPerformed(evt);
+            }
+        });
+        MnCodeBlue.add(MncbIGD);
+
+        MncbLantai3.setBackground(new java.awt.Color(255, 255, 254));
+        MncbLantai3.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MncbLantai3.setForeground(new java.awt.Color(50, 90, 40));
+        MncbLantai3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MncbLantai3.setText("C.B L3");
+        MncbLantai3.setName("MncbLantai3"); // NOI18N
+        MncbLantai3.setPreferredSize(new java.awt.Dimension(180, 30));
+        MncbLantai3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MncbLantai3ActionPerformed(evt);
+            }
+        });
+        MnCodeBlue.add(MncbLantai3);
+
+        MncbLantai2.setBackground(new java.awt.Color(255, 255, 254));
+        MncbLantai2.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MncbLantai2.setForeground(new java.awt.Color(50, 90, 40));
+        MncbLantai2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MncbLantai2.setText("C.B L2");
+        MncbLantai2.setName("MncbLantai2"); // NOI18N
+        MncbLantai2.setPreferredSize(new java.awt.Dimension(180, 30));
+        MncbLantai2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MncbLantai2ActionPerformed(evt);
+            }
+        });
+        MnCodeBlue.add(MncbLantai2);
+
+        MncbKebidanan.setBackground(new java.awt.Color(255, 255, 254));
+        MncbKebidanan.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MncbKebidanan.setForeground(new java.awt.Color(50, 90, 40));
+        MncbKebidanan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MncbKebidanan.setText("C.B Kebidanan");
+        MncbKebidanan.setName("MncbKebidanan"); // NOI18N
+        MncbKebidanan.setPreferredSize(new java.awt.Dimension(180, 30));
+        MncbKebidanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MncbKebidananActionPerformed(evt);
+            }
+        });
+        MnCodeBlue.add(MncbKebidanan);
+
+        MncbPerina.setBackground(new java.awt.Color(255, 255, 254));
+        MncbPerina.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MncbPerina.setForeground(new java.awt.Color(50, 90, 40));
+        MncbPerina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MncbPerina.setText("C.B Peri/Nicu");
+        MncbPerina.setName("MncbPerina"); // NOI18N
+        MncbPerina.setPreferredSize(new java.awt.Dimension(180, 30));
+        MncbPerina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MncbPerinaActionPerformed(evt);
+            }
+        });
+        MnCodeBlue.add(MncbPerina);
+
+        MncbPoliklinik.setBackground(new java.awt.Color(255, 255, 254));
+        MncbPoliklinik.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MncbPoliklinik.setForeground(new java.awt.Color(50, 90, 40));
+        MncbPoliklinik.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png"))); // NOI18N
+        MncbPoliklinik.setText("C.B Poliklinik");
+        MncbPoliklinik.setName("MncbPoliklinik"); // NOI18N
+        MncbPoliklinik.setPreferredSize(new java.awt.Dimension(180, 30));
+        MncbPoliklinik.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MncbPoliklinikActionPerformed(evt);
+            }
+        });
+        MnCodeBlue.add(MncbPoliklinik);
+        MnCodeBlue.add(new javax.swing.JPopupMenu.Separator());
+        
+        javax.swing.JMenuItem MncbSetSentral = new javax.swing.JMenuItem();
+        MncbSetSentral.setBackground(new java.awt.Color(255, 255, 254));
+        MncbSetSentral.setFont(new java.awt.Font("Tahoma", 0, 11));
+        MncbSetSentral.setForeground(new java.awt.Color(50, 90, 40));
+        MncbSetSentral.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/codeblue.png")));
+        boolean isSentral = "yes".equals(koneksiDB.ALARMCODEBLUE());
+        MncbSetSentral.setText(isSentral ? "[v] PC Ini Sebagai Sentral Code Blue" : "[ ] PC Ini Sebagai Sentral Code Blue");
+        MncbSetSentral.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    boolean currentState = "yes".equals(koneksiDB.ALARMCODEBLUE());
+                    boolean newState = !currentState;
+                    java.util.Properties propLocal = new java.util.Properties();
+                    propLocal.loadFromXML(new java.io.FileInputStream("setting/database.xml"));
+                    propLocal.setProperty("ALARMCODEBLUE", newState ? "yes" : "no");
+                    propLocal.storeToXML(new java.io.FileOutputStream("setting/database.xml"), "");
+                    MncbSetSentral.setText(newState ? "[v] PC Ini Sebagai Sentral Code Blue" : "[ ] PC Ini Sebagai Sentral Code Blue");
+                    javax.swing.JOptionPane.showMessageDialog(null, "Seting sentral Code Blue berhasil disimpan.");
+                } catch (Exception e) {
+                    System.out.println("Set Sentral Error : "+e);
+                }
+            }
+        });
+        MnCodeBlue.add(MncbSetSentral);
+
+        MenuBar.add(MnCodeBlue);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (sayaYangTriggerCodeBlue && !activeCodeBlueRoom.isEmpty()) {
+                try {
+                    Sequel.queryu("delete from antricodeblue where ruang='" + activeCodeBlueRoom + "'");
+                } catch (Exception e) {}
+            }
+        }));
+
+        Thread threadCodeBlue = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(1000); // Polling setiap 1 detik untuk respon lebih cepat
+                    String ruangan = Sequel.cariIsi("select ruang from antricodeblue where status='1'");
+                    final boolean hasCodeBlue = ruangan != null && !ruangan.trim().isEmpty();
+                    final String activeRoom = hasCodeBlue ? ruangan : "";
+
+                    SwingUtilities.invokeLater(() -> {
+                        if (hasCodeBlue) {
+                            if (!isCodeBlueActive) {
+                                isCodeBlueActive = true;
+                                activeCodeBlueRoom = activeRoom;
+                                if ("yes".equalsIgnoreCase(koneksiDB.ALARMCODEBLUE())) {
+                                    mainkanCodeBlue(activeRoom);
+                                }
+                                tampilNotifCodeBlue(activeRoom);
+                            }
+                        } else {
+                            if (isCodeBlueActive) {
+                                hentikanCodeBlue();
+                                isCodeBlueActive = false;
+                                activeCodeBlueRoom = "";
+                                if (dlgNotifCodeBlue != null && dlgNotifCodeBlue.isVisible()) {
+                                    dlgNotifCodeBlue.dispose();
+                                }
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    System.out.println("Error Code Blue Thread: " + e);
+                }
+            }
+        });
+        threadCodeBlue.setDaemon(true);
+        threadCodeBlue.start();
+    }
+
+
+    private void MncbICUActionPerformed(java.awt.event.ActionEvent evt) {
+        panggilCodeBlue("ICU");
+    }
+    private void MncbIGDActionPerformed(java.awt.event.ActionEvent evt) {
+        panggilCodeBlue("IGD");
+    }
+    private void MncbLantai3ActionPerformed(java.awt.event.ActionEvent evt) {
+        panggilCodeBlue("Perawatan Lantai 3");
+    }
+    private void MncbLantai2ActionPerformed(java.awt.event.ActionEvent evt) {
+        panggilCodeBlue("Perawatan Lantai 2");
+    }
+    private void MncbKebidananActionPerformed(java.awt.event.ActionEvent evt) {
+        panggilCodeBlue("Perawatan Kebidanan");
+    }
+    private void MncbPerinaActionPerformed(java.awt.event.ActionEvent evt) {
+        panggilCodeBlue("Perinatologi");
+    }
+    private void MncbPoliklinikActionPerformed(java.awt.event.ActionEvent evt) {
+        panggilCodeBlue("Poliklinik");
+    }
+
+    private void mainkanCodeBlue(String ruangan) {
+        try {
+            if (clipCodeBlue != null && clipCodeBlue.isRunning()) {
+                clipCodeBlue.stop();
+            }
+            String formattedRoom = ruangan.toLowerCase().replaceAll(" ", "_");
+            File audioFile = new File("suara/codeblue_" + formattedRoom + ".wav");
+            
+            if (!audioFile.exists()) {
+                audioFile = new File("suara/codeblue.wav");
+            }
+            
+            if (audioFile.exists()) {
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+                clipCodeBlue = AudioSystem.getClip();
+                clipCodeBlue.open(audioStream);
+                clipCodeBlue.loop(Clip.LOOP_CONTINUOUSLY);
+                clipCodeBlue.start();
+            }
+        } catch (Exception e) {
+            System.out.println("Error playing Code Blue sound: " + e);
+        }
+    }
+
+    private void hentikanCodeBlue() {
+        if (clipCodeBlue != null) {
+            if (clipCodeBlue.isRunning()) {
+                clipCodeBlue.stop();
+            }
+            clipCodeBlue.close();
+            clipCodeBlue = null;
+        }
+    }
+
+    private void tampilNotifCodeBlue(String ruangan) {
+        if (dlgNotifCodeBlue == null) {
+            dlgNotifCodeBlue = new JDialog(this, "Peringatan Code Blue!", false);
+            dlgNotifCodeBlue.setSize(400, 200);
+            dlgNotifCodeBlue.setLocationRelativeTo(this);
+            dlgNotifCodeBlue.setAlwaysOnTop(true);
+            dlgNotifCodeBlue.setLayout(new java.awt.BorderLayout());
+            
+            javax.swing.JLabel lblPesan = new javax.swing.JLabel("", javax.swing.SwingConstants.CENTER);
+            lblPesan.setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 18));
+            lblPesan.setForeground(java.awt.Color.RED);
+            dlgNotifCodeBlue.add(lblPesan, java.awt.BorderLayout.CENTER);
+            
+            javax.swing.JButton btnStop = new javax.swing.JButton("Matikan Alarm (Selesai)");
+            btnStop.setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 14));
+            btnStop.addActionListener(e -> {
+                sayaYangTriggerCodeBlue = false;
+                Sequel.queryu("delete from antricodeblue where ruang='" + activeCodeBlueRoom + "'");
+            });
+            dlgNotifCodeBlue.add(btnStop, java.awt.BorderLayout.SOUTH);
+        }
+        
+        java.awt.Component[] comps = dlgNotifCodeBlue.getContentPane().getComponents();
+        for (java.awt.Component comp : comps) {
+            if (comp instanceof javax.swing.JLabel) {
+                ((javax.swing.JLabel) comp).setText("<html><center>🚨 CODE BLUE DI:<br>" + ruangan + " 🚨</center></html>");
+            } else if (comp instanceof javax.swing.JButton) {
+                comp.setVisible(sayaYangTriggerCodeBlue);
+            }
+        }
+        
+        if (!dlgNotifCodeBlue.isVisible()) {
+            dlgNotifCodeBlue.setVisible(true);
+        }
+    }
+
+    public void panggilCodeBlue(String ruang){
+        int konfirmasi = javax.swing.JOptionPane.showConfirmDialog(this, 
+            "Apakah Anda yakin ingin memicu Code Blue untuk: " + ruang + "?", 
+            "Konfirmasi Code Blue", 
+            javax.swing.JOptionPane.YES_NO_OPTION, 
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+            
+        if (konfirmasi == javax.swing.JOptionPane.YES_OPTION) {
+            sayaYangTriggerCodeBlue = true;
+            Sequel.queryu("delete from antricodeblue where ruang='"+ruang+"'");
+            Sequel.queryu("insert into antricodeblue(status,ruang) values('1','"+ruang+"')");
+        }
+    }
+
 }

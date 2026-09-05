@@ -2831,6 +2831,39 @@ public final class RMPenilaianAwalMedisRanapKandungan1 extends javax.swing.JDial
         } catch (Exception e) {
             System.out.println("Notif : "+e);
         }
+
+        try {
+            if(Ultra.getText().trim().equals("") || Tatalaksana.getText().trim().equals("") || Diagnosis.getText().trim().equals("")){
+                ps=koneksi.prepareStatement(
+                    "select pemeriksaan, penilaian, rtl from pemeriksaan_ralan where no_rawat=? order by tgl_perawatan desc, jam_rawat desc limit 1");
+                try {
+                    ps.setString(1,TNoRw.getText());
+                    rs=ps.executeQuery();
+                    if(rs.next()){
+                        if(Ultra.getText().trim().equals("")) {
+                            Ultra.setText(rs.getString("pemeriksaan"));
+                        }
+                        if(Diagnosis.getText().trim().equals("")) {
+                            Diagnosis.setText(rs.getString("penilaian"));
+                        }
+                        if(Tatalaksana.getText().trim().equals("")) {
+                            Tatalaksana.setText(rs.getString("rtl"));
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : "+e);
+                } finally{
+                    if(rs!=null){
+                        rs.close();
+                    }
+                    if(ps!=null){
+                        ps.close();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notif : "+e);
+        }
     }
  
     public void setNoRm(String norwt,Date tgl2) {

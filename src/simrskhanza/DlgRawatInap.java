@@ -13033,6 +13033,7 @@ private void BtnEditKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }
 
     public void setNoRm(String norwt, Date awal, Date akhir) {
+        BtnBatalActionPerformed(null);
         TNoRw.setText(norwt);
         KdDok.setText(Sequel.cariIsi("select dpjp_ranap.kd_dokter from dpjp_ranap where dpjp_ranap.no_rawat=?", norwt));
         if (KdDok.getText().equals("")) {

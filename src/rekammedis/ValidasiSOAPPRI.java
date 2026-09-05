@@ -4438,6 +4438,17 @@ public final class ValidasiSOAPPRI extends javax.swing.JDialog {
             if(Sequel.cariRegistrasi(TNoRw.getText())>0){
                 JOptionPane.showMessageDialog(rootPane,"Data billing sudah terverifikasi ..!!");
             }else{
+                String kdbangsal = Sequel.cariIsi("select kamar.kd_bangsal from kamar inner join kamar_inap on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? and kamar_inap.stts_pulang='-' order by kamar_inap.tgl_masuk desc limit 1", TNoRw.getText());
+                String depo = Sequel.cariIsi("select set_depo_ranap.kd_depo from set_depo_ranap where set_depo_ranap.kd_bangsal=?", kdbangsal);
+                if (depo.equals("")) {
+                    if (Sequel.cariIsi("select set_lokasi.asal_stok from set_lokasi").equals("Gunakan Stok Bangsal")) {
+                        akses.setkdbangsal(kdbangsal);
+                    } else {
+                        akses.setkdbangsal(Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi"));
+                    }
+                } else {
+                    akses.setkdbangsal(depo);
+                }
                 DlgPeresepanDokter resep=new DlgPeresepanDokter(null,false);
                 resep.setSize(internalFrame1.getWidth(),internalFrame1.getHeight());
                 resep.setLocationRelativeTo(internalFrame1);
@@ -4456,6 +4467,17 @@ public final class ValidasiSOAPPRI extends javax.swing.JDialog {
             TCari.requestFocus();
         }else{
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            String kdbangsal = Sequel.cariIsi("select kamar.kd_bangsal from kamar inner join kamar_inap on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? and kamar_inap.stts_pulang='-' order by kamar_inap.tgl_masuk desc limit 1", TNoRw.getText());
+            String depo = Sequel.cariIsi("select set_depo_ranap.kd_depo from set_depo_ranap where set_depo_ranap.kd_bangsal=?", kdbangsal);
+            if (depo.equals("")) {
+                if (Sequel.cariIsi("select set_lokasi.asal_stok from set_lokasi").equals("Gunakan Stok Bangsal")) {
+                    akses.setkdbangsal(kdbangsal);
+                } else {
+                    akses.setkdbangsal(Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi"));
+                }
+            } else {
+                akses.setkdbangsal(depo);
+            }
             DlgCopyResep daftar=new DlgCopyResep(null,false);
             daftar.isCek();
             daftar.setRM(TNoRw.getText(),TNoRM.getText(),KodeDokter.getText(),Sequel.cariIsi("select reg_periksa.kd_pj from reg_periksa where reg_periksa.no_rawat=?",TNoRw.getText()),"ranap");
@@ -4657,6 +4679,17 @@ public final class ValidasiSOAPPRI extends javax.swing.JDialog {
             TCari.requestFocus();
         }else{
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            String kdbangsal = Sequel.cariIsi("select kamar.kd_bangsal from kamar inner join kamar_inap on kamar.kd_kamar=kamar_inap.kd_kamar where kamar_inap.no_rawat=? and kamar_inap.stts_pulang='-' order by kamar_inap.tgl_masuk desc limit 1", TNoRw.getText());
+            String depo = Sequel.cariIsi("select set_depo_ranap.kd_depo from set_depo_ranap where set_depo_ranap.kd_bangsal=?", kdbangsal);
+            if (depo.equals("")) {
+                if (Sequel.cariIsi("select set_lokasi.asal_stok from set_lokasi").equals("Gunakan Stok Bangsal")) {
+                    akses.setkdbangsal(kdbangsal);
+                } else {
+                    akses.setkdbangsal(Sequel.cariIsi("select set_lokasi.kd_bangsal from set_lokasi"));
+                }
+            } else {
+                akses.setkdbangsal(depo);
+            }
             DlgCopyResep daftar = new DlgCopyResep(null, false);
             daftar.isCek();
             daftar.setRM(TNoRw.getText(), TNoRM.getText(), KodeDokter.getText(), Sequel.cariIsi("select reg_periksa.kd_pj from reg_periksa where reg_periksa.no_rawat=?", TNoRw.getText()), "ranap");

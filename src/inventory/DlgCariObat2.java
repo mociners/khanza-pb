@@ -4305,11 +4305,12 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 if(aktifkanbatch.equals("yes")){
                     psobat=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"+
                         " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,kategori_barang.nama as kategori,golongan_barang.nama as golongan,"+
-                        " resep_dokter.jml, resep_dokter.aturan_pakai from databarang inner join jenis inner join industrifarmasi inner join golongan_barang "+
-                        " inner join kategori_barang inner join resep_dokter on databarang.kdjns=jenis.kdjns "+
-                        " and industrifarmasi.kode_industri=databarang.kode_industri and databarang.kode_golongan=golongan_barang.kode and databarang.kode_kategori=kategori_barang.kode "+
-                        " and resep_dokter.kode_brng=databarang.kode_brng where "+
-                        " resep_dokter.no_resep=? and databarang.status='1' and databarang.kode_brng like ? or "+
+                        " resep_dokter.jml, resep_dokter.aturan_pakai from databarang inner join jenis on databarang.kdjns=jenis.kdjns "+
+                        " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "+
+                        " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "+
+                        " left join golongan_barang on databarang.kode_golongan=golongan_barang.kode "+
+                        " left join kategori_barang on databarang.kode_kategori=kategori_barang.kode "+
+                        " where resep_dokter.no_resep=? and databarang.status='1' and databarang.kode_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and databarang.nama_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and kategori_barang.nama like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and golongan_barang.nama like ? or "+
@@ -4387,11 +4388,12 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 }else{
                     psobat=koneksi.prepareStatement("select databarang.kode_brng, databarang.nama_brng,jenis.nama, databarang.kode_sat,(databarang.h_beli+(databarang.h_beli*?)) as harga,"+
                         " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,kategori_barang.nama as kategori,golongan_barang.nama as golongan,"+
-                        " resep_dokter.jml, resep_dokter.aturan_pakai,databarang."+hppfarmasi+" as dasar from databarang inner join jenis inner join industrifarmasi inner join golongan_barang "+
-                        " inner join kategori_barang inner join resep_dokter on databarang.kdjns=jenis.kdjns "+
-                        " and industrifarmasi.kode_industri=databarang.kode_industri and databarang.kode_golongan=golongan_barang.kode and databarang.kode_kategori=kategori_barang.kode "+
-                        " and resep_dokter.kode_brng=databarang.kode_brng where "+
-                        " resep_dokter.no_resep=? and databarang.status='1' and databarang.kode_brng like ? or "+
+                        " resep_dokter.jml, resep_dokter.aturan_pakai,databarang."+hppfarmasi+" as dasar from databarang inner join jenis on databarang.kdjns=jenis.kdjns "+
+                        " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "+
+                        " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "+
+                        " left join golongan_barang on databarang.kode_golongan=golongan_barang.kode "+
+                        " left join kategori_barang on databarang.kode_kategori=kategori_barang.kode "+
+                        " where resep_dokter.no_resep=? and databarang.status='1' and databarang.kode_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and databarang.nama_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and kategori_barang.nama like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and golongan_barang.nama like ? or "+
@@ -4462,9 +4464,11 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         " databarang.kelas2,databarang.kelas3,databarang.utama,databarang.vip,databarang.vvip,databarang.beliluar,databarang.karyawan,"+
                         " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,kategori_barang.nama as kategori,"+
                         " golongan_barang.nama as golongan,resep_dokter.jml,resep_dokter.aturan_pakai "+
-                        " from databarang inner join jenis inner join industrifarmasi inner join golongan_barang inner join kategori_barang inner join resep_dokter "+
-                        " on databarang.kdjns=jenis.kdjns and industrifarmasi.kode_industri=databarang.kode_industri and databarang.kode_golongan=golongan_barang.kode "+
-                        " and databarang.kode_kategori=kategori_barang.kode and resep_dokter.kode_brng=databarang.kode_brng "+
+                        " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "+
+                        " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "+
+                        " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "+
+                        " left join golongan_barang on databarang.kode_golongan=golongan_barang.kode "+
+                        " left join kategori_barang on databarang.kode_kategori=kategori_barang.kode "+
                         " where resep_dokter.no_resep=? and databarang.status='1' and databarang.kode_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and databarang.nama_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and kategori_barang.nama like ? or "+
@@ -4561,9 +4565,11 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         " databarang.kelas2,databarang.kelas3,databarang.utama,databarang.vip,databarang.vvip,databarang.beliluar,databarang.karyawan,"+
                         " databarang.letak_barang,industrifarmasi.nama_industri,databarang.h_beli,kategori_barang.nama as kategori,"+
                         " golongan_barang.nama as golongan,resep_dokter.jml,resep_dokter.aturan_pakai,databarang."+hppfarmasi+" as dasar "+
-                        " from databarang inner join jenis inner join industrifarmasi inner join golongan_barang inner join kategori_barang inner join resep_dokter "+
-                        " on databarang.kdjns=jenis.kdjns and industrifarmasi.kode_industri=databarang.kode_industri and databarang.kode_golongan=golongan_barang.kode "+
-                        " and databarang.kode_kategori=kategori_barang.kode and resep_dokter.kode_brng=databarang.kode_brng "+
+                        " from databarang inner join jenis on databarang.kdjns=jenis.kdjns "+
+                        " inner join industrifarmasi on industrifarmasi.kode_industri=databarang.kode_industri "+
+                        " inner join resep_dokter on resep_dokter.kode_brng=databarang.kode_brng "+
+                        " left join golongan_barang on databarang.kode_golongan=golongan_barang.kode "+
+                        " left join kategori_barang on databarang.kode_kategori=kategori_barang.kode "+
                         " where resep_dokter.no_resep=? and databarang.status='1' and databarang.kode_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and databarang.nama_brng like ? or "+
                         " resep_dokter.no_resep=? and databarang.status='1' and kategori_barang.nama like ? or "+
@@ -6497,44 +6503,80 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             param.put("kontakrs", akses.getkontakrs());
             param.put("emailrs", akses.getemailrs());
             param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
-            if (Sequel.cariInteger(
-                    "select count(*) from resep_obat inner join " +
-                            "resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
-                            "where resep_obat.no_resep=? and resep_dokter.aturan_pakai<>''",
-                    noresep) > 0) {
-                Valid.MyReportqry("rptItemResep.jasper", "report", "::[ Aturan Pakai Obat ]::",
-                        "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir, " +
-                                "resep_obat.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng," +
-                                "resep_dokter.aturan_pakai as aturan,resep_dokter.jml,kodesatuan.satuan,pasien.jk,reg_periksa.umurdaftar,reg_periksa.sttsumur "
-                                +
-                                "from resep_obat inner join reg_periksa inner join pasien inner join " +
-                                "resep_dokter inner join databarang " +
-                                "inner join kodesatuan on resep_obat.no_rawat=reg_periksa.no_rawat  " +
-                                "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis and " +
-                                "databarang.kode_brng=resep_dokter.kode_brng and " +
-                                "resep_obat.no_resep=resep_dokter.no_resep " +
-                                "and kodesatuan.kode_sat=databarang.kode_sat " +
-                                "where resep_obat.no_resep='" + noresep + "' and resep_dokter.aturan_pakai<>''",
-                        param);
-            }
-
-            if (Sequel.cariInteger(
-                    "select count(*) from resep_obat inner join " +
-                            "resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep " +
-                            "where resep_obat.no_resep=? and resep_dokter_racikan.aturan_pakai<>''",
-                    noresep) > 0) {
-                Valid.MyReportqry("rptItemResep2.jasper", "report", "::[ Aturan Pakai Obat ]::",
-                        "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir," +
-                                "resep_obat.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,resep_dokter_racikan.nama_racik," +
-                                "resep_dokter_racikan.aturan_pakai,resep_dokter_racikan.jml_dr,metode_racik.nm_racik,pasien.jk,reg_periksa.umurdaftar,reg_periksa.sttsumur "
-                                +
-                                "from resep_obat inner join reg_periksa inner join pasien inner join " +
-                                "resep_dokter_racikan inner join metode_racik on resep_obat.no_rawat=reg_periksa.no_rawat " +
-                                "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
-                                "and resep_dokter_racikan.kd_racik=metode_racik.kd_racik " +
-                                "and resep_obat.no_resep=resep_dokter_racikan.no_resep " +
-                                "where resep_obat.no_resep='" + noresep + "'",
-                        param);
+            if (Sequel.cariIsi("select status_lanjut from reg_periksa where no_rawat=?", TNoRw.getText()).equals("Ranap")) {
+                if (Sequel.cariInteger("select count(*) from resep_obat inner join resep_dokter inner join databarang on resep_obat.no_resep=resep_dokter.no_resep and resep_dokter.kode_brng=databarang.kode_brng where resep_obat.no_resep=? and databarang.kdjns<>'J003'", noresep) > 0 ||
+                    Sequel.cariInteger("select count(*) from resep_obat inner join resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep where resep_obat.no_resep=?", noresep) > 0) {
+                    
+                    Valid.MyReportqry("rptEtiketRawatInap.jasper", "report", "::[ Etiket Rawat Inap ]::",
+                            "select pasien.nm_pasien, pasien.no_rkm_medis, databarang.nama_brng, resep_dokter.aturan_pakai as aturan, resep_obat.tgl_perawatan, resep_obat.jam, " +
+                            "ifnull((select kamar.kd_kamar from kamar_inap inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar where kamar_inap.no_rawat=resep_obat.no_rawat order by kamar_inap.tgl_masuk desc limit 1),'') as nm_bangsal " +
+                            "from resep_obat inner join reg_periksa on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "inner join resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
+                            "inner join databarang on resep_dokter.kode_brng=databarang.kode_brng " +
+                            "where resep_obat.no_resep='" + noresep + "' and databarang.kdjns<>'J003' " +
+                            "UNION ALL " +
+                            "select pasien.nm_pasien, pasien.no_rkm_medis, resep_dokter_racikan.nama_racik as nama_brng, resep_dokter_racikan.aturan_pakai as aturan, resep_obat.tgl_perawatan, resep_obat.jam, " +
+                            "ifnull((select kamar.kd_kamar from kamar_inap inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar where kamar_inap.no_rawat=resep_obat.no_rawat order by kamar_inap.tgl_masuk desc limit 1),'') as nm_bangsal " +
+                            "from resep_obat inner join reg_periksa on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "inner join resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep " +
+                            "where resep_obat.no_resep='" + noresep + "'",
+                            param);
+                }
+                
+                if (Sequel.cariInteger("select count(*) from resep_obat inner join resep_dokter inner join databarang on resep_obat.no_resep=resep_dokter.no_resep and resep_dokter.kode_brng=databarang.kode_brng where resep_obat.no_resep=? and databarang.kdjns='J003'", noresep) > 0) {
+                    param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
+                    Valid.MyReportqry("rptEtiketRawatInapInfus.jasper", "report", "::[ Etiket Rawat Inap (Infus) ]::",
+                            "select pasien.nm_pasien, pasien.no_rkm_medis, databarang.nama_brng, resep_dokter.aturan_pakai as aturan, resep_obat.tgl_perawatan, resep_obat.jam, " +
+                            "ifnull((select kamar.kd_kamar from kamar_inap inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar where kamar_inap.no_rawat=resep_obat.no_rawat order by kamar_inap.tgl_masuk desc limit 1),'') as nm_bangsal " +
+                            "from resep_obat inner join reg_periksa on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "inner join resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
+                            "inner join databarang on resep_dokter.kode_brng=databarang.kode_brng " +
+                            "where resep_obat.no_resep='" + noresep + "' and databarang.kdjns='J003'",
+                            param);
+                }
+            } else {
+                if (Sequel.cariInteger(
+                        "select count(*) from resep_obat inner join " +
+                                "resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
+                                "where resep_obat.no_resep=? ",
+                        noresep) > 0) {
+                    Valid.MyReportqry("rptItemResep.jasper", "report", "::[ Aturan Pakai Obat ]::",
+                            "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir, " +
+                                    "resep_obat.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng," +
+                                    "resep_dokter.aturan_pakai as aturan,resep_dokter.jml,kodesatuan.satuan,pasien.jk,reg_periksa.umurdaftar,reg_periksa.sttsumur "
+                                    +
+                                    "from resep_obat inner join reg_periksa inner join pasien inner join " +
+                                    "resep_dokter inner join databarang " +
+                                    "inner join kodesatuan on resep_obat.no_rawat=reg_periksa.no_rawat  " +
+                                    "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis and " +
+                                    "databarang.kode_brng=resep_dokter.kode_brng and " +
+                                    "resep_obat.no_resep=resep_dokter.no_resep " +
+                                    "and kodesatuan.kode_sat=databarang.kode_sat " +
+                                    "where resep_obat.no_resep='" + noresep + "'",
+                            param);
+                }
+                
+                if (Sequel.cariInteger(
+                        "select count(*) from resep_obat inner join " +
+                                "resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep " +
+                                "where resep_obat.no_resep=? ",
+                        noresep) > 0) {
+                    Valid.MyReportqry("rptItemResep2.jasper", "report", "::[ Aturan Pakai Obat ]::",
+                            "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir," +
+                                    "resep_obat.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,resep_dokter_racikan.nama_racik," +
+                                    "resep_dokter_racikan.aturan_pakai,resep_dokter_racikan.jml_dr,metode_racik.nm_racik,pasien.jk,reg_periksa.umurdaftar,reg_periksa.sttsumur "
+                                    +
+                                    "from resep_obat inner join reg_periksa inner join pasien inner join " +
+                                    "resep_dokter_racikan inner join metode_racik on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                                    "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                                    "and resep_dokter_racikan.kd_racik=metode_racik.kd_racik " +
+                                    "and resep_obat.no_resep=resep_dokter_racikan.no_resep " +
+                                    "where resep_obat.no_resep='" + noresep + "'",
+                            param);
+                }
             }
             this.setCursor(java.awt.Cursor.getDefaultCursor());
         }
@@ -6558,7 +6600,7 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             if (Sequel.cariInteger(
                     "select count(*) from resep_obat inner join " +
                             "resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
-                            "where resep_obat.no_resep=? and resep_dokter.aturan_pakai<>''",
+                            "where resep_obat.no_resep=? ",
                     noresep) > 0) {
                 Valid.MyReportqry("rptItemResep3.jasper", "report", "::[ Aturan Pakai Obat ]::",
                         "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir, " +
@@ -6572,14 +6614,14 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                                 "databarang.kode_brng=resep_dokter.kode_brng and databarang.kdjns=jenis.kdjns and " +
                                 "resep_obat.no_resep=resep_dokter.no_resep " +
                                 "and kodesatuan.kode_sat=databarang.kode_sat " +
-                                "where resep_obat.no_resep='" + noresep + "' and resep_dokter.aturan_pakai<>''",
+                                "where resep_obat.no_resep='" + noresep + "'",
                         param);
             }
 
             if (Sequel.cariInteger(
                     "select count(*) from resep_obat inner join " +
                             "resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep " +
-                            "where resep_obat.no_resep=? and resep_dokter_racikan.aturan_pakai<>''",
+                            "where resep_obat.no_resep=? ",
                     noresep) > 0) {
                 Valid.MyReportqry("rptItemResep2.jasper", "report", "::[ Aturan Pakai Obat ]::",
                         "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir," +
@@ -6616,7 +6658,7 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             if (Sequel.cariInteger(
                     "select count(*) from resep_obat inner join " +
                             "resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
-                            "where resep_obat.no_resep=? and resep_dokter.aturan_pakai<>''",
+                            "where resep_obat.no_resep=? ",
                     noresep) > 0) {
                 Valid.MyReportqry("rptItemResep5.jasper", "report", "::[ Aturan Pakai Obat ]::",
                         "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir, " +
@@ -6630,14 +6672,14 @@ private void ChkJlnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                                 "databarang.kode_brng=resep_dokter.kode_brng and " +
                                 "resep_obat.no_resep=resep_dokter.no_resep " +
                                 "and kodesatuan.kode_sat=databarang.kode_sat " +
-                                "where resep_obat.no_resep='" + noresep + "' and resep_dokter.aturan_pakai<>''",
+                                "where resep_obat.no_resep='" + noresep + "'",
                         param);
             }
 
             if (Sequel.cariInteger(
                     "select count(*) from resep_obat inner join " +
                             "resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep " +
-                            "where resep_obat.no_resep=? and resep_dokter_racikan.aturan_pakai<>''",
+                            "where resep_obat.no_resep=? ",
                     noresep) > 0) {
                 Valid.MyReportqry("rptItemResep6.jasper", "report", "::[ Aturan Pakai Obat ]::",
                         "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir," +

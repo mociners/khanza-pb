@@ -61,6 +61,36 @@ public class DlgDaftarPermintaanResep extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
+        Popup = new javax.swing.JPopupMenu();
+        ppAturanPakai = new javax.swing.JMenuItem();
+        ppTelaahResep = new javax.swing.JMenuItem();
+
+        ppAturanPakai.setBackground(new java.awt.Color(255, 255, 255));
+        ppAturanPakai.setFont(new java.awt.Font("Tahoma", 0, 11));
+        ppAturanPakai.setForeground(new java.awt.Color(50, 50, 50));
+        ppAturanPakai.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
+        ppAturanPakai.setText("Cetak Aturan Pakai");
+        ppAturanPakai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ppAturanPakaiActionPerformed(evt);
+            }
+        });
+        Popup.add(ppAturanPakai);
+
+        ppTelaahResep.setBackground(new java.awt.Color(255, 255, 255));
+        ppTelaahResep.setFont(new java.awt.Font("Tahoma", 0, 11));
+        ppTelaahResep.setForeground(new java.awt.Color(50, 50, 50));
+        ppTelaahResep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
+        ppTelaahResep.setText("Cetak Telaah Resep");
+        ppTelaahResep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ppTelaahResepActionPerformed(evt);
+            }
+        });
+        Popup.add(ppTelaahResep);
+
+        tbDetailResepRanap.setComponentPopupMenu(Popup);
+        
         tabMode=new DefaultTableModel(null,new Object[]{
                 "No.Resep","Tgl.Peresepan","Jam Peresepan","No.Rawat","No.RM","Pasien","Dokter Peresep",
                 "Status","Kode Dokter","Poli/Unit","Kode Poli","Jenis Bayar","Tgl.Validasi","Jam Validasi",
@@ -5701,6 +5731,145 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
             PanelAccor.setPreferredSize(new Dimension(15,HEIGHT));
             FormMenu.setVisible(false);    
             ChkAccor.setVisible(true);
+        }
+    }
+    
+    private javax.swing.JPopupMenu Popup;
+    private javax.swing.JMenuItem ppAturanPakai;
+    private javax.swing.JMenuItem ppTelaahResep;
+
+    private void ppAturanPakaiActionPerformed(java.awt.event.ActionEvent evt) {
+        if(tbDetailResepRanap.getSelectedRow()!= -1){
+            String noresep = tbDetailResepRanap.getValueAt(tbDetailResepRanap.getSelectedRow(), 0).toString();
+            if (noresep.equals("")) {
+                JOptionPane.showMessageDialog(null, "Maaf, Silahkan pilih baris resep (bukan rincian obat) untuk mencetak aturan pakai...!!!!");
+                return;
+            }
+            this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
+            Map<String, Object> param = new HashMap<>();
+            param.put("namars", akses.getnamars());
+            param.put("alamatrs", akses.getalamatrs());
+            param.put("kotars", akses.getkabupatenrs());
+            param.put("propinsirs", akses.getpropinsirs());
+            param.put("kontakrs", akses.getkontakrs());
+            param.put("emailrs", akses.getemailrs());
+            param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
+            
+            String no_rawat = Sequel.cariIsi("select no_rawat from resep_obat where no_resep=?", noresep);
+            boolean isRanap = Sequel.cariIsi("select status_lanjut from reg_periksa where no_rawat=?", no_rawat).equals("Ranap");
+
+            if (isRanap) {
+                if (Sequel.cariInteger("select count(*) from resep_obat inner join resep_dokter inner join databarang on resep_obat.no_resep=resep_dokter.no_resep and resep_dokter.kode_brng=databarang.kode_brng where resep_obat.no_resep=? and databarang.kdjns<>'J003'", noresep) > 0 ||
+                    Sequel.cariInteger("select count(*) from resep_obat inner join resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep where resep_obat.no_resep=?", noresep) > 0) {
+                    
+                    Valid.MyReportqry("rptEtiketRawatInap.jasper", "report", "::[ Etiket Rawat Inap ]::",
+                            "select pasien.nm_pasien, pasien.no_rkm_medis, databarang.nama_brng, resep_dokter.aturan_pakai as aturan, resep_obat.tgl_perawatan, resep_obat.jam, " +
+                            "ifnull((select kamar.kd_kamar from kamar_inap inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar where kamar_inap.no_rawat=resep_obat.no_rawat order by kamar_inap.tgl_masuk desc limit 1),'') as nm_bangsal " +
+                            "from resep_obat inner join reg_periksa on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "inner join resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
+                            "inner join databarang on resep_dokter.kode_brng=databarang.kode_brng " +
+                            "where resep_obat.no_resep='" + noresep + "' and databarang.kdjns<>'J003' " +
+                            "UNION ALL " +
+                            "select pasien.nm_pasien, pasien.no_rkm_medis, resep_dokter_racikan.nama_racik as nama_brng, resep_dokter_racikan.aturan_pakai as aturan, resep_obat.tgl_perawatan, resep_obat.jam, " +
+                            "ifnull((select kamar.kd_kamar from kamar_inap inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar where kamar_inap.no_rawat=resep_obat.no_rawat order by kamar_inap.tgl_masuk desc limit 1),'') as nm_bangsal " +
+                            "from resep_obat inner join reg_periksa on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "inner join resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep " +
+                            "where resep_obat.no_resep='" + noresep + "'",
+                            param);
+                }
+                
+                if (Sequel.cariInteger("select count(*) from resep_obat inner join resep_dokter inner join databarang on resep_obat.no_resep=resep_dokter.no_resep and resep_dokter.kode_brng=databarang.kode_brng where resep_obat.no_resep=? and databarang.kdjns='J003'", noresep) > 0) {
+                    param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
+                    Valid.MyReportqry("rptEtiketRawatInapInfus.jasper", "report", "::[ Etiket Rawat Inap (Infus) ]::",
+                            "select pasien.nm_pasien, pasien.no_rkm_medis, databarang.nama_brng, resep_dokter.aturan_pakai as aturan, resep_obat.tgl_perawatan, resep_obat.jam, " +
+                            "ifnull((select kamar.kd_kamar from kamar_inap inner join kamar on kamar_inap.kd_kamar=kamar.kd_kamar where kamar_inap.no_rawat=resep_obat.no_rawat order by kamar_inap.tgl_masuk desc limit 1),'') as nm_bangsal " +
+                            "from resep_obat inner join reg_periksa on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                            "inner join resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
+                            "inner join databarang on resep_dokter.kode_brng=databarang.kode_brng " +
+                            "where resep_obat.no_resep='" + noresep + "' and databarang.kdjns='J003'",
+                            param);
+                }
+            } else {
+                if (Sequel.cariInteger(
+                        "select count(*) from resep_obat inner join " +
+                                "resep_dokter on resep_obat.no_resep=resep_dokter.no_resep " +
+                                "where resep_obat.no_resep=? ",
+                        noresep) > 0) {
+                    Valid.MyReportqry("rptItemResep.jasper", "report", "::[ Aturan Pakai Obat ]::",
+                            "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir, " +
+                                    "resep_obat.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng," +
+                                    "resep_dokter.aturan_pakai as aturan,resep_dokter.jml,kodesatuan.satuan,pasien.jk,reg_periksa.umurdaftar,reg_periksa.sttsumur "
+                                    +
+                                    "from resep_obat inner join reg_periksa inner join pasien inner join " +
+                                    "resep_dokter inner join databarang " +
+                                    "inner join kodesatuan on resep_obat.no_rawat=reg_periksa.no_rawat  " +
+                                    "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis and " +
+                                    "databarang.kode_brng=resep_dokter.kode_brng and " +
+                                    "resep_obat.no_resep=resep_dokter.no_resep " +
+                                    "and kodesatuan.kode_sat=databarang.kode_sat " +
+                                    "where resep_obat.no_resep='" + noresep + "'",
+                            param);
+                }
+
+                if (Sequel.cariInteger(
+                        "select count(*) from resep_obat inner join " +
+                                "resep_dokter_racikan on resep_obat.no_resep=resep_dokter_racikan.no_resep " +
+                                "where resep_obat.no_resep=? ",
+                        noresep) > 0) {
+                    Valid.MyReportqry("rptItemResep2.jasper", "report", "::[ Aturan Pakai Obat ]::",
+                            "select resep_obat.no_resep,resep_obat.tgl_perawatan,resep_obat.jam,pasien.tgl_lahir," +
+                                    "resep_obat.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,resep_dokter_racikan.nama_racik," +
+                                    "resep_dokter_racikan.aturan_pakai,resep_dokter_racikan.jml_dr,metode_racik.nm_racik,pasien.jk,reg_periksa.umurdaftar,reg_periksa.sttsumur "
+                                    +
+                                    "from resep_obat inner join reg_periksa inner join pasien inner join " +
+                                    "resep_dokter_racikan inner join metode_racik on resep_obat.no_rawat=reg_periksa.no_rawat " +
+                                    "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                                    "and resep_dokter_racikan.kd_racik=metode_racik.kd_racik " +
+                                    "and resep_obat.no_resep=resep_dokter_racikan.no_resep " +
+                                    "where resep_obat.no_resep='" + noresep + "'",
+                            param);
+                }
+            }
+            this.setCursor(java.awt.Cursor.getDefaultCursor());
+        }else{
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan pilih baris resep (bukan rincian obat) untuk mencetak...!!!!");
+        }
+    }
+
+    private void ppTelaahResepActionPerformed(java.awt.event.ActionEvent evt) {
+        if(tbDetailResepRanap.getSelectedRow()!= -1){
+            String noresep = tbDetailResepRanap.getValueAt(tbDetailResepRanap.getSelectedRow(), 0).toString();
+            if (noresep.equals("")) {
+                JOptionPane.showMessageDialog(null, "Maaf, Silahkan pilih baris resep (bukan rincian obat) untuk mencetak telaah resep...!!!!");
+                return;
+            }
+            this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
+            Map<String, Object> param = new HashMap<>();
+            param.put("namars", akses.getnamars());
+            param.put("alamatrs", akses.getalamatrs());
+            param.put("kotars", akses.getkabupatenrs());
+            param.put("propinsirs", akses.getpropinsirs());
+            param.put("kontakrs", akses.getkontakrs());
+            param.put("emailrs", akses.getemailrs());
+            param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
+            
+            Valid.MyReportqry("rptResepTelaah.jasper", "report", "::[ Lembar Telaah Resep ]::",
+                "select telaah_resep.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.tgl_lahir,pasien.jk,"+
+                "telaah_resep.no_resep,telaah_resep.tgl_perawatan,telaah_resep.jam,telaah_resep.aturan_pakai, "+
+                "telaah_resep.aturan_pakai_keterangan,telaah_resep.dosis,telaah_resep.dosis_keterangan, "+
+                "telaah_resep.duplikasi,telaah_resep.duplikasi_keterangan,telaah_resep.interaksi, "+
+                "telaah_resep.interaksi_keterangan,telaah_resep.kontraindikasi,telaah_resep.kontraindikasi_keterangan, "+
+                "telaah_resep.tepat_obat,telaah_resep.tepat_obat_keterangan,telaah_resep.tepat_pasien, "+
+                "telaah_resep.tepat_pasien_keterangan,telaah_resep.waktu_penggunaan,telaah_resep.waktu_penggunaan_keterangan,"+
+                "telaah_resep.nip,petugas.nama from telaah_resep inner join reg_periksa on telaah_resep.no_rawat=reg_periksa.no_rawat "+
+                "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                "inner join petugas on telaah_resep.nip=petugas.nip where telaah_resep.no_resep='"+noresep+"'",param);
+            this.setCursor(java.awt.Cursor.getDefaultCursor());
+        }else{
+            JOptionPane.showMessageDialog(null, "Maaf, Silahkan pilih baris resep (bukan rincian obat) untuk mencetak...!!!!");
         }
     }
 }

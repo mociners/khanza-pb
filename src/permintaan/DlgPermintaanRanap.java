@@ -64,6 +64,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
     private boolean aktif = false;
     private BackgroundMusic music;
     private DlgCariPenyakit penyakit = new DlgCariPenyakit(null, false);
+    private int pilihanDiagnosa = 0;
     private DlgCariDokter dokterdpjp = new DlgCariDokter(null, false);
 
     /**
@@ -81,7 +82,8 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         tabMode = new DefaultTableModel(null, new Object[] {
                 "No.Rawat", "No.RM", "Nama Pasien", "J.K.", "Umur", "No.Telp", "Cara Bayar",
                 "Asal Poli/Unit", "Dokter Perujuk", "Dokter DPJP", "Tanggal", "Ruang Diminta",
-                "Diagnosa Awal", "Indikasi Rawat Inap", "KodeDokter", "Kode DPJP"
+                "Diagnosa Awal", "Diagnosa Sek. 1", "Diagnosa Sek. 2", "Diagnosa Sek. 3", "Diagnosa Sek. 4", 
+                "Indikasi Rawat Inap", "KodeDokter", "Kode DPJP"
         }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -95,7 +97,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         tbObat.setPreferredScrollableViewportSize(new Dimension(500, 500));
         tbObat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 16; i++) { // Total kolom sekarang 16
+        for (i = 0; i < 20; i++) { // Total kolom sekarang 20
             TableColumn column = tbObat.getColumnModel().getColumn(i);
             if (i == 0) {
                 column.setPreferredWidth(105);
@@ -104,47 +106,46 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             } else if (i == 2) {
                 column.setPreferredWidth(150);
             } else if (i == 3) {
-                column.setPreferredWidth(25);
+                column.setPreferredWidth(30);
             } else if (i == 4) {
-                column.setPreferredWidth(40);
+                column.setPreferredWidth(50);
             } else if (i == 5) {
                 column.setPreferredWidth(90);
             } else if (i == 6) {
-                column.setPreferredWidth(120);
+                column.setPreferredWidth(110);
             } else if (i == 7) {
                 column.setPreferredWidth(130);
             } else if (i == 8) {
-                column.setPreferredWidth(160);
+                column.setPreferredWidth(150);
             } else if (i == 9) {
-                column.setPreferredWidth(160);
-            } // DPJP
-            else if (i == 10) {
+                column.setPreferredWidth(150);
+            } else if (i == 10) {
                 column.setPreferredWidth(65);
-            } // Tanggal
-            else if (i == 11) {
+            } else if (i == 11) {
                 column.setPreferredWidth(150);
-            } // Ruang Diminta
-            else if (i == 12) {
-                column.setPreferredWidth(150);
-            } // Diagnosa
-            else if (i == 13) {
-                column.setPreferredWidth(300);
-            } // Catatan
-            else if (i == 14) {
+            } else if (i == 12 || i == 13 || i == 14 || i == 15 || i == 16) {
+                column.setPreferredWidth(200);
+            } else if (i == 17) {
+                column.setPreferredWidth(200);
+            } else if (i == 18) {
                 column.setMinWidth(0);
                 column.setMaxWidth(0);
-            } // KodeDokter (Hidden)
-            else if (i == 15) {
+            } else if (i == 19) {
                 column.setMinWidth(0);
                 column.setMaxWidth(0);
-            } // Kode DPJP (Hidden)
-        }
+            }
+        } // Kode DPJP (Hidden)
+        
         tbObat.setDefaultRenderer(Object.class, new WarnaTable());
 
         NoRw.setDocument(new batasInput((byte) 17).getKata(NoRw));
         TCari.setDocument(new batasInput((byte) 100).getKata(TCari));
-        jTextArea1.setDocument(new batasInput((byte) 50).getKata(jTextArea1));
-        Diagnosa.setDocument(new batasInput((byte) 50).getKata(Diagnosa));
+        jTextArea1.setDocument(new batasInput((int) 250).getKata(jTextArea1));
+        Diagnosa.setDocument(new batasInput((int) 100).getKata(Diagnosa));
+        DiagnosaSekunder1.setDocument(new batasInput((byte) 100).getKata(DiagnosaSekunder1));
+        DiagnosaSekunder2.setDocument(new batasInput((byte) 100).getKata(DiagnosaSekunder2));
+        DiagnosaSekunder3.setDocument(new batasInput((byte) 100).getKata(DiagnosaSekunder3));
+        DiagnosaSekunder4.setDocument(new batasInput((byte) 100).getKata(DiagnosaSekunder4));
         if (koneksiDB.CARICEPAT().equals("aktif")) {
             TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
                 @Override
@@ -236,20 +237,27 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent e) {
                 if (penyakit.getTable().getSelectedRow() != -1) {
-                    if ((penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 0).toString() + " - "
-                            + penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 1).toString())
-                            .length() < 50) {
-                        Diagnosa.setText(penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 0)
-                                .toString() + " - "
-                                + penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 1).toString());
-                    } else {
-                        Diagnosa.setText((penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 0)
-                                .toString() + " - "
-                                + penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 1).toString())
-                                .substring(0, 50));
+                    String hasil = penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 0).toString() + " - "
+                                 + penyakit.getTable().getValueAt(penyakit.getTable().getSelectedRow(), 1).toString();
+                    if(hasil.length() > 50) hasil = hasil.substring(0, 50);
+
+                    if (pilihanDiagnosa == 0) {
+                        Diagnosa.setText(hasil);
+                        Diagnosa.requestFocus();
+                    } else if (pilihanDiagnosa == 1) {
+                        DiagnosaSekunder1.setText(hasil);
+                        DiagnosaSekunder1.requestFocus();
+                    } else if (pilihanDiagnosa == 2) {
+                        DiagnosaSekunder2.setText(hasil);
+                        DiagnosaSekunder2.requestFocus();
+                    } else if (pilihanDiagnosa == 3) {
+                        DiagnosaSekunder3.setText(hasil);
+                        DiagnosaSekunder3.requestFocus();
+                    } else if (pilihanDiagnosa == 4) {
+                        DiagnosaSekunder4.setText(hasil);
+                        DiagnosaSekunder4.requestFocus();
                     }
                 }
-                Diagnosa.requestFocus();
             }
 
             @Override
@@ -349,10 +357,22 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         Dokter = new widget.TextBox();
         jLabel12 = new widget.Label();
         Diagnosa = new widget.TextBox();
+        DiagnosaSekunder1 = new widget.TextBox();
+        DiagnosaSekunder2 = new widget.TextBox();
+        DiagnosaSekunder3 = new widget.TextBox();
+        DiagnosaSekunder4 = new widget.TextBox();
         CaraBayar = new widget.TextBox();
         jLabel13 = new widget.Label();
         jLabel14 = new widget.Label();
         btnDiagnosa = new widget.Button();
+        btnDiagnosaSekunder1 = new widget.Button();
+        btnDiagnosaSekunder2 = new widget.Button();
+        btnDiagnosaSekunder3 = new widget.Button();
+        btnDiagnosaSekunder4 = new widget.Button();
+        jLabelSekunder1 = new widget.Label();
+        jLabelSekunder2 = new widget.Label();
+        jLabelSekunder3 = new widget.Label();
+        jLabelSekunder4 = new widget.Label();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         PanelAccor = new widget.PanelBiasa();
@@ -664,7 +684,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
 
         PanelInput.setName("PanelInput"); // NOI18N
         PanelInput.setOpaque(false);
-        PanelInput.setPreferredSize(new java.awt.Dimension(192, 310));
+        PanelInput.setPreferredSize(new java.awt.Dimension(192, 430));
         PanelInput.setLayout(new java.awt.BorderLayout(1, 1));
 
         ChkInput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/143.png"))); // NOI18N
@@ -775,7 +795,6 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         FormInput.add(jLabel12);
         jLabel12.setBounds(0, 130, 69, 23);
 
-        Diagnosa.setHighlighter(null);
         Diagnosa.setName("Diagnosa"); // NOI18N
         Diagnosa.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -799,7 +818,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         jLabel14.setText("Indikasi Rawat Inap :");
         jLabel14.setName("jLabel14"); // NOI18N
         FormInput.add(jLabel14);
-        jLabel14.setBounds(10, 160, 110, 23);
+        jLabel14.setBounds(10, 280, 110, 23);
 
         btnDiagnosa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
         btnDiagnosa.setMnemonic('3');
@@ -818,6 +837,82 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         FormInput.add(btnDiagnosa);
         btnDiagnosa.setBounds(289, 130, 28, 23);
 
+        jLabelSekunder1.setText("Diag. Sek. 1 :");
+        jLabelSekunder1.setName("jLabelSekunder1"); // NOI18N
+        FormInput.add(jLabelSekunder1);
+        jLabelSekunder1.setBounds(0, 160, 69, 23);
+
+        DiagnosaSekunder1.setName("DiagnosaSekunder1"); // NOI18N
+        FormInput.add(DiagnosaSekunder1);
+        DiagnosaSekunder1.setBounds(73, 160, 213, 23);
+
+        btnDiagnosaSekunder1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        btnDiagnosaSekunder1.setName("btnDiagnosaSekunder1"); // NOI18N
+        btnDiagnosaSekunder1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiagnosaSekunder1ActionPerformed(evt);
+            }
+        });
+        FormInput.add(btnDiagnosaSekunder1);
+        btnDiagnosaSekunder1.setBounds(289, 160, 28, 23);
+
+        jLabelSekunder2.setText("Diag. Sek. 2 :");
+        jLabelSekunder2.setName("jLabelSekunder2"); // NOI18N
+        FormInput.add(jLabelSekunder2);
+        jLabelSekunder2.setBounds(0, 190, 69, 23);
+
+        DiagnosaSekunder2.setName("DiagnosaSekunder2"); // NOI18N
+        FormInput.add(DiagnosaSekunder2);
+        DiagnosaSekunder2.setBounds(73, 190, 213, 23);
+
+        btnDiagnosaSekunder2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        btnDiagnosaSekunder2.setName("btnDiagnosaSekunder2"); // NOI18N
+        btnDiagnosaSekunder2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiagnosaSekunder2ActionPerformed(evt);
+            }
+        });
+        FormInput.add(btnDiagnosaSekunder2);
+        btnDiagnosaSekunder2.setBounds(289, 190, 28, 23);
+
+        jLabelSekunder3.setText("Diag. Sek. 3 :");
+        jLabelSekunder3.setName("jLabelSekunder3"); // NOI18N
+        FormInput.add(jLabelSekunder3);
+        jLabelSekunder3.setBounds(0, 220, 69, 23);
+
+        DiagnosaSekunder3.setName("DiagnosaSekunder3"); // NOI18N
+        FormInput.add(DiagnosaSekunder3);
+        DiagnosaSekunder3.setBounds(73, 220, 213, 23);
+
+        btnDiagnosaSekunder3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        btnDiagnosaSekunder3.setName("btnDiagnosaSekunder3"); // NOI18N
+        btnDiagnosaSekunder3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiagnosaSekunder3ActionPerformed(evt);
+            }
+        });
+        FormInput.add(btnDiagnosaSekunder3);
+        btnDiagnosaSekunder3.setBounds(289, 220, 28, 23);
+
+        jLabelSekunder4.setText("Diag. Sek. 4 :");
+        jLabelSekunder4.setName("jLabelSekunder4"); // NOI18N
+        FormInput.add(jLabelSekunder4);
+        jLabelSekunder4.setBounds(0, 250, 69, 23);
+
+        DiagnosaSekunder4.setName("DiagnosaSekunder4"); // NOI18N
+        FormInput.add(DiagnosaSekunder4);
+        DiagnosaSekunder4.setBounds(73, 250, 213, 23);
+
+        btnDiagnosaSekunder4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        btnDiagnosaSekunder4.setName("btnDiagnosaSekunder4"); // NOI18N
+        btnDiagnosaSekunder4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiagnosaSekunder4ActionPerformed(evt);
+            }
+        });
+        FormInput.add(btnDiagnosaSekunder4);
+        btnDiagnosaSekunder4.setBounds(289, 250, 28, 23);
+
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         jTextArea1.setColumns(20);
@@ -826,7 +921,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTextArea1);
 
         FormInput.add(jScrollPane1);
-        jScrollPane1.setBounds(130, 170, 410, 100);
+        jScrollPane1.setBounds(130, 290, 410, 100);
 
         PanelInput.add(FormInput, java.awt.BorderLayout.CENTER);
 
@@ -979,13 +1074,17 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         } else if (NmDPJP.getText().trim().equals("")) {
             Valid.textKosong(btnDPJP, "DPJP");
         } else {
-            if (Sequel.menyimpantf("permintaan_ranap", "?,?,?,?,?,?", "Data", 6, new String[] {
+            if (Sequel.menyimpantf("permintaan_ranap", "?,?,?,?,?,?,?,?,?,?", "Data", 10, new String[] {
                     NoRw.getText(),
                     Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
                     CmbRuangRawat.getSelectedItem().toString(),
                     Diagnosa.getText(),
                     jTextArea1.getText(),
-                    KdDPJP.getText()
+                    KdDPJP.getText(),
+                    DiagnosaSekunder1.getText(),
+                    DiagnosaSekunder2.getText(),
+                    DiagnosaSekunder3.getText(),
+                    DiagnosaSekunder4.getText()
             }) == true) {
                 NotifWa();
                 tampil();
@@ -1199,11 +1298,15 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         } else {
             if (tbObat.getSelectedRow() > -1) {
                 if (Sequel.mengedittf("permintaan_ranap", "no_rawat=?",
-                        "no_rawat=?,tanggal=?,kd_kamar=?,diagnosa=?,catatan=?,kd_dpjp=?", 7, new String[] {
+                        "no_rawat=?,tanggal=?,kd_kamar=?,diagnosa=?,diagnosa_sekunder1=?,diagnosa_sekunder2=?,diagnosa_sekunder3=?,diagnosa_sekunder4=?,catatan=?,kd_dpjp=?", 11, new String[] {
                                 NoRw.getText(),
                                 Valid.SetTgl(DTPTgl.getSelectedItem() + ""),
                                 CmbRuangRawat.getSelectedItem().toString(), // Nilai JComboBox disimpan ke kd_kamar
                                 Diagnosa.getText(),
+                                DiagnosaSekunder1.getText(),
+                                DiagnosaSekunder2.getText(),
+                                DiagnosaSekunder3.getText(),
+                                DiagnosaSekunder4.getText(),
                                 jTextArea1.getText(),
                                 KdDPJP.getText(),
                                 tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString()
@@ -1254,12 +1357,49 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
     }// GEN-LAST:event_formWindowClosed
 
     private void btnDiagnosaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnDiagnosaActionPerformed
+        pilihanDiagnosa = 0;
         penyakit.isCek();
         penyakit.emptTeks();
         penyakit.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
         penyakit.setLocationRelativeTo(internalFrame1);
         penyakit.setVisible(true);
     }// GEN-LAST:event_btnDiagnosaActionPerformed
+
+    private void btnDiagnosaSekunder1ActionPerformed(java.awt.event.ActionEvent evt) {
+        pilihanDiagnosa = 1;
+        penyakit.isCek();
+        penyakit.emptTeks();
+        penyakit.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+        penyakit.setLocationRelativeTo(internalFrame1);
+        penyakit.setVisible(true);
+    }
+
+    private void btnDiagnosaSekunder2ActionPerformed(java.awt.event.ActionEvent evt) {
+        pilihanDiagnosa = 2;
+        penyakit.isCek();
+        penyakit.emptTeks();
+        penyakit.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+        penyakit.setLocationRelativeTo(internalFrame1);
+        penyakit.setVisible(true);
+    }
+
+    private void btnDiagnosaSekunder3ActionPerformed(java.awt.event.ActionEvent evt) {
+        pilihanDiagnosa = 3;
+        penyakit.isCek();
+        penyakit.emptTeks();
+        penyakit.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+        penyakit.setLocationRelativeTo(internalFrame1);
+        penyakit.setVisible(true);
+    }
+
+    private void btnDiagnosaSekunder4ActionPerformed(java.awt.event.ActionEvent evt) {
+        pilihanDiagnosa = 4;
+        penyakit.isCek();
+        penyakit.emptTeks();
+        penyakit.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+        penyakit.setLocationRelativeTo(internalFrame1);
+        penyakit.setVisible(true);
+    }
 
     private void btnDiagnosaKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_btnDiagnosaKeyPressed
         Valid.pindah(evt, Diagnosa, jTextArea1);
@@ -1322,6 +1462,10 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             param.put("dokter_perujuk", Dokter.getText());
             param.put("dokter_dpjp", NmDPJP.getText());
             param.put("diagnosa", Diagnosa.getText());
+            param.put("diagnosa_sekunder1", DiagnosaSekunder1.getText());
+            param.put("diagnosa_sekunder2", DiagnosaSekunder2.getText());
+            param.put("diagnosa_sekunder3", DiagnosaSekunder3.getText());
+            param.put("diagnosa_sekunder4", DiagnosaSekunder4.getText());
             param.put("indikasi", jTextArea1.getText());
             param.put("rencana_perawatan", CmbRuangRawat.getSelectedItem().toString());
 
@@ -1494,6 +1638,10 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
     private widget.Tanggal DTPCari2;
     private widget.Tanggal DTPTgl;
     private widget.TextBox Diagnosa;
+    private widget.TextBox DiagnosaSekunder1;
+    private widget.TextBox DiagnosaSekunder2;
+    private widget.TextBox DiagnosaSekunder3;
+    private widget.TextBox DiagnosaSekunder4;
     private widget.TextBox Dokter;
     private widget.PanelBiasa FormInput;
     private widget.PanelBiasa FormMenu;
@@ -1512,12 +1660,20 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
     private widget.ScrollPane ScrollMenu;
     private widget.TextBox TCari;
     private widget.Button btnDiagnosa;
+    private widget.Button btnDiagnosaSekunder1;
+    private widget.Button btnDiagnosaSekunder2;
+    private widget.Button btnDiagnosaSekunder3;
+    private widget.Button btnDiagnosaSekunder4;
     private javax.swing.ButtonGroup buttonGroup1;
     private widget.InternalFrame internalFrame1;
     private widget.Label jLabel10;
     private widget.Label jLabel11;
     private widget.Label jLabel12;
     private widget.Label jLabel13;
+    private widget.Label jLabelSekunder1;
+    private widget.Label jLabelSekunder2;
+    private widget.Label jLabelSekunder3;
+    private widget.Label jLabelSekunder4;
     private widget.Label jLabel14;
     private widget.Label jLabel15;
     private widget.Label jLabel25;
@@ -1584,7 +1740,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
                             +
                             "pasien.no_tlp,penjab.png_jawab,poliklinik.nm_poli,dokter.nm_dokter,permintaan_ranap.tanggal,permintaan_ranap.kd_kamar,"
                             + // Mengambil kd_kamar
-                            "permintaan_ranap.diagnosa,permintaan_ranap.catatan,reg_periksa.kd_dokter,permintaan_ranap.kd_dpjp,dpjp.nm_dokter as dpjp"
+                            "permintaan_ranap.diagnosa,permintaan_ranap.diagnosa_sekunder1,permintaan_ranap.diagnosa_sekunder2,permintaan_ranap.diagnosa_sekunder3,permintaan_ranap.diagnosa_sekunder4,permintaan_ranap.catatan,reg_periksa.kd_dokter,permintaan_ranap.kd_dpjp,dpjp.nm_dokter as dpjp"
                             +
                             commonQuery + whereClause + " order by permintaan_ranap.tanggal");
 
@@ -1616,6 +1772,10 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
                             rs.getString("tanggal"),
                             rs.getString("kd_kamar"), // Menampilkan isi kd_kamar
                             rs.getString("diagnosa"),
+                            rs.getString("diagnosa_sekunder1"),
+                            rs.getString("diagnosa_sekunder2"),
+                            rs.getString("diagnosa_sekunder3"),
+                            rs.getString("diagnosa_sekunder4"),
                             rs.getString("catatan"),
                             rs.getString("kd_dokter"),
                             rs.getString("kd_dpjp")
@@ -1645,6 +1805,10 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         Dokter.setText("");
         KdDokter.setText("");
         Diagnosa.setText("");
+        DiagnosaSekunder1.setText("");
+        DiagnosaSekunder2.setText("");
+        DiagnosaSekunder3.setText("");
+        DiagnosaSekunder4.setText("");
         jTextArea1.setText("");
         KdDPJP.setText("");
         NmDPJP.setText("");
@@ -1666,9 +1830,13 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
             Valid.SetTgl(DTPTgl, tbObat.getValueAt(tbObat.getSelectedRow(), 10).toString());
             CmbRuangRawat.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 11).toString());
             Diagnosa.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 12).toString());
-            jTextArea1.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 13).toString());
-            KdDokter.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 14).toString());
-            KdDPJP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 15).toString());
+            DiagnosaSekunder1.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 13).toString());
+            DiagnosaSekunder2.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 14).toString());
+            DiagnosaSekunder3.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 15).toString());
+            DiagnosaSekunder4.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 16).toString());
+            jTextArea1.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 17).toString());
+            KdDokter.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 18).toString());
+            KdDPJP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 19).toString());
         }
     }
 
@@ -1682,6 +1850,34 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         Poli.setText(poli);
         NoTelp.setText(notelp);
         TCari.setText(norwt);
+        
+        try {
+            java.sql.PreparedStatement ps = koneksi.prepareStatement(
+                    "select diagnosis from penilaian_medis_igd where no_rawat=?");
+            try {
+                ps.setString(1, norwt);
+                java.sql.ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    String diag = rs.getString("diagnosis");
+                    if (diag != null && !diag.trim().isEmpty()) {
+                        String[] parsed = diag.split("\\+|\\n|,");
+                        for (int i = 0; i < parsed.length; i++) {
+                            parsed[i] = parsed[i].trim();
+                        }
+                        if (parsed.length > 0) Diagnosa.setText(parsed[0].length() > 100 ? parsed[0].substring(0, 100) : parsed[0]);
+                        if (parsed.length > 1) DiagnosaSekunder1.setText(parsed[1].length() > 100 ? parsed[1].substring(0, 100) : parsed[1]);
+                        if (parsed.length > 2) DiagnosaSekunder2.setText(parsed[2].length() > 100 ? parsed[2].substring(0, 100) : parsed[2]);
+                        if (parsed.length > 3) DiagnosaSekunder3.setText(parsed[3].length() > 100 ? parsed[3].substring(0, 100) : parsed[3]);
+                        if (parsed.length > 4) DiagnosaSekunder4.setText(parsed[4].length() > 100 ? parsed[4].substring(0, 100) : parsed[4]);
+                    }
+                }
+            } finally {
+                if (ps != null) ps.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Notif: " + e);
+        }
+        
         ChkInput.setSelected(true);
         aktif = false;
         isForm();
@@ -1690,7 +1886,7 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
     private void isForm() {
         if (ChkInput.isSelected() == true) {
             ChkInput.setVisible(false);
-            PanelInput.setPreferredSize(new Dimension(WIDTH, 280));
+            PanelInput.setPreferredSize(new Dimension(WIDTH, 400));
             FormInput.setVisible(true);
             ChkInput.setVisible(true);
         } else if (ChkInput.isSelected() == false) {
@@ -1870,9 +2066,9 @@ public class DlgPermintaanRanap extends javax.swing.JDialog {
         FormInput.add(btnDPJP);
         btnDPJP.setBounds(593, 130, 28, 23);
 
-        // Baris Catatan/Indikasi (y=160)
-        jLabel14.setBounds(0, 160, 120, 23);
-        jScrollPane1.setBounds(123, 160, 495, 45);
+        // Baris Catatan/Indikasi (y=280)
+        jLabel14.setBounds(0, 280, 120, 23);
+        jScrollPane1.setBounds(123, 280, 495, 45);
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         MnCetakReport = new javax.swing.JMenuItem();

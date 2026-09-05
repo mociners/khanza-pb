@@ -30,6 +30,13 @@ import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 /**
  *
@@ -137,12 +144,14 @@ import javax.swing.table.TableColumn;
         Tgl1 = new widget.Tanggal();
         label18 = new widget.Label();
         Tgl2 = new widget.Tanggal();
+        cmbJenis = new widget.ComboBox();
         jLabel6 = new widget.Label();
         TCari = new widget.TextBox();
         BtnCari = new widget.Button();
         BtnAll = new widget.Button();
         jLabel7 = new widget.Label();
         BtnPrint = new widget.Button();
+        BtnExcel = new widget.Button();
         BtnKeluar = new widget.Button();
 
         TKd.setForeground(new java.awt.Color(255, 255, 255));
@@ -206,6 +215,21 @@ import javax.swing.table.TableColumn;
         Tgl2.setName("Tgl2"); // NOI18N
         Tgl2.setPreferredSize(new java.awt.Dimension(90, 23));
         panelGlass5.add(Tgl2);
+
+        cmbJenis.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua", "Obat Umum", "Obat Racikan" }));
+        cmbJenis.setName("cmbJenis"); // NOI18N
+        cmbJenis.setPreferredSize(new java.awt.Dimension(105, 23));
+        cmbJenis.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbJenisItemStateChanged(evt);
+            }
+        });
+        cmbJenis.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbJenisKeyPressed(evt);
+            }
+        });
+        panelGlass5.add(cmbJenis);
 
         jLabel6.setText("Key Word :");
         jLabel6.setName("jLabel6"); // NOI18N
@@ -276,6 +300,24 @@ import javax.swing.table.TableColumn;
             }
         });
         panelGlass5.add(BtnPrint);
+
+        BtnExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/file-edit-16x16.png"))); // NOI18N
+        BtnExcel.setMnemonic('E');
+        BtnExcel.setText("Excel");
+        BtnExcel.setToolTipText("Alt+E");
+        BtnExcel.setName("BtnExcel"); // NOI18N
+        BtnExcel.setPreferredSize(new java.awt.Dimension(100, 30));
+        BtnExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnExcelActionPerformed(evt);
+            }
+        });
+        BtnExcel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                BtnExcelKeyPressed(evt);
+            }
+        });
+        panelGlass5.add(BtnExcel);
 
         BtnKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/exit.png"))); // NOI18N
         BtnKeluar.setMnemonic('K');
@@ -351,6 +393,23 @@ import javax.swing.table.TableColumn;
         dispose();
 }//GEN-LAST:event_BtnKeluarActionPerformed
 
+    private void BtnExcelActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data sudah habis. Tidak ada data yang bisa anda export...!!!!");
+            BtnExcel.requestFocus();
+        }else if(tabMode.getRowCount()!=0){
+            exportExcel(tabMode);
+        }
+    }                                        
+
+    private void BtnExcelKeyPressed(java.awt.event.KeyEvent evt) {                                      
+        if(evt.getKeyCode()==KeyEvent.VK_SPACE){
+            BtnExcelActionPerformed(null);
+        }else{
+            Valid.pindah(evt, BtnPrint, BtnKeluar);
+        }
+    }                                     
+
     private void BtnKeluarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnKeluarKeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_SPACE){
             dispose();
@@ -418,10 +477,86 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         }
     }//GEN-LAST:event_BtnAllKeyPressed
 
+    private void cmbJenisItemStateChanged(java.awt.event.ItemEvent evt) {                                          
+        if(this.isVisible()==true){
+            tampil();
+        }
+    }                                         
+
+    private void cmbJenisKeyPressed(java.awt.event.KeyEvent evt) {                                    
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            tampil();
+        }
+    }                                   
+
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         tampil();
 
     }//GEN-LAST:event_formWindowActivated
+
+    public void exportExcel(DefaultTableModel tableModel) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Pilih Lokasi Simpan File Excel");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Excel Files (*.xls)", "xls"));
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".xls")) {
+                filePath += ".xls";
+            }
+            WritableWorkbook workbook = null;
+            try {
+                workbook = Workbook.createWorkbook(new File(filePath));
+                WritableSheet sheet = workbook.createSheet("Lama Pelayanan Apotek", 0);
+                
+                int colIndex = 0;
+                for (int i = 0; i < tableModel.getColumnCount(); i++) {
+                    Label label = new Label(colIndex, 0, tableModel.getColumnName(i));
+                    sheet.addCell(label);
+                    
+                    int maxColumnWidth = tableModel.getColumnName(i).length() + 5;
+                    for (int j = 0; j < tableModel.getRowCount(); j++) {
+                        Object value = tableModel.getValueAt(j, i);
+                        if (value != null) {
+                            int cellTextLength = value.toString().length();
+                            if (cellTextLength + 5 > maxColumnWidth) {
+                                maxColumnWidth = cellTextLength + 5;
+                            }
+                        }
+                    }
+                    sheet.setColumnView(colIndex, maxColumnWidth);
+                    colIndex++;
+                }
+
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    colIndex = 0;
+                    for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                        Object value = tableModel.getValueAt(i, j);
+                        if (value != null) {
+                            Label label = new Label(colIndex, i + 1, value.toString());
+                            sheet.addCell(label);
+                        }
+                        colIndex++;
+                    }
+                }
+                
+                sheet.getSettings().setVerticalFreeze(1);
+                workbook.write();
+                JOptionPane.showMessageDialog(null, "Data berhasil diekspor ke " + filePath);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error saat menulis file: " + e.getMessage());
+            } finally {
+                if (workbook != null) {
+                    try {
+                        workbook.close();
+                    } catch (Exception e) {
+                        System.out.println("Error closing workbook: " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
 
     /**
     * @param args the command line arguments
@@ -442,6 +577,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private widget.Button BtnAll;
     private widget.Button BtnCari;
+    private widget.Button BtnExcel;
     private widget.Button BtnKeluar;
     private widget.Button BtnPrint;
     private widget.ScrollPane Scroll;
@@ -449,6 +585,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     private widget.TextBox TKd;
     private widget.Tanggal Tgl1;
     private widget.Tanggal Tgl2;
+    private widget.ComboBox cmbJenis;
     private widget.InternalFrame internalFrame1;
     private widget.Label jLabel6;
     private widget.Label jLabel7;
@@ -478,6 +615,13 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
             lebihsatujam3=0;
             lamajam3=0;
             i=1;
+            String kondisijenis = "";
+            if(cmbJenis.getSelectedItem().toString().equals("Obat Umum")){
+                kondisijenis = " and resep_obat.no_resep not in (select resep_dokter_racikan.no_resep from resep_dokter_racikan) ";
+            }else if(cmbJenis.getSelectedItem().toString().equals("Obat Racikan")){
+                kondisijenis = " and resep_obat.no_resep in (select resep_dokter_racikan.no_resep from resep_dokter_racikan) ";
+            }
+            
             ps=koneksi.prepareStatement(
                 "select reg_periksa.no_rkm_medis,pasien.nm_pasien,dokter.nm_dokter,poliklinik.nm_poli," +
                 "resep_obat.tgl_peresepan,resep_obat.jam_peresepan,resep_obat.tgl_perawatan,resep_obat.jam," +
@@ -490,7 +634,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 "and reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
                 "and reg_periksa.kd_poli=poliklinik.kd_poli " +
                 "and reg_periksa.no_rawat=resep_obat.no_rawat "+
-                "where resep_obat.tgl_peresepan<>'0000-00-00' and resep_obat.tgl_penyerahan<>'0000-00-00' and resep_obat.tgl_perawatan<>'0000-00-00' and resep_obat.tgl_peresepan between ? and ? "+
+                "where resep_obat.tgl_peresepan<>'0000-00-00' and resep_obat.tgl_penyerahan<>'0000-00-00' and resep_obat.tgl_perawatan<>'0000-00-00' and resep_obat.tgl_peresepan between ? and ? "+kondisijenis+
                 "and (poliklinik.nm_poli like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ?)  "+
                 "order by resep_obat.tgl_peresepan,resep_obat.jam_peresepan");
             try {

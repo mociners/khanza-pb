@@ -612,6 +612,9 @@ public final class DlgCariObat extends javax.swing.JDialog {
         label13 = new widget.Label();
         BtnKeluar = new widget.Button();
         FormInput = new widget.PanelBiasa();
+        jLabelAsesmen = new widget.Label();
+        scrollAsesmen = new widget.ScrollPane();
+        TAsesmen = new widget.TextArea();
         jLabel5 = new widget.Label();
         LTotal = new widget.Label();
         jLabel6 = new widget.Label();
@@ -1013,8 +1016,25 @@ public final class DlgCariObat extends javax.swing.JDialog {
 
         FormInput.setBackground(new java.awt.Color(215, 225, 215));
         FormInput.setName("FormInput"); // NOI18N
-        FormInput.setPreferredSize(new java.awt.Dimension(100, 103));
+        FormInput.setPreferredSize(new java.awt.Dimension(100, 163));
         FormInput.setLayout(null);
+
+        jLabelAsesmen.setText("Asesmen :");
+        jLabelAsesmen.setName("jLabelAsesmen"); // NOI18N
+        jLabelAsesmen.setPreferredSize(new java.awt.Dimension(68, 23));
+        FormInput.add(jLabelAsesmen);
+        jLabelAsesmen.setBounds(4, 100, 65, 23);
+
+        scrollAsesmen.setName("scrollAsesmen"); // NOI18N
+
+        TAsesmen.setColumns(20);
+        TAsesmen.setRows(3);
+        TAsesmen.setLineWrap(true);
+        TAsesmen.setName("TAsesmen"); // NOI18N
+        scrollAsesmen.setViewportView(TAsesmen);
+
+        FormInput.add(scrollAsesmen);
+        scrollAsesmen.setBounds(72, 100, 613, 53);
 
         jLabel5.setText("Total :");
         jLabel5.setName("jLabel5"); // NOI18N
@@ -2473,6 +2493,11 @@ public final class DlgCariObat extends javax.swing.JDialog {
                             resep.tampil();
                             resep.setVisible(true);
                         }
+                        if (!TAsesmen.getText().trim().equals("")) {
+                            if (Sequel.cariInteger("select count(no_rawat) from pemeriksaan_ralan where no_rawat=?", TNoRw.getText()) > 0) {
+                                Sequel.mengedit("pemeriksaan_ralan", "no_rawat='" + TNoRw.getText() + "' order by tgl_perawatan desc, jam_rawat desc limit 1", "penilaian='" + TAsesmen.getText() + "'");
+                            }
+                        }
                         dispose();
                     }
                 } catch (Exception ex) {
@@ -3346,6 +3371,9 @@ public final class DlgCariObat extends javax.swing.JDialog {
     private widget.Label jLabel7;
     private widget.Label jLabel8;
     private widget.Label jLabel9;
+    private widget.TextArea TAsesmen;
+    private widget.Label jLabelAsesmen;
+    private widget.ScrollPane scrollAsesmen;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu jPopupMenu1;
     private widget.TextBox kdgudang;
@@ -5039,6 +5067,7 @@ public final class DlgCariObat extends javax.swing.JDialog {
         kenaikan = Sequel.cariIsiAngka(
                 "select (set_harga_obat_ralan.hargajual/100) from set_harga_obat_ralan where set_harga_obat_ralan.kd_pj=?",
                 KdPj.getText());
+        TAsesmen.setText(Sequel.cariIsi("select penilaian from pemeriksaan_ralan where no_rawat=? order by tgl_perawatan desc, jam_rawat desc limit 1", norwt));
         TCari.requestFocus();
     }
 
@@ -5059,6 +5088,7 @@ public final class DlgCariObat extends javax.swing.JDialog {
         kenaikan = Sequel.cariIsiAngka(
                 "select (set_harga_obat_ralan.hargajual/100) from set_harga_obat_ralan where set_harga_obat_ralan.kd_pj=?",
                 KdPj.getText());
+        TAsesmen.setText(Sequel.cariIsi("select penilaian from pemeriksaan_ralan where no_rawat=? order by tgl_perawatan desc, jam_rawat desc limit 1", norwt));
         TCari.requestFocus();
     }
 

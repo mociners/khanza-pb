@@ -202,6 +202,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         chkTriase = new widget.CekBox();
         chkTriase1 = new widget.CekBox();
         chkHasilLab = new widget.CekBox();
+        chkHasilLabPA = new widget.CekBox();
         chkHasilRad = new widget.CekBox();
         chkOperasiVK = new widget.CekBox();
         chkDebriment = new widget.CekBox();
@@ -300,6 +301,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         chkPenggunaanKamar = new widget.CekBox();
         chkPemeriksaanRadiologi = new widget.CekBox();
         chkPemeriksaanLaborat = new widget.CekBox();
+        chkPemeriksaanLaboratPA = new widget.CekBox();
         chkPemberianObat = new widget.CekBox();
         chkPenggunaanObatOperasi = new widget.CekBox();
         chkResepPulang = new widget.CekBox();
@@ -659,12 +661,20 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         FormMenu.add(chkTriase1);
 
         chkHasilLab.setSelected(true);
-        chkHasilLab.setText("Hasil Laborat");
+        chkHasilLab.setText("Hasil Laborat PK");
         chkHasilLab.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         chkHasilLab.setName("chkHasilLab"); // NOI18N
         chkHasilLab.setOpaque(false);
         chkHasilLab.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkHasilLab);
+
+        chkHasilLabPA.setSelected(true);
+        chkHasilLabPA.setText("Hasil Laborat PA");
+        chkHasilLabPA.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        chkHasilLabPA.setName("chkHasilLabPA"); // NOI18N
+        chkHasilLabPA.setOpaque(false);
+        chkHasilLabPA.setPreferredSize(new java.awt.Dimension(245, 22));
+        FormMenu.add(chkHasilLabPA);
 
         chkHasilRad.setSelected(true);
         chkHasilRad.setText("Hasil Radiologi");
@@ -1391,12 +1401,20 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
         chkPemeriksaanRadiologi.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkPemeriksaanRadiologi);
 
-        chkPemeriksaanLaborat.setText("Pemeriksaan Laborat");
+        chkPemeriksaanLaborat.setText("Pemeriksaan Laborat PK");
         chkPemeriksaanLaborat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         chkPemeriksaanLaborat.setName("chkPemeriksaanLaborat"); // NOI18N
         chkPemeriksaanLaborat.setOpaque(false);
         chkPemeriksaanLaborat.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkPemeriksaanLaborat);
+
+        chkPemeriksaanLaboratPA.setSelected(false);
+        chkPemeriksaanLaboratPA.setText("Pemeriksaan Laborat PA");
+        chkPemeriksaanLaboratPA.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        chkPemeriksaanLaboratPA.setName("chkPemeriksaanLaboratPA"); // NOI18N
+        chkPemeriksaanLaboratPA.setOpaque(false);
+        chkPemeriksaanLaboratPA.setPreferredSize(new java.awt.Dimension(245, 22));
+        FormMenu.add(chkPemeriksaanLaboratPA);
 
         chkPemberianObat.setText("Pemberian Obat/BHP/Alkes");
         chkPemberianObat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -1905,6 +1923,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             chkOperasiVK.setSelected(true);
             chkPemeriksaanRadiologi.setSelected(true);
             chkPemeriksaanLaborat.setSelected(true);
+            chkPemeriksaanLaboratPA.setSelected(false);
             chkPemberianObat.setSelected(true);
             chkPenggunaanObatOperasi.setSelected(true);
             chkResepPulang.setSelected(true);
@@ -2004,6 +2023,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
             chkOperasiVK.setSelected(true);
             chkPemeriksaanRadiologi.setSelected(false);
             chkPemeriksaanLaborat.setSelected(false);
+            chkPemeriksaanLaboratPA.setSelected(false);
             chkPemberianObat.setSelected(false);
             chkPenggunaanObatOperasi.setSelected(false);
             chkResepPulang.setSelected(false);
@@ -2197,6 +2217,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
     private widget.CekBox chkEdukasiPasienTerintegrasiRawatJalan;
     private widget.CekBox chkGambarRad;
     private widget.CekBox chkHasilLab;
+    private widget.CekBox chkHasilLabPA;
     private widget.CekBox chkHasilPemeriksaanUSG;
     private widget.CekBox chkHasilRad;
     private widget.CekBox chkHemodialisa;
@@ -2216,6 +2237,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
     private widget.CekBox chkPemeriksaanGenekologiRalan;
     private widget.CekBox chkPemeriksaanGenekologiRanap;
     private widget.CekBox chkPemeriksaanLaborat;
+    private widget.CekBox chkPemeriksaanLaboratPA;
     private widget.CekBox chkPemeriksaanObstetriRalan;
     private widget.CekBox chkPemeriksaanObstetriRanap;
     private widget.CekBox chkPemeriksaanRadiologi;
@@ -2429,8 +2451,6 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                     // menampilkan SJP BPJS
                     menampilkanSJPBPJS(rs.getString("no_rawat"));
 
-                    // menampilkan SPRI BPJS
-                    menampilkanSPRIBPJS(rs.getString("no_rawat"));
 
                     // menampilkan SURKON BPJS
                     menampilkanKONTROLBPJS(rs.getString("no_rawat"));
@@ -2440,6 +2460,9 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
 
                     // menampilkan RESUME BPJS
                     menampilkanRESUMEBPJS(rs.getString("no_rawat"));
+
+                    // menampilkan SPRI BPJS
+                    menampilkanSPRIBPJS(rs.getString("no_rawat"));
 
                     // ranap gabung1
                     ResumeBayi(rs.getString("no_rawat"));
@@ -2490,7 +2513,7 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                     // menampilkan pemeriksaan laborat
                     if (chkHasilLab.isSelected() == true) {
 
-                        if (!Sequel.cariIsi("SELECT COUNT(no_rawat) FROM periksa_lab WHERE no_rawat=?",
+                        if (!Sequel.cariIsi("SELECT COUNT(no_rawat) FROM periksa_lab WHERE kategori<>'PA' and no_rawat=?",
                                 rs.getString("no_rawat")).equals("0")) {
                             htmlContent.append(
                                     "<br><br><br>" +
@@ -2705,6 +2728,120 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 }
                             }
 
+                            // QR Code TTD Laboratorium - hanya tampil jika ENABLE_QRCODE_TTD = true
+                            if (ENABLE_QRCODE_TTD) {
+                                rs3 = koneksi.prepareStatement(
+                                        "select set_pjlab.kd_dokterlab,dokter.nm_dokter from set_pjlab inner join dokter on set_pjlab.kd_dokterlab=dokter.kd_dokter")
+                                        .executeQuery();
+                                if (rs3.next()) {
+                                    rs3.beforeFirst();
+                                    while (rs3.next()) {
+                                        // Generate QR code secara lokal menggunakan ZXing
+                                        String qrCodePJLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
+                                                90);
+                                        htmlContent.append(
+                                                "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img height='120' src='")
+                                                .append(qrCodePJLab).append("'/><br>")
+                                                .append(rs3.getString("nm_dokter")).append("</td>");
+                                        rs4 = koneksi.prepareStatement(
+                                                "select periksa_lab.nip,petugas.nama from periksa_lab inner join petugas on periksa_lab.nip=petugas.nip where periksa_lab.kategori<>'PA' and no_rawat='"
+                                                        + rs.getString("no_rawat")
+                                                        + "' ORDER BY periksa_lab.tgl_periksa, periksa_lab.jam limit 1")
+                                                .executeQuery();
+                                        if (rs4.next()) {
+                                            rs4.beforeFirst();
+                                            while (rs4.next()) {
+                                                // Generate QR code petugas secara lokal
+                                                String qrCodePetugas = QRCodeHelper
+                                                        .getPetugasQRPath(rs4.getString("nip"), 90);
+                                                htmlContent.append(
+                                                        "<td border='0' align='center'>Petugas Laboratorium <br><img height='120' src='")
+                                                        .append(qrCodePetugas).append("'/><br>")
+                                                        .append(rs4.getString("nama")).append("</td></tr></table>");
+                                            }
+                                        }
+
+                                    }
+                                }
+                            } // end ENABLE_QRCODE_TTD
+                            htmlContent.append(
+                                    "</table>" +
+                                            "</table>" +
+                                            "</fieldset>");
+                        }
+                    }
+
+                    if (chkHasilLabPA.isSelected() == true) {
+
+                        if (!Sequel.cariIsi("SELECT COUNT(no_rawat) FROM periksa_lab WHERE kategori='PA' and no_rawat=?",
+                                rs.getString("no_rawat")).equals("0")) {
+                            htmlContent.append(
+                                    "<br><br><br>" +
+                                            "<p class='pagebreak'>" +
+                                            "<fieldset>");
+
+                            Copsurat();
+                            htmlContent.append("<h2><center>HASIL LABORATORIUM PA</center></h2>");
+                            htmlContent.append(
+                                    "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr><td valign='top' width='20%'>No.Rekam Medis</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("no_rkm_medis"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Nama Pasien</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("nm_pasien"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Tgl. Lahir</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("tgl_lahir"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>No.Rawat</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("no_rawat"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>No.Registrasi</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("no_reg"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Tanggal Registrasi</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("tgl_registrasi")).append(" ").append(rs.getString("jam_reg"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Unit/Poliklinik</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("nm_poli")).append(polirujukan)
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Dokter Poli</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("nm_dokter")).append(dokterrujukan).append("</td></tr>");
+
+                            if (rs.getString("status_lanjut").equals("Ranap")) {
+                                try {
+                                    rs3 = koneksi.prepareStatement(
+                                            "select dokter.nm_dokter from dpjp_ranap inner join dokter on dpjp_ranap.kd_dokter=dokter.kd_dokter where dpjp_ranap.no_rawat='"
+                                                    + rs.getString("no_rawat") + "'")
+                                            .executeQuery();
+                                    if (rs3.next()) {
+                                        htmlContent.append(
+                                                "<tr>" +
+                                                        "<td valign='top' width='20%'>DPJP Ranap</td>" +
+                                                        "<td valign='top' width='1%' align='center'>:</td>" +
+                                                        "<td valign='top' width='79%'>");
+                                        rs3.beforeFirst();
+                                        urutdpjp = 1;
+                                        while (rs3.next()) {
+                                            htmlContent.append(urutdpjp).append(". ").append(rs3.getString("nm_dokter"))
+                                                    .append("&nbsp;&nbsp;");
+                                            urutdpjp++;
+                                        }
+                                        htmlContent.append("</td>" +
+                                                "</tr>");
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Status Lanjut : " + e);
+                                } finally {
+                                    if (rs3 != null) {
+                                        rs3.close();
+                                    }
+                                }
+                            }
+                            htmlContent.append(
+                                    "<tr><td valign='top' width='20%'>Cara Bayar</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("png_jawab"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Penanggung Jawab</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("p_jawab"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Alamat P.J.</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("almt_pj"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Hubungan P.J.</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("hubunganpj"))
+                                    .append("</td></tr><tr><td valign='top' width='20%'>Status</td><td valign='top' width='1%' align='center'>:</td><td valign='top' width='79%'>")
+                                    .append(rs.getString("status_lanjut")).append("</td></tr></table>");
+
                             try {
                                 rs2 = koneksi.prepareStatement(
                                         "select periksa_lab.tgl_periksa,periksa_lab.jam,periksa_lab.kd_jenis_prw, " +
@@ -2807,37 +2944,34 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                             }
                             // QR Code TTD Laboratorium - hanya tampil jika ENABLE_QRCODE_TTD = true
                             if (ENABLE_QRCODE_TTD) {
-                                rs3 = koneksi.prepareStatement(
-                                        "select set_pjlab.kd_dokterlab,dokter.nm_dokter from set_pjlab inner join dokter on set_pjlab.kd_dokterlab=dokter.kd_dokter")
-                                        .executeQuery();
+                                rs3 = koneksi.prepareStatement("select * from set_pjlab").executeQuery();
                                 if (rs3.next()) {
-                                    rs3.beforeFirst();
-                                    while (rs3.next()) {
-                                        // Generate QR code secara lokal menggunakan ZXing
-                                        String qrCodePJLab = QRCodeHelper.getDoctorQRPath(rs3.getString("kd_dokterlab"),
-                                                90);
-                                        htmlContent.append(
-                                                "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium <br><img height='120' src='")
-                                                .append(qrCodePJLab).append("'/><br>")
-                                                .append(rs3.getString("nm_dokter")).append("</td>");
-                                        rs4 = koneksi.prepareStatement(
-                                                "select periksa_lab.nip,petugas.nama from periksa_lab inner join petugas on periksa_lab.nip=petugas.nip where no_rawat='"
-                                                        + rs.getString("no_rawat")
-                                                        + "' ORDER BY periksa_lab.tgl_periksa, periksa_lab.jam limit 1")
-                                                .executeQuery();
-                                        if (rs4.next()) {
-                                            rs4.beforeFirst();
-                                            while (rs4.next()) {
-                                                // Generate QR code petugas secara lokal
-                                                String qrCodePetugas = QRCodeHelper
-                                                        .getPetugasQRPath(rs4.getString("nip"), 90);
-                                                htmlContent.append(
-                                                        "<td border='0' align='center'>Petugas Laboratorium <br><img height='120' src='")
-                                                        .append(qrCodePetugas).append("'/><br>")
-                                                        .append(rs4.getString("nama")).append("</td></tr></table>");
-                                            }
+                                    String kd_dokterlabpa = rs3.getString(5);
+                                    String nm_dokterpa = Sequel.cariIsi("select nm_dokter from dokter where kd_dokter=?", kd_dokterlabpa);
+                                    
+                                    // Generate QR code secara lokal menggunakan ZXing
+                                    String qrCodePJLab = QRCodeHelper.getDoctorQRPath(kd_dokterlabpa, 90);
+                                    htmlContent.append(
+                                            "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td border='0' align='center'>Penangung Jawab Laboratorium PA<br><img height='120' src='")
+                                            .append(qrCodePJLab).append("'/><br>")
+                                            .append(nm_dokterpa).append("</td>");
+                                            
+                                    rs4 = koneksi.prepareStatement(
+                                            "select periksa_lab.nip,petugas.nama from periksa_lab inner join petugas on periksa_lab.nip=petugas.nip where periksa_lab.kategori='PA' and periksa_lab.no_rawat='"
+                                                    + rs.getString("no_rawat")
+                                                    + "' ORDER BY periksa_lab.tgl_periksa, periksa_lab.jam limit 1")
+                                            .executeQuery();
+                                    if (rs4.next()) {
+                                        rs4.beforeFirst();
+                                        while (rs4.next()) {
+                                            // Generate QR code petugas secara lokal
+                                            String qrCodePetugas = QRCodeHelper
+                                                    .getPetugasQRPath(rs4.getString("nip"), 90);
+                                            htmlContent.append(
+                                                    "<td border='0' align='center'>Petugas Laboratorium PA<br><img height='120' src='")
+                                                    .append(qrCodePetugas).append("'/><br>")
+                                                    .append(rs4.getString("nama")).append("</td></tr></table>");
                                         }
-
                                     }
                                 }
                             } // end ENABLE_QRCODE_TTD
@@ -4189,110 +4323,8 @@ public class RMGenerateKlaim extends javax.swing.JDialog {
                                 rs4.close();
                             }
                         }
-
-                        try {
-                            rs2 = koneksi.prepareStatement(
-                                    "select periksa_lab.tgl_periksa,periksa_lab.jam,periksa_lab.kd_jenis_prw, " +
-                                            "jns_perawatan_lab.nm_perawatan,petugas.nama,periksa_lab.biaya,periksa_lab.dokter_perujuk,dokter.nm_dokter "
-                                            +
-                                            "from periksa_lab inner join jns_perawatan_lab on periksa_lab.kd_jenis_prw=jns_perawatan_lab.kd_jenis_prw "
-                                            +
-                                            "inner join petugas on periksa_lab.nip=petugas.nip inner join dokter on periksa_lab.kd_dokter=dokter.kd_dokter "
-                                            +
-                                            "where periksa_lab.kategori='PA' and periksa_lab.no_rawat='"
-                                            + rs.getString("no_rawat")
-                                            + "' order by periksa_lab.tgl_periksa,periksa_lab.jam")
-                                    .executeQuery();
-                            if (rs2.next()) {
-                                htmlContent.append(
-                                        "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"
-                                                +
-                                                "<tr><td valign='top' colspan='5'>Pemeriksaan Laboratorium PA</td><td valign='top' colspan='1' align='right'>:</td><td valign='top'></td></tr>"
-                                                +
-                                                "<tr align='center'>" +
-                                                "<td valign='top' width='4%' bgcolor='#FFFAF8'>No.</td>" +
-                                                "<td valign='top' width='15%' bgcolor='#FFFAF8'>Tanggal</td>" +
-                                                "<td valign='top' width='10%' bgcolor='#FFFAF8'>Kode</td>" +
-                                                "<td valign='top' width='26%' bgcolor='#FFFAF8'>Nama Pemeriksaan</td>" +
-                                                "<td valign='top' width='18%' bgcolor='#FFFAF8'>Dokter PJ</td>" +
-                                                "<td valign='top' width='17%' bgcolor='#FFFAF8'>Petugas</td>" +
-                                                "<td valign='top' width='10%' bgcolor='#FFFAF8'>Biaya</td>" +
-                                                "</tr>");
-                                rs2.beforeFirst();
-                                w = 1;
-                                while (rs2.next()) {
-                                    htmlContent.append("<tr><td valign='top' align='center'>").append(w)
-                                            .append("</td><td valign='top'>").append(rs2.getString("tgl_periksa"))
-                                            .append(" ").append(rs2.getString("jam")).append("</td><td valign='top'>")
-                                            .append(rs2.getString("kd_jenis_prw")).append("</td><td valign='top'>")
-                                            .append(rs2.getString("nm_perawatan")).append("</td><td valign='top'>")
-                                            .append(rs2.getString("nm_dokter")).append("</td><td valign='top'>")
-                                            .append(rs2.getString("nama"))
-                                            .append("</td><td valign='top' align='right'>")
-                                            .append(Valid.SetAngka(rs2.getDouble("biaya"))).append("</td></tr>");
-                                    biayaperawatan = biayaperawatan + rs2.getDouble("biaya");
-                                    try {
-                                        rs3 = koneksi.prepareStatement(
-                                                "select diagnosa_klinik,makroskopik,mikroskopik,kesimpulan,kesan from detail_periksa_labpa "
-                                                        +
-                                                        "where no_rawat='" + rs.getString("no_rawat")
-                                                        + "' and kd_jenis_prw='" + rs2.getString("kd_jenis_prw")
-                                                        + "' and " +
-                                                        "tgl_periksa='" + rs2.getString("tgl_periksa") + "' and jam='"
-                                                        + rs2.getString("jam") + "'")
-                                                .executeQuery();
-                                        if (rs3.next()) {
-                                            file = Sequel.cariIsi(
-                                                    "select photo from detail_periksa_labpa_gambar where no_rawat='"
-                                                            + rs.getString("no_rawat") + "' and kd_jenis_prw='"
-                                                            + rs2.getString("kd_jenis_prw") + "' and tgl_periksa='"
-                                                            + rs2.getString("tgl_periksa") + "' and jam='"
-                                                            + rs2.getString("jam") + "'");
-                                            htmlContent.append(
-                                                    "<tr><td valign='top' align='center'></td><td valign='top'></td><td valign='top'>Diagnosa Klinis</td><td valign='top' colspan='4'>: ")
-                                                    .append(rs3.getString("diagnosa_klinik"))
-                                                    .append("</td></tr><tr><td valign='top' align='center'></td><td valign='top'></td><td valign='top'>Makroskopik</td><td valign='top' colspan='4'>: ")
-                                                    .append(rs3.getString("makroskopik"))
-                                                    .append("</td></tr><tr><td valign='top' align='center'></td><td valign='top'></td><td valign='top'>Mikroskopik</td><td valign='top' colspan='4'>: ")
-                                                    .append(rs3.getString("mikroskopik"))
-                                                    .append("</td></tr><tr><td valign='top' align='center'></td><td valign='top'></td><td valign='top'>Kesimpulan</td><td valign='top' colspan='4'>: ")
-                                                    .append(rs3.getString("kesimpulan"))
-                                                    .append("</td></tr><tr><td valign='top' align='center'></td><td valign='top'></td><td valign='top'>Kesan</td><td valign='top' colspan='4'>: ")
-                                                    .append(rs3.getString("kesan")).append("</td></tr>");
-                                            if (!file.isEmpty()) {
-                                                htmlContent.append(
-                                                        "<tr><td valign='top' align='center'></td><td valign='top'></td><td valign='top' colspan='5' align='center'><a href='http://")
-                                                        .append(koneksiDB.HOSTHYBRIDWEB()).append(":")
-                                                        .append(koneksiDB.PORTWEB()).append("/")
-                                                        .append(koneksiDB.HYBRIDWEB()).append("/labpa/").append(file)
-                                                        .append("'><img alt='Gambar PA' src='http://")
-                                                        .append(koneksiDB.HOSTHYBRIDWEB()).append(":")
-                                                        .append(koneksiDB.PORTWEB()).append("/")
-                                                        .append(koneksiDB.HYBRIDWEB()).append("/labpa/").append(file)
-                                                        .append("' width='450' height='450'/></a></td></tr>");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        System.out.println("Notifikasi : " + e);
-                                    } finally {
-                                        if (rs3 != null) {
-                                            rs3.close();
-                                        }
-                                    }
-                                    w++;
-                                }
-
-                                htmlContent.append(
-                                        "</table>");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Notifikasi Lab : " + e);
-                        } finally {
-                            if (rs2 != null) {
-                                rs2.close();
-                            }
-                        }
                     }
+
 
                     // menampilkan pemberian obat
                     if (chkPemberianObat.isSelected() == true) {

@@ -18,6 +18,10 @@
 	<parameter name="dokter_perujuk" class="java.lang.String"/>
 	<parameter name="dokter_dpjp" class="java.lang.String"/>
 	<parameter name="diagnosa" class="java.lang.String"/>
+	<parameter name="diagnosa_sekunder1" class="java.lang.String"/>
+	<parameter name="diagnosa_sekunder2" class="java.lang.String"/>
+	<parameter name="diagnosa_sekunder3" class="java.lang.String"/>
+	<parameter name="diagnosa_sekunder4" class="java.lang.String"/>
 	<parameter name="indikasi" class="java.lang.String"/>
 	<parameter name="rencana_perawatan" class="java.lang.String"/>
 	<queryString>
@@ -27,7 +31,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="552" splitType="Stretch">
+		<band height="632" splitType="Stretch">
 			<image scaleImage="FillFrame" onErrorType="Blank">
 				<reportElement x="0" y="0" width="85" height="79" uuid="2b649622-44d4-4f01-a1b7-7e61e0535359"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
@@ -221,49 +225,105 @@
 				<textFieldExpression><![CDATA[": "+(($P{diagnosa} == null || $P{diagnosa}.isEmpty()) ? "................................................................................" : $P{diagnosa})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="21" y="293" width="179" height="20" uuid="f3e09880-99e2-491c-8b83-a447814c8106"/>
+				<reportElement x="21" y="293" width="100" height="20" uuid="8a614d9b-9c71-46e7-8b54-706599b823e6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<text><![CDATA[Diagnosa Sek. 1]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="121" y="293" width="434" height="20" uuid="d9e13350-f8d9-43c2-9097-fddff223403b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+(($P{diagnosa_sekunder1} == null || $P{diagnosa_sekunder1}.isEmpty()) ? "................................................................................" : $P{diagnosa_sekunder1})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="313" width="100" height="20" uuid="8a614d9b-9c71-46e7-8b54-706599b823e7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<text><![CDATA[Diagnosa Sek. 2]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="121" y="313" width="434" height="20" uuid="d9e13350-f8d9-43c2-9097-fddff223403c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+(($P{diagnosa_sekunder2} == null || $P{diagnosa_sekunder2}.isEmpty()) ? "................................................................................" : $P{diagnosa_sekunder2})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="333" width="100" height="20" uuid="8a614d9b-9c71-46e7-8b54-706599b823e8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<text><![CDATA[Diagnosa Sek. 3]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="121" y="333" width="434" height="20" uuid="d9e13350-f8d9-43c2-9097-fddff223403d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+(($P{diagnosa_sekunder3} == null || $P{diagnosa_sekunder3}.isEmpty()) ? "................................................................................" : $P{diagnosa_sekunder3})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="353" width="100" height="20" uuid="8a614d9b-9c71-46e7-8b54-706599b823e9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<text><![CDATA[Diagnosa Sek. 4]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="121" y="353" width="434" height="20" uuid="d9e13350-f8d9-43c2-9097-fddff223403e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+(($P{diagnosa_sekunder4} == null || $P{diagnosa_sekunder4}.isEmpty()) ? "................................................................................" : $P{diagnosa_sekunder4})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="373" width="179" height="20" uuid="f3e09880-99e2-491c-8b83-a447814c8106"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma"/>
 				</textElement>
 				<text><![CDATA[Indikasi Rawat Inap / Rencana Terapi :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="21" y="313" width="534" height="39" uuid="2a59e9ec-d1ad-4674-89c0-eb89325988e0"/>
+				<reportElement x="21" y="393" width="534" height="39" uuid="2a59e9ec-d1ad-4674-89c0-eb89325988e0"/>
 				<textElement>
 					<font fontName="Tahoma"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($P{indikasi} == null || $P{indikasi}.isEmpty()) ? ".................................................................................................................................................................................................................." : $P{indikasi}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="21" y="362" width="179" height="20" uuid="c24a2928-8547-4f6c-8e0b-22d7d8e82054"/>
+				<reportElement x="21" y="442" width="179" height="20" uuid="c24a2928-8547-4f6c-8e0b-22d7d8e82054"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma"/>
 				</textElement>
 				<text><![CDATA[Rencana Perawatan di :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="21" y="382" width="534" height="40" uuid="0e81c1c9-7d8b-4b2a-8c9e-178c3c2a8f7c"/>
+				<reportElement x="21" y="462" width="534" height="40" uuid="0e81c1c9-7d8b-4b2a-8c9e-178c3c2a8f7c"/>
 				<textElement>
 					<font fontName="Tahoma"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($P{rencana_perawatan} == null || $P{rencana_perawatan}.isEmpty()) ? ".................................................................................................................................................................................................................." : $P{rencana_perawatan}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy HH:mm:ss">
-				<reportElement x="375" y="457" width="180" height="15" uuid="3d8e57e3-0c46-46c5-a6e3-da6f0b4d4b1a"/>
+				<reportElement x="375" y="537" width="180" height="15" uuid="3d8e57e3-0c46-46c5-a6e3-da6f0b4d4b1a"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="375" y="472" width="180" height="15" uuid="a710ac25-9c59-4503-acfd-965a3962d385"/>
+				<reportElement x="375" y="552" width="180" height="15" uuid="a710ac25-9c59-4503-acfd-965a3962d385"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma"/>
 				</textElement>
 				<text><![CDATA[Dokter Penanggung Jawab Pelayanan]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="375" y="527" width="180" height="15" uuid="c8c5c7de-fcc0-449e-879e-c80f4f91ef14"/>
+				<reportElement x="375" y="607" width="180" height="15" uuid="c8c5c7de-fcc0-449e-879e-c80f4f91ef14"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma"/>
 				</textElement>

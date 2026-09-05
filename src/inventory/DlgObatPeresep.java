@@ -39,11 +39,11 @@ public class DlgObatPeresep extends javax.swing.JDialog {
     private ResultSet rs,rs2; 
     private DlgCariDokter dokter=new DlgCariDokter(null,false);
     private int i=0,a=0;
-    private double total=0,totalJml=0;
+    private double total=0,totalJml=0,totalItemAll=0;
     private DlgCariCaraBayar carabayar=new DlgCariCaraBayar(null,false);
     private DlgCariPoli poli=new DlgCariPoli(null,false);
     private DlgCariKategori kategori=new DlgCariKategori(null,false);
-    private String  No="",Kode="",Nama="",Kategori="",Jml="",Satuan="",Harga="",Subtotal="";
+    private String  No="",Kode="",Nama="",Kategori="",Jml="",Satuan="",Harga="",Subtotal="",JmlItem="";
 
     /** Creates new form DlgProgramStudi
      * @param parent
@@ -53,13 +53,13 @@ public class DlgObatPeresep extends javax.swing.JDialog {
         initComponents();
 
         tabMode=new DefaultTableModel(null,new Object[]{
-                "No.","Kode","Nama","Kategori","Jml","Satuan","Harga","Subtotal"
+                "No.","Kode","Nama","Kategori","Jml","Satuan","Harga","Subtotal","Jml.Item"
             }){
              @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
              Class[] types = new Class[] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
                 java.lang.Double.class, java.lang.String.class,java.lang.Double.class, 
-                java.lang.Double.class
+                java.lang.Double.class, java.lang.Double.class
              };
              @Override
              public Class getColumnClass(int columnIndex) {
@@ -71,7 +71,7 @@ public class DlgObatPeresep extends javax.swing.JDialog {
         tbDokter.setPreferredScrollableViewportSize(new Dimension(800,800));
         tbDokter.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0;i < 8; i++) {
+        for (i = 0;i < 9; i++) {
             TableColumn column = tbDokter.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(35);
@@ -89,6 +89,8 @@ public class DlgObatPeresep extends javax.swing.JDialog {
                 column.setPreferredWidth(90);
             }else if(i==7){
                 column.setPreferredWidth(100);
+            }else if(i==8){
+                column.setPreferredWidth(60);
             }
         }
         tbDokter.setDefaultRenderer(Object.class, new WarnaTable());   
@@ -585,7 +587,14 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
                     Subtotal="";
                 }
                 
-                Sequel.menyimpan("temporary","'"+i+"','"+No+"','"+Kode+"','"+Nama+"','"+Kategori+"','"+Jml+"','"+Satuan+"','"+Harga+"','"+Subtotal+"','','','','','','','','','','','','','','','','','','','','','','','','','','','','"+akses.getalamatip()+"'","Rekap Obat Perdokter Poli"); 
+                JmlItem="";
+                try {
+                    JmlItem=Valid.SetAngka(Double.parseDouble(tabMode.getValueAt(i,8).toString()));
+                } catch (Exception e) {
+                    JmlItem="";
+                }
+                
+                Sequel.menyimpan("temporary","'"+i+"','"+No+"','"+Kode+"','"+Nama+"','"+Kategori+"','"+Jml+"','"+Satuan+"','"+Harga+"','"+Subtotal+"','"+JmlItem+"','','','','','','','','','','','','','','','','','','','','','','','','','','"+akses.getalamatip()+"'","Rekap Obat Perdokter Poli"); 
             }
                         
             Map<String, Object> param = new HashMap<>();
@@ -747,7 +756,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     " on resep_obat.no_rawat=reg_periksa.no_rawat and reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                     " and resep_obat.kd_dokter=dokter.kd_dokter and penjab.kd_pj=reg_periksa.kd_pj and reg_periksa.kd_poli=poliklinik.kd_poli where "+
                     " resep_obat.tgl_perawatan between ? and ? and dokter.nm_dokter like ? and penjab.png_jawab like ? and poliklinik.nm_poli like ? "+
-                    " and exists(select detail_pemberian_obat.no_rawat from detail_pemberian_obat inner join databarang on detail_pemberian_obat.kode_brng=databarang.kode_brng inner join kategori_barang on databarang.kode_kategori=kategori_barang.kode where detail_pemberian_obat.no_rawat=resep_obat.no_rawat and detail_pemberian_obat.tgl_perawatan=resep_obat.tgl_perawatan and detail_pemberian_obat.jam=resep_obat.jam and kategori_barang.nama like ?) "+
+                    " and exists(select detail_pemberian_obat.no_rawat from detail_pemberian_obat inner join databarang on detail_pemberian_obat.kode_brng=databarang.kode_brng inner join kategori_barang on databarang.kode_kategori=kategori_barang.kode where detail_pemberian_obat.no_rawat=resep_obat.no_rawat and detail_pemberian_obat.tgl_perawatan=resep_obat.tgl_perawatan and detail_pemberian_obat.jam=resep_obat.jam and kategori_barang.nama like ? and kategori_barang.nama not like '%alkes%' and kategori_barang.nama not like '%bmhp%' and kategori_barang.nama <> '-') "+
                     " order by resep_obat.tgl_perawatan,resep_obat.jam ");
             try {
                 ps.setString(1,Valid.SetTgl(Tgl1.getSelectedItem()+""));
@@ -755,20 +764,22 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 ps.setString(3,"%"+nmdokter.getText()+"%");
                 ps.setString(4,"%"+nmpenjab.getText()+"%");
                 ps.setString(5,"%"+nmpoli.getText()+"%");
-                ps.setString(6,"%"+nmkategori.getText()+"%");
+                ps.setString(6,nmkategori.getText().trim().equals("")?"%%":nmkategori.getText().trim());
                 rs=ps.executeQuery();
                 i=1;
                 total=0;
                 totalJml=0;
+                totalItemAll = 0;
                 while(rs.next()){
+                    int headerRow = tabMode.getRowCount();
                     tabMode.addRow(new Object[]{
-                        i,"No.Resep : "+rs.getString("no_resep"),rs.getString("nm_pasien"),null,null,null,null,null
+                        i,"No.Resep : "+rs.getString("no_resep"),rs.getString("nm_pasien"),null,null,null,null,null,null
                     });
                     tabMode.addRow(new Object[]{
-                        null,null,"No.Rawat : "+rs.getString("no_rawat"),null,null,null,null,null
+                        null,null,"No.Rawat : "+rs.getString("no_rawat"),null,null,null,null,null,null
                     });
                     tabMode.addRow(new Object[]{
-                        null,null,"Tgl.Resep : "+rs.getString("tgl_perawatan"),null,null,null,null,null
+                        null,null,"Tgl.Resep : "+rs.getString("tgl_perawatan"),null,null,null,null,null,null
                     });
                     ps2=koneksi.prepareStatement(
                         "select databarang.kode_brng,databarang.nama_brng,kategori_barang.nama as kategori,detail_pemberian_obat.jml,detail_pemberian_obat.biaya_obat,"+
@@ -776,22 +787,26 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                         "from detail_pemberian_obat inner join databarang on detail_pemberian_obat.kode_brng=databarang.kode_brng "+
                         "inner join kategori_barang on databarang.kode_kategori=kategori_barang.kode "+
                         "where detail_pemberian_obat.tgl_perawatan=? and detail_pemberian_obat.jam=? and detail_pemberian_obat.no_rawat=? "+
-                        "and kategori_barang.nama like ? "+
+                        "and kategori_barang.nama like ? and kategori_barang.nama not like '%alkes%' and kategori_barang.nama not like '%bmhp%' and kategori_barang.nama <> '-' "+
                         "order by databarang.kode_brng");
                     try {
                         ps2.setString(1,rs.getString("tgl_perawatan"));
                         ps2.setString(2,rs.getString("jam"));
                         ps2.setString(3,rs.getString("no_rawat"));
-                        ps2.setString(4,"%"+nmkategori.getText()+"%");
+                        ps2.setString(4,nmkategori.getText().trim().equals("")?"%%":nmkategori.getText().trim());
                         rs2=ps2.executeQuery();
+                        double itemsInResep = 0;
                         while(rs2.next()){
                             tabMode.addRow(new Object[]{
                                 null,rs2.getString("kode_brng"),rs2.getString("nama_brng"),rs2.getString("kategori"),rs2.getDouble("jml"),
-                                rs2.getString("kode_sat"),rs2.getDouble("biaya_obat"),rs2.getDouble("total")
+                                rs2.getString("kode_sat"),rs2.getDouble("biaya_obat"),rs2.getDouble("total"), null
                             });
                             total=total+rs2.getDouble("total");
                             totalJml=totalJml+rs2.getDouble("jml");
+                            itemsInResep++;
                         }
+                        tabMode.setValueAt(itemsInResep, headerRow, 8);
+                        totalItemAll += itemsInResep;
                     } catch (Exception e) {
                         System.out.println("Notifikasi : "+e);
                     } finally{
@@ -815,10 +830,10 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 }
             }
             tabMode.addRow(new Object[]{
-                null,null,null,null,null,null,null,null
+                null,null,null,null,null,null,null,null,null
             });
             tabMode.addRow(new Object[]{
-                ">>","TOTAL",null,null,totalJml,null,null,total
+                ">>","TOTAL",null,null,totalJml,null,null,total,totalItemAll
             });
             this.setCursor(Cursor.getDefaultCursor());             
         }catch(Exception e){

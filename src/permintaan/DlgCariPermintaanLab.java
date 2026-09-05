@@ -1,5 +1,6 @@
 package permintaan;
 
+import rekammedis.MasterCriticalValue;
 import bridging.ApiLICA;
 import bridging.ApiMEDQLAB;
 import bridging.ApiSOFTMEDIX;
@@ -606,6 +607,42 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
         BtnAmbilLISSOFTMEDIX = new widget.Button();
         BtnKirimVansLab = new widget.Button();
         BtnAmbilVanslab = new widget.Button();
+
+        BtnAmbilVanslab1 = new widget.Button();
+
+        BtnLaporanNilaiKritis = new widget.Button();
+        BtnLaporanNilaiKritis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png")));
+        BtnLaporanNilaiKritis.setText("Rekap Critical Value");
+        BtnLaporanNilaiKritis.setFocusPainted(false);
+        BtnLaporanNilaiKritis.setFont(new java.awt.Font("Tahoma", 0, 11));
+        BtnLaporanNilaiKritis.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnLaporanNilaiKritis.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnLaporanNilaiKritis.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnLaporanNilaiKritis.setName("BtnLaporanNilaiKritis");
+        BtnLaporanNilaiKritis.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnLaporanNilaiKritis.setRoundRect(false);
+        BtnLaporanNilaiKritis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLaporanNilaiKritisActionPerformed(evt);
+            }
+        });
+        FormMenu.add(BtnLaporanNilaiKritis);
+        BtnAmbilVanslab1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png")));
+        BtnAmbilVanslab1.setText("Master Critical Value");
+        BtnAmbilVanslab1.setFocusPainted(false);
+        BtnAmbilVanslab1.setFont(new java.awt.Font("Tahoma", 0, 11));
+        BtnAmbilVanslab1.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnAmbilVanslab1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnAmbilVanslab1.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnAmbilVanslab1.setName("BtnAmbilVanslab1");
+        BtnAmbilVanslab1.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnAmbilVanslab1.setRoundRect(false);
+        BtnAmbilVanslab1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAmbilVanslab1ActionPerformed(evt);
+            }
+        });
+        FormMenu.add(BtnAmbilVanslab1);
         BtnKirimAdamLab = new widget.Button();
         BtnAmbilAdamLab = new widget.Button();
         BtnInputAlkesBHP = new widget.Button();
@@ -5431,6 +5468,20 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
         }
     }// GEN-LAST:event_BtnKirimVansLabActionPerformed
 
+
+
+    private void BtnLaporanNilaiKritisActionPerformed(java.awt.event.ActionEvent evt) {
+        laporan.DlgLaporanNilaiKritis master = new laporan.DlgLaporanNilaiKritis(null, false);
+        master.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+        master.setLocationRelativeTo(null);
+        master.setVisible(true);
+    }
+    private void BtnAmbilVanslab1ActionPerformed(java.awt.event.ActionEvent evt) {
+        MasterCriticalValue master = new MasterCriticalValue(null, false);
+        master.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+        master.setLocationRelativeTo(null);
+        master.setVisible(true);
+    }
     private void BtnAmbilVanslabActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BtnAmbilVanslabActionPerformed
         if (TabPilihRawat.getSelectedIndex() == 0) {
             if (TabRawatJalan.getSelectedIndex() == 0) {
@@ -6051,6 +6102,8 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
     private widget.Button BtnAmbilLica;
     private widget.Button BtnAmbilSysmex;
     private widget.Button BtnAmbilVanslab;
+    private widget.Button BtnAmbilVanslab1;
+    private widget.Button BtnLaporanNilaiKritis;
     private widget.Button BtnBarcodePermintaan;
     private widget.Button BtnBarcodePermintaan2;
     private widget.Button BtnCari;

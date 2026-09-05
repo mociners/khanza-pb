@@ -297,6 +297,19 @@ public class koneksiDB {
         return var;
     }
 
+    public static String ALARMCODEBLUE() {
+        try {
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var = prop.getProperty("ALARMCODEBLUE");
+            if (var == null) {
+                var = "no";
+            }
+        } catch (Exception e) {
+            var = "no";
+        }
+        return var;
+    }
+
     public static String ALARMAPOTEK() {
         try {
             prop.loadFromXML(new FileInputStream("setting/database.xml"));
